@@ -271,6 +271,70 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   gap: 24px;
 }
 
+/* «Հիմնական / Պրո» pill toggle above the packages */
+.pkg-switch { display: flex; justify-content: center; margin-top: 24px; }
+.pill-tabs {
+  display: inline-flex; gap: 4px;
+  padding: 4px;
+  background: #f4f4f5;
+  border-radius: var(--r-full);
+}
+.pill-tabs__tab {
+  padding: 12px 28px;
+  border-radius: var(--r-full);
+  font-weight: 600; font-size: 16px; line-height: 20px;
+  color: var(--gray-600);
+  transition: background-color .2s, color .2s, box-shadow .2s;
+}
+.pill-tabs__tab:hover { color: var(--slate-900); }
+.pill-tabs__tab[aria-selected="true"] { background: #fff; color: var(--slate-900); box-shadow: 0 1px 3px rgba(15, 23, 42, .12); }
+.pill-tabs__tab:focus-visible { outline: 2px solid var(--blue-600); outline-offset: 2px; }
+.pkg-panel { display: flex; flex-direction: column; gap: 24px; }
+.pkg-panel[hidden] { display: none; }
+
+/* «Պրո» cards: image + bold title, link out to their own pages */
+.pro-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.pro-card {
+  position: relative;
+  height: 440px;
+  overflow: hidden;
+  border-radius: var(--r-card);
+  background: var(--slate-900);
+  isolation: isolate;
+}
+.pro-card > img:first-child {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1);
+}
+.pro-card:hover > img:first-child { transform: scale(1.05); }
+.pro-card::after {
+  content: "";
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(2, 6, 23, .88) 0%, rgba(2, 6, 23, .5) 30%, rgba(2, 6, 23, 0) 58%);
+}
+.pro-card__title {
+  position: absolute; left: 28px; right: 28px; bottom: 26px; z-index: 2;
+  margin: 0;
+  font-weight: 700; font-size: 32px; line-height: 1.1; letter-spacing: -0.8px;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .45);
+  text-wrap: balance;
+}
+.pro-card__arrow {
+  position: absolute; top: 16px; right: 16px; z-index: 2;
+  display: grid; place-items: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, .45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background-color .15s, transform .25s;
+}
+.pro-card:hover .pro-card__arrow { background: var(--blue-600); transform: translate(2px, -2px); }
+.pro-card:focus-visible { outline: 3px solid var(--blue-600); outline-offset: 3px; }
+
 /* 3 cards; each card spans 6 rows and uses subgrid so
    head / schedule / price / CTA / tools / features line up across cards */
 .packages {
@@ -987,6 +1051,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (max-width: 1100px) {
   .nav__links { display: none; }
   .packages { grid-template-columns: 1fr; row-gap: 32px; max-width: 560px; margin: 0 auto; width: 100%; }
+  .pro-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+  .pro-card { height: 320px; }
   .learn-grid { display: block; columns: 2; column-gap: 24px; }
   .learn-col { display: contents; }
   .learn-tile { margin-bottom: 24px; }

@@ -112,7 +112,16 @@
           </div>
       </div>
 
-      <div class="packages" id="packages">
+      <!-- Package tabs: «Հիմնական» (default) and «Պրո» -->
+      <div class="pkg-switch" id="packages">
+        <div class="pill-tabs" role="tablist" aria-label="Դասընթացներ">
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-basic" aria-controls="panel-basic" aria-selected="true">Հիմնական</button>
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-pro" aria-controls="panel-pro" aria-selected="false" tabindex="-1">Պրո</button>
+        </div>
+      </div>
+
+      <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
+      <div class="packages">
 
         <!-- ───── Start ───── -->
         <article class="pkg pkg--start">
@@ -273,8 +282,31 @@
           </div>
         </article>
       </div>
+        <p class="prompt-gift"><i class="ic ic--gift"></i>500+ պատրաստի պրոմպտ՝ նվեր ցանկացած դասընթացի գրանցվելուց</p>
+      </div>
 
-      <p class="prompt-gift"><i class="ic ic--gift"></i>500+ պատրաստի պրոմպտ՝ նվեր ցանկացած դասընթացի գրանցվելուց</p>
+      <div class="pkg-panel" role="tabpanel" id="panel-pro" aria-labelledby="tab-pro" hidden>
+        <div class="pro-grid">
+          <!-- TODO: real external link + image for «AI քեզ ուսուցիչ» -->
+          <a class="pro-card" href="https://example.com/ai-qez-teacher" target="_blank" rel="noopener">
+            <img src="assets/learn/basics-vr-pink.webp" alt="" loading="lazy" />
+            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+            <h3 class="pro-card__title">AI քեզ ուսուցիչ</h3>
+          </a>
+          <!-- TODO: real external link + image for «AI քեզ բժիշկ» -->
+          <a class="pro-card" href="https://example.com/ai-qez-doctor" target="_blank" rel="noopener">
+            <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
+            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
+          </a>
+          <!-- TODO: real external link + image for «AI քեզ պրոդուկտ մենեջեր» -->
+          <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
+            <img src="assets/learn/presentations-vr-purple.webp" alt="" loading="lazy" />
+            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+            <h3 class="pro-card__title">AI քեզ պրոդուկտ մենեջեր</h3>
+          </a>
+        </div>
+      </div>
 
     </section>
 

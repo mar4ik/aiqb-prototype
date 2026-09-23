@@ -181,3 +181,31 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
   });
   update();
 })();
+
+/* ============================================================
+   05 · PACKAGES — «Հիմնական / Պրո» pill tabs
+   ============================================================ */
+(function packageTabs() {
+  const tabs = Array.from(document.querySelectorAll('.pill-tabs [role="tab"]'));
+  if (!tabs.length) return;
+
+  function select(tab, focus) {
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+  }
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      select(next, true);
+    });
+  });
+})();
