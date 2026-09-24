@@ -148,7 +148,7 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 });
 
 /* ============================================================
-   09 · REFERRAL — «Ստեղծել պրոմո կոդ» stays disabled until
+   09 · REFERRAL — «Ստեղծել պրոմոկոդ» stays disabled until
    the email is valid and a code (2+ chars) follows AI_qez_
    ============================================================ */
 (function promoForm() {
@@ -174,7 +174,7 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 })();
 
 /* ============================================================
-   05 · PACKAGES — «Հիմնական / Պրո» pill tabs
+   05 · PACKAGES — «AI գրագիտություն / PRO դասընթացներ» pill tabs
    ============================================================ */
 (function packageTabs() {
   const tabs = Array.from(document.querySelectorAll('.pill-tabs [role="tab"]'));

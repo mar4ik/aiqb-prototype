@@ -635,7 +635,6 @@
   font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--color-slate-700);
 }
 .endorse img { width: --spacing(8); height: auto; flex-shrink: 0; }
-.endorse--footer { margin-top: --spacing(2); }
 .endorse--strip {
   justify-content: center;
   padding: --spacing(3.5) --spacing(6);
@@ -844,7 +843,37 @@
 }
 .stat-card--hero { height: --spacing(119); padding-top: --spacing(24); }
 .stat-card--tools { height: --spacing(65); padding-bottom: --spacing(29.5); }
-.stat-card--fill { flex: 1; }
+.stat-card--fill { flex: 1; flex-direction: column; gap: --spacing(5); }
+
+/* number + stars as one block; the stars stretch to the full width of the number + label */
+.stat-group { display: flex; flex-direction: column; align-items: stretch; gap: --spacing(4); }
+
+/* 4.9 card: five stars in one element — the star shape is a repeating mask; the gold part
+   of the gradient covers --rating / 5 of the row, the rest stays grey */
+.stars {
+  display: block;
+  aspect-ratio: 5.6;               /* 5 stars + 4 gaps of .15 star → stars scale with the width */
+  background: linear-gradient(90deg, var(--color-amber-400) calc(var(--rating) / 5 * 100%), var(--color-zinc-300) 0);
+  mask: url("assets/icons/star.svg") 0 0 / auto 100% space no-repeat;
+}
+
+/* 6 card: the teachers' photos overlapping, like a facepile; links to the teachers section */
+.face-pile { display: flex; }
+.face-pile img {
+  width: --spacing(12); height: --spacing(12);
+  margin-left: calc(--spacing(3) * -1);
+  border-radius: var(--radius-full);
+  border: 3px solid var(--surface);
+  object-fit: cover; object-position: center 20%;
+  transition: transform .2s ease;
+}
+.face-pile img:first-child { margin-left: 0; }
+.face-pile:hover img { transform: translateY(calc(--spacing(1) * -1)); }
+.face-pile img:nth-child(2) { transition-delay: 30ms; }
+.face-pile img:nth-child(3) { transition-delay: 60ms; }
+.face-pile img:nth-child(4) { transition-delay: 90ms; }
+.face-pile img:nth-child(5) { transition-delay: 120ms; }
+.face-pile img:nth-child(6) { transition-delay: 150ms; }
 
 /* Anonymous-animal crowd across the top of the 10,000+ card */
 .crowd {
@@ -1134,17 +1163,25 @@
   display: flex; flex-direction: column; gap: --spacing(8);
 }
 .footer__cols { display: flex; justify-content: space-between; align-items: flex-start; gap: --spacing(12); }
-.footer__brand { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3); max-width: --spacing(80); }
+/* Two matching rows — [logo | tagline] and [coat of arms | endorsement]: the images share
+   one column, so both texts start on the same left edge */
+.footer__brand {
+  display: grid; grid-template-columns: auto 1fr; align-items: center;
+  gap: --spacing(5) --spacing(4);
+  max-width: --spacing(100);
+}
+.footer__gerb { justify-self: center; width: --spacing(10); height: auto; }
 .footer__logo { display: block; }
 .footer__logo img { height: --spacing(12); width: auto; }
 .footer__tagline { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-slate-600); }
 
 .footer__links { display: flex; gap: --spacing(24); }
 .footer__col { display: flex; flex-direction: column; gap: --spacing(2.5); font-size: var(--text-sm); }
-.footer__heading {
+.footer__heading {   /* column title: uppercase, regular weight, spaced out */
   margin-bottom: --spacing(1);
-  font-weight: var(--font-weight-bold); font-size: var(--text-xs); letter-spacing: var(--tracking-wide);
-  color: var(--color-slate-400);
+  font-weight: var(--font-weight-normal); font-size: var(--text-sm);
+  text-transform: uppercase; letter-spacing: var(--tracking-wider);
+  color: var(--color-slate-400);   /* same grey as the copyright and legal links */
 }
 .footer__col a { color: var(--color-slate-700); transition: color var(--default-transition-duration); }
 .footer__col a:hover { color: var(--color-primary); }
@@ -1169,7 +1206,7 @@
 }
 .pay-badge img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
 .footer__legal { display: flex; gap: --spacing(6); font-size: var(--text-sm); }
-.footer__legal a { color: var(--color-slate-700); transition: color var(--default-transition-duration); }
+.footer__legal a { color: var(--color-slate-400); transition: color var(--default-transition-duration); }   /* same grey as the copyright */
 .footer__legal a:hover { color: var(--color-primary); }
 
 /* ============================================================
