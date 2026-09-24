@@ -11,6 +11,13 @@ const HERO_ICONS = [
 ];
 const heroIconSrc = (name) => `assets/hero/${name}.webp`;
 
+// Gradient backdrop: show the scene that belongs to the phrase
+function setHeroScene(phraseIndex) {
+  document.querySelectorAll('.hero__scene').forEach((el, i) => {
+    el.classList.toggle('is-active', i === phraseIndex);
+  });
+}
+
 function swapHeroIcons(phraseIndex) {
   const pair = HERO_ICONS[phraseIndex] || HERO_ICONS[0];
   document.querySelectorAll('.hero__icon').forEach((img, i) => {
@@ -56,6 +63,7 @@ function swapHeroIcons(phraseIndex) {
       index = (index + 1) % phrases.length;
       el.textContent = phrases[index];
       swapHeroIcons(index);
+      setHeroScene(index);
     }, HOLD_MS + 1000);
     return;
   }
@@ -80,6 +88,7 @@ function swapHeroIcons(phraseIndex) {
       // swap icons while the line is empty
       index = (index + 1) % phrases.length;
       swapHeroIcons(index);
+      setHeroScene(index);
 
       setTyping(false);
       await wait(GAP_MS);
@@ -136,6 +145,7 @@ function swapHeroIcons(phraseIndex) {
     const max = row.scrollWidth - row.clientWidth - 2;
     arrows[0].disabled = row.scrollLeft <= 2;
     arrows[1].disabled = row.scrollLeft >= max;
+    row.classList.toggle('is-end', row.scrollLeft >= max);   // drop the right-edge fade at the end
   }
 
   arrows.forEach((btn) => {

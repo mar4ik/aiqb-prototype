@@ -41,33 +41,53 @@
   --violet-600: #7c3aed;
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --r-card: 24px;
-  --r-full: 999px;
+  --r-card: 24px;      /* cards, tiles, panels */
+  --r-inner: 16px;     /* boxes inside cards, bars */
+  --r-field: 12px;     /* inputs, FAQ rows, small controls */
+  --r-full: 999px;     /* pills, buttons */
+
+  /* Layout rhythm — every section uses these */
+  --page-x: 80px;      /* side margin → 1280px content column at 1440 */
+  --section-y: 80px;   /* top / bottom spacing of a section */
+  --title-gap: 32px;   /* section title → its content */
+  --card-gap: 24px;    /* between cards */
 }
+@media (max-width: 1100px) { :root { --page-x: 40px; --section-y: 64px; } }
+@media (max-width: 720px)  { :root { --page-x: 16px; --section-y: 48px; --title-gap: 24px; } }
 
 /* ============================================================
    BASE
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 110px; }
+html { scroll-behavior: smooth; scroll-padding-top: 110px; overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip (not just hide) so phones can never pan sideways */
 body {
   margin: 0;
   background: #fff;
   color: var(--slate-900);
   font-family: var(--font-adelle);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: hidden;   /* fallback for browsers without overflow: clip */
+  overflow-x: clip;
 }
 h1, h2, h3, p { margin: 0; }
 img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 
+/* One section-title style for every section */
 .section-title {
   font-weight: 700;
-  font-size: 32px;
-  letter-spacing: -1.28px;
-  color: var(--zinc-800);
+  font-size: 36px;
+  line-height: 1.15;
+  letter-spacing: -1.2px;
+  color: var(--slate-900);
+}
+
+/* One section box for every content section: same side margins, same vertical rhythm */
+.courses, .stats, .mission, .referral, .faq {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--section-y) var(--page-x);
 }
 
 /* ============================================================
@@ -78,26 +98,27 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   align-items: center;
   justify-content: center;
   gap: 6px;
+  border: 1px solid transparent;   /* every button has a 1px border, so filled and outline sizes match */
   border-radius: var(--r-full);
-  line-height: 20px;
+  font-weight: 600;
+  line-height: 24px;
   white-space: nowrap;
   transition: background-color .15s, box-shadow .15s, transform .15s;
 }
-.btn--primary { background: var(--blue-600); color: #fff; font-weight: 400; }
+.btn--primary { background: var(--blue-600); color: #fff; }
 .btn--primary:hover:not(:disabled) { background: #1d4ed8; }
 .btn:disabled { background: #e2e8f0; color: #94a3b8; box-shadow: none; cursor: not-allowed; }
-.btn--outline { background: #fff; border: 1px solid var(--border); color: var(--slate-900); font-weight: 600; }
+.btn--outline { background: #fff; border-color: var(--border); color: var(--slate-900); }
 .btn--outline:hover { background: #f8fafc; }
 .btn--white { background: #fff; color: #000; }
-.btn--dark { background: var(--slate-900); color: #fff; font-weight: 600; }
+.btn--dark { background: var(--slate-900); color: #fff; }
 .btn--dark:hover { background: #1e293b; }
-.btn--block { width: 100%; padding: 18px 24px; font-size: 20px; }
-.btn--primary.btn--block { font-weight: 600; box-shadow: 0 10px 24px -10px rgba(37, 99, 235, .7); }
+.btn--block { width: 100%; }
 
-.btn--xs { padding: 4px 16px; font-size: 12px; }
-.btn--sm { padding: 12px 32px; font-size: 14px; }
-.btn--md { padding: 16px 32px; font-size: 22px; }
-.btn--lg { padding: 24px 48px; font-size: 22px; }
+/* Three sizes, used everywhere: sm 40px · md 56px · lg 64px (hero only) */
+.btn--sm { padding: 7px 19px;  font-size: 14px; }   /* 40px incl. border */
+.btn--md { padding: 15px 27px; font-size: 18px; }   /* 56px */
+.btn--lg { padding: 19px 39px; font-size: 20px; }   /* 64px */
 
 /* ============================================================
    01 · TOP BAR
@@ -152,7 +173,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .nav__link {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 8px 10px;
-  border-radius: 10px;
+  border-radius: var(--r-field);
   font-size: 14px; line-height: 20px; color: #000;
   font-family: var(--font-adelle);
   white-space: nowrap;
@@ -167,7 +188,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   max-width: 1440px;
   margin: 0 auto;
   min-height: 720px;
-  padding: 200px 80px 140px;
+  padding: 200px var(--page-x) 140px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -175,6 +196,67 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   gap: 16px;
   text-align: center;
 }
+/* Gradient backdrop — full-bleed pastel clouds, one scene per typed phrase.
+   Only opacity animates (cheap); scenes cross-fade when the phrase changes. */
+.hero__bg {
+  position: absolute;
+  top: 0; bottom: 0; left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(to bottom, #000 70%, transparent 100%);
+          mask: linear-gradient(to bottom, #000 70%, transparent 100%);
+}
+.hero__scene {
+  position: absolute; inset: 0;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+.hero__scene.is-active { opacity: 1; }
+/* 1 · ապագայի հմտություններ — brand blue + violet */
+.hero__scene--1 { background:
+  radial-gradient(38% 55% at 14% 32%, rgba(37, 99, 235, .30), transparent 70%),
+  radial-gradient(34% 50% at 86% 24%, rgba(124, 58, 237, .24), transparent 70%),
+  radial-gradient(40% 45% at 58% 92%, rgba(96, 165, 250, .26), transparent 70%); }
+/* 2 · AI գործիքներով աշխատել — teal + sky */
+.hero__scene--2 { background:
+  radial-gradient(36% 52% at 82% 30%, rgba(20, 184, 166, .28), transparent 70%),
+  radial-gradient(40% 55% at 18% 72%, rgba(14, 165, 233, .26), transparent 70%),
+  radial-gradient(30% 40% at 46% 8%, rgba(37, 99, 235, .18), transparent 70%); }
+/* 3 · ավտոմատացնել առօրյադ — warm orange + amber */
+.hero__scene--3 { background:
+  radial-gradient(38% 52% at 20% 22%, rgba(255, 122, 61, .28), transparent 70%),
+  radial-gradient(36% 50% at 84% 70%, rgba(245, 158, 11, .24), transparent 70%),
+  radial-gradient(32% 42% at 52% 96%, rgba(255, 94, 22, .16), transparent 70%); }
+/* 4 · ստեղծել AI-ի օգնությամբ — pink + violet */
+.hero__scene--4 { background:
+  radial-gradient(36% 52% at 80% 28%, rgba(244, 63, 94, .24), transparent 70%),
+  radial-gradient(40% 55% at 16% 68%, rgba(124, 58, 237, .26), transparent 70%),
+  radial-gradient(30% 40% at 54% 6%, rgba(236, 72, 153, .18), transparent 70%); }
+/* Bauhaus tile pattern per scene — soft (low opacity) and faded out behind the text.
+   Tiles pop in as a wave from the centre when their scene becomes active (--d = delay). */
+.hero__geo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  opacity: .24;
+  -webkit-mask: radial-gradient(ellipse 52% 60% at 50% 42%, transparent 55%, #000 95%);
+          mask: radial-gradient(ellipse 52% 60% at 50% 42%, transparent 55%, #000 95%);
+}
+.hero__geo .tile {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(.4);
+  opacity: 0;
+  transition: transform .9s cubic-bezier(.2, .8, .2, 1), opacity .7s ease;
+  transition-delay: var(--d, 0ms);
+}
+.hero__scene.is-active .hero__geo .tile { transform: scale(1); opacity: 1; }
+@media (max-width: 720px) { .hero__geo { opacity: .2; } }   /* lighter on phones: the pattern sits closer to the text */
+@media (prefers-reduced-motion: reduce) {
+  .hero__scene { transition: none; }
+  .hero__geo .tile { transition: none; }
+}
+
 .hero__title {
   position: relative; z-index: 1;
   max-width: 804px;
@@ -245,7 +327,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .promo__text { display: flex; flex-direction: column; z-index: 3; white-space: nowrap; }
 .promo__text strong { font-weight: 700; font-size: 20px; }
 .promo__text span { font-size: 16px; }
-.promo__btn { z-index: 2; width: 126px; height: 48px; padding: 8px 24px; font-size: 14px; font-weight: 700; }
+.promo__btn { z-index: 2; }
 /* Rocket poking out of the bar (replaces the grey Figma shape); lifts off a little on hover */
 .promo__rocket {
   position: absolute;
@@ -263,16 +345,14 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    05 · COURSES / PACKAGES
    ============================================================ */
 .courses {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 60px;
   display: flex;
   flex-direction: column;
   gap: 24px;
 }
 
 /* «Հիմնական / Պրո» pill toggle above the packages */
-.pkg-switch { display: flex; justify-content: center; margin-top: 24px; }
+.courses > .section-title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }
+.pkg-switch { display: flex; justify-content: center; margin-top: var(--card-gap); }
 .pill-tabs {
   display: inline-flex; gap: 4px;
   padding: 4px;
@@ -317,7 +397,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .pro-card__title {
   position: absolute; left: 28px; right: 28px; bottom: 26px; z-index: 2;
   margin: 0;
-  font-weight: 700; font-size: 32px; line-height: 1.1; letter-spacing: -0.8px;
+  font-weight: 700; font-size: 28px; line-height: 1.15; letter-spacing: -0.6px;
   color: #fff;
   text-shadow: 0 2px 14px rgba(0, 0, 0, .45);
   text-wrap: balance;
@@ -353,12 +433,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background: var(--stone-50);
   border: 1px solid transparent;
   border-radius: var(--r-card);
-  box-shadow: var(--shadow-xs);
 }
 .pkg--bundle {
   overflow: hidden; /* crops the gift at the card edge */
   background: linear-gradient(180deg, #eaf1ff 0%, #f6f9ff 45%, var(--stone-50) 100%);
-  box-shadow: 0 20px 50px -20px rgba(37, 99, 235, .35);
 }
 
 /* Ribbon border: a bright band travels around the card, and the
@@ -402,10 +480,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   z-index: 2;
   display: inline-flex; align-items: center;
   height: 28px; padding: 0 14px;
-  border-radius: 32px;
+  border-radius: var(--r-full);
   background: var(--blue-600);
   color: #fff;
-  font-weight: 700; font-style: italic; font-size: 13px;
+  font-weight: 700; font-style: italic; font-size: 12px;
   white-space: nowrap;
 }
 
@@ -433,21 +511,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .pill {
   display: inline-flex; align-items: center; gap: 6px;
   height: 28px; padding: 0 12px;
-  border-radius: 32px;
+  border-radius: var(--r-full);
   font-weight: 700; font-size: 12px;
   white-space: nowrap;
 }
 .pill--zoom { background: #fff; color: var(--slate-900); padding: 0 12px 0 12px; }
 .pill--zoom img { height: 11px; width: auto; }
 .pill--deal { background: var(--orange); color: #fff; font-style: italic; }
-.pill--gift { background: var(--violet-600); color: #fff; height: 22px; padding: 0 10px; font-size: 11px; margin-left: auto; }
+.pill--gift { background: var(--violet-600); color: #fff; height: 22px; padding: 0 10px; font-size: 12px; margin-left: auto; }
 
 /* Row 2 · schedule */
 .pkg__schedule {
   display: flex; flex-direction: column; gap: 10px;
   padding: 16px 18px;
   background: #fff;
-  border-radius: 16px;
+  border-radius: var(--r-inner);
 }
 .pkg__date, .pkg__meta { display: flex; align-items: center; gap: 10px; }
 .pkg__date { font-weight: 700; font-size: 18px; color: var(--slate-900); }
@@ -459,7 +537,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .pkg__price .pkg__old + .pill + .pkg__amount { flex-basis: 100%; }
 .pkg__amount { font-weight: 900; font-size: 44px; line-height: 1.1; color: var(--slate-900); white-space: nowrap; }
 .pkg__old {
-  font-weight: 700; font-size: 26px; color: var(--gray-400);
+  font-weight: 700; font-size: 24px; color: var(--gray-400);
   text-decoration: line-through; text-decoration-color: var(--orange); text-decoration-thickness: 3px;
   white-space: nowrap;
 }
@@ -481,7 +559,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   height: 30px; padding: 0 10px 0 5px;
   background: #fff;
   border: 1px solid var(--slate-200);
-  border-radius: 32px;
+  border-radius: var(--r-full);
   font-weight: 600; font-size: 12px; color: var(--slate-900);
   white-space: nowrap;
 }
@@ -504,7 +582,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   display: flex; align-items: center; justify-content: center; gap: 10px;
   padding: 16px 24px;
   background: #fff4ed;
-  border-radius: 16px;
+  border-radius: var(--r-inner);
   font-weight: 700; font-size: 18px; color: var(--slate-900);
   text-align: center;
 }
@@ -513,8 +591,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* «What you'll learn» — Pinterest-style grid.
    Desktop: 3 explicit columns, tile heights set inline (--h).
    Tablet/phone: the columns dissolve into CSS columns. */
-.learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start; }
-.learn-col { display: flex; flex-direction: column; gap: 24px; }
+.learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--card-gap); align-items: start; }
+.learn-col { display: flex; flex-direction: column; gap: var(--card-gap); }
 
 .learn-tile {
   position: relative;
@@ -546,7 +624,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   z-index: 2;
   margin: 0;
   font-weight: 700;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1.15;
   letter-spacing: -0.6px;
   color: #fff;
@@ -592,15 +670,16 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    06 · TEACHERS
    All cards follow Anahit's card from Figma (the source of truth).
    ============================================================ */
+/* Full-bleed: the left edge lines up with the 1440px content column,
+   but the card row runs all the way to the right edge of the screen. */
 .teachers {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 60px 0 60px 80px;
+  --edge: max(var(--page-x), calc((100vw - 1440px) / 2 + var(--page-x)));
+  padding: var(--section-y) 0 var(--section-y) var(--edge);
   overflow: hidden;
 }
 .teachers__top {
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  padding: 24px 80px 24px 0;
+  padding: 0 var(--edge) var(--title-gap) 0;
 }
 .teachers__nav { display: flex; gap: 8px; }
 .teachers__arrow {
@@ -619,20 +698,25 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .teachers__row {
   display: flex;
   align-items: stretch;
-  gap: 16px;
+  gap: var(--card-gap);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   scrollbar-width: none;
-  padding-right: 80px;
+  padding-right: var(--edge);
   scroll-padding-left: 0;
 }
 .teachers__row::-webkit-scrollbar { display: none; }
+/* soft fade on the right while more cards follow; removed at the end of the row */
+.teachers__row:not(.is-end) {
+  -webkit-mask: linear-gradient(to right, #000 calc(100% - 140px), transparent);
+          mask: linear-gradient(to right, #000 calc(100% - 140px), transparent);
+}
 
 .teacher {
   position: relative;
   flex: none;
-  width: 436px;
+  width: clamp(260px, 27vw, 420px);   /* ≈3.4 cards visible, so the next one always peeks in */
   scroll-snap-align: start;
   display: flex;
   flex-direction: column;
@@ -684,8 +768,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   height: 34px; padding: 16px;
   background: #fff;
   border: 1px solid #e9e9e9;
-  border-radius: 32px;
-  font-weight: 700; font-size: 11px;
+  border-radius: var(--r-full);
+  font-weight: 700; font-size: 12px;
   color: var(--slate-900); white-space: nowrap;
 }
 
@@ -693,15 +777,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    07 · STATS
    ============================================================ */
 .stats {
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 80px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: var(--title-gap);
 }
-.stats__grid { display: flex; gap: 4px; }
-.stats__col { display: flex; flex-direction: column; gap: 4px; }
+.stats__grid { display: flex; gap: var(--card-gap); }
+.stats__col { display: flex; flex-direction: column; gap: var(--card-gap); }
 .stats__col--left { width: 834px; flex: none; }
 .stats__col--right { flex: 1; }
 
@@ -709,7 +790,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   position: relative;
   overflow: hidden;
   background: var(--stone-50);
-  border-radius: 32px;
+  border-radius: var(--r-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -798,21 +879,19 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    ============================================================ */
 .mission {
   position: relative;
-  min-height: 536px;
-  padding: 100px 80px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.mission__row { display: flex; align-items: center; gap: 380px; padding: 24px 0; position: relative; z-index: 1; }
-.mission__title { font-weight: 700; font-size: 34px; letter-spacing: -1.36px; white-space: nowrap; line-height: normal; }
-.mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; padding-top: 24px; }
+.mission__row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 48px; position: relative; z-index: 1; }
+.mission__title { white-space: nowrap; }
+.mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding-top: var(--title-gap); }
 .mission__text { font-size: 20px; color: var(--gray-600); max-width: 344px; }
 
 .mission__right { width: 399px; display: flex; flex-direction: column; gap: 10px; }
 .mission__num {
   font-weight: 900; font-style: italic;
-  font-size: 72px; letter-spacing: -2.88px; color: var(--zinc-800);
+  font-size: 80px; letter-spacing: -0.8px; color: var(--slate-900);   /* same as the stat numbers */
   line-height: 1; white-space: nowrap;
   text-box: trim-both cap alphabetic;
 }
@@ -824,7 +903,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .mission__lighthouse {
   position: absolute;
   left: 50%; top: 50%;
-  height: 586px; width: auto;       /* same height as the Figma slot */
+  height: min(586px, 40vw); width: auto;   /* Figma height at 1440, scales down a little on smaller desktops */
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -832,20 +911,18 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ============================================================
    09 · REFERRAL
    ============================================================ */
-.referral { padding: 80px 60px; display: flex; justify-content: center; }
-.referral__inner { width: 1194px; display: flex; align-items: flex-start; gap: 42px; }
+.referral { display: flex; justify-content: center; }
+.referral__inner { width: 100%; display: flex; align-items: flex-start; gap: 48px; }
 .referral__left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
-.referral__title { font-weight: 700; font-size: 34px; letter-spacing: -1.36px; line-height: normal; }
 
 /* Gray panel holding the whole section; cards on it are white */
 .referral__panel {
-  max-width: 1320px;
   width: 100%;
-  padding: 56px;
+  padding: 48px;
   background: #f4f4f5;
-  border-radius: 32px;
+  border-radius: var(--r-card);
 }
-.referral__left { gap: 32px; }
+.referral__left { gap: var(--title-gap); }
 .referral__panel { align-items: stretch; }
 .referral__panel .promo-form { justify-content: center; }
 
@@ -867,7 +944,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   opacity: .45;
 }
 .ladder .avatar:hover { transform: none; }
-.ladder__num { font-weight: 700; font-size: 13px; color: var(--gray-400); }
+.ladder__num { font-weight: 700; font-size: 12px; color: var(--gray-400); }
 .ladder__step--first .avatar, .ladder__step--last .avatar { opacity: 1; }
 .ladder__step--first .avatar { box-shadow: 0 0 0 3px #ff5e16; }
 .ladder__step--last  .avatar { box-shadow: 0 0 0 3px var(--blue-600); }
@@ -885,10 +962,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .ladder__step:nth-child(10) .avatar { --av: #2563eb; }
 
 /* Reward cards: the prize is the headline */
-.rewards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.rewards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--card-gap); }
 .reward {
   display: flex; flex-direction: column; gap: 8px;
-  padding: 24px 28px 28px;
+  padding: 28px;
   background: #fff;
   border-radius: var(--r-card);
 }
@@ -918,26 +995,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 }
 .promo-form__fields { width: 100%; display: flex; flex-direction: column; gap: 20px; }
 .field { display: flex; flex-direction: column; gap: 8px; }
-.field__label { font-weight: 700; font-size: 11px; letter-spacing: .11px; color: var(--gray-600); }
+.field__label { font-weight: 700; font-size: 12px; color: var(--gray-600); }
 .field__input {
   width: 100%;
   padding: 14px;
   background: #fbfbfb;
   border: 1px solid var(--border-input);
-  border-radius: 8px;
-  font: 14px var(--font-adelle);
+  border-radius: var(--r-field);
+  font: 16px var(--font-adelle);
   color: var(--slate-900);
   outline: none;
 }
 .field__input::placeholder { color: var(--gray-400); }
 .field__input:focus { border-color: var(--blue-600); }
-.field__group { display: flex; border: 1px solid var(--border-input); border-radius: 8px; overflow: hidden; }
+.field__group { display: flex; border: 1px solid var(--border-input); border-radius: var(--r-field); overflow: hidden; }
 .field__group:focus-within { border-color: var(--blue-600); }
 .field__prefix {
   padding: 14px 16px;
   background: #eef2f6;
   border-right: 1px solid var(--border-input);
-  font-weight: 700; font-size: 14px; color: #000;
+  font-weight: 700; font-size: 16px; color: #000;
 }
 .field__input--grouped { border: 0; border-radius: 0; padding: 14px 16px; flex: 1; min-width: 0; }
 
@@ -945,22 +1022,21 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
    10 · FAQ
    ============================================================ */
 .faq {
-  min-height: 629px;
-  padding: 80px 100px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 40px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--title-gap) 64px;
+  align-items: start;
 }
-.faq__title { font-weight: 400; font-size: 40px; letter-spacing: -0.4px; color: var(--gray-900); }
-.faq__list { width: min(745px, 100%); display: flex; flex-direction: column; gap: 8px; }
+.faq__list { width: 100%; display: flex; flex-direction: column; gap: 8px; }
 .faq__item {
   background: #fff;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--r-field);
   overflow: hidden;
 }
 .faq__item summary {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 20px 10px;
+  padding: 20px;
   font-size: 16px; color: var(--gray-600);
   cursor: pointer;
   list-style: none;
@@ -977,26 +1053,26 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .faq__item[open] summary { color: var(--slate-900); font-weight: 600; }
 .faq__answer {
   display: flex; flex-direction: column; gap: 12px;
-  padding: 0 10px 22px;
+  padding: 0 20px 22px;
   font-size: 16px; line-height: 1.55; color: var(--slate-700);
 }
 .faq__answer strong { font-weight: 700; color: var(--slate-900); }
 
 /* «Ե՞րբ են դասերը» — two schedule blocks side by side */
 .schedules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.schedule { padding: 16px 18px; background: var(--stone-50); border-radius: 14px; }
+.schedule { padding: 16px 18px; background: var(--stone-50); border-radius: var(--r-inner); }
 .schedule__name { font-weight: 700; font-size: 18px; color: var(--slate-900); margin-bottom: 10px; }
 .schedule__rows { display: flex; flex-direction: column; gap: 8px; margin: 0; }
 .schedule__rows > div { display: grid; grid-template-columns: 96px 1fr; gap: 10px; }
-.schedule__rows dt { font-size: 13px; line-height: 1.7; color: var(--gray-400); }
-.schedule__rows dd { margin: 0; font-size: 15px; color: var(--slate-900); }
+.schedule__rows dt { font-size: 12px; line-height: 2; color: var(--gray-400); }
+.schedule__rows dd { margin: 0; font-size: 16px; color: var(--slate-900); }
 
 /* ============================================================
    11 · FOOTER
    ============================================================ */
 .footer {
   background: var(--slate-100);
-  padding: 56px 80px 230px;          /* extra bottom room: the webinar bar and its rocket are fixed there */
+  padding: 64px var(--page-x) 230px;  /* extra bottom room: the webinar bar and its rocket are fixed there */
   display: flex; flex-direction: column; gap: 32px;
 }
 .footer__cols { display: flex; justify-content: space-between; align-items: flex-start; gap: 48px; }
@@ -1021,8 +1097,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .footer__line { width: 100%; margin: 0; border: 0; border-top: 1px solid var(--border-input); }
 
 .footer__bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 24px; }
-.footer__copy { font-size: 13px; color: var(--gray-400); }
-.footer__legal { display: flex; gap: 24px; font-size: 13px; }
+.footer__copy { font-size: 14px; color: var(--gray-400); }
+.footer__legal { display: flex; gap: 24px; font-size: 14px; }
 .footer__legal a { color: var(--slate-700); text-decoration: underline; text-underline-offset: 3px; }
 .footer__legal a:hover { color: var(--blue-600); }
 
@@ -1042,9 +1118,12 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ============================================================
    RESPONSIVE (rough draft, refine per section)
    ============================================================ */
+@media (max-width: 1279px) {
+  .mission__lighthouse { display: none; }   /* no room between the two text blocks below 1280px */
+}
+
 @media (max-width: 1280px) {
   .stats__col--left { width: 58%; }
-  .mission__row { gap: 320px; }
   .referral__inner { width: 100%; }
 }
 
@@ -1058,6 +1137,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .learn-tile { margin-bottom: 24px; }
   .mission__row { flex-direction: column; align-items: flex-start; gap: 48px; }
   .mission__lighthouse { display: none; }
+  .faq { grid-template-columns: 1fr; }
   .referral__inner { flex-direction: column; }
   .promo-form { width: 100%; }
 }
@@ -1070,14 +1150,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .hero { padding: 180px 16px 80px; min-height: 0; }
   .hero__title { font-size: 42px; letter-spacing: -2px; }
   .hero__actions { flex-direction: column; width: 100%; }
-  .hero__actions .btn { min-width: 0; width: 100%; padding: 20px 24px; }
+  .hero__actions .btn { min-width: 0; width: 100%; }
   .hero__icon { display: none; }   /* the title carries the hero on phones */
   .promo { gap: 16px; padding: 12px 12px 12px 20px; bottom: 16px; }
   .is-scrolled .fabs { bottom: 100px; }
   .fabs { transition: bottom .35s ease; }
   .promo__rocket { display: none; }
   .promo__btn { margin-left: auto; }
-  .courses, .stats { padding: 40px 16px; }
   .pkg { padding: 24px; }
   .pkg__name { font-size: 44px; }
   .pkg__desc { font-size: 18px; }
@@ -1088,11 +1167,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .learn-grid { columns: 1; }
   .learn-col:last-child .learn-tile:last-child { margin-bottom: 0; }
   .learn-tile { height: min(var(--h), 360px); }
-  .learn-tile__title { font-size: 22px; }
-  .teachers { padding: 40px 0 40px 16px; }
+  .learn-tile__title { font-size: 24px; }
   .teachers__row { padding-right: 16px; }
   .teachers__top { padding-right: 16px; }
-  .teacher { width: 85vw; }
+  .teacher { width: 78vw; }
   .teacher__photo { height: 320px; }
   .teacher__body { padding: 20px 24px 24px; gap: 18px; }
   .stats__grid { flex-direction: column; }
@@ -1100,21 +1178,17 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .stat-card--hero { height: 300px; }
   .stat__num--xl { font-size: 80px; }
   .stat-card--fill { min-height: 180px; }
-  .mission { padding: 60px 16px; }
-  .mission__title { white-space: normal; font-size: 28px; }
+  .mission__title { white-space: normal; }
+  .section-title { font-size: 28px; }
   .mission__right, .progress, .mission__label { width: 100%; white-space: normal; }
-  .referral { padding: 60px 16px; }
-  .referral__panel { padding: 24px; border-radius: 24px; }
+  .referral__panel { padding: 24px; }
   .ladder .avatar { width: 28px; height: 28px; border-width: 2px; }
   .ladder::before { left: 14px; right: 14px; top: 14px; }
-  .ladder__num { font-size: 11px; }
   .rewards { grid-template-columns: 1fr; }
   .reward__prize { font-size: 52px; }
   .promo-form { padding: 24px; }
-  .faq { padding: 60px 16px; min-height: 0; }
-  .faq__title { font-size: 30px; white-space: normal; }
   .schedules { grid-template-columns: 1fr; }
-  .footer { padding: 40px 16px 110px; }
+  .footer { padding: 48px var(--page-x) 110px; }
   .footer__cols { flex-direction: column; gap: 32px; }
   .footer__links { gap: 48px; }
   .footer__bottom { flex-direction: column; align-items: flex-start; }
