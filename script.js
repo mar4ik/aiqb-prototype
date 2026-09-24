@@ -1,33 +1,10 @@
 /* ============================================================
-   03 · HERO — icon pairs
-   One pair per phrase, in the same order as data-phrases: [left, right].
-   Images: assets/hero/<name>.webp
+   03 · HERO — gradient backdrop
    ============================================================ */
-const HERO_ICONS = [
-  ['chat', 'rocket'],     // 1 · ապագայի հմտություններ
-  ['laptop', 'cursor'],   // 2 · AI գործիքներով աշխատել
-  ['flow', 'gear'],       // 3 · ավտոմատացնել առօրյադ
-  ['wand', 'puzzle'],     // 4 · ստեղծել AI-ի օգնությամբ
-];
-const heroIconSrc = (name) => `assets/hero/${name}.webp`;
-
 // Gradient backdrop: show the scene that belongs to the phrase
 function setHeroScene(phraseIndex) {
   document.querySelectorAll('.hero__scene').forEach((el, i) => {
     el.classList.toggle('is-active', i === phraseIndex);
-  });
-}
-
-function swapHeroIcons(phraseIndex) {
-  const pair = HERO_ICONS[phraseIndex] || HERO_ICONS[0];
-  document.querySelectorAll('.hero__icon').forEach((img, i) => {
-    const src = heroIconSrc(pair[i]);
-    if (img.getAttribute('src') === src) return;
-    img.classList.add('is-swapping');
-    setTimeout(() => {
-      img.onload = img.onerror = () => img.classList.remove('is-swapping');
-      img.src = src;
-    }, 350 + i * 80);
   });
 }
 
@@ -56,12 +33,6 @@ function swapHeroIcons(phraseIndex) {
   });
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Preload every icon so swaps are instant
-  // Preload icon pairs only when the icons are on the page (they're hidden for now)
-  if (document.querySelector('.hero__icon')) {
-    new Set(HERO_ICONS.flat()).forEach((n) => { new Image().src = heroIconSrc(n); });
-  }
-
   const TYPE_MS = 70;
   const DELETE_MS = 35;
   const HOLD_MS = 2200;   // pause with the full phrase visible
@@ -74,7 +45,6 @@ function swapHeroIcons(phraseIndex) {
     setInterval(() => {
       index = (index + 1) % phrases.length;
       el.textContent = phrases[index];
-      swapHeroIcons(index);
       setHeroScene(index);
     }, HOLD_MS + 1000);
     return;
@@ -97,9 +67,8 @@ function swapHeroIcons(phraseIndex) {
         await wait(DELETE_MS);
       }
 
-      // swap icons while the line is empty
+      // next phrase: switch the backdrop while the line is empty
       index = (index + 1) % phrases.length;
-      swapHeroIcons(index);
       setHeroScene(index);
 
       setTyping(false);

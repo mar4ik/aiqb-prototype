@@ -190,7 +190,7 @@
   padding: --spacing(3) --spacing(4) --spacing(3) --spacing(7);
   background: color-mix(in oklab, var(--color-white) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
-  border-bottom: 1px solid var(--line);
+  border: 1px solid var(--line);   /* soft outline all around the pill */
   border-radius: var(--radius-full);
 }
 .nav__logo { display: block; flex-shrink: 0; }
@@ -213,8 +213,11 @@
   position: relative;
   max-width: var(--container-page);
   margin: 0 auto;
-  min-height: --spacing(180);
-  padding: --spacing(50) var(--page-x) --spacing(35);
+  /* Full screen height; the fixed top bar + nav cover the top --header-h, so the content is
+     centred in the space below them (visual middle), not in the raw viewport */
+  --header-h: --spacing(32);
+  min-height: 100svh;
+  padding: calc(var(--header-h) + --spacing(8)) var(--page-x) --spacing(8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -285,7 +288,7 @@
 
 .hero__title {
   position: relative; z-index: 1;
-  max-width: --spacing(201);
+  max-width: --spacing(220);   /* wide enough for the longest phrase on one line */
   font-size: var(--text-7xl);
   line-height: 1.1;
   letter-spacing: var(--tracking-tighter);
@@ -298,7 +301,7 @@
 .hero__title { display: grid; }
 .hero__title > span { grid-area: 1 / 1; }
 .hero__ghost { visibility: hidden; }
-.hero__title-light { font-weight: var(--font-weight-normal); }
+.hero__title-light { display: block; font-weight: var(--font-weight-normal); }   /* «Սովորիր» on line 1, the typed phrase on line 2 → a steady 2-line title */
 .hero__caret { font-weight: var(--font-weight-normal); animation: blink 1.1s steps(1) infinite; }
 .hero__caret.is-typing { animation: none; }
 
@@ -312,20 +315,6 @@
 .hero__actions { position: relative; z-index: 1; display: flex; gap: --spacing(3); margin-top: --spacing(6); }
 .hero__actions .btn { min-width: --spacing(70); }
 
-/* Two big glass icons flanking the title (hidden for now — see index.html) */
-.hero__icon {
-  position: absolute;
-  width: --spacing(70); height: --spacing(70);
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-  transition: opacity .35s ease, scale .35s ease;
-}
-.hero__icon.is-swapping { opacity: 0; scale: .7; }
-.hero__icon--left  { left: calc(50% - 730px); top: 170px; rotate: -8deg; }
-.hero__icon--right { left: calc(50% + 450px); top: 330px; rotate: 8deg; }
-@media (width < theme(--breakpoint-xl)) { .hero__icon { display: none; } }   /* no room beside the title */
-@media (prefers-reduced-motion: reduce) { .hero__icon { transition: none; } }
 
 /* ============================================================
    04 · WEBINAR BAR (fixed to the bottom, shown after scrolling)
@@ -490,7 +479,7 @@
 }
 
 /* 3 package cards; each spans 6 rows and uses subgrid so
-   head / schedule / price / tools / features / CTA line up across cards */
+   head / schedule / price / CTA / tools / features line up across cards */
 .packages {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -608,7 +597,7 @@
   white-space: nowrap;
 }
 
-/* Row 4 · tools */
+/* Row 5 · tools */
 .pkg__tools { display: flex; flex-direction: column; gap: --spacing(3); }
 .pkg__label { display: flex; align-items: center; gap: --spacing(2); font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900); }
 .tool-pills { display: flex; flex-wrap: wrap; gap: --spacing(1.5); }
@@ -626,7 +615,7 @@
 .tool-pill--lg { height: --spacing(11); padding: 0 --spacing(4) 0 --spacing(2); gap: --spacing(2.5); font-size: var(--text-sm); }
 .tool-pill--lg img { width: --spacing(7); height: --spacing(7); border-radius: var(--radius-md); }
 
-/* Row 5 · features */
+/* Row 6 · features */
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(3); }
 .pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
@@ -634,8 +623,8 @@
 .pkg__features li.is-off .ic { color: var(--color-slate-300); }
 .pkg__features li.is-gift { font-weight: var(--font-weight-bold); }
 
-/* Row 6 · CTA (at the bottom, right after the feature list) */
-.pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); align-self: end; padding-top: --spacing(2); }
+/* Row 4 · CTA (right under the price) */
+.pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
 .pkg__guarantee { display: flex; align-items: center; justify-content: center; gap: --spacing(2); font-size: var(--text-sm); color: var(--color-slate-600); }
 .pkg__guarantee .ic { color: var(--color-green-600); }
 .pkg__guarantee strong { font-weight: var(--font-weight-bold); color: var(--color-slate-900); }
@@ -825,6 +814,7 @@
 .chips { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 .chip {
   display: inline-flex; align-items: center; justify-content: center; gap: --spacing(2.5);
+  min-width: --spacing(22);   /* 88px, so short tags (PRO, Start) match the rest */
   height: --spacing(8.5); padding: 0 --spacing(4);
   background: var(--color-white);
   border: 1px solid var(--line);
@@ -964,7 +954,6 @@
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
-.mission__lighthouse--green { mix-blend-mode: multiply; filter: brightness(1.04); }   /* off-white PNG background → multiply drops it onto the white section */
 @media (width < theme(--breakpoint-xl)) { .mission__lighthouse { display: none; } }   /* no room between the two text blocks */
 
 /* ============================================================
@@ -1230,6 +1219,7 @@
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(12); }
   .referral__panel { flex-direction: column; }
   .promo-form { width: 100%; }
+  .hero__title { font-size: var(--text-5xl); }   /* phrase still fits on one line on tablets */
 }
 
 @media (width < theme(--breakpoint-md)) {
@@ -1238,8 +1228,8 @@
   .topbar__text { font-size: var(--text-xs); white-space: normal; line-height: var(--leading-tight); }
   .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(5); }
   .nav__logo img { height: --spacing(8); }
-  .hero { padding: --spacing(45) --spacing(4) --spacing(20); min-height: 0; }
-  .hero__title { font-size: var(--text-4xl); }
+  .hero { --header-h: --spacing(29); padding-left: --spacing(4); padding-right: --spacing(4); }
+  .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { min-width: 0; width: 100%; }
   .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
