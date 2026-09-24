@@ -167,7 +167,9 @@
 }
 .is-scrolled .topbar { transform: translateY(-100%); }
 .topbar__item { display: flex; align-items: center; gap: --spacing(3); position: relative; z-index: 2; }
-.topbar__text { font-weight: var(--font-weight-bold); font-size: var(--text-sm); color: var(--color-white); white-space: nowrap; }
+/* regular weight + calendar icon, matching the date line in the webinar bar */
+.topbar__text { display: flex; align-items: center; gap: --spacing(1.5); font-weight: var(--font-weight-normal); font-size: var(--text-sm); color: var(--color-white); white-space: nowrap; }
+.topbar__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 .topbar .btn--sm { padding: calc(--spacing(1) - 1px) calc(--spacing(3.5) - 1px); font-size: var(--text-xs); line-height: --spacing(5); }
 
 /* ============================================================
@@ -340,9 +342,15 @@
   color: var(--color-white);
 }
 .is-scrolled .promo { transform: translate(-50%, 0); opacity: 1; }
-.promo__text { display: flex; flex-direction: column; z-index: 3; white-space: nowrap; }
-.promo__text strong { font-weight: var(--font-weight-bold); font-size: var(--text-xl); }
-.promo__text span { font-size: var(--text-base); }
+/* title + date read as one unit: bold title, smaller softer date with the same calendar icon as the package cards */
+.promo__text { display: flex; flex-direction: column; gap: --spacing(1); z-index: 3; white-space: nowrap; }
+.promo__text strong { font-weight: var(--font-weight-bold); font-size: var(--text-lg); line-height: var(--leading-tight); }
+.promo__text span {
+  display: flex; align-items: center; gap: --spacing(1.5);
+  font-size: var(--text-sm); line-height: var(--leading-tight);
+  color: color-mix(in oklab, var(--color-white) 85%, transparent);
+}
+.promo__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 .promo__btn { z-index: 2; }
 /* Rocket poking out of the bar; lifts off a little on hover */
 .promo__rocket {

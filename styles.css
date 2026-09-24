@@ -488,10 +488,18 @@
   }
 
   .topbar__text {
-    font-weight: var(--font-weight-bold);
+    align-items: center;
+    gap: calc(var(--spacing) * 1.5);
+    font-weight: var(--font-weight-normal);
     font-size: var(--text-sm);
     color: var(--color-white);
     white-space: nowrap;
+    display: flex;
+  }
+
+  .topbar__text .ic {
+    width: calc(var(--spacing) * 3.5);
+    height: calc(var(--spacing) * 3.5);
   }
 
   .topbar .btn--sm {
@@ -789,6 +797,7 @@
   }
 
   .promo__text {
+    gap: var(--spacing);
     z-index: 3;
     white-space: nowrap;
     flex-direction: column;
@@ -797,11 +806,28 @@
 
   .promo__text strong {
     font-weight: var(--font-weight-bold);
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
+    line-height: var(--leading-tight);
   }
 
   .promo__text span {
-    font-size: var(--text-base);
+    align-items: center;
+    gap: calc(var(--spacing) * 1.5);
+    font-size: var(--text-sm);
+    line-height: var(--leading-tight);
+    color: #ffffffd9;
+    display: flex;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .promo__text span {
+      color: color-mix(in oklab, var(--color-white) 85%, transparent);
+    }
+  }
+
+  .promo__text .ic {
+    width: calc(var(--spacing) * 3.5);
+    height: calc(var(--spacing) * 3.5);
   }
 
   .promo__btn {
