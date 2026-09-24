@@ -1025,7 +1025,7 @@
 .mission__lighthouse {
   position: absolute;
   left: 50%; top: 50%;
-  height: min(--spacing(115), 32vw); width: auto;   /* image is cropped tight to the artwork; scales down a little on smaller desktops */
+  height: min(--spacing(95), 26vw); width: auto;   /* image is cropped tight to the artwork; scales down a little on smaller desktops */
   transform: translate(-50%, -50%);
   pointer-events: none;
 }

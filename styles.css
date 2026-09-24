@@ -2305,7 +2305,7 @@
   }
 
   .mission__lighthouse {
-    height: min(calc(var(--spacing) * 115), 32vw);
+    height: min(calc(var(--spacing) * 95), 26vw);
     pointer-events: none;
     width: auto;
     position: absolute;
