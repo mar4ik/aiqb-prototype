@@ -703,6 +703,80 @@
     }
   }
 
+  .hero__floats {
+    z-index: 0;
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__float {
+    --c-y: calc(50% + var(--header-h) / 2);
+    --dx: calc(var(--spacing) * 110);
+    --w: min(calc(var(--size, 160) * 1px), calc((min(100vw, var(--container-page)) / 2 - var(--dx) - calc(var(--spacing) * 4)) / 1.2));
+    top: calc(var(--c-y) + var(--dy, calc(var(--spacing) * -16)));
+    width: var(--w);
+    height: auto;
+    translate: calc(-50% + var(--push, 0px)) -50%;
+    rotate: var(--rot, 0deg);
+    scale: var(--flip, 1) 1;
+    filter: drop-shadow(0 calc(var(--spacing) * 4) calc(var(--spacing) * 8) #0081382e);
+    position: absolute;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .hero__float {
+      filter: drop-shadow(0 calc(var(--spacing) * 4) calc(var(--spacing) * 8) color-mix(in oklab, var(--color-green-700) 18%, transparent));
+    }
+  }
+
+  .hero__float {
+    transition: opacity .4s ease var(--delay, 0s), translate .6s var(--ease-smooth) var(--delay, 0s);
+    animation: 6s ease-in-out infinite float-bob;
+  }
+
+  .hero__float[data-side="left"] {
+    left: calc(50% - var(--dx) - var(--w) / 2);
+  }
+
+  .hero__float[data-side="right"] {
+    left: calc(50% + var(--dx) + var(--w) / 2);
+  }
+
+  .hero__float:nth-child(2) {
+    animation-delay: -2s;
+  }
+
+  .hero__float.is-out {
+    opacity: 0;
+    transition-delay: 0s;
+  }
+
+  .hero__float.is-out[data-side="left"] {
+    --push: calc(calc(var(--spacing) * -16));
+  }
+
+  .hero__float.is-out[data-side="right"] {
+    --push: calc(var(--spacing) * 16);
+  }
+
+  .hero__float:not([src]) {
+    visibility: hidden;
+  }
+
+  @media not all and (min-width: 68.75rem) {
+    .hero__floats {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__float {
+      transition: none;
+      animation: none;
+    }
+  }
+
   .hero__title {
     z-index: 1;
     max-width: calc(var(--spacing) * 220);
@@ -726,7 +800,6 @@
 
   .hero__title-light {
     font-weight: var(--font-weight-normal);
-    display: block;
   }
 
   .hero__caret {
@@ -834,29 +907,6 @@
 
   .promo__btn {
     z-index: 2;
-  }
-
-  .promo__rocket {
-    right: calc(var(--spacing) * 10);
-    bottom: calc(var(--spacing) * 1.5);
-    width: auto;
-    height: calc(var(--spacing) * 37.5);
-    z-index: 1;
-    pointer-events: none;
-    transition: translate .45s var(--ease-smooth);
-    display: none;
-    position: absolute;
-    rotate: 14deg;
-  }
-
-  .promo:hover .promo__rocket {
-    translate: calc(var(--spacing) * 2.5) calc(calc(var(--spacing) * 3.5) * -1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .promo__rocket {
-      transition: none;
-    }
   }
 
   .courses {
@@ -1165,9 +1215,10 @@
 
   .pkg__gift {
     top: calc(var(--spacing) * 16);
-    right: calc(calc(var(--spacing) * 10) * -1);
-    width: calc(var(--spacing) * 45);
-    height: calc(var(--spacing) * 45);
+    right: calc(calc(var(--spacing) * 8) * -1);
+    width: calc(var(--spacing) * 40);
+    height: calc(var(--spacing) * 40);
+    object-fit: contain;
     z-index: 0;
     pointer-events: none;
     position: absolute;
@@ -1192,7 +1243,7 @@
   }
 
   .pkg--bundle .pkg__head {
-    padding-right: calc(var(--spacing) * 28);
+    padding-right: calc(var(--spacing) * 24);
   }
 
   .pkg__name {
@@ -2254,7 +2305,7 @@
   }
 
   .mission__lighthouse {
-    height: min(calc(var(--spacing) * 146.5), 40vw);
+    height: min(calc(var(--spacing) * 115), 32vw);
     pointer-events: none;
     width: auto;
     position: absolute;
@@ -3320,6 +3371,12 @@
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes float-bob {
+  50% {
+    transform: translateY(calc(calc(var(--spacing) * 3) * -1));
   }
 }
 

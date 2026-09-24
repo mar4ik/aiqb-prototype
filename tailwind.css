@@ -288,6 +288,38 @@
   .hero__geo .tile { transition: none; }
 }
 
+/* Two big icons flanking the title (a fresh random pair per phrase — see setHeroFloats in script.js).
+   --dx = gap from the centre line to the icon's near edge (just past the longest phrase),
+   --dy = icon centre vs. the centre of the text block (--c-y); script.js staggers the pair (one high, one low).
+   --w shrinks the icons if the space to the screen edge gets tight, so they never run off-screen.
+   Transparent WebPs cut from the PNGs in assets/hero. */
+.hero__floats { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero__float {
+  --c-y: calc(50% + var(--header-h) / 2);                                   /* vertical centre of the text block */
+  --dx: --spacing(110);
+  /* ÷ 1.2: a tilted icon is up to ~20% wider than its box, so it still fits before the screen edge */
+  --w: min(calc(var(--size, 160) * 1px), calc((min(100vw, var(--container-page)) / 2 - var(--dx) - --spacing(4)) / 1.2));
+  position: absolute;
+  top: calc(var(--c-y) + var(--dy, --spacing(-16)));   /* --dy set per icon by script.js (one high, one low) */
+  width: var(--w); height: auto;
+  translate: calc(-50% + var(--push, 0px)) -50%;
+  rotate: var(--rot, 0deg);
+  scale: var(--flip, 1) 1;                                                   /* mirrored at random */
+  filter: drop-shadow(0 --spacing(4) --spacing(8) color-mix(in oklab, var(--color-green-700) 18%, transparent));
+  animation: float-bob 6s ease-in-out infinite;
+  transition: opacity .4s ease var(--delay, 0ms), translate .6s var(--ease-smooth) var(--delay, 0ms);
+}
+.hero__float[data-side="left"]  { left: calc(50% - var(--dx) - var(--w) / 2); }
+.hero__float[data-side="right"] { left: calc(50% + var(--dx) + var(--w) / 2); }
+.hero__float:nth-child(2) { animation-delay: -2s; }
+/* hidden state: faded and pushed outwards, so each icon slides in towards the text */
+.hero__float.is-out { opacity: 0; transition-delay: 0ms; }
+.hero__float.is-out[data-side="left"]  { --push: calc(--spacing(-16)); }
+.hero__float.is-out[data-side="right"] { --push: --spacing(16); }
+.hero__float:not([src]) { visibility: hidden; }
+@media (width < theme(--breakpoint-lg)) { .hero__floats { display: none; } }   /* tablets / phones: no margin beside the title */
+@media (prefers-reduced-motion: reduce) { .hero__float { animation: none; transition: none; } }
+
 .hero__title {
   position: relative; z-index: 1;
   max-width: --spacing(220);   /* wide enough for the longest phrase on one line */
@@ -303,7 +335,7 @@
 .hero__title { display: grid; }
 .hero__title > span { grid-area: 1 / 1; }
 .hero__ghost { visibility: hidden; }
-.hero__title-light { display: block; font-weight: var(--font-weight-normal); }   /* «Սովորիր» on line 1, the typed phrase on line 2 → a steady 2-line title */
+.hero__title-light { font-weight: var(--font-weight-normal); }   /* «Սովորիր» flows with the phrase; the text wraps naturally (2 lines max) */
 .hero__caret { font-weight: var(--font-weight-normal); animation: blink 1.1s steps(1) infinite; }
 .hero__caret.is-typing { animation: none; }
 
@@ -352,19 +384,6 @@
 }
 .promo__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 .promo__btn { z-index: 2; }
-/* Rocket poking out of the bar; lifts off a little on hover */
-.promo__rocket {
-  display: none;   /* hidden for now — delete this line to bring the rocket back */
-  position: absolute;
-  right: --spacing(10); bottom: --spacing(1.5);
-  width: auto; height: --spacing(37.5);
-  z-index: 1;
-  rotate: 14deg;
-  pointer-events: none;
-  transition: translate .45s var(--ease-smooth);
-}
-.promo:hover .promo__rocket { translate: --spacing(2.5) calc(--spacing(3.5) * -1); }
-@media (prefers-reduced-motion: reduce) { .promo__rocket { transition: none; } }
 
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
@@ -549,9 +568,10 @@
 .pkg__gift {
   position: absolute;
   top: --spacing(16);
-  right: calc(--spacing(10) * -1);
-  width: --spacing(45);
-  height: --spacing(45);
+  right: calc(--spacing(8) * -1);
+  width: --spacing(40);
+  height: --spacing(40);
+  object-fit: contain;
   rotate: -10deg;
   z-index: 0;
   pointer-events: none;
@@ -561,7 +581,7 @@
 
 /* Row 1 · head */
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2.5); }
-.pkg--bundle .pkg__head { padding-right: --spacing(28); }
+.pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; description fits on 2 lines */
 .pkg__name {
   font-weight: var(--font-weight-bold);
   font-size: var(--text-6xl); line-height: var(--text-6xl--line-height);
@@ -1005,7 +1025,7 @@
 .mission__lighthouse {
   position: absolute;
   left: 50%; top: 50%;
-  height: min(--spacing(146.5), 40vw); width: auto;   /* Figma height at 1440, scales down a little on smaller desktops */
+  height: min(--spacing(115), 32vw); width: auto;   /* image is cropped tight to the artwork; scales down a little on smaller desktops */
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -1346,6 +1366,7 @@
    KEYFRAMES
    ============================================================ */
 @keyframes blink { 50% { opacity: 0; } }
+@keyframes float-bob { 50% { transform: translateY(calc(--spacing(3) * -1)); } }
 @keyframes hero-drift {
   from { transform: scale(1) translate(0, 0); }
   to   { transform: scale(1.12) translate(3%, -2%); }

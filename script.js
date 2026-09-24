@@ -1,12 +1,64 @@
 /* ============================================================
-   03 · HERO — gradient backdrop
+   03 · HERO — gradient backdrop + floating icons
+   Two big icons flank the title, one on each side. Every phrase change brings a fresh pair:
+     · both are icons that were NOT on screen last time (6 icons → no icon shows twice in a row)
+     · never both rockets at once
+     · one sits higher than the other (random which), random mirror flip, tilt and size,
+       and they slide in towards the text
+   Add an icon: drop assets/hero/float-<name>.webp and add <name> to HERO_ICONS.
    ============================================================ */
-// Gradient backdrop: show the scene that belongs to the phrase
+const HERO_ICONS = ['rocket', 'rocket2', 'laptop', 'gear', 'keyboard', 'mouse'];
+const heroFloatSrc = (icon) => `assets/hero/float-${icon}.webp`;
+HERO_ICONS.forEach((icon) => { new Image().src = heroFloatSrc(icon); });
+
+const shuffle = (list) => list.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
+const between = (min, max) => Math.round(min + Math.random() * (max - min));
+let heroOnScreen = [];
+
+function pickHeroPair() {
+  const pair = [];
+  for (const icon of [...shuffle(HERO_ICONS.filter((i) => !heroOnScreen.includes(i))), ...shuffle(heroOnScreen)]) {
+    if (pair.length === 2) break;
+    if (icon.startsWith('rocket') && pair.some((p) => p.startsWith('rocket'))) continue;
+    pair.push(icon);
+  }
+  heroOnScreen = pair;
+  const high = Math.random() < .5 ? 0 : 1;   // one icon sits higher, the other lower — never on the same line
+  return pair.map((icon, i) => ({
+    icon,
+    dy: i === high ? between(-150, -120) : between(-40, -10),   // px from the centre of the text block
+    size: between(150, 175),
+    rot: (i === 0 ? -1 : 1) * between(4, 12),   // left leans left, right leans right (like the mockup)
+    flip: Math.random() < .5,
+  }));
+}
+
+// Icons slide out and fade, swap, then slide back in towards the title (the right one a beat later)
+function setHeroFloats() {
+  const set = pickHeroPair();
+  document.querySelectorAll('.hero__float').forEach((img, i) => {
+    const f = set[i];
+    img.classList.add('is-out');
+    setTimeout(() => {
+      img.src = heroFloatSrc(f.icon);
+      img.style.setProperty('--size', f.size);
+      img.style.setProperty('--dy', f.dy + 'px');
+      img.style.setProperty('--rot', f.rot + 'deg');
+      img.style.setProperty('--flip', f.flip ? -1 : 1);
+      img.style.setProperty('--delay', i * 140 + 'ms');
+      requestAnimationFrame(() => img.classList.remove('is-out'));
+    }, img.getAttribute('src') ? 450 : 0);
+  });
+}
+
+// Gradient backdrop + icons: show the ones that belong to the phrase
 function setHeroScene(phraseIndex) {
   document.querySelectorAll('.hero__scene').forEach((el, i) => {
     el.classList.toggle('is-active', i === phraseIndex);
   });
+  setHeroFloats();
 }
+setHeroFloats();
 
 /* ============================================================
    03 · HERO — typewriter
