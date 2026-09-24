@@ -549,9 +549,9 @@
 .pkg__gift {
   position: absolute;
   top: --spacing(16);
-  right: calc(--spacing(16) * -1);
-  width: --spacing(62.5);
-  height: --spacing(62.5);
+  right: calc(--spacing(10) * -1);
+  width: --spacing(45);
+  height: --spacing(45);
   rotate: -10deg;
   z-index: 0;
   pointer-events: none;
@@ -561,7 +561,7 @@
 
 /* Row 1 · head */
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2.5); }
-.pkg--bundle .pkg__head { padding-right: --spacing(37.5); }
+.pkg--bundle .pkg__head { padding-right: --spacing(28); }
 .pkg__name {
   font-weight: var(--font-weight-bold);
   font-size: var(--text-6xl); line-height: var(--text-6xl--line-height);
@@ -581,6 +581,7 @@
 .pill--zoom { background: var(--surface); color: var(--color-slate-900); }
 .pill--zoom img { height: 11px; width: auto; }
 .pill--deal { background: color-mix(in oklab, var(--color-accent) 90%, transparent); color: var(--color-white); font-style: italic; }
+.pill--save { background: var(--color-green-100); color: var(--color-green-700); }
 .pill--gift { background: var(--color-violet-600); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
 
 /* Row 2 · schedule */
@@ -597,7 +598,7 @@
 
 /* Row 3 · price */
 .pkg__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1) --spacing(2.5); align-self: end; }
-.pkg__price .pkg__old + .pill + .pkg__amount { flex-basis: 100%; }
+.pkg__price .pkg__old ~ .pkg__amount { flex-basis: 100%; }   /* discounted price drops below the old price + tags */
 .pkg__amount { font-weight: var(--font-weight-black); font-size: var(--text-5xl); line-height: 1.1; color: var(--color-slate-900); white-space: nowrap; }
 .pkg__old {
   font-weight: var(--font-weight-bold); font-size: var(--text-2xl); color: var(--color-slate-400);
@@ -605,8 +606,25 @@
   white-space: nowrap;
 }
 
-/* Row 5 · tools */
+/* Row 5 · tools — compact: six logos overlapping + a "+N" bubble (names on hover).
+   Rows 5 and 6 open with a thin divider, so each card reads as three blocks. */
 .pkg__tools { display: flex; flex-direction: column; gap: --spacing(3); }
+.pkg__tools, .pkg__features { padding-top: --spacing(5); border-top: 1px solid var(--line); }
+.tool-stack { display: flex; align-items: center; }
+.tool-stack__logo, .tool-stack__more {
+  display: grid; place-items: center;
+  width: --spacing(10); height: --spacing(10);
+  margin-left: calc(--spacing(2) * -1);
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  border: 1px solid var(--line);
+  box-shadow: 0 0 0 2px var(--color-white);
+  transition: transform .2s ease;
+}
+.tool-stack > :first-child { margin-left: 0; }
+.tool-stack__logo img { width: --spacing(5.5); height: --spacing(5.5); border-radius: var(--radius-sm); }
+.tool-stack__logo:hover { transform: translateY(calc(--spacing(1) * -1)); position: relative; z-index: 1; }
+.tool-stack__more { background: var(--surface); font-weight: var(--font-weight-bold); font-size: var(--text-xs); color: var(--color-slate-700); cursor: default; }
 .pkg__label { display: flex; align-items: center; gap: --spacing(2); font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900); }
 .tool-pills { display: flex; flex-wrap: wrap; gap: --spacing(1.5); }
 .tool-pill {
@@ -627,8 +645,8 @@
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(3); }
 .pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
-.pkg__features li.is-off { color: var(--color-slate-400); }
-.pkg__features li.is-off .ic { color: var(--color-slate-300); }
+.pkg__features li.is-off { color: var(--color-slate-300); }
+.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-zinc-300); }
 .pkg__features li.is-gift { font-weight: var(--font-weight-bold); }
 
 /* Row 4 · CTA (right under the price) */
@@ -1285,8 +1303,8 @@
   .pkg__name { font-size: var(--text-5xl); line-height: var(--text-5xl--line-height); }
   .pkg__desc { font-size: var(--text-lg); }
   .pkg__amount { font-size: var(--text-4xl); }
-  .pkg__gift { width: --spacing(47.5); height: --spacing(47.5); top: --spacing(16); right: calc(--spacing(14) * -1); }
-  .pkg--bundle .pkg__head { padding-right: --spacing(27.5); }
+  .pkg__gift { width: --spacing(36); height: --spacing(36); top: --spacing(16); right: calc(--spacing(8) * -1); }
+  .pkg--bundle .pkg__head { padding-right: --spacing(22); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-sm); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .learn-grid { columns: 1; }
