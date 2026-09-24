@@ -2,7 +2,8 @@
   "name": "aiqb-landing",
   "private": true,
   "scripts": {
-    "build": "tailwindcss -i ./tailwind.css -o ./styles.css --optimize",
+    "build": "npm run build:css && node scripts/dist.mjs",
+    "build:css": "tailwindcss -i ./tailwind.css -o ./styles.css --optimize",
     "dev": "tailwindcss -i ./tailwind.css -o ./styles.css --watch"
   },
   "devDependencies": {
