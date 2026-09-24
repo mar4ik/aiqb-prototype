@@ -42,6 +42,18 @@ function swapHeroIcons(phraseIndex) {
 
   const phrases = JSON.parse(el.dataset.phrases);
   const caret = document.querySelector('.hero__caret');
+
+  // Invisible copies of every full phrase sit in the same grid cell as the live line,
+  // so the title is always as tall as the longest phrase (at any screen width) and
+  // the content below never jumps while typing / deleting.
+  const line = el.parentElement;
+  phrases.forEach((phrase) => {
+    const ghost = line.cloneNode(true);
+    ghost.classList.add('hero__ghost');
+    ghost.querySelector('.hero__typed').textContent = phrase;
+    ghost.querySelector('.hero__typed').removeAttribute('data-phrases');
+    line.parentElement.appendChild(ghost);
+  });
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Preload every icon so swaps are instant
@@ -218,4 +230,37 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
       select(next, true);
     });
   });
+})();
+
+/* ============================================================
+   08 · MISSION — when the block scrolls into view, the progress bar
+   fills from 0 to its target and 1,000,000 counts up alongside it
+   ============================================================ */
+(function missionProgress() {
+  const bar = document.querySelector('.mission .progress__fill');
+  const num = document.querySelector('.mission__num');
+  if (!bar || !num || !('IntersectionObserver' in window)) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const target = bar.style.width;                       // e.g. "19.88%"
+  const total = parseInt(num.textContent.replace(/\D/g, ''), 10);
+  const fmt = new Intl.NumberFormat('en-US');
+  const DURATION = 1800;
+
+  bar.style.width = '0%';
+  num.textContent = '0';
+
+  const io = new IntersectionObserver((entries) => {
+    if (!entries[0].isIntersecting) return;
+    io.disconnect();
+    requestAnimationFrame(() => { bar.classList.add('is-filling'); bar.style.width = target; });
+    const start = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - start) / DURATION, 1);
+      const eased = 1 - Math.pow(1 - t, 3);              // ease-out, matches the bar
+      num.textContent = fmt.format(Math.round(total * eased));
+      if (t < 1) requestAnimationFrame(tick);
+    })(start);
+  }, { threshold: 0.5 });
+  io.observe(bar.closest('.mission__right'));
 })();

@@ -23,15 +23,12 @@
        ========================================================= -->
   <header class="nav-wrap">
     <nav class="nav">
-      <a href="#" class="nav__logo">AI Քեզ Բան</a>
+      <a href="#" class="nav__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI Քեզ Բան" /></a>
       <div class="nav__links">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
-        <button type="button" class="nav__link">
-          Փաթեթներ
-          <img src="assets/nav-chevron.svg" width="16" height="16" alt="" />
-        </button>
+        <a href="#packages" class="nav__link">Դասընթացներ</a>
         <a href="#mission" class="nav__link">Մեր Առաքելությունը</a>
-        <a href="#teachers" class="nav__link">Մեր դասախոսները</a>
+        <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
       <a href="#packages" class="btn btn--primary btn--sm">Գրանցվել</a>
     </nav>
@@ -126,14 +123,22 @@
             </article>
           </div>
       </div>
+    </section>
 
-      <!-- Package tabs: «Հիմնական» (default) and «Պրո» -->
+    <!-- =========================================================
+         05b · PACKAGES — grey full-bleed band with the tabs + cards
+         ========================================================= -->
+    <section class="pricing">
+      <!-- Package tabs: «AI գրագիտություն» (default) and «PRO դասընթացներ» -->
       <div class="pkg-switch" id="packages">
         <div class="pill-tabs" role="tablist" aria-label="Դասընթացներ">
-          <button type="button" class="pill-tabs__tab" role="tab" id="tab-basic" aria-controls="panel-basic" aria-selected="true">Հիմնական</button>
-          <button type="button" class="pill-tabs__tab" role="tab" id="tab-pro" aria-controls="panel-pro" aria-selected="false" tabindex="-1">Պրո</button>
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-basic" aria-controls="panel-basic" aria-selected="true">AI գրագիտություն</button>
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-pro" aria-controls="panel-pro" aria-selected="false" tabindex="-1">PRO դասընթացներ</button>
         </div>
       </div>
+
+      <!-- Ministry endorsement — above the cards, shown for both tabs -->
+      <p class="endorse endorse--strip"><img src="assets/logos/armgerb.svg" alt="" /><span>Պաշտոնապես երաշխավորված է Կրթության, գիտության, մշակույթի և սպորտի նախարարության կողմից։<br />100% վերադարձ եկամտահարկից։</span></p>
 
       <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
       <div class="packages">
@@ -297,28 +302,27 @@
           </div>
         </article>
       </div>
-        <p class="prompt-gift"><i class="ic ic--gift"></i>500+ պատրաստի պրոմպտ՝ նվեր ցանկացած դասընթացի գրանցվելուց</p>
       </div>
 
       <div class="pkg-panel" role="tabpanel" id="panel-pro" aria-labelledby="tab-pro" hidden>
         <div class="pro-grid">
-          <!-- TODO: real external link + image for «AI քեզ ուսուցիչ» -->
-          <a class="pro-card" href="https://example.com/ai-qez-teacher" target="_blank" rel="noopener">
-            <img src="assets/learn/basics-vr-pink.webp" alt="" loading="lazy" />
+          <a class="pro-card" href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">
+            <video class="pro-card__media" src="assets/videos/teacher-level-1-hero.mp4" poster="assets/videos/teacher-level-1-hero.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
             <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
             <h3 class="pro-card__title">AI քեզ ուսուցիչ</h3>
           </a>
-          <!-- TODO: real external link + image for «AI քեզ բժիշկ» -->
-          <a class="pro-card" href="https://example.com/ai-qez-doctor" target="_blank" rel="noopener">
-            <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
-            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
-            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
-          </a>
-          <!-- TODO: real external link + image for «AI քեզ պրոդուկտ մենեջեր» -->
+          <!-- TODO: real external link for «AI Քեզ Project Manager» -->
           <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
-            <img src="assets/learn/presentations-vr-purple.webp" alt="" loading="lazy" />
+            <img class="pro-card__blob" src="assets/videos/blob.webp" alt="" loading="lazy" />
             <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
-            <h3 class="pro-card__title">AI քեզ պրոդուկտ մենեջեր</h3>
+            <h3 class="pro-card__title">AI Քեզ Project Manager</h3>
+          </a>
+          <!-- Coming soon: links to the pre-registration page -->
+          <a class="pro-card is-soon" href="doctor-register.html" target="_blank" rel="noopener">
+            <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
+            <span class="pro-card__soon">Շուտով</span>
+            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
+            <span class="btn btn--white btn--sm pro-card__cta">Գրանցվել</span>
           </a>
         </div>
       </div>
@@ -341,10 +345,9 @@
 
         <article class="teacher">
           <div class="teacher__photo">
-            <img src="assets/teachers/anahit-vardanyan.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
+            <img src="assets/teachers/anahit.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
           </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanyan" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
+          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanian/" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
             <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
           </a>
           <div class="teacher__body">
@@ -357,100 +360,39 @@
                 <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />110+ Ժամ</span>
                 <span class="chip"><img src="assets/flag.svg" width="20" height="20" alt="" />Start</span>
                 <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
+                <span class="chip"><img src="assets/lucide-sparkles.svg" width="16" height="16" alt="" />PRO</span>
+                <span class="chip"><img src="assets/lucide-video.svg" width="16" height="16" alt="" />Webinar</span>
             </div>
           </div>
         </article>
 
         <article class="teacher">
           <div class="teacher__photo">
-            <img src="assets/teachers/hayk-hovhannisyan.webp" alt="Հայկ Հովհաննիսյան" loading="lazy" />
+            <img src="assets/teachers/gevorg.webp" alt="Գևորգ Պողեսյան" loading="lazy" />
           </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/hayk-hovhannisyan" target="_blank" rel="noopener" aria-label="Հայկ Հովհաննիսյան — LinkedIn">
+          <a class="teacher__link" href="https://www.linkedin.com/in/gevorg-poghosyan-a6580a85/" target="_blank" rel="noopener" aria-label="Գևորգ Պողեսյան — LinkedIn">
             <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
           </a>
           <div class="teacher__body">
             <div class="teacher__head">
-              <h3 class="teacher__name">Հայկ Հովհաննիսյան</h3>
-              <p class="teacher__role">Network Engineer</p>
-            </div>
-            <p class="teacher__bio">Ցանցային ինժեներ և լրագրող՝ AI-ի, տվյալների ու տեխնոլոգիաների սիրահար։</p>
-            <div class="chips">
-                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />95+ Ժամ</span>
-                <span class="chip"><img src="assets/flag.svg" width="20" height="20" alt="" />Start</span>
-                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/artak-grigoryan.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
-          </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/artak-grigoryan" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
-              <p class="teacher__role">AI Automation Expert</p>
+              <h3 class="teacher__name">Գևորգ Պողեսյան</h3>
+              <!-- TODO: Gevorg's real bio and hours (placeholders carried over from the previous card) -->
+              <p class="teacher__role">AI First Mindset</p>
             </div>
             <p class="teacher__bio">Նախագծերի կառավարման 10+ տարվա փորձով AI ավտոմատացումների ուսուցիչ</p>
             <div class="chips">
                 <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />120+ Ժամ</span>
-                <span class="chip"><img src="assets/flag.svg" width="20" height="20" alt="" />Start</span>
-                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
+                <span class="chip"><img src="assets/lucide-sparkles.svg" width="16" height="16" alt="" />PRO</span>
+                <span class="chip"><img src="assets/lucide-video.svg" width="16" height="16" alt="" />Webinar</span>
             </div>
           </div>
         </article>
 
         <article class="teacher">
           <div class="teacher__photo">
-            <img src="assets/teachers/lilit-khachatryan.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
+            <img src="assets/teachers/nairi.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
           </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-khachatryan" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
-              <p class="teacher__role">Senior Product Designer</p>
-            </div>
-            <p class="teacher__bio">Senior Product Designer՝ 15+ տարվա փորձով, AI և UX/UI մասնագետ</p>
-            <div class="chips">
-                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />80+ Ժամ</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/lilit-barseghyan.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
-          </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
-              <p class="teacher__role">AI Artist &amp; Director</p>
-            </div>
-            <p class="teacher__bio">AI արտիստ և սցենարիստ-ռեժիսոր՝ 10+ տարվա ստեղծագործ փորձով։</p>
-            <div class="chips">
-                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />75+ Ժամ</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/nairi-areg-hatspanyan.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
-          </div>
-          <!-- TODO: replace with the real LinkedIn profile -->
-          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg-hatspanyan" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
+          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg/" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
             <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
           </a>
           <div class="teacher__body">
@@ -461,6 +403,71 @@
             <p class="teacher__bio">6+ տարվա փորձով Full-Stack Engineer՝ AI և cloud տեխնոլոգիաներում</p>
             <div class="chips">
                 <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />90+ Ժամ</span>
+                <span class="chip"><img src="assets/flag.svg" width="20" height="20" alt="" />Start</span>
+                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
+                <span class="chip"><img src="assets/lucide-sparkles.svg" width="16" height="16" alt="" />PRO</span>
+                <span class="chip"><img src="assets/lucide-video.svg" width="16" height="16" alt="" />Webinar</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/artak.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/artakgrigoryan/" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
+              <p class="teacher__role">AI Automation Expert</p>
+            </div>
+            <p class="teacher__bio">Նախագծերի կառավարման 10+ տարվա փորձով AI ավտոմատացումների ուսուցիչ</p>
+            <div class="chips">
+                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />120+ Ժամ</span>
+                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_kh.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
+          </div>
+          <!-- TODO: replace with the real LinkedIn profile -->
+          <a class="teacher__link is-hidden" href="https://www.linkedin.com/in/lilit-khachatryan" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
+              <p class="teacher__role">Senior Product Designer</p>
+            </div>
+            <p class="teacher__bio">Senior Product Designer՝ 15+ տարվա փորձով, AI և UX/UI մասնագետ</p>
+            <div class="chips">
+                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />80+ Ժամ</span>
+                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_b.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan-96a2152aa/" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
+              <p class="teacher__role">AI Artist &amp; Director</p>
+            </div>
+            <p class="teacher__bio">AI արտիստ և սցենարիստ-ռեժիսոր՝ 10+ տարվա ստեղծագործ փորձով։</p>
+            <div class="chips">
+                <span class="chip"><img src="assets/lucide-clock.svg" width="16" height="16" alt="" />75+ Ժամ</span>
+                <span class="chip"><img src="assets/lucide-rocket.svg" width="16" height="16" alt="" />Level Up</span>
             </div>
           </div>
         </article>
@@ -516,41 +523,27 @@
               <p class="stat__num">20+</p>
               <p class="stat__label">AI գործիք<br />կուրսի ընթացքում</p>
             </div>
-            <!-- Circle / square pattern from Figma; each square carries an AI tool logo. Scrolls in a loop. -->
-            <div class="tool-wave" aria-hidden="true">
-              <ul class="tool-wave__track" data-loop>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Gemini"><img src="assets/logos/gemini.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Claude"><img src="assets/logos/claude.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Arena"><img src="assets/logos/arena.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Grok"><img src="assets/logos/grok.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Suno"><img src="assets/logos/suno.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Oboe"><img src="assets/logos/oboe.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Gamma"><img src="assets/logos/gamma.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="NotebookLM"><img src="assets/logos/notebooklm.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Veo"><img src="assets/logos/veo.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Lovable"><img src="assets/logos/lovable.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Make.com"><img src="assets/logos/make.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Higgsfield"><img src="assets/logos/higgsfield.svg" alt="" /></li>
-                <li class="tool-wave__circle"></li>
-                <li class="tool-wave__square" title="Google Flow"><img src="assets/logos/google-flow.svg" alt="" /></li>
+            <!-- Two rows of tool pills (same pill as the package cards), scrolling in opposite directions -->
+            <div class="tool-rows" aria-hidden="true">
+              <ul class="tool-rows__track " data-loop>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/chatgpt.svg" alt="" />ChatGPT</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/arena.svg" alt="" />Arena</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/wispr-flow.svg" alt="" />Wispr Flow</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/grok.svg" alt="" />Grok</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/suno.svg" alt="" />Suno</li>
+              </ul>
+              <ul class="tool-rows__track tool-rows__track--reverse" data-loop>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/oboe.svg" alt="" />Oboe</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/gamma.svg" alt="" />Gamma</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/notebooklm.svg" alt="" />NotebookLM</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/veo.svg" alt="" />Veo</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/lovable.svg" alt="" />Lovable</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/make.svg" alt="" />Make.com</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/higgsfield.svg" alt="" />Higgsfield</li>
+                <li class="tool-pill tool-pill--lg"><img src="assets/logos/google-flow.svg" alt="" />Google Flow</li>
               </ul>
             </div>
           </div>
@@ -566,7 +559,7 @@
           <div class="stat-card stat-card--fill">
             <div class="stat">
               <p class="stat__num">6</p>
-              <p class="stat__label" style="width:140px">Փորձառու<br />ուսուցիչ</p>
+              <p class="stat__label">Փորձառու<br />ուսուցիչ</p>
             </div>
           </div>
         </div>
@@ -605,7 +598,10 @@
     <section class="referral" id="referral">
       <div class="referral__inner referral__panel">
         <div class="referral__left">
-          <h2 class="section-title referral__title">Հրավիրիր ընկերոջդ<br />և երկուսդ էլ կստանաք բոնուս</h2>
+          <div class="referral__head">
+            <h2 class="section-title referral__title">Հրավիրիր ընկերոջդ<br />և երկուսդ էլ կստանաք բոնուս</h2>
+            <p class="referral__sub">Հրավիրիր ընկերներիդ և ստացիր բոնուս AI կուրսի համար</p>
+          </div>
 
           <!-- Friends ladder: 10 friends; #1 unlocks −10%, #10 makes it free -->
           <ol class="ladder" aria-label="1 ընկեր՝ −10%, 10 ընկեր՝ անվճար">
@@ -675,6 +671,17 @@
           </div>
         </details>
         <details class="faq__item">
+          <summary>PRO դասընթացներ</summary>
+          <div class="faq__answer">
+            <ul class="faq__pro">
+              <li><strong>AI քեզ Ուսուցիչ</strong> — Մանրամասներին ծանոթացեք <a href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <!-- TODO: real link for «AI քեզ Project Manager» -->
+              <li><strong>AI քեզ Project Manager</strong> — Մանրամասներին ծանոթացեք <a href="https://example.com/ai-qez-project-manager" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <li><strong>AI քեզ Բժիշկ</strong> — Շուտով, <a href="doctor-register.html" target="_blank" rel="noopener">գրանցվել նախապես</a></li>
+            </ul>
+          </div>
+        </details>
+        <details class="faq__item">
           <summary>Կա՞ գումարի վերադարձի երաշխիք</summary>
           <div class="faq__answer">
             <p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p>
@@ -724,11 +731,9 @@
   <footer class="footer">
     <div class="footer__cols">
       <div class="footer__brand">
-        <a href="#" class="footer__logo">AI Քեզ Բան</a>
+        <a href="#" class="footer__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI Քեզ Բան" /></a>
         <p class="footer__tagline">Հայաստանում AI կրթության լավագույն ծրագիր</p>
-        <a href="https://rearmenia.com" target="_blank" rel="noopener" class="footer__partner">
-          <img src="assets/logos/rearmenia-academy.png" width="147" height="40" alt="reArmenia Academy" />
-        </a>
+        <p class="endorse endorse--footer"><img src="assets/logos/armgerb.svg" alt="" />Պաշտոնապես երաշխավորված է Կրթության, գիտության, մշակույթի և սպորտի նախարարության կողմից</p>
       </div>
 
       <div class="footer__links">
@@ -746,6 +751,11 @@
           <a href="tel:+37444199199">+374 44 199 199</a>
           <a href="mailto:info@rearmenia.com">info@rearmenia.com</a>
           <a href="https://www.google.com/maps/search/?api=1&amp;query=Halabyan+65%2F5+Yerevan+Armenia" target="_blank" rel="noopener" class="footer__address">Երևան, Հալաբյան 65/5<br />Հայաստան 0078</a>
+          <div class="footer__social">
+            <a href="https://www.facebook.com/aiqezbanai/" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/social/facebook.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.instagram.com/ai_qez_ban_/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/social/instagram.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.linkedin.com/company/lumiverse-ecosystem/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/social/linkedin.svg" width="20" height="20" alt="" /></a>
+          </div>
         </div>
       </div>
     </div>
@@ -753,11 +763,21 @@
     <hr class="footer__line" />
 
     <div class="footer__bottom">
-      <p class="footer__copy">© 2026 AI Քեզ Բան · Բոլոր իրավունքները պաշտպանված են</p>
-      <p class="footer__legal">
-        <a href="https://aiqezban.lumiverse.global/privacy-policy" target="_blank" rel="noopener">Գաղտնիության քաղաքականություն</a>
-        <a href="https://aiqezban.lumiverse.global/terms" target="_blank" rel="noopener">Պայմաններին ու կանոններ</a>
-      </p>
+      <p class="footer__copy">© 2026 AI Քեզ Բան<br />Բոլոր իրավունքները պաշտպանված են</p>
+
+      <div class="footer__end">
+        <!-- Accepted payments -->
+        <ul class="footer__pay" aria-label="Վճարման եղանակներ">
+          <li class="pay-badge"><img src="assets/payments/visa.svg" alt="Visa" /></li>
+          <li class="pay-badge"><img src="assets/payments/mastercard.svg" alt="Mastercard" /></li>
+          <li class="pay-badge"><img src="assets/payments/arca.png" alt="ArCa" /></li>
+          <li class="pay-badge"><img src="assets/payments/idram.svg" alt="Idram" /></li>
+        </ul>
+        <p class="footer__legal">
+          <a href="https://aiqezban.lumiverse.global/privacy-policy" target="_blank" rel="noopener">Գաղտնիության քաղաքականություն</a>
+          <a href="https://aiqezban.lumiverse.global/terms" target="_blank" rel="noopener">Պայմաններին ու կանոններ</a>
+        </p>
+      </div>
     </div>
   </footer>
 
@@ -777,8 +797,8 @@
        12 · FLOATING ACTION BUTTONS
        ========================================================= -->
   <div class="fabs">
-    <a href="#" class="fab" aria-label="Chat"><img src="assets/fab-chat.svg" width="16" height="16" alt="" /></a>
-    <a href="#" class="fab" aria-label="Telegram"><img src="assets/fab-send.svg" width="16" height="16" alt="" /></a>
+    <a href="https://t.me/AI_qez_banakan_bot" class="fab" target="_blank" rel="noopener" aria-label="Telegram"><img src="assets/fab-chat.svg" width="16" height="16" alt="" /></a>
+    <a href="https://wa.me/37441958510" class="fab" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><img src="assets/fab-send.svg" width="16" height="16" alt="" /></a>
   </div>
 
   <script src="script.js"></script>
