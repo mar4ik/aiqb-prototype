@@ -3233,7 +3233,7 @@
 
   .fab {
     padding: calc(var(--spacing) * 4);
-    background: var(--color-slate-950);
+    background: var(--color-primary);
     border-radius: var(--radius-full);
     transition: transform var(--default-transition-duration);
     justify-content: center;
