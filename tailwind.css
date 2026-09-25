@@ -922,7 +922,7 @@ body.is-menu-open { overflow: hidden; }
 .chip {
   display: inline-flex; align-items: center; justify-content: center; gap: --spacing(2.5);
   min-width: --spacing(22);   /* 88px, so short tags (PRO, Start) match the rest */
-  height: --spacing(8.5); padding: 0 --spacing(4);
+  height: --spacing(8.5); padding: --spacing(0.5) --spacing(4) 0;   /* the 2px top padding moves the text down 1px: the font's ascent is taller than its descent, so it sat high */
   background: var(--color-white);
   border: 1px solid var(--line);
   border-radius: var(--radius-full);
