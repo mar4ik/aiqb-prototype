@@ -609,8 +609,8 @@
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(3); }
 .pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
-.pkg__features li.is-off { color: var(--color-slate-300); }
-.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-zinc-300); }
+.pkg__features li.is-off { color: var(--color-slate-400); }   /* muted, but still readable */
+.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-slate-400); }
 .pkg__features li.is-gift { font-weight: var(--font-weight-bold); }
 
 /* Row 4 · CTA (right under the price) */
@@ -960,14 +960,19 @@
 }
 .mission__label { font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: var(--color-slate-600); white-space: nowrap; }
 .progress { position: relative; width: --spacing(85.5); height: --spacing(2); background: var(--surface); border-radius: var(--radius-full); overflow: hidden; }
-.progress__fill { position: absolute; inset: 0 auto 0 0; background: var(--color-primary); border-radius: var(--radius-full) 0 0 var(--radius-full); }
+.progress__fill { position: absolute; inset: 0 auto 0 0; overflow: hidden; background: var(--color-primary); border-radius: var(--radius-full) 0 0 var(--radius-full); }
 .progress__fill.is-filling { transition: width 1.8s cubic-bezier(.33, 1, .68, 1); }   /* ease-out, in step with the count-up in script.js */
-/* soft light sweeping along the filled part, so the bar feels "in progress" */
+/* soft light gliding along the filled part in a seamless loop, so the bar feels "in progress".
+   The layer is 2× the bar wide with two identical bands; shifting it by exactly half its
+   width lands on the same frame, so there's no jump between loops. */
 .progress__fill::after {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-white) 55%, transparent), transparent);
-  background-size: 50% 100%; background-repeat: no-repeat;
-  animation: progress-sheen 2.4s ease-in-out infinite;
+  content: ""; position: absolute; top: 0; bottom: 0; left: -100%;
+  width: 200%;
+  background: linear-gradient(90deg,
+    transparent 0%, color-mix(in oklab, var(--color-white) 50%, transparent) 25%, transparent 50%,
+    color-mix(in oklab, var(--color-white) 50%, transparent) 75%, transparent 100%);
+  animation: progress-sheen 2.4s linear infinite;
+  will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) { .progress__fill::after { animation: none; } }
 .mission__note { font-size: var(--text-base); color: var(--color-slate-700); max-width: --spacing(96); }
@@ -975,9 +980,18 @@
 .mission__lighthouse {
   position: absolute;
   left: 50%; top: 50%;
-  height: min(--spacing(95), 26vw); width: auto;   /* image is cropped tight to the artwork; scales down a little on smaller desktops */
+  height: calc(100% - --spacing(6)); width: auto;   /* SVG drawn by script.js; almost the full height of the section */
+  overflow: visible;
   transform: translate(-50%, -50%);
   pointer-events: none;
+  /* the drawing's palette (script.js fills the SVG with var(--lh-…)) */
+  --lh-50: var(--color-emerald-50);   --lh-100: var(--color-emerald-100); --lh-200: var(--color-emerald-200);
+  --lh-300: var(--color-emerald-300); --lh-400: var(--color-emerald-400); --lh-500: var(--color-emerald-500);
+  --lh-600: var(--color-emerald-600); --lh-700: var(--color-emerald-700); --lh-800: var(--color-emerald-800);
+  --lh-900: var(--color-emerald-900);
+  /* the light: warm yellow */
+  --lh-glow-100: var(--color-amber-100); --lh-glow-200: var(--color-amber-200);
+  --lh-glow-300: var(--color-amber-300); --lh-glow-400: var(--color-amber-400);
 }
 @media (width < theme(--breakpoint-xl)) { .mission__lighthouse { display: none; } }   /* no room between the two text blocks */
 
@@ -1361,7 +1375,7 @@
 @keyframes soon-shimmer { from { transform: translateX(0); } to { transform: translateX(50%); } }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
-@keyframes progress-sheen { from { background-position: -100% 0; } to { background-position: 200% 0; } }
+@keyframes progress-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
   25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }

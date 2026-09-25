@@ -397,6 +397,125 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 })();
 
 /* ============================================================
+   08 · MISSION — lighthouse, drawn as SVG and added to the mission section
+   Green gradients, checkered tower,
+   lantern room, railing, roof, hill; the light is warm yellow. The lantern turns: two opposite beams
+   stretch out and shrink as they sweep round (a beam pointing away passes
+   behind the tower); when one faces the viewer the windows flash and a
+   glow spreads. A thin ray shimmers above the roof. Pauses off screen.
+   ============================================================ */
+(function missionLighthouse() {
+  const mission = document.querySelector('.mission');
+  if (!mission) return;
+
+  const NS = 'http://www.w3.org/2000/svg';
+  const W = 587, H = 900, CX = 293, LY = 260;   // viewBox; lantern centre
+  const PERIOD = 7000;                           // ms per full turn of the lantern
+  const REACH = 285;                             // beam length when side-on
+  const c = (name) => `var(--lh-${name.replace('emerald-', '')})`;   // palette lives in CSS (.mission__lighthouse)
+  const el = (tag, attrs = {}, parent) => {
+    const n = document.createElementNS(NS, tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+    parent?.append(n);
+    return n;
+  };
+  const gradient = (defs, id, stops, attrs = {}) => {
+    const g = el(attrs.r ? 'radialGradient' : 'linearGradient', { id, ...attrs }, defs);
+    for (const [offset, color, opacity = 1] of stops) {
+      el('stop', { offset, style: `stop-color:${color};stop-opacity:${opacity}` }, g);
+    }
+    return g;
+  };
+
+  const svg = el('svg', { class: 'mission__lighthouse', viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
+  const defs = el('defs', {}, svg);
+  gradient(defs, 'lh-hill', [[0, c('emerald-900')], [.45, c('emerald-600')], [1, c('emerald-200')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
+  gradient(defs, 'lh-dark', [[0, c('emerald-800')], [1, c('emerald-600')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
+  gradient(defs, 'lh-light', [[0, c('emerald-500')], [1, c('emerald-100')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
+  gradient(defs, 'lh-lantern', [[0, c('emerald-700')], [1, c('emerald-400')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
+  gradient(defs, 'lh-ray', [[0, c('glow-400')], [1, c('glow-300'), 0]], { x1: 0, y1: 1, x2: 0, y2: 0 });
+  gradient(defs, 'lh-halo', [[0, c('glow-200'), .95], [.5, c('glow-300'), .4], [1, c('glow-300'), 0]], { cx: .5, cy: .5, r: .5 });
+  const beamGrads = ['a', 'b'].map((k) => gradient(defs, `lh-beam-${k}`,
+    [[0, c('glow-400'), 1], [.6, c('glow-300'), .85], [1, c('glow-300'), 0]],   // rich enough to read on white
+    { gradientUnits: 'userSpaceOnUse', x1: CX, y1: LY, x2: CX + 1, y2: LY }));
+  const clip = el('clipPath', { id: 'lh-tower' }, defs);
+  el('polygon', { points: '195,772 228,345 358,345 391,772' }, clip);
+
+  // layers, back to front: beam behind · halo · lighthouse · beam in front
+  const back = el('g', {}, svg);
+  const halo = el('circle', { cx: CX, cy: LY, r: 60, fill: 'url(#lh-halo)' }, svg);
+  const house = el('g', {}, svg);
+  const front = el('g', {}, svg);
+
+  // thin ray above the roof
+  const ray = el('polygon', { points: `${CX - 6},150 ${CX + 6},150 ${CX + 2},0 ${CX - 2},0`, fill: 'url(#lh-ray)' }, house);
+  // hill
+  el('path', { d: `M0 ${H} L205 765 Q${CX} 748 381 765 L${W} ${H} Z`, fill: 'url(#lh-hill)' }, house);
+  // tower: checkered halves, clipped to the tapering shape
+  const tower = el('g', { 'clip-path': 'url(#lh-tower)' }, house);
+  [345, 450, 540, 645, 772].reduce((top, bottom, i) => {
+    el('rect', { x: 150, y: top, width: CX - 150, height: bottom - top, fill: `url(#lh-${i % 2 ? 'light' : 'dark'})` }, tower);
+    el('rect', { x: CX, y: top, width: 440 - CX, height: bottom - top, fill: `url(#lh-${i % 2 ? 'dark' : 'light'})` }, tower);
+    return bottom;
+  });
+  // gallery: deck, balusters, top rail
+  el('rect', { x: 203, y: 334, width: 182, height: 15, rx: 4, fill: 'url(#lh-dark)' }, house);
+  for (let x = 211; x <= 375; x += 12) el('rect', { x, y: 306, width: 4, height: 29, fill: c('emerald-700') }, house);
+  el('rect', { x: 203, y: 299, width: 182, height: 8, rx: 4, fill: 'url(#lh-dark)' }, house);
+  // lantern room + windows (the windows light up)
+  el('rect', { x: 242, y: 228, width: 104, height: 72, fill: 'url(#lh-lantern)' }, house);
+  const windows = el('g', { fill: c('glow-200') }, house);
+  el('rect', { x: 251, y: 238, width: 38, height: 46, rx: 2 }, windows);
+  el('rect', { x: 299, y: 238, width: 38, height: 46, rx: 2 }, windows);
+  // roof + finial
+  el('polygon', { points: `218,231 ${CX},176 368,231`, fill: 'url(#lh-dark)' }, house);
+  el('circle', { cx: CX, cy: 166, r: 16, fill: c('emerald-700') }, house);
+
+  // Each beam is drawn twice — once behind the tower, once in front — and the two cross-fade
+  // as it swings past the side. (Swapping one polygon between layers made it pop every half turn.)
+  const beams = beamGrads.map((g) => ({
+    g,
+    behind: el('polygon', { fill: `url(#${g.id})` }, back),
+    inFront: el('polygon', { fill: `url(#${g.id})` }, front),
+  }));
+  const smooth = (edge0, edge1, x) => { const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0))); return t * t * (3 - 2 * t); };
+
+  function render(angle) {
+    let glow = 0;
+    beams.forEach((beam, i) => {
+      const a = angle + i * Math.PI;                 // the two lenses face opposite ways
+      const side = Math.sin(a), facing = Math.cos(a);
+      const len = REACH * side;                     // signed: − left, + right
+      const spread = 18 + 62 * Math.abs(side);      // wider as it reaches out
+      const points = `${CX},${LY - 9} ${CX + len},${LY - spread} ${CX + len},${LY + spread} ${CX},${LY + 9}`;
+      beam.behind.setAttribute('points', points);
+      beam.inFront.setAttribute('points', points);
+      beam.g.setAttribute('x2', CX + len || CX + 1);
+      const f = smooth(-.3, .3, facing);             // 0 = pointing away (behind the tower) … 1 = towards us
+      beam.inFront.style.opacity = f;
+      beam.behind.style.opacity = .6 * (1 - f);
+      glow = Math.max(glow, Math.max(0, facing) ** 6);  // sharp flash when a beam faces us
+    });
+    halo.setAttribute('r', 55 + 150 * glow);
+    halo.style.opacity = .35 + .65 * glow;
+    windows.style.opacity = .55 + .45 * glow;
+    ray.style.opacity = .55 + .45 * Math.sin(angle * 2) ** 2;   // smooth shimmer (no sharp dip)
+  }
+
+  mission.append(svg);
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { render(Math.PI / 2); return; }
+
+  let raf = 0, start = performance.now(), pausedAt = start;
+  const tick = (now) => { render(((now - start) / PERIOD) * Math.PI * 2 + Math.PI / 2); raf = requestAnimationFrame(tick); };
+  render(Math.PI / 2);
+  if (!('IntersectionObserver' in window)) { raf = requestAnimationFrame(tick); return; }
+  new IntersectionObserver(([entry]) => {   // only animate while visible; resume where it stopped
+    if (entry.isIntersecting && !raf) { start += performance.now() - pausedAt; raf = requestAnimationFrame(tick); }
+    else if (!entry.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; pausedAt = performance.now(); }
+  }).observe(svg);
+})();
+
+/* ============================================================
    08 · MISSION — when the block scrolls into view, the progress bar
    fills from 0 to its target and 1,000,000 counts up alongside it
    ============================================================ */

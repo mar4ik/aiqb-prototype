@@ -12,6 +12,8 @@
     --font-sans: "Adelle Sans ARM", system-ui, sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
+    --color-amber-100: oklch(96.2% .059 95.617);
+    --color-amber-200: oklch(92.4% .12 95.746);
     --color-amber-300: oklch(87.9% .169 91.605);
     --color-amber-400: oklch(82.8% .189 84.429);
     --color-amber-500: oklch(76.9% .188 70.08);
@@ -19,6 +21,16 @@
     --color-green-500: oklch(72.3% .219 149.579);
     --color-green-600: oklch(62.7% .194 149.214);
     --color-green-700: oklch(52.7% .154 150.069);
+    --color-emerald-50: oklch(97.9% .021 166.113);
+    --color-emerald-100: oklch(95% .052 163.051);
+    --color-emerald-200: oklch(90.5% .093 164.15);
+    --color-emerald-300: oklch(84.5% .143 164.978);
+    --color-emerald-400: oklch(76.5% .177 163.223);
+    --color-emerald-500: oklch(69.6% .17 162.48);
+    --color-emerald-600: oklch(59.6% .145 163.225);
+    --color-emerald-700: oklch(50.8% .118 165.612);
+    --color-emerald-800: oklch(43.2% .095 166.913);
+    --color-emerald-900: oklch(37.8% .077 168.94);
     --color-teal-500: oklch(70.4% .14 182.503);
     --color-sky-500: oklch(68.5% .169 237.323);
     --color-blue-50: oklch(97% .014 254.604);
@@ -27,7 +39,6 @@
     --color-violet-100: oklch(94.3% .029 294.588);
     --color-violet-600: oklch(54.1% .281 293.009);
     --color-rose-500: oklch(64.5% .246 16.439);
-    --color-slate-300: oklch(86.9% .022 252.894);
     --color-slate-400: oklch(70.4% .04 256.788);
     --color-slate-600: oklch(44.6% .043 257.281);
     --color-slate-700: oklch(37.2% .044 257.287);
@@ -1365,13 +1376,13 @@
   }
 
   .pkg__features li.is-off {
-    color: var(--color-slate-300);
+    color: var(--color-slate-400);
   }
 
   .pkg__features li.is-off .ic {
     width: calc(var(--spacing) * 3.5);
     height: calc(var(--spacing) * 3.5);
-    color: var(--color-zinc-300);
+    color: var(--color-slate-400);
     margin: 4px 2px 0;
   }
 
@@ -2134,6 +2145,7 @@
     border-radius: var(--radius-full) 0 0 var(--radius-full);
     position: absolute;
     inset: 0 auto 0 0;
+    overflow: hidden;
   }
 
   .progress__fill.is-filling {
@@ -2142,21 +2154,23 @@
 
   .progress__fill:after {
     content: "";
-    background: linear-gradient(90deg, #0000, #ffffff8c, #0000);
+    background: linear-gradient(90deg, #0000 0%, #ffffff80 25%, #0000 50%, #ffffff80 75%, #0000 100%);
+    width: 200%;
     position: absolute;
-    inset: 0;
+    top: 0;
+    bottom: 0;
+    left: -100%;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
     .progress__fill:after {
-      background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--color-white) 55%, transparent), transparent);
+      background: linear-gradient(90deg, transparent 0%, color-mix(in oklab, var(--color-white) 50%, transparent) 25%, transparent 50%, color-mix(in oklab, var(--color-white) 50%, transparent) 75%, transparent 100%);
     }
   }
 
   .progress__fill:after {
-    background-repeat: no-repeat;
-    background-size: 50% 100%;
-    animation: 2.4s ease-in-out infinite progress-sheen;
+    will-change: transform;
+    animation: 2.4s linear infinite progress-sheen;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -2172,12 +2186,27 @@
   }
 
   .mission__lighthouse {
-    height: min(calc(var(--spacing) * 95), 26vw);
+    height: calc(100% - calc(var(--spacing) * 6));
     pointer-events: none;
+    --lh-50: var(--color-emerald-50);
+    --lh-100: var(--color-emerald-100);
+    --lh-200: var(--color-emerald-200);
+    --lh-300: var(--color-emerald-300);
+    --lh-400: var(--color-emerald-400);
+    --lh-500: var(--color-emerald-500);
+    --lh-600: var(--color-emerald-600);
+    --lh-700: var(--color-emerald-700);
+    --lh-800: var(--color-emerald-800);
+    --lh-900: var(--color-emerald-900);
+    --lh-glow-100: var(--color-amber-100);
+    --lh-glow-200: var(--color-amber-200);
+    --lh-glow-300: var(--color-amber-300);
+    --lh-glow-400: var(--color-amber-400);
     width: auto;
     position: absolute;
     top: 50%;
     left: 50%;
+    overflow: visible;
     transform: translate(-50%, -50%);
   }
 
@@ -3380,11 +3409,11 @@
 
 @keyframes progress-sheen {
   from {
-    background-position: -100% 0;
+    transform: translateX(0);
   }
 
   to {
-    background-position: 200% 0;
+    transform: translateX(50%);
   }
 }
 
