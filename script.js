@@ -307,7 +307,13 @@ function textCore(text, font, box) {
   item.addEventListener('mouseenter', sync);
   item.addEventListener('mouseleave', () => { if (!item.contains(document.activeElement)) reset(); else sync(); });
   item.addEventListener('focusin', sync);
-  item.addEventListener('focusout', (e) => { if (desktop.matches && !item.contains(e.relatedTarget)) { item.classList.remove('is-open'); reset(); } });
+  // Focus leaving un-pins the menu; .is-closed is only lifted if the pointer isn't still on it
+  // (after a link click it is, and hover would reopen it; mouseleave lifts it later).
+  item.addEventListener('focusout', (e) => {
+    if (!desktop.matches || item.contains(e.relatedTarget)) return;
+    item.classList.remove('is-open');
+    if (!item.matches(':hover')) reset(); else sync();
+  });
   document.addEventListener('keydown', (e) => {
     if (desktop.matches && e.key === 'Escape' && isShown()) { close(); trigger.focus(); }
   });
@@ -329,6 +335,7 @@ function textCore(text, font, box) {
   const courses = wrap.querySelector('.nav__item');
 
   function setOpen(open) {
+    if (!open && !wrap.classList.contains('is-menu-open')) return;   // not open (e.g. desktop): leave the sub nav's state alone
     wrap.classList.toggle('is-menu-open', open);
     document.body.classList.toggle('is-menu-open', open);
     burger.setAttribute('aria-expanded', String(open));
