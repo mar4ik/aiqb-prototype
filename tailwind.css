@@ -365,15 +365,16 @@ body.is-menu-open { overflow: hidden; }
   color: var(--hero-fg);
 }
 /* Solid colour backdrop — the colour changes with each phrase (script.js).
-   Every colour is a light pastel, so the text on it is always slate-900.
+   The text on every colour is black (--hero-fg).
    data-bg sits on .hero (text + buttons) and .hero__bg (the colour itself). */
-.hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-slate-900); }
+.hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-black); }
+.hero .btn--white { color: var(--hero-fg); }   /* the secondary button's label matches the black headline */
 .hero__bg {
   position: absolute;
   top: 0; bottom: 0; left: 50%;

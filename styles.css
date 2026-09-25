@@ -931,7 +931,7 @@
     text-align: center;
     color: var(--hero-fg);
     --hero-bg: var(--color-pop-orange);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
     flex-direction: column;
     margin: 0 auto;
     display: flex;
@@ -940,32 +940,36 @@
 
   :is(.hero, .hero *)[data-bg="cyan"] {
     --hero-bg: var(--color-pop-cyan);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
   }
 
   :is(.hero, .hero *)[data-bg="mint"] {
     --hero-bg: var(--color-pop-mint);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
   }
 
   :is(.hero, .hero *)[data-bg="yellow"] {
     --hero-bg: var(--color-pop-yellow);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
   }
 
   :is(.hero, .hero *)[data-bg="orange"] {
     --hero-bg: var(--color-pop-orange);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
   }
 
   :is(.hero, .hero *)[data-bg="orchid"] {
     --hero-bg: var(--color-pop-orchid);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
   }
 
   :is(.hero, .hero *)[data-bg="tan"] {
     --hero-bg: var(--color-pop-tan);
-    --hero-fg: var(--color-slate-900);
+    --hero-fg: var(--color-black);
+  }
+
+  .hero .btn--white {
+    color: var(--hero-fg);
   }
 
   .hero__bg {
