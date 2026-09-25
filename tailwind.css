@@ -211,6 +211,134 @@
 }
 .nav__link:hover { background: var(--surface); }
 
+/* «Դասընթացներ» sub nav: a white panel under the pill with course links + the Bundle promo.
+   Opens on hover / keyboard focus (CSS) and on click (script.js toggles .is-open). */
+.nav__trigger { cursor: pointer; }
+.nav__trigger .ic { width: --spacing(4); height: --spacing(4); transition: rotate .2s; }
+.nav__item.is-open .nav__trigger .ic { rotate: 180deg; }
+@media (width >= theme(--breakpoint-lg)) {
+  .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger { background: var(--surface); }
+  .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger .ic { rotate: 180deg; }
+  .nav__item.is-closed .nav__trigger .ic { rotate: 0deg; }
+  .nav__item.is-closed .nav__trigger:not(:hover) { background: transparent; }
+}
+
+.subnav {
+  position: absolute; left: 0; right: 0; top: 100%;
+  padding-top: --spacing(1);          /* invisible bridge so hover survives the gap */
+  opacity: 0; visibility: hidden; translate: 0 calc(--spacing(2) * -1);
+  transition: opacity .2s, translate .25s var(--ease-smooth), visibility 0s .25s;
+}
+@media (width >= theme(--breakpoint-lg)) {
+  .nav__item:is(:hover, :focus-within, .is-open):not(.is-closed) .subnav {
+    opacity: 1; visibility: visible; translate: 0 0;
+    transition: opacity .2s, translate .25s var(--ease-smooth), visibility 0s;
+  }
+}
+.subnav__panel {
+  display: grid; grid-template-columns: minmax(0, 1fr) --spacing(88);
+  gap: --spacing(3);
+  padding: --spacing(3);
+  background: var(--color-white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-3xl);
+  box-shadow: 0 24px 48px -16px rgb(15 23 42 / .18);
+}
+.subnav__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: --spacing(6); padding: --spacing(6) --spacing(4) --spacing(4) --spacing(6); }
+.subnav__group { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(1); }
+.subnav__label { padding-bottom: --spacing(2); font-size: var(--text-sm); color: var(--color-slate-500); }
+/* Rows are hug-width pills: bold title, then the arrow (external) and any tag right after it */
+.subnav__link {
+  display: inline-flex; align-items: center; gap: --spacing(2);
+  min-height: --spacing(10); margin-left: calc(--spacing(3) * -1); padding: --spacing(1.5) --spacing(3);
+  border-radius: var(--radius-xl);
+  font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900);
+  white-space: nowrap;
+  transition: background-color var(--default-transition-duration), color var(--default-transition-duration);
+}
+.subnav__link:hover { background: var(--surface); color: var(--color-primary); }
+.subnav__link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.subnav__link .ic { width: --spacing(4); height: --spacing(4); margin-left: calc(--spacing(0.5) * -1); transition: translate .25s; }
+.subnav__link:hover .ic { translate: 2px -2px; }
+.subnav__link .pill { height: --spacing(6); padding: 0 --spacing(2.5); }
+.subnav__soon { margin-left: --spacing(1); background: var(--color-accent); color: var(--color-white); }
+
+/* Bundle promo — same blue wash, price tags and gift as the Bundle package card */
+.subnav-promo {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: flex; flex-direction: column; gap: --spacing(4);
+  padding: --spacing(6);
+  border-radius: var(--radius-2xl);
+  background: linear-gradient(180deg, var(--color-blue-100) 0%, var(--color-blue-50) 55%, var(--color-white) 100%);
+  border: 1px solid var(--color-blue-100);
+}
+.subnav-promo__gift {
+  position: absolute; top: --spacing(2); right: calc(--spacing(3) * -1); z-index: -1;
+  width: --spacing(32); height: --spacing(32); object-fit: contain;
+  rotate: -10deg;
+  transition: rotate .6s var(--ease-smooth);
+  pointer-events: none;
+}
+.subnav-promo:hover .subnav-promo__gift { rotate: 0deg; }
+.subnav-promo__head { display: flex; flex-direction: column; gap: --spacing(1.5); padding-right: --spacing(24); }
+.subnav-promo__name { font-weight: var(--font-weight-bold); font-size: var(--text-5xl); line-height: 1; letter-spacing: var(--tracking-tight); color: var(--color-slate-900); }
+.subnav-promo__tagline { font-weight: var(--font-weight-black); font-style: italic; font-size: var(--text-xl); color: var(--color-slate-800); white-space: nowrap; }
+.subnav-promo__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1.5) --spacing(2.5); margin-top: auto; }
+.subnav-promo__price .pkg__old { font-size: var(--text-2xl); }
+.subnav-promo__price .pill { height: --spacing(8); padding: 0 --spacing(3.5); font-size: var(--text-sm); }
+.subnav-promo__amount { flex-basis: 100%; font-weight: var(--font-weight-black); font-size: var(--text-5xl); line-height: 1.1; color: var(--color-slate-900); }
+.subnav-promo:hover .btn--primary { background: var(--color-primary-hover); }
+
+/* Desktop: keep the dropdown short — tighter promo (mobile keeps the big version) */
+@media (width >= theme(--breakpoint-lg)) {
+  .subnav__cols { padding-top: --spacing(5); padding-bottom: --spacing(3); }
+  .subnav__link { min-height: --spacing(9); padding-block: --spacing(1); }
+  .subnav-promo { gap: --spacing(3); padding: --spacing(5) --spacing(6); }
+  .subnav-promo__gift { width: --spacing(26); height: --spacing(26); }
+  .subnav-promo__head { gap: --spacing(0.5); }
+  .subnav-promo__name { font-size: var(--text-4xl); }
+  .subnav-promo__tagline { font-size: var(--text-lg); }
+  .subnav-promo__price { gap: --spacing(1) --spacing(2.5); }
+  .subnav-promo__price .pkg__old { font-size: var(--text-xl); }
+  .subnav-promo__price .pill { height: --spacing(7); }
+  .subnav-promo__amount { font-size: var(--text-4xl); }
+  .subnav-promo .btn--md { padding-block: calc(--spacing(2.5) - 1px); font-size: var(--text-base); }
+}
+
+/* Right side of the pill: «Գրանցվել» + (mobile) the burger */
+.nav__actions { display: flex; align-items: center; gap: --spacing(2); }
+.nav__burger {
+  display: none;   /* shown below lg */
+  place-items: center; align-content: center; gap: 5px;
+  width: --spacing(10); height: --spacing(10);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  cursor: pointer;
+  transition: background-color var(--default-transition-duration);
+}
+.nav__burger:hover { background: var(--surface-strong); }
+.nav__burger:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+/* two bars → ✕ */
+.nav__burger span {
+  display: block; width: --spacing(4.5); height: 2px;
+  border-radius: var(--radius-full);
+  background: var(--color-slate-900);
+  transition: translate .3s var(--ease-smooth), rotate .3s var(--ease-smooth);
+}
+.nav-wrap.is-menu-open .nav__burger span:first-child { translate: 0 3.5px; rotate: 45deg; }
+.nav-wrap.is-menu-open .nav__burger span:last-child { translate: 0 -3.5px; rotate: -45deg; }
+
+/* Dim + blur the page behind the open mobile menu (tapping it closes the menu) */
+.nav-scrim {
+  position: fixed; inset: 0; z-index: 54;   /* just under .nav-wrap */
+  background: color-mix(in oklab, var(--color-slate-900) 30%, transparent);
+  backdrop-filter: blur(var(--blur-xs));
+  opacity: 0; visibility: hidden;
+  transition: opacity .25s, visibility 0s .25s;
+}
+.is-menu-open .nav-scrim { opacity: 1; visibility: visible; transition: opacity .25s, visibility 0s; }
+body.is-menu-open { overflow: hidden; }
+
 /* ============================================================
    03 · HERO
    ============================================================ */
@@ -708,6 +836,7 @@
 .ic--chev-left  { --i: url("assets/icons/chevron-left.svg"); }
 .ic--chev-right { --i: url("assets/icons/chevron-right.svg"); }
 .ic--external   { --i: url("assets/lucide-arrow-up-right.svg"); }
+.ic--chev-down  { --i: url("assets/lucide-chevron-down.svg"); }
 
 /* ============================================================
    06 · TEACHERS
@@ -1297,7 +1426,43 @@
 }
 
 @media (width < theme(--breakpoint-lg)) {
-  .nav__links { display: none; }
+  /* Mobile menu: .nav__links drops down under the pill as a white panel */
+  .nav__burger { display: grid; }
+  .nav__links {
+    position: absolute; left: 0; right: 0; top: calc(100% + --spacing(2));
+    flex-direction: column; align-items: stretch; gap: --spacing(1);
+    max-height: calc(100dvh - --spacing(28)); overflow-y: auto; overscroll-behavior: contain;
+    padding: --spacing(3);
+    background: var(--color-white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-3xl);
+    box-shadow: 0 24px 48px -16px rgb(15 23 42 / .25);
+    opacity: 0; visibility: hidden; translate: 0 calc(--spacing(2) * -1); scale: .98; transform-origin: top center;
+    transition: opacity .2s, translate .3s var(--ease-smooth), scale .3s var(--ease-smooth), visibility 0s .3s;
+  }
+  .nav-wrap.is-menu-open .nav__links {
+    opacity: 1; visibility: visible; translate: 0 0; scale: 1;
+    transition: opacity .2s, translate .3s var(--ease-smooth), scale .3s var(--ease-smooth), visibility 0s;
+  }
+  .nav__link { justify-content: space-between; width: 100%; padding: --spacing(3.5) --spacing(4); border-radius: var(--radius-2xl); font-size: var(--text-lg); }
+  .nav__item.is-open .nav__trigger { background: var(--surface); }
+
+  /* «Դասընթացներ» becomes an accordion inside the panel */
+  .subnav {
+    position: static; padding: 0;
+    display: grid; grid-template-rows: 0fr;
+    opacity: 1; visibility: visible; translate: none;
+    transition: grid-template-rows .35s var(--ease-smooth);
+  }
+  .nav__item.is-open .subnav { grid-template-rows: 1fr; }
+  .subnav__panel {
+    min-height: 0; overflow: hidden;
+    grid-template-columns: 1fr; gap: --spacing(3);
+    padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none;
+  }
+  .nav__item:not(.is-open) .subnav__panel { visibility: hidden; transition: visibility 0s .35s; }   /* collapsed links can't be tabbed to */
+  .subnav__cols { padding: --spacing(3) --spacing(4) 0; gap: --spacing(4) --spacing(6); }
+  .subnav-promo { margin: 0 0 --spacing(2); }
   .packages { grid-template-columns: 1fr; row-gap: --spacing(8); max-width: --spacing(140); margin: 0 auto; width: 100%; }
   .pro-grid { grid-template-columns: 1fr; max-width: --spacing(140); margin: 0 auto; }
   .pro-card { height: --spacing(80); }
@@ -1316,6 +1481,8 @@
   .topbar__text { font-size: var(--text-xs); white-space: normal; line-height: var(--leading-tight); }
   .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(5); }
   .nav__logo img { height: --spacing(8); }
+  .subnav__cols { grid-template-columns: 1fr; }
+  .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
   .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
   .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
   .hero__actions { flex-direction: column; width: 100%; }

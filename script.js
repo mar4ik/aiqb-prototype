@@ -281,6 +281,73 @@ function textCore(text, font, box) {
 })();
 
 /* ============================================================
+   02 · Sub nav («Դասընթացներ»)
+   CSS opens it on hover / focus. Here: click pins it open (touch),
+   and picking a link, Escape or an outside click closes it — .is-closed
+   overrides hover/focus until the pointer or focus leaves the item.
+   ============================================================ */
+(function subnav() {
+  const item = document.querySelector('.nav__item');
+  if (!item) return;
+  const trigger = item.querySelector('.nav__trigger');
+  const desktop = matchMedia('(width >= 64rem)');   // = Tailwind lg; below it the sub nav is an accordion in the mobile menu
+
+  const isShown = () => !item.classList.contains('is-closed') && item.matches(':hover, :focus-within, .is-open');
+  const sync = () => trigger.setAttribute('aria-expanded', String(isShown()));
+  const close = () => { item.classList.remove('is-open'); item.classList.add('is-closed'); sync(); };
+  const reset = () => { item.classList.remove('is-closed'); sync(); };
+
+  trigger.addEventListener('click', () => {
+    if (item.classList.contains('is-open')) return close();
+    item.classList.remove('is-closed');
+    item.classList.add('is-open');
+    sync();
+  });
+  item.querySelectorAll('.subnav a').forEach((a) => a.addEventListener('click', () => { close(); a.blur(); }));
+  item.addEventListener('mouseenter', sync);
+  item.addEventListener('mouseleave', () => { if (!item.contains(document.activeElement)) reset(); else sync(); });
+  item.addEventListener('focusin', sync);
+  item.addEventListener('focusout', (e) => { if (desktop.matches && !item.contains(e.relatedTarget)) { item.classList.remove('is-open'); reset(); } });
+  document.addEventListener('keydown', (e) => {
+    if (desktop.matches && e.key === 'Escape' && isShown()) { close(); trigger.focus(); }
+  });
+  document.addEventListener('click', (e) => {
+    if (desktop.matches && !item.contains(e.target) && item.classList.contains('is-open')) { item.classList.remove('is-open'); sync(); }
+  });
+})();
+
+/* ============================================================
+   02 · Mobile menu (below lg)
+   The burger opens .nav__links as a panel under the pill. Picking a link,
+   Escape, tapping the scrim or growing to desktop width closes it.
+   ============================================================ */
+(function mobileMenu() {
+  const wrap = document.querySelector('.nav-wrap');
+  const burger = wrap?.querySelector('.nav__burger');
+  if (!burger) return;
+  const scrim = document.querySelector('.nav-scrim');
+  const courses = wrap.querySelector('.nav__item');
+
+  function setOpen(open) {
+    wrap.classList.toggle('is-menu-open', open);
+    document.body.classList.toggle('is-menu-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    if (!open && courses) {   // fold the courses accordion back up for next time
+      courses.classList.remove('is-open', 'is-closed');
+      courses.querySelector('.nav__trigger').setAttribute('aria-expanded', 'false');
+    }
+  }
+
+  burger.addEventListener('click', () => setOpen(!wrap.classList.contains('is-menu-open')));
+  scrim?.addEventListener('click', () => setOpen(false));
+  wrap.querySelectorAll('.nav__links a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && wrap.classList.contains('is-menu-open')) { setOpen(false); burger.focus(); }
+  });
+  matchMedia('(width >= 64rem)').addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+})();
+
+/* ============================================================
    01 / 04 · Scroll state
    After the page is scrolled: the orange announcement bar slides down out
    of view and the webinar bar appears in its place at the bottom.

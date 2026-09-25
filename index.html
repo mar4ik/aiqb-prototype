@@ -29,15 +29,63 @@
   <header class="nav-wrap">
     <nav class="nav">
       <a href="#" class="nav__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI Քեզ Բան" /></a>
-      <div class="nav__links">
+      <div class="nav__links" id="nav-menu">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="#packages" class="nav__link">Դասընթացներ</a>
+        <!-- «Դասընթացներ» sub nav: course links + Bundle promo (opens on hover / click, script.js).
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
+        <div class="nav__item" hidden>
+          <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
+            Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
+          </button>
+          <div class="subnav" id="subnav-courses">
+            <div class="subnav__panel">
+              <div class="subnav__cols">
+                <div class="subnav__group">
+                  <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="#packages" class="subnav__link">Start</a>
+                  <a href="#packages" class="subnav__link">Level-Up</a>
+                  <a href="#packages" class="subnav__link">Bundle <span class="pill pill--deal">−20%</span></a>
+                </div>
+                <div class="subnav__group">
+                  <p class="subnav__label">PRO</p>
+                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- TODO: real external link for «AI Քեզ Project Manager» (same as the PRO card) -->
+                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Project Manager<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <a href="doctor-register.html" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Բժիշկ<i class="ic ic--external" aria-hidden="true"></i><span class="pill subnav__soon">Շուտով</span></a>
+                </div>
+              </div>
+
+              <!-- Bundle promo (replaces the wireframe's placeholder image) -->
+              <a href="#packages" class="subnav-promo">
+                <img class="subnav-promo__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
+                <span class="subnav-promo__head">
+                  <strong class="subnav-promo__name">Bundle</strong>
+                  <span class="subnav-promo__tagline">Start + Level-Up</span>
+                </span>
+                <span class="subnav-promo__price">
+                  <s class="pkg__old">֏ 57,000</s>
+                  <span class="pill pill--deal">−20%</span>
+                  <span class="subnav-promo__amount">֏ 45,700</span>
+                </span>
+                <span class="btn btn--primary btn--md btn--block">Գնել</span>
+              </a>
+            </div>
+          </div>
+        </div>
         <a href="#mission" class="nav__link">Մեր առաքելությունը</a>
         <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
-      <a href="#packages" class="btn btn--primary btn--sm">Գրանցվել</a>
+      <div class="nav__actions">
+        <a href="#packages" class="btn btn--primary btn--sm">Գրանցվել</a>
+        <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
+        <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
+          <span></span><span></span>
+        </button>
+      </div>
     </nav>
   </header>
+  <div class="nav-scrim" aria-hidden="true"></div>
 
   <main>
 
