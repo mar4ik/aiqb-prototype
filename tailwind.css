@@ -53,7 +53,7 @@
   --color-pop-cyan: #7ee8fa;
   --color-pop-mint: #74deb9;
   --color-pop-orange: #f78154;
-  --color-pop-lavender: #e3dfff;
+  --color-pop-tan: #b48164;         /* not in Tailwind's palette */
 
   /* Pill radius (Tailwind's rounded-full value) */
   --radius-full: calc(infinity * 1px);
@@ -373,7 +373,7 @@ body.is-menu-open { overflow: hidden; }
 :is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-slate-900); }
 :is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-slate-900); }
 :is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="lavender"]       { --hero-bg: var(--color-pop-lavender); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-slate-900); }
 .hero__bg {
   position: absolute;
   top: 0; bottom: 0; left: 50%;

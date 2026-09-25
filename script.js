@@ -106,7 +106,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    Phrases live in the data-phrases attribute in index.html.
    ============================================================ */
 // Colours change instantly, in this order (the «warhol» palette, see --color-pop-* in tailwind.css)
-const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'lavender', 'orchid'];   // the page opens on the first one
+const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'tan', 'orchid'];   // the page opens on the first one
 const HERO_BRAND = 'AI Քեզ Բան';
 
 (function heroShuffle() {

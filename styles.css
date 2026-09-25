@@ -102,7 +102,7 @@
     --color-pop-cyan: #7ee8fa;
     --color-pop-mint: #74deb9;
     --color-pop-orange: #f78154;
-    --color-pop-lavender: #e3dfff;
+    --color-pop-tan: #b48164;
     --radius-full: calc(infinity * 1px);
     --text-display: 5rem;
     --text-display--line-height: 1;
@@ -963,8 +963,8 @@
     --hero-fg: var(--color-slate-900);
   }
 
-  :is(.hero, .hero *)[data-bg="lavender"] {
-    --hero-bg: var(--color-pop-lavender);
+  :is(.hero, .hero *)[data-bg="tan"] {
+    --hero-bg: var(--color-pop-tan);
     --hero-fg: var(--color-slate-900);
   }
 
