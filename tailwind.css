@@ -47,6 +47,14 @@
   --color-accent: #ff5e16;          /* orange: banners, «Շուտով», −10% */
   --color-accent-soft: #ff7a3d;     /* lighter orange for decoration */
 
+  /* Hero backdrop palette: the «warhol» palette (coolors), flat pop-art pastels */
+  --color-pop-orchid: #df86d9;
+  --color-pop-yellow: #ffd062;
+  --color-pop-cyan: #7ee8fa;
+  --color-pop-mint: #74deb9;
+  --color-pop-orange: #f78154;
+  --color-pop-lavender: #e3dfff;
+
   /* Pill radius (Tailwind's rounded-full value) */
   --radius-full: calc(infinity * 1px);
 
@@ -130,7 +138,7 @@
   font-weight: var(--font-weight-semibold);
   line-height: --spacing(6);
   white-space: nowrap;
-  transition: background-color var(--default-transition-duration), box-shadow var(--default-transition-duration), transform var(--default-transition-duration);
+  transition: background-color var(--default-transition-duration), color var(--default-transition-duration), border-color var(--default-transition-duration), box-shadow var(--default-transition-duration), transform var(--default-transition-duration);
 }
 .btn--primary { background: var(--color-primary); color: var(--color-white); }
 .btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
@@ -142,10 +150,10 @@
 .btn--dark:hover { background: var(--color-slate-800); }
 .btn--block { width: 100%; }
 
-/* Three sizes, used everywhere: sm 40px · md 56px · lg 64px (hero only). The 1px border is part of the height. */
-.btn--sm { padding: calc(--spacing(2) - 1px) calc(--spacing(5) - 1px); font-size: var(--text-sm); }
-.btn--md { padding: calc(--spacing(4) - 1px) calc(--spacing(7) - 1px); font-size: var(--text-lg); }
-.btn--lg { padding: calc(--spacing(5) - 1px) calc(--spacing(10) - 1px); font-size: var(--text-xl); }
+/* Two sizes, used everywhere: sm 40px · md 56px. The 1px border is part of the height. The ±.5px padding
+   moves the text down half a pixel: the font's ascent is taller than its descent, so it sat slightly high. */
+.btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-sm); }
+.btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-lg); }
 
 /* ============================================================
    01 · ANNOUNCEMENT BAR (orange, floating at the bottom until the page is scrolled)
@@ -175,7 +183,6 @@
 /* regular weight + calendar icon, matching the date line in the webinar bar */
 .topbar__text { display: flex; align-items: center; gap: --spacing(1.5); font-weight: var(--font-weight-normal); font-size: var(--text-sm); color: var(--color-white); white-space: nowrap; }
 .topbar__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
-.topbar .btn--sm { padding: calc(--spacing(1) - 1px) calc(--spacing(3.5) - 1px); font-size: var(--text-xs); line-height: --spacing(5); }
 
 /* ============================================================
    02 · MAIN NAV
@@ -301,7 +308,6 @@
   .subnav-promo__price .pkg__old { font-size: var(--text-xl); }
   .subnav-promo__price .pill { height: --spacing(7); }
   .subnav-promo__amount { font-size: var(--text-4xl); }
-  .subnav-promo .btn--md { padding-block: calc(--spacing(2.5) - 1px); font-size: var(--text-base); }
 }
 
 /* Right side of the pill: «Գրանցվել» + (mobile) the burger */
@@ -358,20 +364,16 @@ body.is-menu-open { overflow: hidden; }
   text-align: center;
   color: var(--hero-fg);
 }
-/* Solid colour backdrop — with each phrase a giant letter brings in the next colour (script.js).
-   Each colour brings the text colour that reads best on it (higher contrast: white or slate-900).
-   data-bg sits on .hero (text + buttons), .hero__bg (current colour) and .hero__letter (next colour). */
-.hero                           { --hero-bg: var(--color-primary);    --hero-fg: var(--color-white); }
-:is(.hero, .hero *)[data-bg="olive"] { --hero-bg: var(--color-olive-500);  --hero-fg: var(--color-white); }
-:is(.hero, .hero *)[data-bg="blue"]  { --hero-bg: var(--color-primary);    --hero-fg: var(--color-white); }
-:is(.hero, .hero *)[data-bg="zinc"]  { --hero-bg: var(--color-zinc-900);   --hero-fg: var(--color-white); }
-:is(.hero, .hero *)[data-bg="teal"]  { --hero-bg: var(--color-teal-500);   --hero-fg: var(--color-slate-900); }
-:is(.hero, .hero *)[data-bg="amber"] { --hero-bg: var(--color-amber-300);  --hero-fg: var(--color-slate-900); }
-/* Buttons follow the colours: solid = text colour on it, outline = its border */
-.hero .btn--primary, .hero .btn--primary:hover:not(:disabled) { background: var(--hero-fg); color: var(--hero-bg); }
-.hero .btn--outline, .hero .btn--outline:hover { background: transparent; border-color: var(--hero-fg); color: var(--hero-fg); }
-/* (Previously) gradient backdrop — full-bleed pastel clouds, one scene per typed phrase.
-   Only opacity animates (cheap); scenes cross-fade when the phrase changes. */
+/* Solid colour backdrop — the colour changes with each phrase (script.js).
+   Every colour is a light pastel, so the text on it is always slate-900.
+   data-bg sits on .hero (text + buttons) and .hero__bg (the colour itself). */
+.hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="lavender"]       { --hero-bg: var(--color-pop-lavender); --hero-fg: var(--color-slate-900); }
 .hero__bg {
   position: absolute;
   top: 0; bottom: 0; left: 50%;
@@ -381,19 +383,6 @@ body.is-menu-open { overflow: hidden; }
   pointer-events: none;
   background: var(--hero-bg);
 }
-/* The next colour arrives as a giant «AI քեզ բան» (script.js sizes the viewBox to the text, grows it
-   from the centre, then zooms into its thickest stroke). `translate` centres it; animations use `transform`. */
-.hero__letter {
-  position: absolute; z-index: 1;
-  left: 50%; top: 50%;
-  translate: -50% -50%;
-  width: 94vw; height: auto;               /* height follows the text's shape (viewBox) */
-  overflow: visible;
-  opacity: 0;                              /* hidden between transitions */
-  fill: var(--hero-bg);                    /* its own data-bg = the next colour */
-  will-change: transform;
-}
-
 
 .hero__title {
   position: relative; z-index: 1;
@@ -410,6 +399,9 @@ body.is-menu-open { overflow: hidden; }
 .hero__title > span { grid-area: 1 / 1; }
 .hero__ghost { visibility: hidden; }
 .hero__title-light { font-weight: var(--font-weight-normal); }   /* «Սովորիր» flows with the phrase; the text wraps naturally (2 lines max) */
+.hero__typed { font-style: normal; }   /* only «Սովորիր» is italic; the phrase and the brand line are upright */
+.is-brand { align-self: center; font-size: 1.3em; }   /* the brand line stands alone: centred in the title area, a little bigger */
+.is-brand .hero__title-light { display: none; }
 
 .hero__sub {
   position: relative; z-index: 1;
@@ -419,7 +411,6 @@ body.is-menu-open { overflow: hidden; }
 }
 .hero__sub strong { font-weight: var(--font-weight-bold); }
 .hero__actions { position: relative; z-index: 1; display: flex; gap: --spacing(3); margin-top: --spacing(6); }
-.hero__actions .btn { min-width: --spacing(70); }
 
 
 /* ============================================================
@@ -1485,7 +1476,7 @@ body.is-menu-open { overflow: hidden; }
   .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
   .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
   .hero__actions { flex-direction: column; width: 100%; }
-  .hero__actions .btn { min-width: 0; width: 100%; }
+  .hero__actions .btn { width: 100%; }
   .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); transition: bottom .35s ease; }

@@ -1,4 +1,3 @@
-const shuffle = (list) => list.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
 const between = (min, max) => Math.round(min + Math.random() * (max - min));
 
 /* ============================================================
@@ -102,59 +101,13 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    03 · HERO — «Սովորիր» + a phrase whose letters scramble into place
-   (the title's own font — no style changes). As the last letters settle, a giant
-   «AI քեզ բան» in the next palette colour grows out of the centre and the view zooms into it (new background).
-   Colours + matching text colour live in CSS (.hero[data-bg="…"]).
+   (the title's own font — no style changes). After each sentence settles, the backdrop simply changes to the
+   next palette colour. Colours + matching text colour live in CSS (.hero[data-bg="…"]).
    Phrases live in the data-phrases attribute in index.html.
    ============================================================ */
-const HERO_COLORS = ['olive', 'blue', 'zinc', 'teal', 'amber'];
-
-// The giant text that brings in each new colour, and its face (heavy + upright → thick strokes, short zoom)
-const HERO_BIG_TEXT = 'AI քեզ բան';
-const HERO_BIG_FONT = { family: '"Adelle Sans ARM", sans-serif', weight: 900 };
-
-// Tight box around the inked text, in font units (F = font size): the SVG's viewBox
-function textBox(text, font) {
-  const F = 200;
-  const ctx = document.createElement('canvas').getContext('2d');
-  ctx.font = `normal ${font.weight} ${F}px ${font.family}`;
-  const m = ctx.measureText(text);
-  const pad = F * .02;
-  return {
-    F,
-    x: -m.actualBoundingBoxLeft - pad, y: -m.actualBoundingBoxAscent - pad,
-    w: m.actualBoundingBoxLeft + m.actualBoundingBoxRight + 2 * pad,
-    h: m.actualBoundingBoxAscent + m.actualBoundingBoxDescent + 2 * pad,
-  };
-}
-
-// The thickest point of the text, in % of its box, and the radius of solid colour around it (as a share
-// of the box width). Draws the text on a small canvas and runs a chamfer distance transform over it —
-// zooming into that point always lands on solid colour, never on a hole like the inside of «Ա» or «ա».
-function textCore(text, font, box) {
-  const k = 480 / box.w;                                   // canvas: 480 px wide
-  const W = Math.ceil(box.w * k), H = Math.ceil(box.h * k);
-  const ctx = Object.assign(document.createElement('canvas'), { width: W, height: H }).getContext('2d', { willReadFrequently: true });
-  ctx.scale(k, k);
-  ctx.translate(-box.x, -box.y);
-  ctx.font = `normal ${font.weight} ${box.F}px ${font.family}`;
-  ctx.fillText(text, 0, 0);                                // same placement as the SVG <text x="0" y="0">
-  const alpha = ctx.getImageData(0, 0, W, H).data;
-  const d = new Float32Array(W * H);
-  for (let i = 0; i < W * H; i++) d[i] = alpha[i * 4 + 3] > 127 ? 1e6 : 0;
-  const at = (x, y) => (x < 0 || y < 0 || x >= W || y >= H ? 0 : d[y * W + x]);
-  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {           // forward pass
-    const i = y * W + x; if (!d[i]) continue;
-    d[i] = Math.min(d[i], at(x - 1, y) + 3, at(x, y - 1) + 3, at(x - 1, y - 1) + 4, at(x + 1, y - 1) + 4);
-  }
-  let best = { x: W / 2, y: H / 2, r: 0 };
-  for (let y = H - 1; y >= 0; y--) for (let x = W - 1; x >= 0; x--) { // backward pass
-    const i = y * W + x; if (!d[i]) continue;
-    d[i] = Math.min(d[i], at(x + 1, y) + 3, at(x, y + 1) + 3, at(x + 1, y + 1) + 4, at(x - 1, y + 1) + 4);
-    if (d[i] > best.r) best = { x, y, r: d[i] };
-  }
-  return { x: best.x / W * 100, y: best.y / H * 100, r: best.r / 3 / W };
-}
+// Colours change instantly, in this order (the «warhol» palette, see --color-pop-* in tailwind.css)
+const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'lavender', 'orchid'];   // the page opens on the first one
+const HERO_BRAND = 'AI Քեզ Բան';
 
 (function heroShuffle() {
   const hero = document.querySelector('.hero');
@@ -162,69 +115,22 @@ function textCore(text, font, box) {
   if (!hero || !el) return;
 
   const phrases = JSON.parse(el.dataset.phrases);
-  const HOLD = 2600;                                   // ms a settled phrase stays still
+  // After every sentence the brand takes the whole line (same size, without «Սովորիր»); the colour changes with every line
+  const steps = phrases.flatMap((text) => [{ text }, { text: HERO_BRAND, brand: true }]);
+  const HOLD = 1600;                                   // ms every settled line (sentence or «AI Քեզ Բան») stays, with its colour
   const INTRO_DELAY = 300;                             // ms after the page is ready before the first scramble
-  const LETTER_IN_MS = 650;                            // giant «AI քեզ բան» grows out of the centre
-  const LETTER_PAUSE_MS = 150;                         // …holds a beat…
-  const LETTER_ZOOM_MS = 750;                          // …then the view dives into it
-  const COLOR_LEAD = 700;                              // ms before the phrase settles that the letter starts
-  const TIMING = { frame: 90, revealStart: 250, revealStep: 45, revealJitter: 200 };   // long phrases → a quicker scramble than the wordmark
+  // The wordmark's flip style (letters flip together, then settle left → right), just quicker; no font changes (styles: false).
+  const TIMING = { frame: 60, revealStart: 80, revealStep: 20, revealJitter: 60, settle: 0 };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  // The next colour arrives as a giant «AI քեզ բան» (in the new colour) that grows out of the centre behind
-  // the text, then the view zooms into its thickest stroke until it fills the hero. Text + buttons switch mid-zoom.
   const bg = hero.querySelector('.hero__bg');
-  const svg = hero.querySelector('.hero__letter');
-  let big = null, core = null;
-  // First use: set the SVG to the text's exact box and find its thickest point (fonts are loaded by now)
-  const setupBigText = () => {
-    const box = textBox(HERO_BIG_TEXT, HERO_BIG_FONT);
-    svg.setAttribute('viewBox', `${box.x} ${box.y} ${box.w} ${box.h}`);
-    const text = svg.querySelector('text');
-    text.textContent = HERO_BIG_TEXT;
-    text.setAttribute('font-size', box.F);
-    Object.assign(text.style, { fontFamily: HERO_BIG_FONT.family, fontWeight: HERO_BIG_FONT.weight, fontStyle: 'normal' });
-    core = textCore(HERO_BIG_TEXT, HERO_BIG_FONT, box);
-    return box;
-  };
   const nextColor = () => {
-    const color = shuffle(HERO_COLORS.filter((c) => c !== hero.dataset.bg))[0];
-    if (reduceMotion || !svg?.animate) { hero.dataset.bg = bg.dataset.bg = color; return; }
-
-    big ??= setupBigText();
-    svg.dataset.bg = color;
-    svg.style.transformOrigin = '50% 50%';   // grows out of the centre…
-
-    // how far to zoom: the solid circle around the core must reach the hero's farthest corner
-    const box = svg.getBoundingClientRect(), area = bg.getBoundingClientRect();
-    const ox = box.left + box.width * core.x / 100, oy = box.top + box.height * core.y / 100;
-    const reach = Math.max(...[[area.left, area.top], [area.right, area.top], [area.left, area.bottom], [area.right, area.bottom]]
-      .map(([x, y]) => Math.hypot(x - ox, y - oy)));
-    const zoom = reach / (box.width * core.r) * 1.1;
-
-    const enter = svg.animate(
-      [{ transform: 'scale(0)', opacity: 1 }, { transform: 'scale(1)', opacity: 1 }],
-      { duration: LETTER_IN_MS, easing: 'cubic-bezier(.2, .8, .2, 1)', fill: 'forwards' },
-    );
-    enter.finished.then(() => {
-      svg.style.transformOrigin = `${core.x}% ${core.y}%`;   // …then dives into its thickest point (at scale 1 the swap is invisible)
-      const dive = svg.animate(
-        [{ transform: 'scale(1)', opacity: 1 }, { transform: `scale(${zoom})`, opacity: 1 }],
-        { duration: LETTER_ZOOM_MS, delay: LETTER_PAUSE_MS, easing: 'cubic-bezier(.75, 0, .85, .35)', fill: 'forwards' },
-      );
-      setTimeout(() => { hero.dataset.bg = color; }, LETTER_PAUSE_MS + LETTER_ZOOM_MS * .6);
-      return dive.finished.then(() => {
-        bg.dataset.bg = color;           // base takes the new colour…
-        enter.cancel(); dive.cancel();   // …in the same frame the letter resets (hidden)
-      });
-    });
+    const color = HERO_COLORS[(HERO_COLORS.indexOf(hero.dataset.bg) + 1) % HERO_COLORS.length];
+    hero.dataset.bg = bg.dataset.bg = color;
   };
 
-  // Only wait for the fonts the hero uses (the title's Adelle + the giant text), not every font on the page
+  // Only wait for the font the hero title uses, not every font on the page
   const title = el.closest('.hero__title');
-  const heroFonts = Promise.all([
-    document.fonts.load(getComputedStyle(title).font, phrases.join('')),
-    document.fonts.load(`${HERO_BIG_FONT.weight} 100px ${HERO_BIG_FONT.family}`, HERO_BIG_TEXT),
-  ]).catch(() => {});
+  const heroFonts = document.fonts.load(getComputedStyle(title).font, phrases.join('')).catch(() => {});
 
   let index = 0;
   heroFonts.then(() => {
@@ -233,20 +139,26 @@ function textCore(text, font, box) {
     // Invisible slotted copies of every phrase share the title's grid cell, so the title is
     // always as tall as the longest phrase and nothing below moves while it scrambles.
     const line = el.parentElement;
-    phrases.forEach((phrase) => {
+    steps.forEach(({ text, brand }) => {
       const ghost = line.cloneNode(true);
       ghost.classList.add('hero__ghost');
+      ghost.classList.toggle('is-brand', !!brand);
       const typed = ghost.querySelector('.hero__typed');
       typed.removeAttribute('data-phrases');
-      spell(typed, phrase);
+      spell(typed, text);
       line.parentElement.appendChild(ghost);
     });
-    spell(el, phrases[index]);
+    const show = () => {
+      const { text, brand } = steps[index];
+      line.classList.toggle('is-brand', !!brand);
+      return spell(el, text);
+    };
+    show();
 
     if (reduceMotion) {   // no scrambling: swap whole phrases, then the colour
       setInterval(() => {
-        index = (index + 1) % phrases.length;
-        spell(el, phrases[index]);
+        index = (index + 1) % steps.length;
+        show();
         nextColor();
       }, HOLD + 1000);
       return;
@@ -254,12 +166,11 @@ function textCore(text, font, box) {
 
     let cancel = () => {}, timer = 0, running = false;
     function play(advance = true) {
-      if (advance) index = (index + 1) % phrases.length;
-      cancel = shuffleIn(spell(el, phrases[index]), {
+      if (advance) index = (index + 1) % steps.length;
+      if (advance) nextColor();   // the colour switches the instant the next line starts (not for the opening sentence: it keeps the first colour)
+      cancel = shuffleIn(show(), {
         styles: false,
         timing: TIMING,
-        almost: COLOR_LEAD,
-        onAlmostDone: nextColor,           // the giant text starts growing as the last letters settle
         onDone: () => { timer = setTimeout(play, HOLD); },
       });
     }
