@@ -466,7 +466,7 @@
     width: max-content;
     max-width: calc(100% - calc(var(--spacing) * 8));
     padding: calc(var(--spacing) * 3) calc(var(--spacing) * 3) calc(var(--spacing) * 3) calc(var(--spacing) * 6);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-full);
     background: #ff5e16e6;
     justify-content: center;
     align-items: center;
@@ -1050,7 +1050,7 @@
     align-items: center;
     gap: calc(var(--spacing) * 10);
     padding: calc(var(--spacing) * 3) calc(var(--spacing) * 3) calc(var(--spacing) * 3) calc(var(--spacing) * 6);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-full);
     background: #ff5e16e6;
     display: flex;
     position: fixed;

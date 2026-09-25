@@ -171,7 +171,7 @@
   align-items: center;
   justify-content: center;
   padding: --spacing(3) --spacing(3) --spacing(3) --spacing(6);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-full);
   background: color-mix(in oklab, var(--color-accent) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   isolation: isolate;
@@ -431,7 +431,7 @@ body.is-menu-open { overflow: hidden; }
   align-items: center;
   gap: --spacing(10);
   padding: --spacing(3) --spacing(3) --spacing(3) --spacing(6);
-  border-radius: var(--radius-2xl);
+  border-radius: var(--radius-full);
   background: color-mix(in oklab, var(--color-accent) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   color: var(--color-white);
