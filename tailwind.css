@@ -438,7 +438,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .is-scrolled .promo { transform: translate(-50%, 0); opacity: 1; }
 /* title + date read as one unit: bold title, smaller softer date with the same calendar icon as the package cards */
-.promo__text { display: flex; flex-direction: column; gap: --spacing(1); z-index: 3; white-space: nowrap; }
+.promo__text { display: flex; flex-direction: column; z-index: 3; white-space: nowrap; }   /* title + date add up to exactly the button's 40px, so the bar's padding is the same on all sides of the button */
 .promo__text strong { font-weight: var(--font-weight-bold); font-size: var(--text-lg); line-height: var(--leading-tight); }
 .promo__text span {
   display: flex; align-items: center; gap: --spacing(1.5);

@@ -1074,7 +1074,6 @@
   }
 
   .promo__text {
-    gap: var(--spacing);
     z-index: 3;
     white-space: nowrap;
     flex-direction: column;
