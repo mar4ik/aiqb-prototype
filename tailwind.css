@@ -18,7 +18,8 @@
 @source "./index.html";
 @source "./doctor-register.html";
 
-/* Adelle Sans ARM is the only typeface (files in /fonts) */
+/* Adelle Sans ARM is the site typeface (files in /fonts); the wordmark shuffle (10b) also mixes in
+   Noto Sans/Serif Armenian, Handjet, Google Sans and Iosevka Charon from Google Fonts (linked in index.html) */
 @font-face { font-family: "Adelle Sans ARM"; font-weight: 400; font-style: normal; font-display: swap;
   src: url("fonts/AdelleSans_ARM-Regular.ttf") format("truetype"); }
 @font-face { font-family: "Adelle Sans ARM"; font-weight: 400; font-style: italic; font-display: swap;
@@ -84,7 +85,7 @@
    BASE (on top of Tailwind's preflight)
    ============================================================ */
 @layer base {
-  html { scroll-behavior: smooth; scroll-padding-top: 110px; overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip so phones never pan sideways */
+  html { scroll-behavior: smooth; scroll-padding-top: 96px; overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip so phones never pan sideways */
   body {
     background: var(--color-white);
     color: var(--color-slate-900);
@@ -147,25 +148,29 @@
 .btn--lg { padding: calc(--spacing(5) - 1px) calc(--spacing(10) - 1px); font-size: var(--text-xl); }
 
 /* ============================================================
-   01 · TOP BAR
+   01 · ANNOUNCEMENT BAR (orange, floating at the bottom until the page is scrolled)
    ============================================================ */
+/* Floating at the bottom centre, sized to its content, shaped like the webinar bar (04).
+   Once the page is scrolled it slides down out of view and the webinar bar takes its place. */
 .topbar {
   position: fixed;
-  inset: 0 0 auto 0;
+  left: 50%;
+  bottom: --spacing(6);
   z-index: 60;
-  height: --spacing(12);
+  width: max-content;
+  max-width: calc(100% - --spacing(8));
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: --spacing(12);
-  padding: --spacing(2) --spacing(4);
+  padding: --spacing(3) --spacing(3) --spacing(3) --spacing(6);
+  border-radius: var(--radius-2xl);
   background: color-mix(in oklab, var(--color-accent) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
-  overflow: hidden;
   isolation: isolate;
-  transition: transform .35s ease;
+  transform: translate(-50%, 0);
+  transition: transform .4s var(--ease-smooth), opacity .3s ease;
 }
-.is-scrolled .topbar { transform: translateY(-100%); }
+.is-scrolled .topbar { transform: translate(-50%, calc(100% + --spacing(15))); opacity: 0; }
 .topbar__item { display: flex; align-items: center; gap: --spacing(3); position: relative; z-index: 2; }
 /* regular weight + calendar icon, matching the date line in the webinar bar */
 .topbar__text { display: flex; align-items: center; gap: --spacing(1.5); font-weight: var(--font-weight-normal); font-size: var(--text-sm); color: var(--color-white); white-space: nowrap; }
@@ -177,14 +182,12 @@
    ============================================================ */
 .nav-wrap {
   position: fixed;
-  top: --spacing(15);
+  top: --spacing(3);
   left: 50%;
   transform: translateX(-50%);
   z-index: 55;
   width: min(--spacing(245), calc(100% - --spacing(8)));
-  transition: top .35s ease;
 }
-.is-scrolled .nav-wrap { top: --spacing(3); }
 .nav {
   display: flex;
   align-items: center;
@@ -215,9 +218,9 @@
   position: relative;
   max-width: var(--container-page);
   margin: 0 auto;
-  /* Full screen height; the fixed top bar + nav cover the top --header-h, so the content is
+  /* Full screen height; the fixed nav covers the top --header-h, so the content is
      centred in the space below them (visual middle), not in the raw viewport */
-  --header-h: --spacing(32);
+  --header-h: --spacing(20);
   min-height: 100svh;
   padding: calc(var(--header-h) + --spacing(8)) var(--page-x) --spacing(8);
   display: flex;
@@ -226,8 +229,21 @@
   justify-content: center;
   gap: --spacing(4);
   text-align: center;
+  color: var(--hero-fg);
 }
-/* Gradient backdrop — full-bleed pastel clouds, one scene per typed phrase.
+/* Solid colour backdrop — with each phrase a giant letter brings in the next colour (script.js).
+   Each colour brings the text colour that reads best on it (higher contrast: white or slate-900).
+   data-bg sits on .hero (text + buttons), .hero__bg (current colour) and .hero__letter (next colour). */
+.hero                           { --hero-bg: var(--color-primary);    --hero-fg: var(--color-white); }
+:is(.hero, .hero *)[data-bg="olive"] { --hero-bg: var(--color-olive-500);  --hero-fg: var(--color-white); }
+:is(.hero, .hero *)[data-bg="blue"]  { --hero-bg: var(--color-primary);    --hero-fg: var(--color-white); }
+:is(.hero, .hero *)[data-bg="zinc"]  { --hero-bg: var(--color-zinc-900);   --hero-fg: var(--color-white); }
+:is(.hero, .hero *)[data-bg="teal"]  { --hero-bg: var(--color-teal-500);   --hero-fg: var(--color-slate-900); }
+:is(.hero, .hero *)[data-bg="amber"] { --hero-bg: var(--color-amber-300);  --hero-fg: var(--color-slate-900); }
+/* Buttons follow the colours: solid = text colour on it, outline = its border */
+.hero .btn--primary, .hero .btn--primary:hover:not(:disabled) { background: var(--hero-fg); color: var(--hero-bg); }
+.hero .btn--outline, .hero .btn--outline:hover { background: transparent; border-color: var(--hero-fg); color: var(--hero-fg); }
+/* (Previously) gradient backdrop — full-bleed pastel clouds, one scene per typed phrase.
    Only opacity animates (cheap); scenes cross-fade when the phrase changes. */
 .hero__bg {
   position: absolute;
@@ -236,8 +252,21 @@
   transform: translateX(-50%);
   z-index: 0;
   pointer-events: none;
-  mask: linear-gradient(to bottom, #000 70%, transparent 100%);
+  background: var(--hero-bg);
 }
+/* The next colour arrives as a giant «AI քեզ բան» (script.js sizes the viewBox to the text, grows it
+   from the centre, then zooms into its thickest stroke). `translate` centres it; animations use `transform`. */
+.hero__letter {
+  position: absolute; z-index: 1;
+  left: 50%; top: 50%;
+  translate: -50% -50%;
+  width: 94vw; height: auto;               /* height follows the text's shape (viewBox) */
+  overflow: visible;
+  opacity: 0;                              /* hidden between transitions */
+  fill: var(--hero-bg);                    /* its own data-bg = the next colour */
+  will-change: transform;
+}
+.hero__scene { display: none; }   /* gradient scenes switched off for the solid colours — delete this line to bring them back */
 .hero__scene {
   position: absolute; inset: 0;
   opacity: 0;
@@ -288,37 +317,6 @@
   .hero__geo .tile { transition: none; }
 }
 
-/* Two big icons flanking the title (a fresh random pair per phrase — see setHeroFloats in script.js).
-   --dx = gap from the centre line to the icon's near edge (just past the longest phrase),
-   --dy = icon centre vs. the centre of the text block (--c-y); script.js staggers the pair (one high, one low).
-   --w shrinks the icons if the space to the screen edge gets tight, so they never run off-screen.
-   Transparent WebPs cut from the PNGs in assets/hero. */
-.hero__floats { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.hero__float {
-  --c-y: calc(50% + var(--header-h) / 2);                                   /* vertical centre of the text block */
-  --dx: --spacing(110);
-  /* ÷ 1.2: a tilted icon is up to ~20% wider than its box, so it still fits before the screen edge */
-  --w: min(calc(var(--size, 160) * 1px), calc((min(100vw, var(--container-page)) / 2 - var(--dx) - --spacing(4)) / 1.2));
-  position: absolute;
-  top: calc(var(--c-y) + var(--dy, --spacing(-16)));   /* --dy set per icon by script.js (one high, one low) */
-  width: var(--w); height: auto;
-  translate: calc(-50% + var(--push, 0px)) -50%;
-  rotate: var(--rot, 0deg);
-  scale: var(--flip, 1) 1;                                                   /* mirrored at random */
-  filter: drop-shadow(0 --spacing(4) --spacing(8) color-mix(in oklab, var(--color-green-700) 18%, transparent));
-  animation: float-bob 6s ease-in-out infinite;
-  transition: opacity .4s ease var(--delay, 0ms), translate .6s var(--ease-smooth) var(--delay, 0ms);
-}
-.hero__float[data-side="left"]  { left: calc(50% - var(--dx) - var(--w) / 2); }
-.hero__float[data-side="right"] { left: calc(50% + var(--dx) + var(--w) / 2); }
-.hero__float:nth-child(2) { animation-delay: -2s; }
-/* hidden state: faded and pushed outwards, so each icon slides in towards the text */
-.hero__float.is-out { opacity: 0; transition-delay: 0ms; }
-.hero__float.is-out[data-side="left"]  { --push: calc(--spacing(-16)); }
-.hero__float.is-out[data-side="right"] { --push: --spacing(16); }
-.hero__float:not([src]) { visibility: hidden; }
-@media (width < theme(--breakpoint-lg)) { .hero__floats { display: none; } }   /* tablets / phones: no margin beside the title */
-@media (prefers-reduced-motion: reduce) { .hero__float { animation: none; transition: none; } }
 
 .hero__title {
   position: relative; z-index: 1;
@@ -327,8 +325,7 @@
   line-height: 1.1;
   letter-spacing: var(--tracking-tighter);
   font-weight: var(--font-weight-bold);
-  font-style: italic;
-  color: var(--color-slate-900);
+  font-style: italic;              /* «Սովորիր»; the shuffled phrase letters are always upright */
 }
 /* The live line and invisible copies of every phrase (added by script.js) share one grid cell,
    so the title keeps the height of its longest phrase and nothing below moves while typing. */
@@ -336,8 +333,6 @@
 .hero__title > span { grid-area: 1 / 1; }
 .hero__ghost { visibility: hidden; }
 .hero__title-light { font-weight: var(--font-weight-normal); }   /* «Սովորիր» flows with the phrase; the text wraps naturally (2 lines max) */
-.hero__caret { font-weight: var(--font-weight-normal); animation: blink 1.1s steps(1) infinite; }
-.hero__caret.is-typing { animation: none; }
 
 .hero__sub {
   position: relative; z-index: 1;
@@ -1201,6 +1196,47 @@
 .schedule__rows dd { font-size: var(--text-base); color: var(--color-slate-900); }
 
 /* ============================================================
+   10b · WORDMARK — black box, white type, every letter in a random font style
+   Letter styles (data-f) are the shared .shuffle rules below; only the font changes, never the colour.
+   Every face has Armenian and Latin, so «AI» and «Project Manager» shuffle the same way. No italics.
+   ============================================================ */
+/* Full-width black band, edge to edge, sitting right on top of the footer */
+.wordmark { padding-top: var(--section-y); }
+.wordmark__box {
+  background: var(--color-black);
+  color: var(--color-white);
+  padding: --spacing(16) var(--page-x);
+  text-align: center;
+  overflow: hidden;
+  font-size: clamp(1.75rem, 8vw, 7.5rem);
+}
+.wordmark__line {
+  height: 1.2em; line-height: 1.2em;   /* fixed line box: switching fonts never makes the box jump */
+  white-space: nowrap;
+  font-weight: var(--font-weight-bold);
+}
+
+/* LETTER SHUFFLE (hero title + wordmark, see script.js): each letter is a fixed-width slot
+   (width = its widest style) inside a no-wrap word; the glyph is centred and may spill over,
+   but never moves its neighbours. Lines only break between words. */
+.shuffle { position: relative; }
+.shuffle__word { display: inline-block; white-space: nowrap; }
+.shuffle__slot { display: inline-flex; justify-content: center; }
+.shuffle__slot > span { line-height: 0; }   /* tall styles (e.g. the scaled-up pixel font) never make a line taller; the glyph just draws over the leading */
+.shuffle__probe { position: absolute; top: 0; left: 0; visibility: hidden; white-space: nowrap; pointer-events: none; }
+.shuffle [data-f] { font-style: normal; font-variation-settings: normal; }   /* upright only, never italic; Handjet (5, 6) runs small, so it is scaled up */
+.shuffle [data-f="0"] { font-family: var(--font-sans); font-weight: 900; }                              /* heavy humanist */
+.shuffle [data-f="1"] { font-family: "Noto Sans Armenian", var(--font-sans); font-weight: 900; }       /* heavy geometric */
+.shuffle [data-f="2"] { font-family: "Noto Sans Armenian", var(--font-sans); font-weight: 100; }       /* hairline */
+.shuffle [data-f="3"] { font-family: "Noto Serif Armenian", serif; font-weight: 400; }                  /* classic serif */
+.shuffle [data-f="4"] { font-family: "Noto Serif Armenian", serif; font-weight: 900; }                  /* black serif */
+.shuffle [data-f="5"] { font-family: "Handjet", monospace; font-weight: 900; font-size: 1.2em; font-variation-settings: "ELSH" 2, "ELGR" 1; }   /* solid pixel blocks */
+.shuffle [data-f="6"] { font-family: "Handjet", monospace; font-weight: 700; font-size: 1.2em; font-variation-settings: "ELSH" 10, "ELGR" 1; }  /* dotted LED grid (ELSH 0 renders nothing) */
+.shuffle [data-f="7"] { font-family: "Google Sans", var(--font-sans); font-weight: 700; }               /* clean sans */
+.shuffle [data-f="8"] { font-family: "Iosevka Charon", monospace; font-weight: 700; }                   /* boxy mono */
+@media (width < theme(--breakpoint-md)) { .wordmark__box { padding: --spacing(10) var(--page-x); } }
+
+/* ============================================================
    11 · FOOTER
    ============================================================ */
 .footer {
@@ -1306,12 +1342,12 @@
 }
 
 @media (width < theme(--breakpoint-md)) {
-  .topbar { gap: --spacing(4); padding: --spacing(3) --spacing(4); justify-content: space-between; }
+  .topbar { width: calc(100% - --spacing(8)); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
   .topbar__item { gap: --spacing(2.5); width: 100%; justify-content: space-between; }
   .topbar__text { font-size: var(--text-xs); white-space: normal; line-height: var(--leading-tight); }
   .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(5); }
   .nav__logo img { height: --spacing(8); }
-  .hero { --header-h: --spacing(29); padding-left: --spacing(4); padding-right: --spacing(4); }
+  .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
   .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { min-width: 0; width: 100%; }
@@ -1365,8 +1401,6 @@
 /* ============================================================
    KEYFRAMES
    ============================================================ */
-@keyframes blink { 50% { opacity: 0; } }
-@keyframes float-bob { 50% { transform: translateY(calc(--spacing(3) * -1)); } }
 @keyframes hero-drift {
   from { transform: scale(1) translate(0, 0); }
   to   { transform: scale(1.12) translate(3%, -2%); }
