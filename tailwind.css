@@ -1340,7 +1340,7 @@ body.is-menu-open { overflow: hidden; }
   gap: --spacing(5) --spacing(4);
   max-width: --spacing(100);
 }
-.footer__gerb { justify-self: center; width: --spacing(10); height: auto; }
+.footer__gerb { justify-self: start; width: --spacing(10); height: auto; }   /* left edge lines up with the logo's */
 .footer__logo { display: block; }
 .footer__logo img { height: --spacing(12); width: auto; }
 .footer__tagline { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-slate-600); }
