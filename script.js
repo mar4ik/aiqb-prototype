@@ -335,7 +335,7 @@ function textCore(text, font, box) {
 })();
 
 /* ============================================================
-   07 · STATS — duplicate each [data-loop] track (animal crowd, tool logos)
+   07 · STATS — duplicate each [data-loop] track (letter crowd, tool logos)
    so the CSS scroll (translateX 50%) loops seamlessly
    ============================================================ */
 document.querySelectorAll('[data-loop]').forEach((track) => {

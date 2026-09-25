@@ -266,56 +266,6 @@
   fill: var(--hero-bg);                    /* its own data-bg = the next colour */
   will-change: transform;
 }
-.hero__scene { display: none; }   /* gradient scenes switched off for the solid colours — delete this line to bring them back */
-.hero__scene {
-  position: absolute; inset: 0;
-  opacity: 0;
-  transition: opacity 1.4s ease;
-}
-.hero__scene.is-active { opacity: 1; animation: hero-drift 14s ease-in-out infinite alternate; }   /* colour clouds slowly drift, so the backdrop keeps shifting */
-/* 1 · ապագայի հմտություններ — brand blue + violet */
-.hero__scene--1 { background:
-  radial-gradient(38% 55% at 14% 32%, color-mix(in oklab, var(--color-primary) 30%, transparent), transparent 70%),
-  radial-gradient(34% 50% at 86% 24%, color-mix(in oklab, var(--color-violet-600) 24%, transparent), transparent 70%),
-  radial-gradient(40% 45% at 58% 92%, color-mix(in oklab, var(--color-blue-400) 26%, transparent), transparent 70%); }
-/* 2 · AI գործիքներով աշխատել — teal + sky */
-.hero__scene--2 { background:
-  radial-gradient(36% 52% at 82% 30%, color-mix(in oklab, var(--color-teal-500) 28%, transparent), transparent 70%),
-  radial-gradient(40% 55% at 18% 72%, color-mix(in oklab, var(--color-sky-500) 26%, transparent), transparent 70%),
-  radial-gradient(30% 40% at 46% 8%, color-mix(in oklab, var(--color-primary) 18%, transparent), transparent 70%); }
-/* 3 · ավտոմատացնել առօրյադ — warm orange + amber */
-.hero__scene--3 { background:
-  radial-gradient(38% 52% at 20% 22%, color-mix(in oklab, var(--color-accent-soft) 28%, transparent), transparent 70%),
-  radial-gradient(36% 50% at 84% 70%, color-mix(in oklab, var(--color-amber-500) 24%, transparent), transparent 70%),
-  radial-gradient(32% 42% at 52% 96%, color-mix(in oklab, var(--color-accent) 16%, transparent), transparent 70%); }
-/* 4 · ստեղծել AI-ի օգնությամբ — pink + violet */
-.hero__scene--4 { background:
-  radial-gradient(36% 52% at 80% 28%, color-mix(in oklab, var(--color-rose-500) 24%, transparent), transparent 70%),
-  radial-gradient(40% 55% at 16% 68%, color-mix(in oklab, var(--color-violet-600) 26%, transparent), transparent 70%),
-  radial-gradient(30% 40% at 54% 6%, color-mix(in oklab, var(--color-pink-500) 18%, transparent), transparent 70%); }
-/* Bauhaus tile pattern per scene — soft (low opacity) and faded out behind the text.
-   Tiles pop in as a wave from the centre when their scene becomes active (--d = delay). */
-.hero__geo {
-  display: none;   /* patterns hidden for now — delete this line to bring them back */
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  opacity: .24;
-  mask: radial-gradient(ellipse 52% 60% at 50% 42%, transparent 55%, #000 95%);
-}
-.hero__geo .tile {
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scale(.4);
-  opacity: 0;
-  transition: transform .9s var(--ease-smooth), opacity .7s ease;
-  transition-delay: var(--d, 0ms);
-}
-.hero__scene.is-active .hero__geo .tile { transform: scale(1); opacity: 1; }
-@media (width < theme(--breakpoint-md)) { .hero__geo { opacity: .2; } }   /* lighter on phones: the pattern sits closer to the text */
-@media (prefers-reduced-motion: reduce) {
-  .hero__scene { transition: none; }
-  .hero__scene.is-active { animation: none; }
-  .hero__geo .tile { transition: none; }
-}
 
 
 .hero__title {
@@ -641,7 +591,6 @@
 .tool-stack__logo:hover { transform: translateY(calc(--spacing(1) * -1)); position: relative; z-index: 1; }
 .tool-stack__more { background: var(--surface); font-weight: var(--font-weight-bold); font-size: var(--text-xs); color: var(--color-slate-700); cursor: default; }
 .pkg__label { display: flex; align-items: center; gap: --spacing(2); font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900); }
-.tool-pills { display: flex; flex-wrap: wrap; gap: --spacing(1.5); }
 .tool-pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
   height: --spacing(7.5); padding: 0 --spacing(2.5) 0 --spacing(1.5);
@@ -756,7 +705,6 @@
 .ic--check      { --i: url("assets/icons/check.svg"); }
 .ic--x          { --i: url("assets/icons/x.svg"); }
 .ic--shield     { --i: url("assets/icons/shield-check.svg"); }
-.ic--gift       { --i: url("assets/icons/gift.svg"); }
 .ic--chev-left  { --i: url("assets/icons/chevron-left.svg"); }
 .ic--chev-right { --i: url("assets/icons/chevron-right.svg"); }
 .ic--external   { --i: url("assets/lucide-arrow-up-right.svg"); }
@@ -882,7 +830,7 @@
   justify-content: center;
   padding: --spacing(4);
 }
-.stat-card--hero { height: --spacing(119); padding-top: --spacing(24); }
+.stat-card--hero { height: --spacing(119); padding-bottom: --spacing(24); }   /* room for the letter crowd along the bottom */
 .stat-card--tools { height: --spacing(65); padding-bottom: --spacing(29.5); }
 .stat-card--fill { flex: 1; flex-direction: column; gap: --spacing(5); }
 
@@ -916,9 +864,9 @@
 .face-pile img:nth-child(5) { transition-delay: 120ms; }
 .face-pile img:nth-child(6) { transition-delay: 150ms; }
 
-/* Anonymous-animal crowd across the top of the 10,000+ card */
+/* Crowd of Armenian-letter avatars along the bottom of the 10,000+ card */
 .crowd {
-  position: absolute; top: --spacing(4); left: 0; right: 0;
+  position: absolute; bottom: --spacing(4); left: 0; right: 0;
   overflow: hidden;
   mask: linear-gradient(90deg, transparent 0, #000 --spacing(16), #000 calc(100% - --spacing(16)), transparent 100%);
 }
@@ -939,7 +887,14 @@
   overflow: hidden;
   transition: transform .2s ease;
 }
-.avatar img { width: 100%; height: 100%; }
+/* Armenian letter on the coloured disc */
+.avatar--letter {
+  display: grid; place-items: center;
+  font-weight: var(--font-weight-bold); font-size: var(--text-2xl); line-height: 1;
+  color: var(--color-white);
+  user-select: none;
+}
+.ladder .avatar--letter { font-size: var(--text-xl); }
 .crowd .avatar { margin-right: calc(--spacing(2.5) * -1); }   /* slight overlap, like a facepile */
 .crowd .avatar:hover { transform: translateY(calc(--spacing(1) * -1)) scale(1.08); position: relative; z-index: 1; }
 /* Palette: brand blue / orange / violet + playful extras, cycled */
@@ -1043,7 +998,7 @@
 .referral__sub { font-size: var(--text-base); color: var(--color-slate-600); }
 .referral__panel .promo-form { align-self: center; }   /* card hugs its content instead of stretching to the left column */
 
-/* Friends ladder: 10 anonymous animals, #1 and #10 are the reward steps */
+/* Friends ladder: 10 Armenian-letter avatars, #1 and #10 are the reward steps */
 .ladder {
   position: relative;
   display: flex; justify-content: space-between;
@@ -1382,6 +1337,7 @@
   .mission__right, .progress, .mission__label { width: 100%; white-space: normal; }
   .referral__panel { padding: --spacing(6); }
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
+  .ladder .avatar--letter { font-size: var(--text-xs); }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }
   .ladder::before { left: --spacing(3.5); right: --spacing(3.5); top: --spacing(3.5); }
   .rewards { grid-template-columns: 1fr; }
@@ -1401,10 +1357,6 @@
 /* ============================================================
    KEYFRAMES
    ============================================================ */
-@keyframes hero-drift {
-  from { transform: scale(1) translate(0, 0); }
-  to   { transform: scale(1.12) translate(3%, -2%); }
-}
 @keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes soon-shimmer { from { transform: translateX(0); } to { transform: translateX(50%); } }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
