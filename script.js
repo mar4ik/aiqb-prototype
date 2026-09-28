@@ -101,13 +101,132 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    03 · HERO — «Սովորիր» + a phrase whose letters scramble into place
-   (the title's own font — no style changes). After each sentence settles, the backdrop simply changes to the
-   next palette colour. Colours + matching text colour live in CSS (.hero[data-bg="…"]).
+   (the title's own font — no style changes). Every time a new line starts,
+   the three floating icons swap for a new random set (heroFloats below).
    Phrases live in the data-phrases attribute in index.html.
    ============================================================ */
-// Colours change instantly, in this order (the «warhol» palette, see --color-pop-* in tailwind.css)
-const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'tan', 'orchid'];   // the page opens on the first one
 const HERO_BRAND = 'AI քեզ բան';
+// Floating icons: assets/hero/icon/<name>.webp. Each entry is one thing; its variants never show together.
+const HERO_ICONS = [
+  ['gear-bolt', 'gear-bolt-glow'], ['keyboard'], ['laptop-sparkle'], ['pointer'], ['rocket-flying', 'rocket'],
+  ['robot-head'], ['chat-bubble'], ['code-brackets'], ['film-clapper'], ['magic-wand'],
+];
+
+// Three icons at a time, set around the words of the line they come with (read from that line's
+// invisible sizing copy, so they hug the real text, not the title's full-width box). Each sits in a
+// fixed slot (HERO_SLOTS) with a little jitter, clear of the text, the fixed nav, the floating
+// buttons and each other. With room beside the words (wide screens): a big one beside the headline,
+// a big one beside the buttons, the small one above the headline's far end. Otherwise (tablets,
+// phones): two above the headline, one below the buttons. Every other line is the mirror image.
+// next(line) fades the set out and a fresh one in, with as many things as possible that weren't just on screen.
+const HERO_SLOTS = {   // top-left corner of each icon. T: the line's words, A: the buttons, c: centre, s/m: big/small size, g: gap
+  beside: [
+    ({ T, s, g }) => [T.left - g - s, T.top - s * 0.35],                                          // big, beside the headline
+    ({ T, A, s, g }) => [A.right + g * 2, Math.max(A.top + A.height / 2 - s / 2, T.bottom + g)],  // big, beside the buttons
+    ({ T, m, g }) => [T.right - m, T.top - g - m],                                                // small, above the headline's end
+  ],
+  stacked: [
+    ({ T, c, s, g }) => [c - T.width * 0.3 - s / 2, T.top - g - s],                  // big, above the headline
+    ({ A, c, s, g }) => [c + A.width * 0.25 - s / 2, A.bottom + g],                  // big, below the buttons
+    ({ T, c, s, m, g }) => [c + T.width * 0.3 - m / 2, T.top - g * 1.5 - s],        // small, above the headline, a bit higher
+  ],
+};
+
+function heroFloats(hero) {
+  const box = hero.querySelector('.hero__floats');
+  const sub = hero.querySelector('.hero__sub');
+  const actions = hero.querySelector('.hero__actions');
+  if (!box || !sub || !actions) return { next() {} };
+  const fabs = document.querySelector('.fabs');   // fixed bottom right: keep icons out from under it
+  const GAP = 16;   // px always kept clear around the text, the other icons and the hero's edges
+  const SLOT_GAP = 24;   // px between an icon and the text it sits next to
+  const pick = (list) => list[Math.floor(Math.random() * list.length)];
+  const shuffle = (list) => list.map((v) => [Math.random(), v]).sort((a, b) => a[0] - b[0]).map(([, v]) => v);
+  HERO_ICONS.flat().forEach((name) => { new Image().src = `assets/hero/icon/${name}.webp`; });   // cached, so swaps are instant
+  let current = [], shown = [], mirror = 1, line = null;   // shown: HERO_ICONS indexes on screen
+
+  const hits = (x, y, s, boxes) => boxes.some((b) => x < b.r && x + s > b.l && y < b.b && y + s > b.t);
+  // Where an element's text actually is (its line boxes), not its layout box
+  function ink(el) {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const rs = [...range.getClientRects()].filter((r) => r.width && r.height);
+    if (!rs.length) return el.getBoundingClientRect();
+    const left = Math.min(...rs.map((r) => r.left)), right = Math.max(...rs.map((r) => r.right));
+    const top = Math.min(...rs.map((r) => r.top)), bottom = Math.max(...rs.map((r) => r.bottom));
+    return { left, top, right, bottom, width: right - left, height: bottom - top };
+  }
+
+  // Places every icon in its slot; returns which ones fit
+  function arrange(imgs) {
+    if (!imgs.length || !line) return imgs.map(() => false);
+    const H = hero.getBoundingClientRect();
+    const rel = (r) => ({ left: r.left - H.left, top: r.top - H.top, right: r.right - H.left, bottom: r.bottom - H.top, width: r.width, height: r.height });
+    const T = rel(ink(line)), A = rel(actions.getBoundingClientRect());
+    const walls = [T, rel(sub.getBoundingClientRect()), A, fabs && rel(fabs.getBoundingClientRect())].filter(Boolean)
+      .map((r) => ({ l: r.left - GAP, t: r.top - GAP, r: r.right + GAP, b: r.bottom + GAP }));
+    const s = imgs.find((img) => !img.classList.contains('hero__float--sm'))?.offsetWidth ?? imgs[0].offsetWidth;
+    const m = imgs.find((img) => img.classList.contains('hero__float--sm'))?.offsetWidth ?? s;
+    const beside = Math.min(T.left, H.width - T.right) >= s + SLOT_GAP + GAP;
+    const slots = HERO_SLOTS[beside ? 'beside' : 'stacked'];
+    const top = parseFloat(getComputedStyle(hero).paddingTop) - GAP * 2;   // just below the fixed nav
+    const taken = [];
+
+    return imgs.map((img) => {
+      const size = img.offsetWidth;
+      let [x, y] = slots[img.dataset.slot]({ T, A, c: H.width / 2, s, m, g: SLOT_GAP });
+      if (mirror) x = H.width - x - size;
+      x = Math.min(Math.max(x + between(-8, 8), GAP), H.width - size - GAP);
+      y = Math.min(Math.max(y + between(-8, 8), top), H.height - size - GAP);
+      if (hits(x, y, size, walls) || hits(x, y, size, taken)) return false;   // no room here (small screens): skip it
+      taken.push({ l: x - GAP, t: y - GAP, r: x + size + GAP, b: y + size + GAP });
+      img.style.setProperty('--x', `${(x / H.width) * 100}%`);
+      img.style.setProperty('--y', `${(y / H.height) * 100}%`);
+      return true;
+    });
+  }
+
+  function next(nextLine) {
+    line = nextLine;
+    current.forEach((img) => {
+      img.classList.replace('is-in', 'is-out');
+      setTimeout(() => img.remove(), 700);
+    });
+    mirror = 1 - mirror;
+    const fresh = HERO_ICONS.map((_, i) => i).filter((i) => !shown.includes(i));
+    shown = [...shuffle(fresh), ...shuffle(shown)].slice(0, 3);
+    const imgs = shown.map((kind, i) => {
+      const img = document.createElement('img');
+      img.className = i === 2 ? 'hero__float hero__float--sm' : 'hero__float';
+      img.src = `assets/hero/icon/${pick(HERO_ICONS[kind])}.webp`;
+      img.alt = '';
+      img.dataset.slot = i;
+      img.style.setProperty('--r', `${between(-12, 12)}deg`);
+      img.style.setProperty('--bob', `${between(45, 65) / 10}s`);   // fixed per icon, so it never changes pace mid-bob
+      box.append(img);
+      return img;
+    });
+    const placed = arrange(imgs);
+    current = imgs.filter((img, i) => {
+      if (placed[i]) img.classList.add('is-in');   // arrange() measured the layout first, so this fades in
+      else img.remove();
+      return placed[i];
+    });
+  }
+
+  // New layout: arrange the icons again. Width only: phones fire resize while scrolling (URL bar).
+  let resizeTimer = 0, width = innerWidth;
+  addEventListener('resize', () => {
+    if (innerWidth === width) return;
+    width = innerWidth;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      const placed = arrange(current);
+      current.forEach((img, i) => img.classList.toggle('is-in', placed[i]));
+    }, 200);
+  });
+  return { next };
+}
 
 (function heroShuffle() {
   const hero = document.querySelector('.hero');
@@ -115,18 +234,14 @@ const HERO_BRAND = 'AI քեզ բան';
   if (!hero || !el) return;
 
   const phrases = JSON.parse(el.dataset.phrases);
-  // After every sentence the brand takes the whole line (same size, without «Սովորիր»); the colour changes with every line
+  // After every sentence the brand takes the whole line (same size, without «Սովորիր»); the icons change with every line
   const steps = phrases.flatMap((text) => [{ text }, { text: HERO_BRAND, brand: true }]);
-  const HOLD = 1600;                                   // ms every settled line (sentence or «AI քեզ բան») stays, with its colour
+  const HOLD = 1600;                                   // ms every settled line (sentence or «AI քեզ բան») stays, with its icons
   const INTRO_DELAY = 300;                             // ms after the page is ready before the first scramble
   // The wordmark's flip style (letters flip together, then settle left → right), just quicker; no font changes (styles: false).
   const TIMING = { frame: 60, revealStart: 80, revealStep: 20, revealJitter: 60, settle: 0 };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const bg = hero.querySelector('.hero__bg');
-  const nextColor = () => {
-    const color = HERO_COLORS[(HERO_COLORS.indexOf(hero.dataset.bg) + 1) % HERO_COLORS.length];
-    hero.dataset.bg = bg.dataset.bg = color;
-  };
+  const floats = heroFloats(hero);
 
   // Only wait for the font the hero title uses, not every font on the page
   const title = el.closest('.hero__title');
@@ -138,8 +253,9 @@ const HERO_BRAND = 'AI քեզ բան';
 
     // Invisible slotted copies of every phrase share the title's grid cell, so the title is
     // always as tall as the longest phrase and nothing below moves while it scrambles.
+    // The icons read each line's copy to sit around its words.
     const line = el.parentElement;
-    steps.forEach(({ text, brand }) => {
+    const ghosts = steps.map(({ text, brand }) => {
       const ghost = line.cloneNode(true);
       ghost.classList.add('hero__ghost');
       ghost.classList.toggle('is-brand', !!brand);
@@ -147,6 +263,7 @@ const HERO_BRAND = 'AI քեզ բան';
       typed.removeAttribute('data-phrases');
       spell(typed, text);
       line.parentElement.appendChild(ghost);
+      return ghost;
     });
     const show = () => {
       const { text, brand } = steps[index];
@@ -154,12 +271,13 @@ const HERO_BRAND = 'AI քեզ բան';
       return spell(el, text);
     };
     show();
+    floats.next(ghosts[index]);
 
-    if (reduceMotion) {   // no scrambling: swap whole phrases, then the colour
+    if (reduceMotion) {   // no scrambling: swap whole phrases, then the icons
       setInterval(() => {
         index = (index + 1) % steps.length;
         show();
-        nextColor();
+        floats.next(ghosts[index]);
       }, HOLD + 1000);
       return;
     }
@@ -167,7 +285,7 @@ const HERO_BRAND = 'AI քեզ բան';
     let cancel = () => {}, timer = 0, running = false;
     function play(advance = true) {
       if (advance) index = (index + 1) % steps.length;
-      if (advance) nextColor();   // the colour switches the instant the next line starts (not for the opening sentence: it keeps the first colour)
+      if (advance) floats.next(ghosts[index]);   // new icons the instant the next line starts (the opening sentence keeps the first set)
       cancel = shuffleIn(show(), {
         styles: false,
         timing: TIMING,
@@ -480,6 +598,75 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
     removeEventListener('pointermove', hoverReady);
     note.closest('.pkg').querySelector('.pkg__name').focus({ preventScroll: true });   // the ✕ is gone; keep keyboard focus in its card
   }));
+})();
+
+/* ============================================================
+   05b · EYE MASK TILES — every photo tile in «Ի՞նչ սովորել» (.learn-tile--eye)
+   gets a dark frame with an eye-shaped hole over its photo
+   (assets/learn/mask/eye_open.svg). Each eye starts shut, opens when its
+   tile scrolls into view, then blinks on its own random clock (now and
+   then a quick double), so no two tiles blink together. No blinks while
+   hovered (the eye is wide open) or off screen. With reduced motion or no
+   IntersectionObserver the eyes just stay open.
+   ============================================================ */
+(function learnEyes() {
+  const tiles = document.querySelectorAll('.learn-tile--eye');
+  if (!tiles.length) return;
+  // The open eye in a 900×600 box; the closed one is this squashed to 3.77% of its height (CSS)
+  const EYE = 'M441 67C229.075 66.9998 8.15657 317.269 8 317.446C8 317.446 246 528 452 528C658 528 900 317.446 900 317.446C899.845 317.268 682.016 67.0002 441 67Z';
+  const FRAME = 'x="-20000" y="-20000" width="40900" height="40600"';   // runs past the viewBox to fill any tile shape
+  const animate = 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  tiles.forEach((tile, i) => {
+    tile.querySelector('img').insertAdjacentHTML('afterend',
+      `<svg class="learn-tile__eye" viewBox="0 0 900 600" aria-hidden="true" focusable="false">
+        <mask id="learn-eye-${i}"><rect ${FRAME} /><path class="learn-tile__eye-hole" d="${EYE}" /></mask>
+        <rect ${FRAME} mask="url(#learn-eye-${i})" />
+      </svg>`);   // one mask per tile, so each eye blinks on its own
+    if (animate) blink(tile);
+  });
+
+  function blink(tile) {
+    const eye = tile.querySelector('.learn-tile__eye');
+    const hole = eye.querySelector('.learn-tile__eye-hole');
+    let running = false, timer = 0, left = 0;   // left: blinks still to do in this burst
+
+    const next = () => { timer = setTimeout(close, rand(600, 3200)); };   // 0.6–3.2 s apart
+    function close() {
+      if (tile.matches(':hover')) { left = 0; next(); return; }
+      if (!left) left = Math.random() < 0.35 ? 2 : 1;
+      eye.classList.add('is-blinking');
+    }
+    const blinked = () => {
+      eye.classList.remove('is-blinking');
+      if (!running) return;
+      left--;
+      if (left > 0) timer = setTimeout(close, 60);   // quick double blink
+      else next();
+    };
+    hole.addEventListener('animationend', blinked);
+    hole.addEventListener('animationcancel', blinked);   // a hover cuts a blink short
+
+    eye.classList.add('is-closed');
+    new IntersectionObserver(([entry]) => {
+      if (entry.intersectionRatio >= 0.6 && eye.classList.contains('is-closed') && !running) {
+        running = true;
+        timer = setTimeout(() => {                  // tiles in one row don't open in lockstep either
+          eye.classList.remove('is-closed');        // CSS transition does the opening
+          timer = setTimeout(close, rand(900, 3000));
+        }, rand(0, 400));
+      } else if (entry.isIntersecting && !running && !eye.classList.contains('is-closed')) {
+        running = true;
+        next();
+      } else if (!entry.isIntersecting && running) {
+        running = false;
+        clearTimeout(timer);
+        left = 0;
+        eye.classList.remove('is-blinking');
+      }
+    }, { threshold: [0, 0.6] }).observe(tile);
+  }
 })();
 
 /* ============================================================
