@@ -1,7 +1,7 @@
 const between = (min, max) => Math.round(min + Math.random() * (max - min));
 
 /* ============================================================
-   LETTER SHUFFLE — shared by the hero title (03) and the wordmark (10b)
+   LETTER SHUFFLE — shared by the hero title (03) and the wordmark (09b)
    Each letter sits in a fixed-width slot (as wide as its widest style) inside
    a no-wrap word, so switching fonts never pushes its neighbours and lines only
    break between words. data-f="0…8" picks the style (CSS: .shuffle [data-f]).
@@ -107,7 +107,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    ============================================================ */
 // Colours change instantly, in this order (the «warhol» palette, see --color-pop-* in tailwind.css)
 const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'tan', 'orchid'];   // the page opens on the first one
-const HERO_BRAND = 'AI Քեզ Բան';
+const HERO_BRAND = 'AI քեզ բան';
 
 (function heroShuffle() {
   const hero = document.querySelector('.hero');
@@ -117,7 +117,7 @@ const HERO_BRAND = 'AI Քեզ Բան';
   const phrases = JSON.parse(el.dataset.phrases);
   // After every sentence the brand takes the whole line (same size, without «Սովորիր»); the colour changes with every line
   const steps = phrases.flatMap((text) => [{ text }, { text: HERO_BRAND, brand: true }]);
-  const HOLD = 1600;                                   // ms every settled line (sentence or «AI Քեզ Բան») stays, with its colour
+  const HOLD = 1600;                                   // ms every settled line (sentence or «AI քեզ բան») stays, with its colour
   const INTRO_DELAY = 300;                             // ms after the page is ready before the first scramble
   // The wordmark's flip style (letters flip together, then settle left → right), just quicker; no font changes (styles: false).
   const TIMING = { frame: 60, revealStart: 80, revealStep: 20, revealJitter: 60, settle: 0 };
@@ -290,6 +290,33 @@ const HERO_BRAND = 'AI Քեզ Բան';
 })();
 
 /* ============================================================
+   12 · Back to top
+   The last floating button shows once the first screen is scrolled
+   past (body.is-past-fold) and scrolls back up; focus goes to the logo
+   so keyboard users aren't left on a button that just hid itself.
+   ============================================================ */
+(function backToTop() {
+  const btn = document.querySelector('.fab--top');
+  if (!btn) return;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let past = null;
+
+  function update() {
+    const next = window.scrollY > window.innerHeight;
+    if (next === past) return;
+    past = next;
+    document.body.classList.toggle('is-past-fold', past);
+  }
+
+  update();
+  window.addEventListener('scroll', update, { passive: true });
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reduceMotion.matches ? 'instant' : 'smooth' });
+    document.querySelector('.nav__logo')?.focus({ preventScroll: true });
+  });
+})();
+
+/* ============================================================
    06 · TEACHERS — prev / next arrows for the card row
    ============================================================ */
 (function teachersCarousel() {
@@ -379,6 +406,80 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
       select(next, true);
     });
   });
+})();
+
+/* ============================================================
+   05 · «Ի՞նչ սովորել» tiles → packages
+   Each tile names the package that teaches it (data-pkg="start" / "levelup";
+   Bundle has both). Wide screens: scroll to the cards, name the topic in a
+   banner inside that package (.pkg-spot), and once the scroll lands spotlight
+   it (.packages[data-spotlight]): it lifts with Bundle and the other package
+   fades until hovered. The spotlight ends when the cards leave the screen,
+   or at once via the banner's ✕ (which also hides the banner).
+   Stacked cards (below lg): just scroll to the package.
+   ============================================================ */
+(function learnSpotlight() {
+  const tiles = document.querySelectorAll('a.learn-tile[data-pkg]');
+  const packages = document.querySelector('.packages');
+  if (!tiles.length || !packages) return;
+  const notes = packages.querySelectorAll('.pkg-spot');
+  const wide = matchMedia('(width >= 68.75rem)');   // = --breakpoint-lg: the three cards sit side by side
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+  const end = () => {
+    delete packages.dataset.spotlight;
+    packages.classList.remove('is-hover-ready');
+  };
+  const unlift = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) return;
+    end();
+    unlift.disconnect();
+  });
+  // The faded card comes back on hover only after a real mouse move (the cursor may have landed on it)
+  const hoverReady = (e) => {
+    if (!e.movementX && !e.movementY) return;
+    packages.classList.add('is-hover-ready');
+    removeEventListener('pointermove', hoverReady);
+  };
+  let landing = 0;
+
+  tiles.forEach((tile) => tile.addEventListener('click', (e) => {
+    const pkg = tile.dataset.pkg;
+    const card = packages.querySelector(`.pkg--${pkg}`);
+    if (!card) return;   // unknown package: let the link jump to #packages
+    e.preventDefault();
+    document.getElementById('tab-basic')?.click();   // the cards live on the «AI գրագիտություն» tab
+    const heading = card.querySelector('.pkg__name');
+    heading.tabIndex = -1;   // keyboard focus follows the scroll, so Tab continues at that card's «Գնել»
+    heading.focus({ preventScroll: true });
+    const behavior = reduceMotion.matches ? 'instant' : 'smooth';
+    if (!wide.matches) { card.scrollIntoView({ behavior }); return; }
+
+    card.querySelector('.pkg-spot__topic').textContent = tile.querySelector('.learn-tile__title').textContent;
+    notes.forEach((note) => { note.hidden = !card.contains(note); });   // one banner at a time
+    end();   // replay the lift for a second tile
+    packages.scrollIntoView({ behavior });
+
+    const id = ++landing;
+    const land = () => {
+      if (id !== landing || packages.dataset.spotlight) return;
+      packages.dataset.spotlight = pkg;
+      unlift.observe(packages);
+      addEventListener('pointermove', hoverReady);
+    };
+    addEventListener('scrollend', land, { once: true });
+    setTimeout(land, 1000);   // no scrollend (older Safari, or nothing to scroll)
+  }));
+
+  // ✕ on a banner: hide it and end the spotlight, so every package is back at full strength
+  notes.forEach((note) => note.querySelector('.dismiss')?.addEventListener('click', () => {
+    landing++;   // a scroll that is still landing mustn't bring the spotlight back
+    note.hidden = true;
+    end();
+    unlift.disconnect();
+    removeEventListener('pointermove', hoverReady);
+    note.closest('.pkg').querySelector('.pkg__name').focus({ preventScroll: true });   // the ✕ is gone; keep keyboard focus in its card
+  }));
 })();
 
 /* ============================================================
@@ -534,16 +635,15 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 })();
 
 /* ============================================================
-   10b · WORDMARK — «AI Քեզ» + a role that changes every few seconds
-   (Ուսուցիչ → Բժիշկ → Նկարիչ → Project Manager → Բան → …).
-   On each change every letter of both lines flips through random font
-   styles; the role's letters also scramble and settle left-to-right
-   (LETTER SHUFFLE helpers, top of this file). The words themselves never
-   change. Pauses while off screen.
-   Add a role: append it to data-words on .wordmark__role.
+   09b · WEBINAR WORDMARK — «AI քեզ» + the role word from data-words
+   on .wordmark__role (now just «վեբինար»; with several words, e.g.
+   "վեբինար|բժիշկ", it rotates through them). Every few seconds every letter
+   of both lines flips through random font styles and the role's letters
+   scramble and settle left-to-right (LETTER SHUFFLE helpers, top of this
+   file). Pauses while off screen.
    ============================================================ */
 (function wordmarkShuffle() {
-  const box = document.querySelector('.wordmark__box');
+  const box = document.querySelector('.wordmark__type');
   const fixed = document.querySelector('.wordmark__fixed');
   const role = document.querySelector('.wordmark__role');
   if (!box || !fixed || !role) return;

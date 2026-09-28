@@ -1,5 +1,5 @@
 /* ============================================================
-   AI Քեզ Բան — stylesheet source (Tailwind CSS v4)
+   AI քեզ բան — stylesheet source (Tailwind CSS v4)
 
    Source file. Build:  npm run build   → writes styles.css (the file the pages load — do not edit it by hand)
    Watch:  npm run dev
@@ -11,6 +11,7 @@
      · text        → slate  (900 headings/body, 700 copy, 600 secondary, 400 muted)
      · surfaces    → zinc   (100 grey sections/cards, 200 strong/borders, 300 dashed)
      · brand       → --color-primary (blue) and --color-accent (orange)
+     · third-party → --color-telegram / --color-whatsapp, only on their own floating buttons
    Tailwind utilities are available too for new markup; the component
    classes live in @layer components, so utilities can override them.
    ============================================================ */
@@ -18,7 +19,7 @@
 @source "./index.html";
 @source "./doctor-register.html";
 
-/* Adelle Sans ARM is the site typeface (files in /fonts); the wordmark shuffle (10b) also mixes in
+/* Adelle Sans ARM is the site typeface (files in /fonts); the wordmark shuffle (09b) also mixes in
    Noto Sans/Serif Armenian, Handjet, Google Sans and Iosevka Charon from Google Fonts (linked in index.html) */
 @font-face { font-family: "Adelle Sans ARM"; font-weight: 400; font-style: normal; font-display: swap;
   src: url("fonts/AdelleSans_ARM-Regular.ttf") format("truetype"); }
@@ -46,6 +47,10 @@
   --color-primary-hover: #1d4ed8;
   --color-accent: #ff5e16;          /* orange: banners, «Շուտով», −10% */
   --color-accent-soft: #ff7a3d;     /* lighter orange for decoration */
+
+  /* Third-party brand colours (Simple Icons values) — only on .fab--telegram / .fab--whatsapp */
+  --color-telegram: #26a5e4;
+  --color-whatsapp: #25d366;
 
   /* Hero backdrop palette: the «warhol» palette (coolors), flat pop-art pastels */
   --color-pop-orchid: #df86d9;
@@ -155,6 +160,18 @@
 .btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-sm); }
 .btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-lg); }
 
+/* Dismiss: small round icon-only ✕ (holds .ic--x) that hides a banner. The hover tint is mixed from
+   the text colour, so it reads on any background (e.g. the green .pkg-spot). */
+.dismiss {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: --spacing(7); height: --spacing(7);
+  border-radius: var(--radius-full);
+  color: var(--color-slate-600);
+  transition: background-color var(--default-transition-duration), color var(--default-transition-duration);
+}
+.dismiss:hover { background: color-mix(in oklab, currentColor 12%, transparent); color: var(--color-slate-900); }
+.dismiss:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
 /* ============================================================
    01 · ANNOUNCEMENT BAR (orange, floating at the bottom until the page is scrolled)
    ============================================================ */
@@ -215,8 +232,9 @@
   font-size: var(--text-base); line-height: var(--text-base--line-height);
   font-weight: var(--font-weight-bold); color: var(--color-slate-900);
   white-space: nowrap;
+  transition: color var(--default-transition-duration);
 }
-.nav__link:hover { background: var(--surface); }
+.nav__link:hover { color: var(--color-primary); }   /* text link: colour only, no background */
 
 /* «Դասընթացներ» sub nav: a white panel under the pill with course links + the Bundle promo.
    Opens on hover / keyboard focus (CSS) and on click (script.js toggles .is-open). */
@@ -224,10 +242,10 @@
 .nav__trigger .ic { width: --spacing(4); height: --spacing(4); transition: rotate .2s; }
 .nav__item.is-open .nav__trigger .ic { rotate: 180deg; }
 @media (width >= theme(--breakpoint-lg)) {
-  .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger { background: var(--surface); }
+  .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger { color: var(--color-primary); }
   .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger .ic { rotate: 180deg; }
   .nav__item.is-closed .nav__trigger .ic { rotate: 0deg; }
-  .nav__item.is-closed .nav__trigger:not(:hover) { background: transparent; }
+  .nav__item.is-closed .nav__trigger:not(:hover) { color: var(--color-slate-900); }
 }
 
 .subnav {
@@ -483,7 +501,7 @@ body.is-menu-open { overflow: hidden; }
   transition: background-color .2s, color .2s, box-shadow .2s;
 }
 .pill-tabs__tab:hover { color: var(--color-slate-900); }
-.pill-tabs__tab[aria-selected="true"] { background: var(--color-white); color: var(--color-slate-900); box-shadow: var(--shadow-sm); }
+.pill-tabs__tab[aria-selected="true"] { background: var(--color-primary); color: var(--color-white); box-shadow: var(--shadow-sm); }
 .pill-tabs__tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .pkg-panel { display: flex; flex-direction: column; gap: var(--card-gap); }
 .pkg-panel[hidden] { display: none; }
@@ -643,6 +661,46 @@ body.is-menu-open { overflow: hidden; }
 .pkg--bundle > :not(.pkg__gift) { position: relative; z-index: 1; }
 .pkg--bundle > .pkg__corner { position: absolute; z-index: 2; }
 
+/* Spotlight (script.js, wide screens only): a clicked «Ի՞նչ սովորել» tile sets .packages[data-spotlight]
+   to the package that teaches it (start / levelup). That package and Bundle lift, the other one steps
+   back and the gift wiggles once to sell Bundle. Hovering the faded card brings it back — but only once
+   the mouse has moved (.is-hover-ready): after the scroll the cursor may have landed on it, and that
+   alone shouldn't undo the fade.
+   .pkg-spot is a light-green banner in the picked card's head (under the name) naming the topic;
+   its .dismiss ✕ hides it and ends the spotlight.
+   .packages gets a scroll margin so the lifted cards clear the nav when the page scrolls to them. */
+.packages { scroll-margin-top: --spacing(6); }
+.pkg { transition: translate .5s var(--ease-smooth), opacity .5s var(--ease-smooth), box-shadow .5s var(--ease-smooth); }
+.pkg-spot {
+  align-self: stretch;
+  display: flex; align-items: flex-start; gap: --spacing(2);
+  margin: --spacing(1) 0;
+  padding: --spacing(4) --spacing(4.5);   /* = .pkg__schedule box */
+  background: var(--color-green-100);
+  border-radius: var(--radius-2xl);
+  font-size: var(--text-lg); line-height: var(--leading-snug); color: var(--color-slate-700);
+  text-wrap: pretty;
+  transition: opacity .5s;
+}
+@starting-style { .pkg-spot { opacity: 0; } }
+.pkg-spot[hidden] { display: none; }
+.pkg-spot strong { font-weight: var(--font-weight-bold); color: var(--color-slate-900); }
+.pkg-spot > p { flex: 1; }
+.pkg-spot .dismiss { margin: calc(--spacing(0.5) * -1) calc(--spacing(2) * -1) 0 0; }   /* ✕ centred on the first line, tucked into the corner */
+@media (width >= theme(--breakpoint-lg)) {
+  .packages[data-spotlight="levelup"] .pkg--start:not(:focus-within),
+  .packages[data-spotlight="start"] .pkg--levelup:not(:focus-within) { opacity: .5; }
+  .packages[data-spotlight].is-hover-ready :is(.pkg--start, .pkg--levelup):hover { opacity: 1; }
+  .packages[data-spotlight="start"] .pkg--start,
+  .packages[data-spotlight="levelup"] .pkg--levelup { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-xl); }
+  .packages[data-spotlight] .pkg--bundle { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-2xl); }
+  .packages[data-spotlight] .pkg__gift { animation: gift-wiggle .9s var(--ease-smooth) .4s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pkg { transition: none; }
+  .packages[data-spotlight] .pkg__gift { animation: none; }
+}
+
 /* Row 1 · head */
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2.5); }
 .pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; description fits on 2 lines */
@@ -759,6 +817,7 @@ body.is-menu-open { overflow: hidden; }
 .learn-col { display: flex; flex-direction: column; gap: var(--card-gap); }
 .learn-tile {
   position: relative;
+  display: block;                    /* most tiles are links to the packages */
   height: var(--h, --spacing(70));
   overflow: hidden;
   border-radius: var(--radius-3xl);
@@ -773,6 +832,7 @@ body.is-menu-open { overflow: hidden; }
   transition: transform .6s var(--ease-smooth);
 }
 .learn-tile:hover > img:not(.learn-tile__art) { transform: scale(1.05); }
+.learn-tile:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 .learn-tile > img[src*="video-river"] { object-position: center 78%; }
 /* dark scrim so the title is always readable */
 .learn-tile::after {
@@ -811,7 +871,7 @@ body.is-menu-open { overflow: hidden; }
 .learn-tile--color:hover .learn-tile__art { rotate: 20deg; }
 
 /* ============================================================
-   ICONS (Lucide, tinted with currentColor via mask)
+   ICONS (Lucide + Simple Icons brand logos, tinted with currentColor via mask)
    ============================================================ */
 .ic {
   display: inline-block; flex: none;
@@ -819,6 +879,7 @@ body.is-menu-open { overflow: hidden; }
   background: currentColor;
   mask: var(--i) center / contain no-repeat;
 }
+.ic--lg { width: --spacing(6); height: --spacing(6); }   /* size scale: default 18px · --lg 24px (brand logos in the floating buttons) */
 .ic--calendar   { --i: url("assets/icons/calendar.svg"); }
 .ic--clock      { --i: url("assets/icons/clock.svg"); }
 .ic--check      { --i: url("assets/icons/check.svg"); }
@@ -828,6 +889,10 @@ body.is-menu-open { overflow: hidden; }
 .ic--chev-right { --i: url("assets/icons/chevron-right.svg"); }
 .ic--external   { --i: url("assets/lucide-arrow-up-right.svg"); }
 .ic--chev-down  { --i: url("assets/lucide-chevron-down.svg"); }
+.ic--phone      { --i: url("assets/icons/phone.svg"); }
+.ic--telegram   { --i: url("assets/icons/telegram.svg"); }
+.ic--whatsapp   { --i: url("assets/icons/whatsapp.svg"); }
+.ic--arrow-up   { --i: url("assets/icons/arrow-up.svg"); }
 
 /* ============================================================
    06 · TEACHERS
@@ -1285,25 +1350,30 @@ body.is-menu-open { overflow: hidden; }
 .schedule__rows dd { font-size: var(--text-base); color: var(--color-slate-900); }
 
 /* ============================================================
-   10b · WORDMARK — black box, white type, every letter in a random font style
+   09b · WEBINAR — black band: the «AI քեզ վեբինար» wordmark (every letter in a random
+   font style), then the lead, the date / time pills and the sign-up button
    Letter styles (data-f) are the shared .shuffle rules below; only the font changes, never the colour.
-   Every face has Armenian and Latin, so «AI» and «Project Manager» shuffle the same way. No italics.
+   Every face has Armenian and Latin, so «AI» shuffles the same way. No italics.
    ============================================================ */
-/* Full-width black band, edge to edge, sitting right on top of the footer */
-.wordmark { padding-top: var(--section-y); }
+/* Full-width black band, edge to edge, between the referral and the FAQ (their own padding spaces it) */
 .wordmark__box {
   background: var(--color-black);
   color: var(--color-white);
   padding: --spacing(16) var(--page-x);
   text-align: center;
   overflow: hidden;
-  font-size: clamp(1.75rem, 8vw, 7.5rem);
 }
+.wordmark__type { font-size: clamp(1.75rem, 8vw, 7.5rem); }
 .wordmark__line {
   height: 1.2em; line-height: 1.2em;   /* fixed line box: switching fonts never makes the box jump */
   white-space: nowrap;
   font-weight: var(--font-weight-bold);
 }
+.wordmark__lead { margin-top: --spacing(8); font-size: var(--text-2xl); line-height: var(--leading-tight); }
+.wordmark__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(6); }
+/* date + time: plain white text with icons — no background, so only the button reads as clickable */
+.wordmark__when { display: flex; flex-wrap: wrap; justify-content: center; gap: --spacing(2) --spacing(6); }
+.wordmark__fact { display: inline-flex; align-items: center; gap: --spacing(2.5); font-weight: var(--font-weight-bold); font-size: var(--text-lg); white-space: nowrap; }
 
 /* LETTER SHUFFLE (hero title + wordmark, see script.js): each letter is a fixed-width slot
    (width = its widest style) inside a no-wrap word; the glyph is centred and may spill over,
@@ -1323,7 +1393,10 @@ body.is-menu-open { overflow: hidden; }
 .shuffle [data-f="6"] { font-family: "Handjet", monospace; font-weight: 700; font-size: 1.2em; font-variation-settings: "ELSH" 10, "ELGR" 1; }  /* dotted LED grid (ELSH 0 renders nothing) */
 .shuffle [data-f="7"] { font-family: "Google Sans", var(--font-sans); font-weight: 700; }               /* clean sans */
 .shuffle [data-f="8"] { font-family: "Iosevka Charon", monospace; font-weight: 700; }                   /* boxy mono */
-@media (width < theme(--breakpoint-md)) { .wordmark__box { padding: --spacing(10) var(--page-x); } }
+@media (width < theme(--breakpoint-md)) {
+  .wordmark__box { padding: --spacing(10) var(--page-x); }
+  .wordmark__actions { flex-direction: column; align-items: stretch; }   /* date + time above, button full width below, like the hero buttons */
+}
 
 /* ============================================================
    11 · FOOTER
@@ -1386,12 +1459,33 @@ body.is-menu-open { overflow: hidden; }
 .fabs { position: fixed; right: --spacing(14); bottom: --spacing(8); z-index: 50; display: flex; gap: --spacing(2); }
 .fab {
   display: flex; align-items: center; justify-content: center;
-  padding: --spacing(4);
+  width: --spacing(12); height: --spacing(12);
+  color: var(--color-white);
   background: var(--color-primary);
   border-radius: var(--radius-full);
   transition: transform var(--default-transition-duration);
 }
 .fab:hover { transform: translateY(-2px); }
+/* icon + text (the phone number): same height, stretches into a pill; type matches .pill-tabs__tab */
+.fab--label {
+  width: auto; gap: --spacing(2); padding-inline: --spacing(5);
+  font-weight: var(--font-weight-semibold); font-size: var(--text-base); line-height: --spacing(5);
+  white-space: nowrap;
+}
+.fab--accent { background: color-mix(in oklab, var(--color-accent) 90%, transparent); backdrop-filter: blur(var(--blur-sm)); }   /* same orange as the webinar bar (04) */
+.fab--telegram { background: var(--color-telegram); }
+.fab--whatsapp { background: var(--color-whatsapp); }
+/* back to top: dark so it doesn't read as a contact. Its slot in the row is kept (no jump);
+   it fades in once the first screen is scrolled past (body.is-past-fold, script.js) */
+.fab--top {
+  background: var(--color-slate-900);
+  opacity: 0; visibility: hidden; translate: 0 --spacing(2);
+  transition: transform var(--default-transition-duration), opacity .3s ease, translate .3s ease, visibility 0s .3s;
+}
+.is-past-fold .fab--top {
+  opacity: 1; visibility: visible; translate: none;
+  transition: transform var(--default-transition-duration), opacity .3s ease, translate .3s ease;
+}
 
 /* ============================================================
    13 · PRE-REGISTRATION PAGE (doctor-register.html)
@@ -1414,6 +1508,9 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 @media (width < theme(--breakpoint-xl)) {
   .stats__col--left { width: 58%; }
+  /* the FAB row is too wide to sit beside the centred webinar bar: lift it above once the bar is in */
+  .fabs { transition: bottom .35s ease; }
+  .is-scrolled .fabs { bottom: --spacing(25); }
 }
 
 @media (width < theme(--breakpoint-lg)) {
@@ -1436,7 +1533,7 @@ body.is-menu-open { overflow: hidden; }
     transition: opacity .2s, translate .3s var(--ease-smooth), scale .3s var(--ease-smooth), visibility 0s;
   }
   .nav__link { justify-content: space-between; width: 100%; padding: --spacing(3.5) --spacing(4); border-radius: var(--radius-2xl); font-size: var(--text-lg); }
-  .nav__item.is-open .nav__trigger { background: var(--surface); }
+  .nav__item.is-open .nav__trigger { color: var(--color-primary); }
 
   /* «Դասընթացներ» becomes an accordion inside the panel */
   .subnav {
@@ -1455,6 +1552,7 @@ body.is-menu-open { overflow: hidden; }
   .subnav__cols { padding: --spacing(3) --spacing(4) 0; gap: --spacing(4) --spacing(6); }
   .subnav-promo { margin: 0 0 --spacing(2); }
   .packages { grid-template-columns: 1fr; row-gap: --spacing(8); max-width: --spacing(140); margin: 0 auto; width: 100%; }
+  .pkg-spot { display: none; }   /* stacked cards: the tiles just scroll to their package */
   .pro-grid { grid-template-columns: 1fr; max-width: --spacing(140); margin: 0 auto; }
   .pro-card { height: --spacing(80); }
   .learn-grid { display: block; columns: 2; column-gap: var(--card-gap); }
@@ -1480,8 +1578,8 @@ body.is-menu-open { overflow: hidden; }
   .hero__actions .btn { width: 100%; }
   .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
   .promo__btn { margin-left: auto; }
-  .fabs { right: --spacing(4); bottom: --spacing(4); transition: bottom .35s ease; }
-  .is-scrolled .fabs { bottom: --spacing(25); }
+  .fabs { right: --spacing(4); bottom: --spacing(4); }
+  .fab--top { position: absolute; right: 0; bottom: calc(100% + --spacing(2)); }   /* no room for a 4th in the row: stack it above WhatsApp */
   .pkg { padding: --spacing(6); }
   .pkg__name { font-size: var(--text-5xl); line-height: var(--text-5xl--line-height); }
   .pkg__desc { font-size: var(--text-lg); }
@@ -1534,6 +1632,7 @@ body.is-menu-open { overflow: hidden; }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
 @keyframes progress-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
+@keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
   25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>AI Քեզ Բան</title>
-  <!-- Display fonts for the wordmark shuffle (10b) — each has Armenian + Latin -->
+  <title>AI քեզ բան</title>
+  <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@100..900&family=Noto+Serif+Armenian:wght@400..900&family=Handjet:wght,ELGR,ELSH@100..900,1..2,0..16&family=Google+Sans:wght@700&family=Iosevka+Charon:wght@700&display=swap" />
@@ -28,7 +28,7 @@
        ========================================================= -->
   <header class="nav-wrap">
     <nav class="nav">
-      <a href="#" class="nav__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI Քեզ Բան" /></a>
+      <a href="#" class="nav__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI քեզ բան" /></a>
       <div class="nav__links" id="nav-menu">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="#packages" class="nav__link">Դասընթացներ</a>
@@ -49,10 +49,10 @@
                 </div>
                 <div class="subnav__group">
                   <p class="subnav__label">PRO</p>
-                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
-                  <!-- TODO: real external link for «AI Քեզ Project Manager» (same as the PRO card) -->
-                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Project Manager<i class="ic ic--external" aria-hidden="true"></i></a>
-                  <a href="doctor-register.html" class="subnav__link" target="_blank" rel="noopener">AI Քեզ Բժիշկ<i class="ic ic--external" aria-hidden="true"></i><span class="pill subnav__soon">Շուտով</span></a>
+                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI քեզ ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- TODO: real external link for «AI քեզ project manager» (same as the PRO card) -->
+                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI քեզ project manager<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <a href="doctor-register.html" class="subnav__link" target="_blank" rel="noopener">AI քեզ բժիշկ<i class="ic ic--external" aria-hidden="true"></i><span class="pill subnav__soon">Շուտով</span></a>
                 </div>
               </div>
 
@@ -73,6 +73,7 @@
             </div>
           </div>
         </div>
+        <a href="#webinar" class="nav__link">Վեբինար</a>
         <a href="#mission" class="nav__link">Մեր առաքելությունը</a>
         <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
@@ -118,45 +119,46 @@
     <section class="courses" id="courses">
       <h2 class="section-title">Ի՞նչ սովորել</h2>
 
-      <!-- What you'll learn: 3 columns of different heights (Pinterest style), then the packages -->
+      <!-- What you'll learn: 3 columns of different heights (Pinterest style), then the packages.
+           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js) -->
       <div class="learn-grid">
           <div class="learn-col">
-            <article class="learn-tile" style="--h:380px">
+            <a class="learn-tile" style="--h:380px" href="#packages" data-pkg="start">
               <img src="assets/learn/basics-vr-pink.webp" alt="Մարդ VR ակնոցով վարդագույն ֆոնի վրա" loading="lazy" />
               <h4 class="learn-tile__title">AI հիմունքներ, Prompt Engineering, AI անվտանգություն</h4>
-            </article>
-            <article class="learn-tile" style="--h:220px">
+            </a>
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="start">
               <img src="assets/learn/presentations-vr-purple.webp" alt="Մարդ VR ակնոցով մանուշակագույն լույսի ներքո" loading="lazy" />
               <h4 class="learn-tile__title">Պրեզենտացիաների և ելույթի խոսքի ակնթարթային գեներացիա</h4>
-            </article>
-            <article class="learn-tile" style="--h:220px">
+            </a>
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/websites-capsule.webp" alt="Թռչող ֆուտուրիստական կապսուլ երկնքում" loading="lazy" />
               <h4 class="learn-tile__title">Կայքերի գեներացիա՝ առանց ծրագրավորման գիտելիքների</h4>
-            </article>
+            </a>
           </div>
           <div class="learn-col">
-            <article class="learn-tile" style="--h:300px">
+            <a class="learn-tile" style="--h:300px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/research-astronaut.webp" alt="Տիեզերագնաց վարդագույն սաղավարտով" loading="lazy" />
               <h4 class="learn-tile__title">Խորը հետազոտություններ և աղբյուրներով հիմնավորված բովանդակություն</h4>
-            </article>
-            <article class="learn-tile" style="--h:544px">
+            </a>
+            <a class="learn-tile" style="--h:544px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/images-face-paint.webp" alt="Դիմանկար վառ գույներով դիմահարդարմամբ" loading="lazy" />
               <h4 class="learn-tile__title">Տպավորիչ նկարների գեներացիա</h4>
-            </article>
+            </a>
           </div>
           <div class="learn-col">
-            <article class="learn-tile" style="--h:420px">
+            <a class="learn-tile" style="--h:420px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/video-river-portrait.webp" alt="Կինեմատոգրաֆիկ դիմանկար գետի մոտ" loading="lazy" />
               <h4 class="learn-tile__title">Սցենարից վիդեոների գեներացիա</h4>
-            </article>
-            <article class="learn-tile learn-tile--color" style="--h:180px">
+            </a>
+            <a class="learn-tile learn-tile--color" style="--h:180px" href="#packages" data-pkg="levelup">
               <img class="learn-tile__art" src="assets/hero/gear.webp" alt="" aria-hidden="true" />
               <h4 class="learn-tile__title">Գործընթացների ավտոմատացում AI-ով</h4>
-            </article>
-            <article class="learn-tile" style="--h:220px">
+            </a>
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/agents-robot-hand.webp" alt="Ռոբոտի ձեռք նոութբուքի ստեղնաշարի վրա" loading="lazy" />
               <h4 class="learn-tile__title">Ինքնավար ագենտների ստեղծում</h4>
-            </article>
+            </a>
           </div>
       </div>
     </section>
@@ -174,7 +176,7 @@
       </div>
 
       <!-- Ministry endorsement — above the cards, shown for both tabs -->
-      <p class="endorse endorse--strip"><img src="assets/logos/armgerb.svg" alt="" /><span>Պաշտոնապես երաշխավորված է Կրթության, գիտության, մշակույթի և սպորտի նախարարության կողմից։<br />100% վերադարձ եկամտահարկից։</span></p>
+      <p class="endorse endorse--strip"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>
 
       <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
       <div class="packages">
@@ -184,6 +186,11 @@
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Start</h3>
+            <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
+            <div class="pkg-spot" hidden>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>Start</strong> դասընթացի ընթացքում</p>
+              <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+            </div>
             <p class="pkg__desc">AI-ի հետ առաջին ծանոթության համար</p>
           </header>
 
@@ -231,6 +238,11 @@
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Level-Up</h3>
+            <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
+            <div class="pkg-spot" hidden>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>Level-Up</strong> դասընթացի ընթացքում</p>
+              <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+            </div>
             <p class="pkg__desc">Նրանց համար, ովքեր ուզում են AI-ով 10 անգամ ավելի արդյունավետ դառնալ</p>
           </header>
 
@@ -333,19 +345,19 @@
           <a class="pro-card" href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">
             <video class="pro-card__media" src="assets/videos/teacher-level-1-hero.mp4" poster="assets/videos/teacher-level-1-hero.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
             <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
-            <h3 class="pro-card__title">AI Քեզ Ուսուցիչ</h3>
+            <h3 class="pro-card__title">AI քեզ ուսուցիչ</h3>
           </a>
-          <!-- TODO: real external link for «AI Քեզ Project Manager» -->
+          <!-- TODO: real external link for «AI քեզ project manager» -->
           <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
             <img class="pro-card__blob" src="assets/videos/blob.webp" alt="" loading="lazy" />
             <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
-            <h3 class="pro-card__title">AI Քեզ Project Manager</h3>
+            <h3 class="pro-card__title">AI քեզ project manager</h3>
           </a>
           <!-- Coming soon: links to the pre-registration page -->
           <a class="pro-card is-soon" href="doctor-register.html" target="_blank" rel="noopener">
             <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
             <span class="pro-card__soon">Շուտով</span>
-            <h3 class="pro-card__title">AI Քեզ Բժիշկ</h3>
+            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
             <span class="btn btn--white btn--sm pro-card__cta">Գրանցվել</span>
           </a>
         </div>
@@ -379,7 +391,7 @@
               <h3 class="teacher__name">Անահիտ Վարդանյան</h3>
               <p class="teacher__role">AI ստրատեգիստ</p>
             </div>
-            <p class="teacher__bio">AI Քեզ Բան ծրագրի նախագծող, AI ստրատեգիստ՝ 5+ տարվա փորձով</p>
+            <p class="teacher__bio">AI քեզ բան ծրագրի նախագծող, AI ստրատեգիստ՝ 5+ տարվա փորձով</p>
             <div class="chips">
                 <span class="chip">110+ ժամ</span>
                 <span class="chip">Start</span>
@@ -688,6 +700,28 @@
     </section>
 
     <!-- =========================================================
+         09b · WEBINAR — the animated wordmark «AI քեզ վեբինար» (every letter
+         shuffles its font, script.js) + the webinar date, time and sign-up
+         ========================================================= -->
+    <section class="wordmark" id="webinar" aria-labelledby="webinar-title">
+      <div class="wordmark__box">
+        <h2 class="sr-only" id="webinar-title">AI քեզ վեբինար</h2>
+        <div class="wordmark__type shuffle" aria-hidden="true">
+          <p class="wordmark__line wordmark__fixed">AI քեզ</p>
+          <p class="wordmark__line wordmark__role" data-words="վեբինար">վեբինար</p>
+        </div>
+        <p class="wordmark__lead">Մասնակցիր ընթացիկ<br />անվճար վեբինարին</p>
+        <div class="wordmark__actions">
+          <p class="wordmark__when">
+            <span class="wordmark__fact"><i class="ic ic--lg ic--calendar" aria-hidden="true"></i>Ընթացիկ ամսվա 19-ին</span>
+            <span class="wordmark__fact"><i class="ic ic--lg ic--clock" aria-hidden="true"></i>19 : 00 - ին</span>
+          </p>
+          <a href="#" class="btn btn--primary btn--md">Գրանցվիր</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
          10 · FAQ — «Հաճախ տրվող հարցեր»
          ========================================================= -->
     <section class="faq" id="faq">
@@ -710,10 +744,10 @@
           <summary>PRO դասընթացներ</summary>
           <div class="faq__answer">
             <ul class="faq__pro">
-              <li><strong>AI Քեզ Ուսուցիչ</strong> — Մանրամասներին ծանոթացիր <a href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
-              <!-- TODO: real link for «AI Քեզ Project Manager» -->
-              <li><strong>AI Քեզ Project Manager</strong> — Մանրամասներին ծանոթացիր <a href="https://example.com/ai-qez-project-manager" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
-              <li><strong>AI Քեզ Բժիշկ</strong> — Շուտով, <a href="doctor-register.html" target="_blank" rel="noopener">գրանցվել նախապես</a></li>
+              <li><strong>AI քեզ ուսուցիչ</strong> — Մանրամասներին ծանոթացիր <a href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <!-- TODO: real link for «AI քեզ project manager» -->
+              <li><strong>AI քեզ project manager</strong> — Մանրամասներին ծանոթացիր <a href="https://example.com/ai-qez-project-manager" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <li><strong>AI քեզ բժիշկ</strong> — Շուտով, <a href="doctor-register.html" target="_blank" rel="noopener">գրանցվել նախապես</a></li>
             </ul>
           </div>
         </details>
@@ -759,18 +793,6 @@
       </div>
     </section>
 
-    <!-- =========================================================
-         10b · WORDMARK — «AI Քեզ» + a rotating role; every letter
-         shuffles its font, the role scrambles its letters (script.js)
-         ========================================================= -->
-    <section class="wordmark">
-      <div class="wordmark__box shuffle" aria-hidden="true">
-        <p class="wordmark__line wordmark__fixed">AI Քեզ</p>
-        <p class="wordmark__line wordmark__role" data-words="Ուսուցիչ|Բժիշկ|Նկարիչ|Project Manager|Բան">Բան</p>
-      </div>
-      <p class="sr-only">AI Քեզ Ուսուցիչ, AI Քեզ Բժիշկ, AI Քեզ Նկարիչ, AI Քեզ Project Manager, AI Քեզ Բան</p>
-    </section>
-
   </main>
 
   <!-- =========================================================
@@ -779,10 +801,10 @@
   <footer class="footer">
     <div class="footer__cols">
       <div class="footer__brand">
-        <a href="#" class="footer__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI Քեզ Բան" /></a>
+        <a href="#" class="footer__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI քեզ բան" /></a>
         <p class="footer__tagline">Հայաստանում AI կրթության<br />լավագույն ծրագիր</p>
         <img class="footer__gerb" src="assets/logos/armgerb.svg" alt="" />
-        <p class="footer__tagline">Պաշտոնապես երաշխավորված է Կրթության, գիտության, մշակույթի և սպորտի նախարարության կողմից</p>
+        <p class="footer__tagline">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
       </div>
 
       <div class="footer__links">
@@ -812,7 +834,7 @@
     <hr class="footer__line" />
 
     <div class="footer__bottom">
-      <p class="footer__copy">© 2026 AI Քեզ Բան<br />Բոլոր իրավունքները պաշտպանված են</p>
+      <p class="footer__copy">© 2026 AI քեզ բան<br />Բոլոր իրավունքները պաշտպանված են</p>
 
       <div class="footer__end">
         <!-- Accepted payments -->
@@ -845,8 +867,10 @@
        12 · FLOATING ACTION BUTTONS
        ========================================================= -->
   <div class="fabs">
-    <a href="https://t.me/AI_qez_banakan_bot" class="fab" target="_blank" rel="noopener" aria-label="Telegram"><img src="assets/fab-chat.svg" width="16" height="16" alt="" /></a>
-    <a href="https://wa.me/37441958510" class="fab" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><img src="assets/fab-send.svg" width="16" height="16" alt="" /></a>
+    <a href="tel:+37444199199" class="fab fab--label fab--accent" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i>+374 44 199 199</a>
+    <a href="https://t.me/AI_qez_banakan_bot" class="fab fab--telegram" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic--lg ic--telegram" aria-hidden="true"></i></a>
+    <a href="https://wa.me/37441958510" class="fab fab--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><i class="ic ic--lg ic--whatsapp" aria-hidden="true"></i></a>
+    <button type="button" class="fab fab--top" aria-label="Վերև"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
   </div>
 
   <script src="script.js"></script>

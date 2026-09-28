@@ -19,7 +19,9 @@ There's no component folder: the **atomic components are the shared classes in `
 |---|---|---|
 | Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--md` (56px) · `--lg` (64px, hero only); optional `--block` | every clickable action (links styled as buttons too) |
 | Pill / tag | `.pill` + `--deal` (orange −%) · `--save` (green) · `--gift` (violet) · `--zoom` (grey) | discounts, labels, badges |
-| Icon | `.ic` + `.ic--calendar` · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` | every icon: masks tinted by `currentColor` |
+| Icon | `.ic` + `.ic--calendar` · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
+| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · colour: `--accent` (webinar-bar orange) · `--telegram` · `--whatsapp` · `--top` (back to top) | the fixed buttons bottom right |
+| Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
 | Round arrow | `.pro-card__arrow` / `.teachers__arrow` | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |
 | Chip | `.chip` (in `.chips`) | filter / topic chips |
@@ -38,7 +40,7 @@ Rules:
 
 ### Consistency
 - **Font hierarchy:** match the existing type scale and weights — section titles, card names (`.pkg__name`), body text, labels. Don't add new sizes or weights for one element; reuse what a comparable element already uses. Font is always Adelle Sans ARM (`--font-sans`).
-- **Colour roles** (from the header of `tailwind.css`): text is slate (900 headings/body, 700 copy, 600 secondary, 400 muted); surfaces are zinc via `--surface` / `--surface-strong` / `--line`; brand is `--color-primary` (blue) and `--color-accent` (orange). Don't bring in other colours for text or surfaces.
+- **Colour roles** (from the header of `tailwind.css`): text is slate (900 headings/body, 700 copy, 600 secondary, 400 muted); surfaces are zinc via `--surface` / `--surface-strong` / `--line`; brand is `--color-primary` (blue) and `--color-accent` (orange). Don't bring in other colours for text or surfaces. The only exception: `--color-telegram` / `--color-whatsapp`, used only on their own floating buttons.
 - **Spacing:** use the existing rhythm (`--page-x`, `--section-y`, `--card-gap`, `--title-gap`) and `--spacing(n)` steps already used for similar elements. Similar things get identical spacing.
 
 ### Before saying you're done
