@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hero example · AI քեզ բան</title>
+  <!-- Example only: the site's hero (../index.html stays untouched) with the yarn story in place of the
+       headline shuffle. The site's own compiled CSS styles the nav, hero, buttons and fonts; hero.css adds the yarn. -->
+  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="hero.css" />
+</head>
+<body>
+
+  <!-- MAIN NAV (same as the site; links go back to the real page) -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <a href="../index.html" class="nav__logo"><img src="../assets/logos/AIQB_logo.svg" alt="AI քեզ բան" /></a>
+      <div class="nav__links" id="nav-menu">
+        <a href="../index.html#courses" class="nav__link">Ի՞նչ սովորել</a>
+        <a href="../index.html#packages" class="nav__link">Դասընթացներ</a>
+        <a href="../index.html#webinar" class="nav__link">Վեբինար</a>
+        <a href="../index.html#mission" class="nav__link">Մեր առաքելությունը</a>
+        <a href="../index.html#teachers" class="nav__link">Մեր ուսուցիչները</a>
+      </div>
+      <div class="nav__actions">
+        <a href="../index.html#packages" class="btn btn--primary btn--sm">Գրանցվել</a>
+        <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
+          <span></span><span></span>
+        </button>
+      </div>
+    </nav>
+  </header>
+  <div class="nav-scrim" aria-hidden="true"></div>
+
+  <main>
+    <!-- HERO — the yarn story replaces the headline; script.js switches data-bg on the elements marked data-yarn-bg
+         with each scene, and the site's CSS turns that into the backdrop colour -->
+    <section class="hero" data-bg="orange" data-yarn-bg>
+      <div class="hero__bg" data-bg="orange" data-yarn-bg aria-hidden="true"></div>
+      <h1 class="hero__yarn">
+        <svg class="yarn" viewBox="10 120 2020 410" role="img" aria-labelledby="yarn-title">
+          <title id="yarn-title">AI քեզ բան</title>
+          <path class="yarn__thread" id="thread" />
+          <!-- Ball: outer <g> is moved along the thread, inner <g> spins -->
+          <g class="yarn__ball" id="ball">
+            <g id="ball-spin">
+              <circle r="18" />
+              <path d="M -16 -8 C -6 -15, 7 -15, 16 -7" />
+              <path d="M -18 1 C -7 -7, 8 -7, 18 2" />
+              <path d="M -14 11 C -5 4, 6 4, 14 12" />
+              <path d="M -4 -18 C -11 -6, -11 7, -2 18" />
+            </g>
+          </g>
+        </svg>
+      </h1>
+      <p class="hero__sub">
+        Սովորիր արհեստական բանականություն առանց գլխացավանքի՝ <strong>1-ից 4 շաբաթում</strong>
+      </p>
+      <div class="hero__actions">
+        <a href="../index.html#packages" class="btn btn--primary btn--md">Գրանցվել</a>
+        <a href="../index.html#referral" class="btn btn--white btn--md">Ստացիր պրոմոկոդ</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script type="module" src="script.js"></script>
+  <script src="../script.js"></script>   <!-- the site's nav behaviour (burger menu) -->
+</body>
+</html>

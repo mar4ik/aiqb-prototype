@@ -1,0 +1,38 @@
+/* Yarn story inside the site hero — for the example page hero.html only.
+   Built on the site's own variables: --hero-fg (black text colour) and --hero-bg (the current backdrop colour).
+   The SVG is the camera frame: script.js moves its viewBox, sets the thread width and ball size,
+   and switches data-bg on .hero / .hero__bg with each scene. */
+.hero__yarn {
+  position: relative; z-index: 1;
+  /* 1200px at most, and never taller than 55% of the screen (55svh × 12/5), so the buttons stay in view */
+  width: min(100%, calc(var(--spacing) * 300), 132svh);
+}
+
+.yarn {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 5;
+}
+
+.yarn__thread {
+  fill: none;
+  stroke: var(--hero-fg);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.yarn__ball circle { fill: var(--hero-fg); }
+
+.yarn__ball path {           /* the wraps drawn on the ball take the backdrop colour */
+  fill: none;
+  stroke: var(--hero-bg);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* Phones (the site's 48rem breakpoint): a taller frame, so each scene fills the width */
+@media (width < 48rem) {
+  .yarn { aspect-ratio: 4 / 3; }
+}

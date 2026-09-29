@@ -1,0 +1,61 @@
+/* Yarn thread demo — standalone.
+   Colours mirror the site's hero: a black thread (--hero-fg) on the «warhol» palette (--color-pop-*).
+   Thread width and ball size are set in script.js (they adapt to the camera zoom). */
+:root {
+  --bg: #f78154;            /* pop-orange, until script.js picks the beat's colour */
+  --thread: #000000;        /* --color-black, the hero's text colour on every backdrop */
+}
+
+/* Background shuffle: script.js sets data-bg on <body> for each story beat (instant cut, like the site hero) */
+body[data-bg="orange"] { --bg: #f78154; }   /* --color-pop-orange */
+body[data-bg="yellow"] { --bg: #ffd062; }   /* --color-pop-yellow */
+body[data-bg="mint"]   { --bg: #74deb9; }   /* --color-pop-mint */
+body[data-bg="cyan"]   { --bg: #7ee8fa; }   /* --color-pop-cyan */
+body[data-bg="tan"]    { --bg: #b48164; }   /* --color-pop-tan */
+body[data-bg="orchid"] { --bg: #df86d9; }   /* --color-pop-orchid */
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+}
+
+.stage {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 16px;
+}
+
+/* The SVG is the camera's frame: script.js moves the viewBox inside this shape */
+.yarn {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 5;
+}
+
+.yarn__thread {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.yarn__ball circle { fill: var(--thread); }
+
+.yarn__ball path {           /* the wraps drawn on the ball */
+  fill: none;
+  stroke: var(--bg);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+/* Phones: a taller frame, so each scene fills the screen */
+@media (max-width: 640px) {
+  .yarn { aspect-ratio: 4 / 3; }
+}
