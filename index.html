@@ -93,11 +93,9 @@
     <!-- =========================================================
          03 · HERO
          ========================================================= -->
-    <section class="hero">
-      <!-- Soft gradient backdrop, and two floating icons (assets/hero/icon) that script.js
-           swaps for a new random pair with each line of the title -->
-      <div class="hero__bg" aria-hidden="true"></div>
-      <div class="hero__floats" aria-hidden="true"></div>
+    <section class="hero" data-bg="orange">
+      <!-- Solid colour backdrop; script.js changes its colour with each phrase. -->
+      <div class="hero__bg" data-bg="orange" aria-hidden="true"></div>
       <h1 class="hero__title shuffle" aria-label="Սովորիր ապագայի հմտություններ">
         <span aria-hidden="true">
           <span class="hero__title-light">Սովորիր </span><span class="hero__typed" data-phrases='["ապագայի հմտություններ", "AI գործիքներով աշխատել", "ավտոմատացնել առօրյադ", "ստեղծել AI-ի օգնությամբ"]'>ապագայի հմտություններ</span>
@@ -122,43 +120,42 @@
       <h2 class="section-title">Ի՞նչ սովորել</h2>
 
       <!-- What you'll learn: 3 columns of different heights (Pinterest style), then the packages.
-           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js).
-           Photo tiles (.learn-tile--eye) get a blinking eye mask over the photo, added by script.js -->
+           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js) -->
       <div class="learn-grid">
           <div class="learn-col">
-            <a class="learn-tile learn-tile--eye" style="--h:380px" href="#packages" data-pkg="start">
+            <a class="learn-tile" style="--h:380px" href="#packages" data-pkg="start">
               <img src="assets/learn/basics-vr-pink.webp" alt="Մարդ VR ակնոցով վարդագույն ֆոնի վրա" loading="lazy" />
               <h4 class="learn-tile__title">AI հիմունքներ, Prompt Engineering, AI անվտանգություն</h4>
             </a>
-            <a class="learn-tile learn-tile--eye" style="--h:220px" href="#packages" data-pkg="start">
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="start">
               <img src="assets/learn/presentations-vr-purple.webp" alt="Մարդ VR ակնոցով մանուշակագույն լույսի ներքո" loading="lazy" />
               <h4 class="learn-tile__title">Պրեզենտացիաների և ելույթի խոսքի ակնթարթային գեներացիա</h4>
             </a>
-            <a class="learn-tile learn-tile--eye" style="--h:220px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/websites-capsule.webp" alt="Թռչող ֆուտուրիստական կապսուլ երկնքում" loading="lazy" />
               <h4 class="learn-tile__title">Կայքերի գեներացիա՝ առանց ծրագրավորման գիտելիքների</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile learn-tile--eye" style="--h:300px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:300px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/research-astronaut.webp" alt="Տիեզերագնաց վարդագույն սաղավարտով" loading="lazy" />
               <h4 class="learn-tile__title">Խորը հետազոտություններ և աղբյուրներով հիմնավորված բովանդակություն</h4>
             </a>
-            <a class="learn-tile learn-tile--eye" style="--h:544px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:544px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/images-face-paint.webp" alt="Դիմանկար վառ գույներով դիմահարդարմամբ" loading="lazy" />
               <h4 class="learn-tile__title">Տպավորիչ նկարների գեներացիա</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile learn-tile--eye" style="--h:420px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:420px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/video-river-portrait.webp" alt="Կինեմատոգրաֆիկ դիմանկար գետի մոտ" loading="lazy" />
               <h4 class="learn-tile__title">Սցենարից վիդեոների գեներացիա</h4>
             </a>
-            <a class="learn-tile learn-tile--eye" style="--h:180px" href="#packages" data-pkg="levelup">
-              <img src="assets/learn/automation-robot.webp" alt="Նարնջագույն ռոբոտ լեռնային մարգագետնում" loading="lazy" />
+            <a class="learn-tile learn-tile--color" style="--h:180px" href="#packages" data-pkg="levelup">
+              <img class="learn-tile__art" src="assets/hero/gear.webp" alt="" aria-hidden="true" />
               <h4 class="learn-tile__title">Գործընթացների ավտոմատացում AI-ով</h4>
             </a>
-            <a class="learn-tile learn-tile--eye" style="--h:220px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/agents-robot-hand.webp" alt="Ռոբոտի ձեռք նոութբուքի ստեղնաշարի վրա" loading="lazy" />
               <h4 class="learn-tile__title">Ինքնավար ագենտների ստեղծում</h4>
             </a>
@@ -719,7 +716,7 @@
             <span class="wordmark__fact"><i class="ic ic--lg ic--calendar" aria-hidden="true"></i>Ընթացիկ ամսվա 19-ին</span>
             <span class="wordmark__fact"><i class="ic ic--lg ic--clock" aria-hidden="true"></i>19 : 00 - ին</span>
           </p>
-          <a href="#" class="btn btn--primary btn--md">Գրանցվել</a>
+          <a href="#" class="btn btn--primary btn--md">Գրանցվիր</a>
         </div>
       </div>
     </section>

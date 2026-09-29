@@ -52,10 +52,13 @@
   --color-telegram: #26a5e4;
   --color-whatsapp: #25d366;
 
-  /* Hero backdrop palette (from the «warhol» palette, coolors): the soft hero gradient is tinted from these */
+  /* Hero backdrop palette: the «warhol» palette (coolors), flat pop-art pastels */
   --color-pop-orchid: #df86d9;
   --color-pop-yellow: #ffd062;
+  --color-pop-cyan: #7ee8fa;
+  --color-pop-mint: #74deb9;
   --color-pop-orange: #f78154;
+  --color-pop-tan: #b48164;         /* not in Tailwind's palette */
 
   /* Pill radius (Tailwind's rounded-full value) */
   --radius-full: calc(infinity * 1px);
@@ -68,9 +71,6 @@
 
   /* Tablet breakpoint: layouts collapse at 1100px (Tailwind default lg is 1024px) */
   --breakpoint-lg: 68.75rem;
-
-  /* Eye-mask frame on the «Ի՞նչ սովորել» photo tiles (colour from assets/learn/mask) */
-  --color-eye-mask: #290000;
 
   /* Shared motion curve for image zooms and slide-ins */
   --ease-smooth: cubic-bezier(.2, .8, .2, 1);
@@ -380,11 +380,19 @@ body.is-menu-open { overflow: hidden; }
   justify-content: center;
   gap: --spacing(4);
   text-align: center;
-  color: var(--color-black);
+  color: var(--hero-fg);
 }
-.hero .btn--white { color: var(--color-black); }   /* the secondary button's label matches the black headline */
-/* Soft gradient backdrop (full bleed): warm peach at the top melting into lavender at the bottom,
-   warmer at the sides, with a pale glow behind the headline. Tints of the hero palette (--color-pop-*). */
+/* Solid colour backdrop — the colour changes with each phrase (script.js).
+   The text on every colour is black (--hero-fg).
+   data-bg sits on .hero (text + buttons) and .hero__bg (the colour itself). */
+.hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-black); }
+.hero .btn--white { color: var(--hero-fg); }   /* the secondary button's label matches the black headline */
 .hero__bg {
   position: absolute;
   top: 0; bottom: 0; left: 50%;
@@ -392,34 +400,8 @@ body.is-menu-open { overflow: hidden; }
   transform: translateX(-50%);
   z-index: 0;
   pointer-events: none;
-  background:
-    radial-gradient(45% 40% at 50% 42%, color-mix(in oklab, var(--color-white) 75%, transparent), transparent),
-    radial-gradient(35% 55% at 0% 45%, color-mix(in oklab, var(--color-pop-orange) 40%, transparent), transparent),
-    radial-gradient(35% 55% at 100% 45%, color-mix(in oklab, var(--color-pop-orange) 35%, transparent), transparent),
-    linear-gradient(to bottom,
-      color-mix(in oklab, var(--color-pop-yellow) 30%, var(--color-white)) 0%,
-      color-mix(in oklab, var(--color-pop-orange) 28%, var(--color-white)) 40%,
-      color-mix(in oklab, var(--color-pop-orchid) 25%, var(--color-white)) 72%,
-      var(--color-violet-200) 100%);
+  background: var(--hero-bg);
 }
-/* Floating icons (script.js): three at a time framing the text, and a new random set with every line
-   of the title. script.js places each one (--x / --y) with a random tilt (--r); --sm is the smaller,
-   "further away" one. */
-.hero__floats { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-.hero__float {
-  position: absolute; left: var(--x); top: var(--y);
-  width: --spacing(38); aspect-ratio: 1;
-  rotate: var(--r, 0deg);
-  filter: drop-shadow(0 --spacing(4) --spacing(6) color-mix(in oklab, var(--color-violet-900) 18%, transparent));
-  opacity: 0; scale: .6;
-  transition: opacity .5s ease, scale .7s var(--ease-smooth);
-  animation: hero-float var(--bob, 5s) ease-in-out infinite alternate;   /* --bob: each icon's own pace, set once by script.js */
-}
-.hero__float--sm { width: --spacing(28); }
-.hero__float.is-in { opacity: 1; scale: 1; }
-.hero__float.is-out { opacity: 0; scale: .8; }
-@keyframes hero-float { to { translate: 0 calc(--spacing(4) * -1); } }   /* a gentle bob */
-@media (prefers-reduced-motion: reduce) { .hero__float { animation: none; transition: none; } }
 
 .hero__title {
   position: relative; z-index: 1;
@@ -843,13 +825,13 @@ body.is-menu-open { overflow: hidden; }
   isolation: isolate;
   break-inside: avoid;
 }
-.learn-tile > img {
+.learn-tile > img:not(.learn-tile__art) {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform .6s var(--ease-smooth);
 }
-.learn-tile:hover > img { transform: scale(1.05); }
+.learn-tile:hover > img:not(.learn-tile__art) { transform: scale(1.05); }
 .learn-tile:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 .learn-tile > img[src*="video-river"] { object-position: center 78%; }
 /* dark scrim so the title is always readable */
@@ -873,29 +855,20 @@ body.is-menu-open { overflow: hidden; }
   text-shadow: 0 2px 14px rgb(0 0 0 / .45);
   text-wrap: balance;
 }
-/* Eye mask on the photo tiles (.learn-tile--eye; script.js adds the SVG): a dark frame over the
-   photo with an eye-shaped hole. The eye keeps its proportions (viewBox "meet") and the frame runs
-   past the viewBox to fill any tile shape. The closed eye in assets/learn/mask is the open one
-   squashed to 3.77% of its height, so opening is one scale transition; script.js shuts each eye on
-   load, opens it when its tile scrolls into view, then blinks it (.is-blinking) on its own random
-   clock. Hover: the eye opens wide (whole photo); the title stays. */
-.learn-tile__eye {
-  position: absolute; inset: 0;
-  z-index: 1;
-  width: 100%; height: 100%;
-  fill: var(--color-eye-mask);
-  pointer-events: none;
+/* Text-only tile (no photo yet): brand gradient + glossy gear */
+.learn-tile--color { background: linear-gradient(135deg, var(--color-blue-100) 0%, var(--color-violet-100) 100%); }
+.learn-tile--color::after { background: none; }
+.learn-tile--color .learn-tile__title { right: --spacing(32.5); top: 50%; bottom: auto; transform: translateY(-50%); color: var(--color-slate-900); text-shadow: none; }
+.learn-tile__art {
+  position: absolute;
+  right: calc(--spacing(7) * -1); top: 50%;
+  width: --spacing(42.5); height: --spacing(42.5);
+  translate: 0 -50%;
+  rotate: -12deg;
+  opacity: .95;
+  transition: rotate .8s ease;
 }
-.learn-tile__eye mask rect { fill: var(--color-white); }
-.learn-tile__eye-hole {
-  fill: var(--color-black);
-  transform-box: view-box; transform-origin: center;
-  transition: scale .9s var(--ease-smooth) .1s;
-}
-.learn-tile__eye.is-closed .learn-tile__eye-hole { scale: 1 .0377; transition: none; }
-.learn-tile__eye.is-blinking .learn-tile__eye-hole { animation: learn-eye-blink .2s ease-in-out; }
-@keyframes learn-eye-blink { 40%, 55% { scale: 1 .0377; } }
-.learn-tile--eye:hover .learn-tile__eye-hole { scale: 5; animation: none; transition: scale .7s var(--ease-smooth); }   /* 5× covers the whole tile */
+.learn-tile--color:hover .learn-tile__art { rotate: 20deg; }
 
 /* ============================================================
    ICONS (Lucide + Simple Icons brand logos, tinted with currentColor via mask)
@@ -1589,8 +1562,6 @@ body.is-menu-open { overflow: hidden; }
   .referral__panel { flex-direction: column; }
   .promo-form { width: 100%; }
   .hero__title { font-size: var(--text-5xl); }   /* phrase still fits on one line on tablets */
-  .hero__float { width: --spacing(30); }
-  .hero__float--sm { width: --spacing(22); }
 }
 
 @media (width < theme(--breakpoint-md)) {
@@ -1603,8 +1574,6 @@ body.is-menu-open { overflow: hidden; }
   .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
   .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
   .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
-  .hero__float { width: --spacing(22); }
-  .hero__float--sm { width: --spacing(16); }
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { width: 100%; }
   .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
