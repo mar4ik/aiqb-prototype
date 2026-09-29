@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Qez Ban — Comic Story Hero</title>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: #050505;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  font-family: "Adelle Sans ARM", "Noto Sans Armenian", Arial, sans-serif;
+}
+
+.hero {
+  width: min(1280px, 100vw);
+  aspect-ratio: 16 / 9;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255, 255, 255, 0.08), transparent 18%),
+    radial-gradient(circle at 78% 16%, rgba(255, 189, 46, 0.08), transparent 16%),
+    #050505;
+  overflow: hidden;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.panel,
+.icon,
+.eyes,
+.connector,
+.spark,
+.copy {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.frame {
+  display: none;
+}
+
+.doodle {
+  fill: none;
+  stroke: #fff;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.doodle {
+  stroke-width: 4.5;
+}
+
+.title {
+  fill: #fff;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.title--small {
+  font-size: 21px;
+}
+
+.intro-copy {
+  fill: #fff;
+  font-size: 24px;
+  font-weight: 850;
+  letter-spacing: 0;
+}
+
+.final-mark {
+  fill: #fff;
+  font-size: 72px;
+  font-weight: 950;
+  letter-spacing: 0;
+}
+
+.final-copy {
+  fill: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0;
+  opacity: 0.92;
+}
+
+.intro-copy,
+.title,
+.final-copy {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel,
+  .icon,
+  .eyes,
+  .spark {
+    transition: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="hero" aria-label="AI քեզ բան comic storyboard hero">
+<svg viewBox="0 0 1280 720" role="img" aria-labelledby="heroTitle heroDesc">
+  <title id="heroTitle">AI քեզ բան comic storyboard hero</title>
+  <desc id="heroDesc">A comic-style storyboard where frames appear one by one and remain visible, connected by a hand-drawn line.</desc>
+
+  <rect width="1280" height="720" fill="#050505"/>
+
+  <g id="panelIntro" class="panel">
+    <path class="frame" d="M36 42 H376 V252 H36 Z"/>
+    <text class="intro-copy" x="206" y="112" text-anchor="middle">ամեն բան կարո՜ղ եմ սովորել</text>
+
+  </g>
+
+  <g id="panelBasics" class="panel">
+    <path class="frame" d="M462 42 H818 V252 H462 Z"/>
+    <text class="title" x="492" y="92">AI հիմունքներ</text>
+
+    <g class="icon">
+      <path d="M540 142 Q540 118 566 118 H712 Q738 118 742 142 L762 220 H520 Z" fill="#4169ff"/>
+      <path d="M502 220 H780 Q770 244 744 244 H538 Q512 244 502 220 Z" fill="#4169ff"/>
+      <rect x="578" y="162" width="62" height="36" rx="8" fill="#fff"/>
+      <rect x="652" y="154" width="70" height="58" rx="9" fill="#111" stroke="#fff" stroke-width="4"/>
+      <path d="M592 176 h28 M666 174 h38 M666 192 h24" class="doodle"/>
+    </g>
+
+    <path class="spark" d="M770 120 l18 -20 M782 146 h34 M770 174 l20 22" stroke="#ffbd2e" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <g id="panelPresentation" class="panel">
+    <path class="frame" d="M906 42 H1244 V252 H906 Z"/>
+    <text class="title" x="936" y="92">Պրեզենտացիաների</text>
+    <text class="title" x="936" y="124">գեներացիա</text>
+
+    <g class="icon">
+      <rect x="998" y="142" width="154" height="92" rx="14" fill="#9b5cff"/>
+      <rect x="1014" y="162" width="122" height="52" rx="9" fill="#050505" stroke="#fff" stroke-width="4"/>
+      <circle cx="1042" cy="188" r="15" fill="#ffbd2e"/>
+      <path d="M1070 178 h46 M1070 196 h34" class="doodle"/>
+      <path d="M1075 142 v-30 h76 v30" class="doodle"/>
+    </g>
+  </g>
+
+  <g id="panelWebsites" class="panel">
+    <path class="frame" d="M906 286 H1244 V496 H906 Z"/>
+    <text class="title" x="936" y="336">Կայքերի պատրաստում</text>
+
+    <g class="icon">
+      <rect x="982" y="366" width="184" height="110" rx="15" fill="#42e8a1"/>
+      <rect x="996" y="388" width="156" height="76" rx="10" fill="#050505"/>
+      <circle cx="1010" cy="378" r="5" fill="#ff4fa3"/>
+      <circle cx="1028" cy="378" r="5" fill="#ffbd2e"/>
+      <circle cx="1046" cy="378" r="5" fill="#4169ff"/>
+      <rect x="1018" y="410" width="70" height="14" rx="7" fill="#fff"/>
+      <rect x="1018" y="438" width="118" height="10" rx="5" fill="#fff"/>
+      <path d="M1118 422 l42 38 l-24 4 l-10 24 l-34 -46 Z" fill="#fff"/>
+    </g>
+  </g>
+
+  <g id="panelImages" class="panel">
+    <path class="frame" d="M462 286 H818 V496 H462 Z"/>
+    <text class="title" x="492" y="336">Տպավորիչ նկարների</text>
+    <text class="title" x="492" y="368">գեներացիա</text>
+
+    <g class="icon">
+      <rect x="564" y="388" width="160" height="90" rx="14" fill="#ff4fa3"/>
+      <rect x="582" y="408" width="124" height="50" rx="8" fill="#050505" stroke="#fff" stroke-width="4"/>
+      <circle cx="678" cy="424" r="10" fill="#ffbd2e"/>
+      <path d="M596 452 L630 424 L662 450 L684 438 L700 452 Z" fill="#ffbd2e"/>
+      <path d="M546 394 l-24 -16 M546 428 h-34 M742 394 l24 -16 M742 428 h34" class="doodle"/>
+    </g>
+  </g>
+
+  <g id="panelAgents" class="panel">
+    <path class="frame" d="M36 286 H376 V496 H36 Z"/>
+    <text class="title" x="66" y="336">Ինքնավար ագենտների</text>
+    <text class="title" x="66" y="368">ստեղծում</text>
+
+    <g class="icon">
+      <path d="M100 420 C142 380 188 462 226 420 C262 382 310 386 344 424" class="doodle"/>
+      <rect x="78" y="388" width="62" height="42" rx="10" fill="#42e8a1"/>
+      <rect x="294" y="396" width="62" height="42" rx="10" fill="#42e8a1"/>
+      <rect x="170" y="462" width="68" height="38" rx="10" fill="#42e8a1"/>
+      <circle cx="210" cy="424" r="38" fill="#42e8a1"/>
+      <circle cx="194" cy="414" r="10" fill="#fff"/>
+      <circle cx="224" cy="414" r="10" fill="#fff"/>
+      <circle cx="197" cy="418" r="4" fill="#050505"/>
+      <circle cx="221" cy="418" r="4" fill="#050505"/>
+      <path d="M210 382 v-34 M210 348 l-16 -14 M210 348 l16 -14" class="doodle"/>
+    </g>
+  </g>
+
+  <g id="panelVideos" class="panel">
+    <path class="frame" d="M36 544 H596 V680 H36 Z"/>
+    <text class="title title--small" x="66" y="584">Սցենարից վիդեոների</text>
+    <text class="title title--small" x="66" y="612">գեներացիա</text>
+
+    <g class="icon">
+      <rect x="414" y="604" width="128" height="60" rx="13" fill="#ff6238"/>
+      <path d="M414 616 H542 M438 604 l-16 23 M474 604 l-16 23 M510 604 l-16 23" stroke="#050505" stroke-width="6"/>
+      <polygon points="464,626 464,654 492,640" fill="#050505"/>
+      <rect x="422" y="568" width="112" height="32" rx="9" fill="#fff"/>
+      <path d="M438 584 h64" stroke="#050505" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <g id="panelFinal" class="panel">
+    <text class="final-mark" x="947" y="680" text-anchor="middle">AI քեզ բան</text>
+  </g>
+
+  <g id="introEyes" class="eyes">
+    <circle id="eyeWhiteLeft" cx="155" cy="178" r="31" fill="#fff"/>
+    <circle id="eyeWhiteRight" cx="220" cy="178" r="31" fill="#fff"/>
+    <circle id="pupilLeft" cx="166" cy="184" r="12" fill="#050505"/>
+    <circle id="pupilRight" cx="209" cy="184" r="12" fill="#050505"/>
+  </g>
+</svg>
+</main>
+
+<script>
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const panels = [
+  "#panelIntro",
+  "#panelBasics",
+  "#panelPresentation",
+  "#panelWebsites",
+  "#panelImages",
+  "#panelAgents",
+  "#panelVideos",
+  "#panelFinal"
+];
+
+const tl = gsap.timeline({
+  repeat: reduceMotion ? 0 : -1,
+  repeatDelay: 0.35,
+  paused: reduceMotion
+});
+
+gsap.set(panels, {
+  autoAlpha: 0,
+  y: 16,
+  scale: 0.94
+});
+
+gsap.set("#panelIntro", {
+  autoAlpha: 1,
+  y: 0,
+  scale: 1
+});
+
+gsap.set(".icon", {
+  autoAlpha: 0,
+  scale: 0.76,
+  rotation: -3
+});
+
+gsap.set(".spark", {
+  autoAlpha: 0,
+  scale: 0.45
+});
+
+if (reduceMotion) {
+  gsap.set(panels, {
+    autoAlpha: 1,
+    y: 0,
+    scale: 1
+  });
+
+  gsap.set(".icon, .spark", {
+    autoAlpha: 1,
+    scale: 1,
+    rotation: 0
+  });
+
+}
+
+function blink(at) {
+  tl.to("#eyeWhiteLeft, #eyeWhiteRight", {
+    scaleY: 0.08,
+    duration: 0.06,
+    ease: "power2.in"
+  }, at);
+
+  tl.to("#eyeWhiteLeft, #eyeWhiteRight", {
+    scaleY: 1,
+    duration: 0.11,
+    ease: "back.out(2)"
+  });
+}
+
+function look(x, y, duration = 0.2) {
+  tl.to("#pupilLeft, #pupilRight", {
+    x,
+    y,
+    duration,
+    ease: "power2.inOut"
+  });
+}
+
+function expression(name) {
+  if (name === "wonder") {
+    tl.to("#introEyes", {
+      rotation: -4,
+      scaleX: 1.03,
+      scaleY: 0.95,
+      duration: 0.18,
+      ease: "power2.out"
+    });
+
+    look(-7, -6, 0.18);
+
+    tl.to("#eyeWhiteLeft", {
+      scaleX: 0.92,
+      scaleY: 1.08,
+      duration: 0.18
+    }, "<");
+
+    tl.to("#eyeWhiteRight", {
+      scaleX: 1.08,
+      scaleY: 0.94,
+      duration: 0.18
+    }, "<");
+  }
+
+  if (name === "oooo") {
+    tl.to("#introEyes", {
+      rotation: 0,
+      scale: 1.08,
+      duration: 0.18,
+      ease: "back.out(2)"
+    });
+
+    look(0, 0, 0.14);
+
+    tl.to("#eyeWhiteLeft, #eyeWhiteRight", {
+      scaleX: 1.18,
+      scaleY: 1.18,
+      duration: 0.16,
+      ease: "back.out(2)"
+    }, "<");
+  }
+
+  if (name === "excited") {
+    tl.to("#introEyes", {
+      rotation: 4,
+      scale: 1.04,
+      duration: 0.16,
+      yoyo: true,
+      repeat: 1,
+      ease: "power2.inOut"
+    });
+
+    look(9, -4, 0.14);
+
+    tl.to("#eyeWhiteLeft, #eyeWhiteRight", {
+      scaleX: 1.18,
+      scaleY: 0.82,
+      duration: 0.16,
+      ease: "back.out(2)"
+    }, "<");
+  }
+
+  if (name === "focus") {
+    tl.to("#introEyes", {
+      rotation: 0,
+      scale: 0.98,
+      duration: 0.16
+    });
+
+    look(10, 5, 0.16);
+
+    tl.to("#eyeWhiteLeft, #eyeWhiteRight", {
+      scaleX: 1.08,
+      scaleY: 0.72,
+      duration: 0.16
+    }, "<");
+  }
+}
+
+function jumpEyes(x, y) {
+  tl.to("#introEyes", {
+    x,
+    y: y - 18,
+    duration: 0.18,
+    ease: "power2.out"
+  });
+
+  tl.to("#introEyes", {
+    y,
+    duration: 0.24,
+    ease: "bounce.out"
+  });
+}
+
+function revealPanel(panel) {
+  tl.to(panel, {
+    autoAlpha: 1,
+    y: 0,
+    scale: 1,
+    duration: 0.38,
+    ease: "back.out(1.4)"
+  });
+
+  if (document.querySelector(`${panel} .icon`)) {
+    tl.to(`${panel} .icon`, {
+      autoAlpha: 1,
+      scale: 1,
+      rotation: 0,
+      duration: 0.36,
+      ease: "back.out(1.8)"
+    }, "-=0.18");
+  }
+
+  if (document.querySelector(`${panel} .spark`)) {
+    tl.to(`${panel} .spark`, {
+      autoAlpha: 1,
+      scale: 1,
+      duration: 0.16,
+      stagger: 0.06,
+      yoyo: true,
+      repeat: 1
+    }, "-=0.22");
+  }
+
+  tl.to({}, {
+    duration: 0.24
+  });
+}
+
+blink(0.25);
+expression("wonder");
+blink();
+expression("oooo");
+expression("excited");
+
+for (let i = 1; i < panels.length; i += 1) {
+  const moods = ["focus", "oooo", "excited", "wonder", "focus", "excited", "oooo"];
+  const eyeStops = [
+    { x: 452, y: -8 },
+    { x: 887, y: -8 },
+    { x: 887, y: 232 },
+    { x: 452, y: 232 },
+    { x: 18, y: 232 },
+    { x: 282, y: 447 },
+    { x: 759, y: 364 }
+  ];
+  expression(moods[i - 1]);
+  jumpEyes(eyeStops[i - 1].x, eyeStops[i - 1].y);
+  revealPanel(panels[i]);
+  if (i % 2 === 0) {
+    blink();
+  }
+}
+
+tl.to({}, {
+  duration: 1.1
+});
+
+tl.to(panels.slice(1), {
+  autoAlpha: 0,
+  y: -12,
+  scale: 0.98,
+  duration: 0.28,
+  stagger: 0.03,
+  ease: "power2.in"
+});
+
+tl.set(panels, {
+  autoAlpha: 0,
+  y: 16,
+  scale: 0.94
+});
+
+tl.set("#panelIntro", {
+  autoAlpha: 1,
+  y: 0,
+  scale: 1
+});
+
+tl.set(".icon", {
+  autoAlpha: 0,
+  scale: 0.76,
+  rotation: -3
+});
+
+tl.set(".spark", {
+  autoAlpha: 0,
+  scale: 0.45
+});
+
+tl.set("#introEyes", {
+  x: 0,
+  y: 0,
+  rotation: 0,
+  scale: 1,
+  scaleX: 1,
+  scaleY: 1
+});
+
+tl.set("#pupilLeft, #pupilRight", {
+  x: 0,
+  y: 0
+});
+
+tl.set("#eyeWhiteLeft, #eyeWhiteRight", {
+  scaleX: 1,
+  scaleY: 1
+});
+</script>
+
+</body>
+</html>
