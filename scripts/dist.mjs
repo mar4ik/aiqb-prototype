@@ -3,7 +3,7 @@
 import { cpSync, rmSync, mkdirSync } from 'node:fs';
 
 const FILES = ['index.html', 'doctor-register.html', 'script.js', 'styles.css'];
-const DIRS = ['assets', 'fonts'];
+const DIRS = ['assets', 'fonts', 'hero-yarn', 'hero-eyes', 'hero-icons'];
 
 rmSync('dist', { recursive: true, force: true });
 mkdirSync('dist');
