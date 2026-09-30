@@ -155,9 +155,11 @@
 .btn--dark:hover { background: var(--color-slate-800); }
 .btn--block { width: 100%; }
 
-/* Two sizes, used everywhere: sm 40px · md 56px. The 1px border is part of the height. The ±.5px padding
-   moves the text down half a pixel: the font's ascent is taller than its descent, so it sat slightly high. */
+/* Three sizes: sm 40px · base 48px (the height and type of the floating buttons, .fab) · md 56px.
+   The 1px border is part of the height. The ±.5px padding moves the text down half a pixel: the font's ascent
+   is taller than its descent, so it sat slightly high. */
 .btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-sm); }
+.btn--base { padding: calc(--spacing(3) - 1px + .5px) calc(--spacing(6) - 1px) calc(--spacing(3) - 1px - .5px); font-size: var(--text-base); }
 .btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-lg); }
 
 /* Dismiss: small round icon-only ✕ (holds .ic--x) that hides a banner. The hover tint is mixed from
@@ -382,9 +384,9 @@ body.is-menu-open { overflow: hidden; }
   text-align: center;
   color: var(--hero-fg);
 }
-/* Solid colour backdrop — the colour changes with each phrase (script.js).
+/* Solid colour backdrop — each scene of the eyes' walk has its colour (script.js · 03).
    The text on every colour is black (--hero-fg).
-   data-bg sits on .hero (text + buttons) and .hero__bg (the colour itself). */
+   data-bg sits on .hero (text + buttons), .hero__bg (the colour itself) and .hero__reveal (the next colour). */
 .hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
 :is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-black); }
 :is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-black); }
@@ -393,7 +395,8 @@ body.is-menu-open { overflow: hidden; }
 :is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-black); }
 :is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-black); }
 .hero .btn--white { color: var(--hero-fg); }   /* the secondary button's label matches the black headline */
-.hero__bg {
+.hero__bg,
+.hero__reveal {
   position: absolute;
   top: 0; bottom: 0; left: 50%;
   width: 100vw;
@@ -402,26 +405,58 @@ body.is-menu-open { overflow: hidden; }
   pointer-events: none;
   background: var(--hero-bg);
 }
+/* The next scene's colour, opening from the eyes as a circle over the current one (script.js sets the circle) */
+.hero__reveal { clip-path: circle(0 at 50% 50%); }
 
+/* The eyes' walk (script.js · 03): one SVG line writing «AI քեզ բան» through little scenes, with Yerevan
+   behind. The SVG is the camera frame: script.js moves its viewBox, sets the line width and the eyes' size. */
+.hero__walk {
+  position: relative; z-index: 1;
+  /* 1200px at most, and never taller than 55% of the screen (55svh × 12/5), so the buttons stay in view */
+  width: min(100%, --spacing(300), 132svh);
+}
+.walk {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 5;
+  overflow: visible;   /* the city and the line run on to the screen's edges (the page clips sideways overflow) */
+}
+.walk__thread {
+  fill: none;
+  stroke: var(--hero-fg);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The eyes: white, with a thin outline in the line's colour so they read on every backdrop */
+.walk__white { fill: var(--color-white); stroke: var(--hero-fg); stroke-width: 2.5; }
+.walk__pupil { fill: var(--hero-fg); }
+/* The city (assets/hero/city.png + Matenadaran's path): black lines kept faint, so on every colour it's a
+   quiet darker shade behind the line */
+.walk__city { opacity: 0.2; }
+.walk__city-line {
+  fill: none;
+  stroke: var(--hero-fg);
+  stroke-width: 4;            /* in the drawing's own pixels, like the lines of city.png */
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The headline under the walk: the promise, at the section titles' size (.section-title). Regular italic, set
+   tight (the old typed title's tracking), so it reads lighter and more hand-written, like the line drawing above */
 .hero__title {
   position: relative; z-index: 1;
-  max-width: --spacing(220);   /* wide enough for the longest phrase on one line */
-  font-size: var(--text-7xl);
+  max-width: --spacing(220);
+  font-size: var(--text-4xl);
   line-height: 1.1;
   letter-spacing: var(--tracking-tighter);
-  font-weight: var(--font-weight-bold);
-  font-style: italic;              /* «Սովորիր»; the shuffled phrase letters are always upright */
+  font-weight: var(--font-weight-normal);
+  font-style: italic;
+  text-wrap: balance;              /* two even lines when it wraps (phones) */
 }
-/* The live line and invisible copies of every phrase (added by script.js) share one grid cell,
-   so the title keeps the height of its longest phrase and nothing below moves while typing. */
-.hero__title { display: grid; }
-.hero__title > span { grid-area: 1 / 1; }
-.hero__ghost { visibility: hidden; }
-.hero__title-light { font-weight: var(--font-weight-normal); }   /* «Սովորիր» flows with the phrase; the text wraps naturally (2 lines max) */
-.hero__typed { font-style: normal; }   /* only «Սովորիր» is italic; the phrase and the brand line are upright */
-.is-brand { align-self: center; font-size: 1.3em; }   /* the brand line stands alone: centred in the title area, a little bigger */
-.is-brand .hero__title-light { display: none; }
 
+/* (used by the hero-yarn/hero.html example) */
 .hero__sub {
   position: relative; z-index: 1;
   max-width: --spacing(86);
@@ -1375,7 +1410,7 @@ body.is-menu-open { overflow: hidden; }
 .wordmark__when { display: flex; flex-wrap: wrap; justify-content: center; gap: --spacing(2) --spacing(6); }
 .wordmark__fact { display: inline-flex; align-items: center; gap: --spacing(2.5); font-weight: var(--font-weight-bold); font-size: var(--text-lg); white-space: nowrap; }
 
-/* LETTER SHUFFLE (hero title + wordmark, see script.js): each letter is a fixed-width slot
+/* LETTER SHUFFLE (wordmark, see script.js): each letter is a fixed-width slot
    (width = its widest style) inside a no-wrap word; the glyph is centred and may spill over,
    but never moves its neighbours. Lines only break between words. */
 .shuffle { position: relative; }
@@ -1456,7 +1491,15 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    12 · FLOATING ACTION BUTTONS
    ============================================================ */
-.fabs { position: fixed; right: --spacing(14); bottom: --spacing(8); z-index: 50; display: flex; gap: --spacing(2); }
+/* The row comes in once the page is scrolled, the way the webinar bar (04) does: it slides up and fades in
+   (body.is-scrolled; script.js also makes it inert until then, so its hidden links can't be tabbed to) */
+.fabs {
+  position: fixed; right: --spacing(14); bottom: --spacing(8); z-index: 50;
+  display: flex; gap: --spacing(2);
+  translate: 0 calc(100% + --spacing(15)); opacity: 0;
+  transition: translate .4s var(--ease-smooth), opacity .3s ease, bottom .35s ease;
+}
+.is-scrolled .fabs { translate: none; opacity: 1; }
 .fab {
   display: flex; align-items: center; justify-content: center;
   width: --spacing(12); height: --spacing(12);
@@ -1509,7 +1552,6 @@ body.is-menu-open { overflow: hidden; }
 @media (width < theme(--breakpoint-xl)) {
   .stats__col--left { width: 58%; }
   /* the FAB row is too wide to sit beside the centred webinar bar: lift it above once the bar is in */
-  .fabs { transition: bottom .35s ease; }
   .is-scrolled .fabs { bottom: --spacing(25); }
 }
 
@@ -1561,7 +1603,6 @@ body.is-menu-open { overflow: hidden; }
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(12); }
   .referral__panel { flex-direction: column; }
   .promo-form { width: 100%; }
-  .hero__title { font-size: var(--text-5xl); }   /* phrase still fits on one line on tablets */
 }
 
 @media (width < theme(--breakpoint-md)) {
@@ -1573,7 +1614,8 @@ body.is-menu-open { overflow: hidden; }
   .subnav__cols { grid-template-columns: 1fr; }
   .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
   .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
-  .hero__title { font-size: min(var(--text-4xl), 7.2vw); }   /* scales with the phone so the phrase stays on one line → 2 lines max */
+  .walk { aspect-ratio: 4 / 3; }   /* a taller frame, so each scene fills the phone's width */
+  .hero__title { font-size: var(--text-2xl); }
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { width: 100%; }
   .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }

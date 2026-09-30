@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>AI Qez Ban — Line-art storyboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<style>
+/* A copy of ../hero-storyboard with one-colour line-art icons: four frames on top, three centred under them.
+     (eyes) սովորիր → AI հիմունքներ → կայքերի գեներացիա → պրեզենտացիաների ստեղծում
+          ↑                                                                  ↓
+     AI քեզ բան ← վիդեոների գեներացիա ← գործընթացների ավտոմատացում ← նկարների գեներացիա
+   The eyes start alone, «սովորիր» comes up under them; at the end they come back to the same spot and
+   «սովորիր» turns into «AI քեզ բան».
+   · every icon is drawn in one colour (--ink) and one line weight (--weight), picked in the try-out bar,
+     with its label under it (lowercase, only «AI» in capitals)
+   · each icon has a «window» (a screen, a slide, a browser…) where the eyes land, and draws itself around them
+   · the eyes stay round: blinks squash the whole eye (pupil included), moods use lids, tilt and where the
+     pupils look, and the pupils are clipped to the eye so they can never spill out
+   · backdrop (try-out bar): black, or «colours» — each new frame's colour opens from the eyes as a circle
+     (as in ../hero-eyes), and the line art turns black so it reads on every colour */
+@font-face { font-family: "Adelle Sans ARM"; font-weight: 600; font-style: normal; font-display: swap;
+  src: url("../fonts/AdelleSans_ARM-SemiBold.ttf") format("truetype"); }
+@font-face { font-family: "Adelle Sans ARM"; font-weight: 900; font-style: normal; font-display: swap;
+  src: url("../fonts/AdelleSans_ARM-Heavy.ttf") format("truetype"); }
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+/* The backdrop: black, or in «colours» the colour of the frame the eyes are on (the site hero's «warhol»
+   palette). Any element with data-bg="<colour>" gets it as --bg. */
+body                 { --bg: #050505; background: var(--bg); }
+[data-bg="black"]    { --bg: #050505; }
+[data-bg="orange"]   { --bg: #f78154; }   /* --color-pop-orange */
+[data-bg="yellow"]   { --bg: #ffd062; }   /* --color-pop-yellow */
+[data-bg="mint"]     { --bg: #74deb9; }   /* --color-pop-mint */
+[data-bg="cyan"]     { --bg: #7ee8fa; }   /* --color-pop-cyan */
+[data-bg="orchid"]   { --bg: #df86d9; }   /* --color-pop-orchid */
+
+/* «colours»: the next colour, growing from the eyes (the script sets the circle), then it becomes the page's */
+.reveal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  clip-path: circle(0 at 50% 50%);
+}
+
+body {
+  display: grid;
+  place-items: center;
+  font-family: "Adelle Sans ARM", "Noto Sans Armenian", Arial, sans-serif;
+}
+
+.hero {
+  --ink: #ffffff;           /* the one colour of every icon and label (try-out bar) */
+  --weight: 4.5;            /* line weight in SVG units (try-out bar) */
+  position: relative;
+  width: min(1280px, 100vw);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.hero[data-ink="orange"] { --ink: #f78154; }   /* --color-pop-orange */
+.hero[data-ink="yellow"] { --ink: #ffd062; }   /* --color-pop-yellow */
+.hero[data-ink="mint"]   { --ink: #74deb9; }   /* --color-pop-mint */
+.hero[data-ink="cyan"]   { --ink: #7ee8fa; }   /* --color-pop-cyan */
+.hero[data-weight="light"] { --weight: 3; }
+.hero[data-backdrop="colours"] { --ink: #050505; }   /* black lines on every colour, like ../hero-eyes */
+
+svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Line art: every stroke of every icon. The script draws them on (stroke-dashoffset) when a frame appears */
+.ln {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: var(--weight);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The label under each icon (two lines, one word each); the first frame's word (սովորիր, then AI քեզ բան)
+   is the big one */
+.label {
+  fill: var(--ink);
+  font-size: 22px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+
+.label--big {
+  font-size: 44px;
+  font-weight: 900;
+}
+
+/* The eyes: white, round, always, with a thin black rim so they read on light colours too (on black it disappears).
+   The lids and the backing are the backdrop colour — the eyes take the next colour as soon as its circle starts,
+   since it grows from right under them. */
+.eye__white { fill: #fff; }
+.eye__rim { fill: none; stroke: #050505; stroke-width: 3; }
+.eye__pupil { fill: #050505; }
+.eye__lid,
+.eyes__backing { fill: var(--bg); }
+
+/* ---------- Try-out bar (experiment only) ---------- */
+
+.tryout {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 16px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 6px;
+  border-radius: 24px;
+  background: #18181b;       /* --color-zinc-900: a step up from the black stage */
+  color: #fff;
+  font: 14px system-ui, sans-serif;
+}
+
+.tryout__group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.tryout__group[hidden] {
+  display: none;
+}
+
+.tryout button {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tryout button:hover { background: #3f3f46; }                  /* --color-zinc-700 */
+.tryout button[aria-pressed="true"] { background: #fff; color: #000; }
+.tryout button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.tryout__swatch {
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+}
+
+.tryout__swatch[data-ink="white"]  { background: #ffffff !important; }
+.tryout__swatch[data-ink="orange"] { background: #f78154 !important; }
+.tryout__swatch[data-ink="yellow"] { background: #ffd062 !important; }
+.tryout__swatch[data-ink="mint"]   { background: #74deb9 !important; }
+.tryout__swatch[data-ink="cyan"]   { background: #7ee8fa !important; }
+.tryout__swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #18181b, 0 0 0 4px #fff; }
+
+@media (max-width: 640px) {
+  .tryout { gap: 8px; font-size: 13px; }
+  .tryout button { padding: 6px 8px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- «colours»: the next frame's colour opens from the eyes over the current one -->
+<div class="reveal" id="reveal" aria-hidden="true"></div>
+
+<main class="hero" aria-label="AI քեզ բան storyboard hero">
+<!-- The grid: top row x = 160, 480, 800, 1120 (y = 175), bottom row centred under it x = 320, 640, 960 (y = 485).
+     Each icon is drawn around (0, 0), the spot where the eyes land, and moved to its cell. Its label is two lines,
+     one word each, starting 112 below that spot; the first frame's big word sits level with them. -->
+<svg viewBox="0 0 1280 720" role="img" aria-labelledby="heroTitle heroDesc">
+  <title id="heroTitle">AI քեզ բան</title>
+  <desc id="heroDesc">A pair of eyes hops from frame to frame; each frame draws a line-art icon with its course under it.</desc>
+
+  <defs>
+    <!-- Each eye's own shape: pupils and lids are clipped to it -->
+    <clipPath id="eyeClipLeft"><circle cx="127.5" cy="175" r="31"/></clipPath>
+    <clipPath id="eyeClipRight"><circle cx="192.5" cy="175" r="31"/></clipPath>
+  </defs>
+
+  <!-- 1 · the first frame: the eyes start here, «սովորիր» comes up under them; at the end the eyes come back
+       and it turns into «AI քեզ բան» -->
+  <g id="panelIntro" class="panel">
+    <text class="label label--big" id="wordLearn" x="160" y="307">սովորիր</text>
+    <text class="label label--big" id="wordMark" x="160" y="307">AI քեզ բան</text>
+  </g>
+
+  <!-- 2 · AI basics: a laptop; the eyes look out of its screen -->
+  <g id="panelBasics" class="panel">
+    <g class="icon" transform="translate(480 175)">
+      <rect class="ln" x="-92" y="-58" width="184" height="108" rx="10"/>
+      <path class="ln" d="M-110 50 H110 L136 70 H-136 Z"/>
+    </g>
+    <text class="label" x="480" y="287"><tspan x="480">AI</tspan><tspan x="480" dy="28">հիմունքներ</tspan></text>
+  </g>
+
+  <!-- 3 · websites: a browser window and the pointer -->
+  <g id="panelWebsites" class="panel">
+    <g class="icon" transform="translate(800 175)">
+      <rect class="ln" x="-116" y="-80" width="232" height="152" rx="12"/>
+      <path class="ln" d="M-116 -52 H116"/>
+      <path class="ln" d="M76 12 V46 L85 38 L92 52 L98 49 L91 35 L103 34 Z"/>
+    </g>
+    <text class="label" x="800" y="287"><tspan x="800">կայքերի</tspan><tspan x="800" dy="28">գեներացիա</tspan></text>
+  </g>
+
+  <!-- 4 · presentations: a projector screen on its stand -->
+  <g id="panelPresentations" class="panel">
+    <g class="icon" transform="translate(1120 175)">
+      <path class="ln" d="M-116 -72 H116"/>
+      <rect class="ln" x="-105" y="-66" width="210" height="112" rx="4"/>
+      <path class="ln" d="M0 46 V66 M-16 78 L0 66 L16 78"/>
+    </g>
+    <text class="label" x="1120" y="287"><tspan x="1120">պրեզենտացիաների</tspan><tspan x="1120" dy="28">ստեղծում</tspan></text>
+  </g>
+
+  <!-- 5 · images: a picture with the sun and hills -->
+  <g id="panelImages" class="panel">
+    <g class="icon" transform="translate(960 485)">
+      <rect class="ln" x="-102" y="-76" width="204" height="148" rx="8"/>
+      <circle class="ln" cx="72" cy="-48" r="11"/>
+      <path class="ln" d="M-102 60 L-44 10 L-8 42 L36 -6 L102 52"/>
+    </g>
+    <text class="label" x="960" y="597"><tspan x="960">նկարների</tspan><tspan x="960" dy="28">գեներացիա</tspan></text>
+  </g>
+
+  <!-- 6 · process automation: a flow in → through the agent (the eyes) → out -->
+  <g id="panelAutomation" class="panel">
+    <g class="icon" transform="translate(640 485)">
+      <circle class="ln" cx="-126" cy="-62" r="12"/>
+      <path class="ln" d="M-116 -56 L-70 -30"/>
+      <rect class="ln" x="-82" y="-42" width="164" height="84" rx="42"/>
+      <path class="ln" d="M70 30 L116 56"/>
+      <circle class="ln" cx="126" cy="62" r="12"/>
+    </g>
+    <text class="label" x="640" y="597"><tspan x="640">գործընթացների</tspan><tspan x="640" dy="28">ավտոմատացում</tspan></text>
+  </g>
+
+  <!-- 7 · videos from a script: the video frame in front of the script page; its play button shows once
+       the eyes move on -->
+  <g id="panelVideos" class="panel">
+    <g class="icon" transform="translate(320 485)">
+      <path class="ln" d="M-78 20 H-112 V-80 H-52 L-36 -64 V-54"/>
+      <rect class="ln" x="-78" y="-54" width="156" height="108" rx="10"/>
+      <path class="ln" d="M-10 -18 L18 0 L-10 18 Z"/>
+    </g>
+    <text class="label" x="320" y="597"><tspan x="320">վիդեոների</tspan><tspan x="320" dy="28">գեներացիա</tspan></text>
+  </g>
+
+  <!-- Eyes: #introEyes moves / tilts / scales as a pair; each .eye blinks as a whole.
+       The backing (backdrop colour) hides the lines under and between the eyes, so they sit cleanly on an icon. -->
+  <g id="introEyes" class="eyes">
+    <rect class="eyes__backing" x="92.5" y="140" width="135" height="70" rx="35"/>
+    <g class="eye" id="eyeLeft">
+      <g clip-path="url(#eyeClipLeft)">
+        <circle class="eye__white" cx="127.5" cy="175" r="31"/>
+        <circle class="eye__pupil" cx="127.5" cy="175" r="12"/>
+        <rect class="eye__lid" x="92.5" y="144" width="70" height="0"/>
+      </g>
+      <circle class="eye__rim" cx="127.5" cy="175" r="31"/>
+    </g>
+    <g class="eye" id="eyeRight">
+      <g clip-path="url(#eyeClipRight)">
+        <circle class="eye__white" cx="192.5" cy="175" r="31"/>
+        <circle class="eye__pupil" cx="192.5" cy="175" r="12"/>
+        <rect class="eye__lid" x="157.5" y="144" width="70" height="0"/>
+      </g>
+      <circle class="eye__rim" cx="192.5" cy="175" r="31"/>
+    </g>
+  </g>
+</svg>
+</main>
+
+<!-- Try-out bar (this experiment only): the backdrop, the line colour (on black) and the line weight, kept in the
+     URL (?bg=colours&ink=mint&w=light) -->
+<nav class="tryout" aria-label="Line art">
+  <div class="tryout__group" role="group" aria-label="Backdrop">
+    <button type="button" data-bg-mode="black">Black</button>
+    <button type="button" data-bg-mode="colours">Colours</button>
+  </div>
+  <div class="tryout__group" id="inkChoice" role="group" aria-label="Line colour">
+    <button type="button" class="tryout__swatch" data-ink="white" aria-label="White"></button>
+    <button type="button" class="tryout__swatch" data-ink="orange" aria-label="Orange"></button>
+    <button type="button" class="tryout__swatch" data-ink="yellow" aria-label="Yellow"></button>
+    <button type="button" class="tryout__swatch" data-ink="mint" aria-label="Mint"></button>
+    <button type="button" class="tryout__swatch" data-ink="cyan" aria-label="Cyan"></button>
+  </div>
+  <div class="tryout__group" role="group" aria-label="Line weight">
+    <button type="button" data-w="light">Light</button>
+    <button type="button" data-w="regular">Regular</button>
+  </div>
+</nav>
+
+<script>
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Try-out bar: backdrop, line colour + weight, kept in the URL ---------- */
+const hero = document.querySelector(".hero");
+const params = new URLSearchParams(location.search);
+const choice = {
+  bg: params.get("bg") === "colours" ? "colours" : "black",
+  ink: ["white", "orange", "yellow", "mint", "cyan"].includes(params.get("ink")) ? params.get("ink") : "white",
+  w: ["light", "regular"].includes(params.get("w")) ? params.get("w") : "regular"
+};
+const colours = choice.bg === "colours";
+const query = () => `?bg=${choice.bg}&ink=${choice.ink}&w=${choice.w}`;
+function applyChoice() {
+  hero.dataset.backdrop = choice.bg;
+  hero.dataset.ink = choice.ink;
+  hero.dataset.weight = choice.w;
+  document.getElementById("inkChoice").hidden = colours;   // the lines are always black on colours
+  document.querySelectorAll(".tryout [data-bg-mode]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.bgMode === choice.bg));
+  document.querySelectorAll(".tryout [data-ink]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.ink === choice.ink));
+  document.querySelectorAll(".tryout [data-w]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.w === choice.w));
+  history.replaceState(null, "", query());
+}
+document.querySelector(".tryout").addEventListener("click", (e) => {
+  const b = e.target.closest("button");
+  if (!b) return;
+  if (b.dataset.bgMode) {
+    // The backdrop changes the whole timeline: start over with the new one
+    choice.bg = b.dataset.bgMode;
+    location.search = query();
+    return;
+  }
+  if (b.dataset.ink) choice.ink = b.dataset.ink;
+  if (b.dataset.w) choice.w = b.dataset.w;
+  applyChoice();
+});
+applyChoice();
+
+/* ---------- Storyboard ---------- */
+
+// Where the eyes start and end (the first frame), then each frame in order: where they land, their mood on
+// the way, and (on «colours») the frame's colour
+const HOME = { x: 160, y: 175 };
+const HOME_COLOUR = "orange";   // «colours»: the first frame, and «AI քեզ բան» at the end
+const STOPS = [
+  ["#panelBasics",        480,  175, "focus",   "yellow"],
+  ["#panelWebsites",      800,  175, "oooo",    "mint"],
+  ["#panelPresentations", 1120, 175, "excited", "cyan"],
+  ["#panelImages",        960,  485, "wonder",  "orchid"],
+  ["#panelAutomation",    640,  485, "focus",   "yellow"],
+  ["#panelVideos",        320,  485, "excited", "mint"]
+];
+const REVEAL = 0.7;       // seconds a colour takes to open from the eyes to the farthest corner
+const WORD_DELAY = 0.6;   // seconds the eyes are alone (after a first blink and a look around) before «սովորիր»
+const HOLD = 2.5;         // seconds «AI քեզ բան» stays with everything on screen before it starts over
+
+/* Moods: only the pair tilts / grows (a little, and evenly), the pupils look somewhere, the lids come down.
+   The eyes themselves never change shape; every mood sets all four, so nothing is left over from the last one. */
+const MOODS = {
+  rest:    { tilt: 0,  scale: 1,    look: [0, 0],   lid: 0 },
+  wonder:  { tilt: -4, scale: 1,    look: [-7, -6], lid: 0 },
+  oooo:    { tilt: 0,  scale: 1.06, look: [0, 0],   lid: 0 },
+  excited: { tilt: 0,  scale: 1.03, look: [9, -4],  lid: 0, wiggle: 4 },
+  focus:   { tilt: 0,  scale: 1,    look: [10, 5],  lid: 15 },
+  read:    { tilt: 0,  scale: 1,    look: [0, 8],   lid: 0 },   // looking down at «սովորիր»
+  proud:   { tilt: 0,  scale: 1.06, look: [0, 8],   lid: 0 }    // looking down at «AI քեզ բան»
+};
+
+// Each line's length, so it can be drawn on: dash = the whole line, offset past its end = hidden (the extra 8
+// keeps the round cap of the dash out of sight too)
+const lines = gsap.utils.toArray(".ln");
+lines.forEach((el) => {
+  el._len = el.getTotalLength();
+  el.style.strokeDasharray = `${el._len} ${el._len + 16}`;
+});
+const hiddenLine = (i, el) => el._len + 8;
+const labels = ".panel:not(#panelIntro) .label";   // the labels under the icons
+const words = "#wordLearn, #wordMark";              // the first frame's big word: սովորիր, then AI քեզ բան
+
+const tl = gsap.timeline({
+  repeat: reduceMotion ? 0 : -1,
+  repeatDelay: 0.35,
+  paused: reduceMotion
+});
+
+gsap.set("#introEyes, .eye", { transformOrigin: "50% 50%" });
+
+// The empty stage the loop starts from: only the eyes. Lines undrawn, labels and words hidden (the frames
+// themselves stay visible)
+function hideAll(target) {
+  target.set(lines, { strokeDashoffset: hiddenLine });
+  target.set([labels, words].join(", "), { autoAlpha: 0, y: 8 });
+  target.set(".panel", { autoAlpha: 1 });
+}
+
+hideAll(gsap);
+
+const reveal = document.getElementById("reveal");
+const eyesGroup = document.getElementById("introEyes");
+const backing = document.querySelector(".eyes__backing");
+if (colours) {
+  document.body.dataset.bg = HOME_COLOUR;
+  eyesGroup.dataset.bg = HOME_COLOUR;
+}
+
+if (reduceMotion) {
+  // No animation: every frame drawn, the eyes in the first frame looking down at «AI քեզ բան»
+  gsap.set(lines, { strokeDashoffset: 0 });
+  gsap.set([labels, "#wordMark"].join(", "), { autoAlpha: 1, y: 0 });
+  gsap.set(".eye__pupil", { y: MOODS.proud.look[1] });
+}
+
+function blink(at) {
+  tl.to(".eye", {
+    scaleY: 0.08,
+    duration: 0.06,
+    ease: "power2.in"
+  }, at);
+
+  tl.to(".eye", {
+    scaleY: 1,
+    duration: 0.12,
+    ease: "power2.out"
+  });
+}
+
+function expression(name) {
+  const mood = MOODS[name];
+
+  tl.to("#introEyes", {
+    rotation: mood.tilt,
+    scale: mood.scale,
+    duration: 0.2,
+    ease: "power2.out"
+  });
+
+  tl.to(".eye__pupil", {
+    x: mood.look[0],
+    y: mood.look[1],
+    duration: 0.2,
+    ease: "power2.inOut"
+  }, "<");
+
+  tl.to(".eye__lid", {
+    attr: { height: mood.lid },
+    duration: 0.2,
+    ease: "power2.out"
+  }, "<");
+
+  if (mood.wiggle) {
+    tl.to("#introEyes", {
+      rotation: mood.wiggle,
+      duration: 0.14,
+      yoyo: true,
+      repeat: 1,
+      ease: "power1.inOut"
+    });
+  }
+}
+
+// A hop to a spot on the grid: across in one smooth move, up and down in an arc — no bounce
+function jumpEyes(toX, toY) {
+  const x = toX - HOME.x;
+  const y = toY - HOME.y;
+
+  tl.to("#introEyes", {
+    x,
+    duration: 0.44,
+    ease: "power2.inOut"
+  });
+
+  tl.to("#introEyes", {
+    y: y - 28,
+    duration: 0.22,
+    ease: "power2.out"
+  }, "<");
+
+  tl.to("#introEyes", {
+    y,
+    duration: 0.22,
+    ease: "power2.in"
+  }, ">");
+}
+
+// «colours»: the next colour grows from the eyes to the farthest corner — it starts slow (a bloom behind the
+// eyes) and speeds up as it sweeps off screen — then becomes the page's colour. The eyes' lids and backing take
+// it straight away, since the circle starts right under them.
+const circle = { r: 0 };
+function drawCircle() {
+  const b = backing.getBoundingClientRect();
+  const x = b.left + b.width / 2, y = b.top + b.height / 2;
+  const far = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+  reveal.style.clipPath = `circle(${circle.r * far}px at ${x}px ${y}px)`;
+}
+function openColour(colour) {
+  tl.set(reveal, { attr: { "data-bg": colour } });
+  tl.set(eyesGroup, { attr: { "data-bg": colour } }, "<");
+  tl.fromTo(circle, { r: 0 }, {
+    r: 1,
+    duration: REVEAL,
+    ease: "power2.in",
+    immediateRender: false,
+    onUpdate: drawCircle
+  }, "<");
+  tl.set(document.body, { attr: { "data-bg": colour } });
+}
+
+// The frame's lines draw themselves around the eyes, then its label comes up under them. On «colours» the
+// frame's colour opens first and the drawing starts while it grows.
+function revealPanel(panel, colour) {
+  const drawn = document.querySelectorAll(`${panel} .ln`);
+
+  if (colours) {
+    openColour(colour);
+  }
+
+  if (drawn.length) {
+    tl.to(drawn, {
+      strokeDashoffset: 0,
+      duration: 0.7,
+      stagger: 0.06,
+      ease: "power2.inOut"
+    }, colours ? `-=${REVEAL - 0.25}` : ">");
+  }
+
+  tl.to(`${panel} .label`, {
+    autoAlpha: 1,
+    y: 0,
+    duration: 0.4,
+    ease: "power2.out"
+  }, drawn.length ? "-=0.35" : ">");
+
+  tl.to({}, {
+    duration: 0.24
+  });
+}
+
+// Opening: the eyes alone for a moment, then «սովորիր» comes up under them and they read it
+blink(0.25);
+expression("wonder");
+
+tl.to("#wordLearn", {
+  autoAlpha: 1,
+  y: 0,
+  duration: 0.4,
+  ease: "power2.out"
+}, `+=${WORD_DELAY}`);
+
+expression("read");
+blink();
+expression("oooo");
+expression("excited");
+
+STOPS.forEach(([panel, x, y, mood, colour], i) => {
+  expression(mood);
+  jumpEyes(x, y);
+  revealPanel(panel, colour);
+  if (i % 2 === 1) {
+    blink();
+  }
+});
+
+// Back to the first frame: «սովորիր» makes way for «AI քեզ բան», and the eyes look down at it (on «colours»
+// the first colour opens again — the one the next lap starts with)
+expression("oooo");
+jumpEyes(HOME.x, HOME.y);
+
+if (colours) {
+  openColour(HOME_COLOUR);
+}
+
+tl.to("#wordLearn", {
+  autoAlpha: 0,
+  y: -8,
+  duration: 0.3,
+  ease: "power2.in"
+}, colours ? `-=${REVEAL - 0.25}` : ">");   // on «colours» the word changes while the colour is still opening
+
+tl.to("#wordMark", {
+  autoAlpha: 1,
+  y: 0,
+  duration: 0.45,
+  ease: "power2.out"
+}, "-=0.05");
+
+expression("proud");
+
+// Stay with everything on screen, then clear it all — the eyes are already where the next lap starts
+tl.to({}, {
+  duration: HOLD
+});
+
+blink();
+
+tl.to([...STOPS.map(([panel]) => panel), "#wordMark"], {
+  autoAlpha: 0,
+  duration: 0.3,
+  stagger: 0.03,
+  ease: "power2.in"
+});
+
+expression("rest");
+hideAll(tl);
+</script>
+
+</body>
+</html>

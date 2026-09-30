@@ -17,10 +17,10 @@ There's no component folder: the **atomic components are the shared classes in `
 
 | Atom | Classes | Use for |
 |---|---|---|
-| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--md` (56px) · `--lg` (64px, hero only); optional `--block` | every clickable action (links styled as buttons too) |
+| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons; the hero CTAs) · `--md` (56px) · `--lg` (64px, hero only); optional `--block` | every clickable action (links styled as buttons too) |
 | Pill / tag | `.pill` + `--deal` (orange −%) · `--save` (green) · `--gift` (violet) · `--zoom` (grey) | discounts, labels, badges |
 | Icon | `.ic` + `.ic--calendar` · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
-| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · colour: `--accent` (webinar-bar orange) · `--telegram` · `--whatsapp` · `--top` (back to top) | the fixed buttons bottom right |
+| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · colour: `--accent` (webinar-bar orange) · `--telegram` · `--whatsapp` · `--top` (back to top) | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
 | Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
 | Round arrow | `.pro-card__arrow` / `.teachers__arrow` | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |
@@ -34,7 +34,7 @@ There's no component folder: the **atomic components are the shared classes in `
 Rules:
 - **Never restyle an atom locally.** Don't give one button a new padding, radius, colour or font size inside a section. If something is really needed, add a **variant** to the atom (e.g. `.btn--ghost`, `.pill--info`) next to its siblings in `tailwind.css`, so it's reusable.
 - **Same meaning → same atom.** A primary action is always `.btn--primary`; a discount is always `.pill--deal`; an "opens in a new tab" link is always `.ic--external`. Don't mix `<img>` icons and `.ic` for the same icon.
-- **Only size exceptions come from the atom's own size scale** (`--sm/md/lg`), never a custom size. The one existing exception is compact pills inside dense lists (e.g. `.subnav__link .pill`); keep those to height and padding only.
+- **Only size exceptions come from the atom's own size scale** (`--sm/base/md/lg`), never a custom size. The one existing exception is compact pills inside dense lists (e.g. `.subnav__link .pill`); keep those to height and padding only.
 - **New atom only if nothing fits.** Put it in `@layer components` with a short comment, build it from tokens, and add it to this table.
 - **Links vs buttons:** text links (nav, sub nav, footer) change **colour only** on hover; background and pill hover states are for buttons.
 

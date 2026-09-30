@@ -1,18 +1,20 @@
 /* Watching eyes demo — standalone (a copy of ../hero-yarn with eyes in place of the yarn ball).
-   Colours mirror the site's hero: a black thread (--hero-fg) on the «warhol» palette (--color-pop-*).
+   Colours mirror the site's hero: a black thread (--hero-fg) on the «warhol» palette (--color-pop-*),
+   with a line-art Yerevan behind it.
    Line width and eye size are set in script.js (they adapt to the camera zoom). */
 :root {
   --bg: #f78154;            /* pop-orange, until script.js picks the beat's colour */
   --thread: #000000;        /* --color-black, the hero's text colour on every backdrop */
 }
 
-/* Background shuffle: script.js sets data-bg on <body> for each story beat (instant cut, like the site hero) */
-body[data-bg="orange"] { --bg: #f78154; }   /* --color-pop-orange */
-body[data-bg="yellow"] { --bg: #ffd062; }   /* --color-pop-yellow */
-body[data-bg="mint"]   { --bg: #74deb9; }   /* --color-pop-mint */
-body[data-bg="cyan"]   { --bg: #7ee8fa; }   /* --color-pop-cyan */
-body[data-bg="tan"]    { --bg: #b48164; }   /* --color-pop-tan */
-body[data-bg="orchid"] { --bg: #df86d9; }   /* --color-pop-orchid */
+/* Background shuffle: script.js gives each story beat its colour — it opens from the eyes as a circle (.reveal),
+   then becomes the colour of <body>. Any element with data-bg="<colour>" gets it as --bg. */
+[data-bg="orange"] { --bg: #f78154; }   /* --color-pop-orange */
+[data-bg="yellow"] { --bg: #ffd062; }   /* --color-pop-yellow */
+[data-bg="mint"]   { --bg: #74deb9; }   /* --color-pop-mint */
+[data-bg="cyan"]   { --bg: #7ee8fa; }   /* --color-pop-cyan */
+[data-bg="tan"]    { --bg: #b48164; }   /* --color-pop-tan */
+[data-bg="orchid"] { --bg: #df86d9; }   /* --color-pop-orchid */
 
 * { box-sizing: border-box; }
 
@@ -24,7 +26,17 @@ body {
   background: var(--bg);
 }
 
+/* The next colour, growing from the eyes: script.js sets the circle (centre on the eyes, radius growing to the
+   farthest corner of the screen) */
+.reveal {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  clip-path: circle(0 at 50% 50%);
+}
+
 .stage {
+  position: relative;
   width: 100%;
   max-width: 1200px;
   padding: 0 16px;
@@ -36,6 +48,17 @@ body {
   width: 100%;
   height: auto;
   aspect-ratio: 12 / 5;
+}
+
+/* The city: black lines at low opacity, so on every backdrop it's a quiet darker shade behind the black line */
+.city { opacity: 0.2; }
+
+.city__line {
+  fill: none;
+  stroke: #000000;
+  stroke-width: 4;          /* in the drawing's pixels, like the lines of city.png */
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .yarn__thread {

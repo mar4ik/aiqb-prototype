@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Colour transitions · AI քեզ բան</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-bg="orange">
+
+  <!-- «Place»: a strip of rooms, one solid colour per story beat. script.js lays the rooms out in the drawing's
+       coordinates and slides the strip with the camera, so the next colour comes in from the right and the eyes
+       walk into it. -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="backdrop__world" id="world"></div>
+  </div>
+
+  <!-- «Circle»: the next colour grows from the eyes over the current one, then becomes the page colour -->
+  <div class="reveal" id="reveal" aria-hidden="true"></div>
+
+  <main class="stage">
+    <!-- One SVG: the line (a single path, its `d` is built in script.js) + the eyes riding its tip.
+         script.js moves the viewBox like a camera following the eyes. -->
+    <svg class="yarn" viewBox="10 120 2020 410" role="img" aria-labelledby="yarn-title">
+      <title id="yarn-title">AI քեզ բան</title>
+
+      <path class="yarn__thread" id="thread" />
+
+      <!-- Eyes: outer <g> follows the tip of the line, inner <g> blinks, pupils look around -->
+      <g class="eyes" id="eyes">
+        <g id="eyes-blink">
+          <circle class="eyes__white" cx="-13" cy="0" r="14" />
+          <circle class="eyes__white" cx="13" cy="0" r="14" />
+          <circle class="eyes__pupil" id="pupil-l" cx="-13" cy="0" r="6.5" />
+          <circle class="eyes__pupil" id="pupil-r" cx="13" cy="0" r="6.5" />
+        </g>
+      </g>
+    </svg>
+  </main>
+
+  <!-- Try-out bar (this experiment only): how the colour changes, and how many colours a lap has.
+       The choice is kept in the URL (?t=circle&pal=three), so a link opens the same combination. -->
+  <nav class="tryout" aria-label="Backdrop">
+    <div class="tryout__group" role="group" aria-label="Transition">
+      <button type="button" data-t="place" title="Each scene's colour is painted in the world; the eyes walk into it">Place</button>
+      <button type="button" data-t="circle" title="The next colour opens from the eyes">Circle</button>
+      <button type="button" data-t="cut" title="Instant cut, as in hero-eyes now">Cut</button>
+    </div>
+    <div class="tryout__group" role="group" aria-label="Colours per lap">
+      <button type="button" data-pal="six" title="A colour per beat, as now">6 colours</button>
+      <button type="button" data-pal="three" title="A colour per word: AI · քեզ · բան">3 colours</button>
+    </div>
+  </nav>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>

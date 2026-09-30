@@ -8,11 +8,11 @@
    Story: AI → a developer walks by with a laptop → a photographer takes a photo → քեզ
           → a teacher points at a board and draws a rising chart → բան
 
-   A copy of ../hero-yarn with the eyes in place of the yarn ball; the markup it needs is in index.html
-   (.yarn, #thread, #eyes, #eyes-blink, #pupil-l, #pupil-r). GSAP loads first, this file as a module.
-   Every element marked data-yarn-bg gets data-bg="<colour>" for the current scene — the page's CSS turns that
-   into the backdrop. The new colour doesn't cut in: it opens from the eyes as a circle (#reveal, see CIRCLE).
-   Behind it all, a line-art Yerevan drifts by slower than the line (#city, see CITY); ?city=off hides it. */
+   A copy of ../hero-eyes where the backdrop colour no longer cuts between beats: instead each beat is a «room»
+   with its own CSS pattern (see BACKDROP below and styles.css), laid out in the drawing's coordinates, so the
+   pattern slides with the camera and the next room fades in as the eyes walk into it.
+   The markup it needs is in index.html (.yarn, #thread, #eyes, #eyes-blink, #pupil-l, #pupil-r, #world, .tryout).
+   GSAP loads first, this file as a module. */
 
 /* ------------------------------------------------------------------
    THE THREAD — one path, split into pieces so each letter / scene is easy to tweak.
@@ -120,18 +120,18 @@ const THREAD = [
 ];
 
 /* ------------------------------------------------------------------
-   STORY BEATS — the eyes reach the end of each piece after N seconds, and each beat has its own
-   background colour (the site hero's «warhol» palette, in the same order; colours live in styles.css).
-   The eyes ease in and out of every beat, so they take a breath between scenes — that's when the colour changes.
+   STORY BEATS — the eyes reach the end of each piece after N seconds. Each beat is a room of the backdrop
+   with its own pattern (used when the try-out bar is on «Mix»; patterns live in styles.css):
+   the letters are written on ruled paper, each scene gets the «paper» of its craft.
    One lap of beats draws the whole drawing once (≈ 19s); then the next copy follows straight on, forever.
    ------------------------------------------------------------------ */
 const BEATS = [
-  ['I', 2.4, 'orange'],            // AI
-  ['developer', 3.2, 'yellow'],    // someone walks with a laptop…
-  ['photographer', 3.8, 'mint'],   // …takes a photo
-  ['զ', 2.4, 'cyan'],              // քեզ
-  ['teacher', 3.6, 'tan'],         // someone teaches at a board
-  ['loop', 3.4, 'orchid'],         // բան, and the swoop into the next «AI»
+  ['I', 2.4, 'lines'],             // AI
+  ['developer', 3.2, 'dots'],      // someone walks with a laptop… (a design canvas)
+  ['photographer', 3.8, 'checker'],// …takes a photo (an image editor's transparency)
+  ['զ', 2.4, 'lines'],             // քեզ
+  ['teacher', 3.6, 'grid'],        // someone teaches at a board (graph paper for the chart)
+  ['loop', 3.4, 'lines'],          // բան, and the swoop into the next «AI»
 ];
 
 /* ENDLESS WALK — the drawing repeats every TILE units to the right (the 'loop' piece ends exactly one TILE
@@ -165,39 +165,46 @@ const LOOKS = [
 ];
 const BLINK = [2.2, 5];    // seconds between blinks (random within the range)
 
-/* CIRCLE — the next colour grows from the eyes to the farthest corner of the screen in REVEAL seconds;
-   it starts slow (a bloom behind the eyes) and speeds up as it sweeps off screen */
-const REVEAL = 0.7;
-
-/* CITY — Yerevan behind the drawing (index.html: #city-tile, drawn in its own pixels: x 55 → 1740, ground y 400).
-   It moves at CITY_SPEED of the camera's speed, so it drifts past slower than the line and the landmarks change as
-   the eyes walk. One stretch of city is TILE × CITY_SPEED units wide, so the endless-walk jump lands on the same
-   view of the city too. */
-const CITY_SPEED = 0.5;
-const CITY_GROUND = 440;   // the city stands on the figures' ground
-const CITY_SHIFT = 50;     // slides the city along: Republic Square behind the photographer, Matenadaran behind the teacher
-const CITY_TILE = { x0: 55, x1: 1740, ground: 400 };
+/* BACKDROP — one room per beat, from where the previous beat ends to where this one ends (drawing x).
+   CELL is one pattern period: the baseline (y 400), x-height (300) and ground (440) all fall on it, and TILE is
+   a whole number of cells, so the endless-walk jump can't be seen in the pattern either. */
+const CELL = 20;           // SVG units
+const FADE = 120;          // the next room fades in over this many units, centred on the boundary
+const PATTERNS = ['mix', 'lines', 'grid', 'dots', 'checker', 'stripes'];
+const COLOURS = ['orange', 'yellow', 'mint', 'cyan', 'paper'];
 
 /* ------------------------------------------------------------------ */
 
 const svg = document.querySelector('.yarn');
-const bgTargets = document.querySelectorAll('[data-yarn-bg]');
-const reveal = document.getElementById('reveal');
-const city = document.getElementById('city');
+const world = document.getElementById('world');
 const thread = document.getElementById('thread');
 const eyes = document.getElementById('eyes');
 const eyesBlink = document.getElementById('eyes-blink');
 const pupils = [document.getElementById('pupil-l'), document.getElementById('pupil-r')];
 const PUPIL_HOME = pupils.map((p) => +p.getAttribute('cx'));
 
-// Where each piece ends along one copy of the drawing (for the story beats)
+// Where each piece ends along one copy of the drawing (for the story beats), and at which x (for the rooms)
 const pieceEnd = {};
+const pieceEndX = {};
 THREAD.forEach(([name], i) => {
   thread.setAttribute('d', THREAD.slice(0, i + 1).map(([, d]) => d).join(' '));
   pieceEnd[name] = thread.getTotalLength();
+  pieceEndX[name] = thread.getPointAtLength(pieceEnd[name]).x;
 });
 const LAP = pieceEnd.loop;   // length of one copy
-const BEAT_ENDS = BEATS.map(([piece]) => pieceEnd[piece]);
+
+// The rooms: one per beat, for five copies of the drawing (one before the walk, one after — enough to cover
+// any screen). Each overlaps the next by FADE so the right one can fade in over the left.
+const rooms = [];
+for (let copy = -1; copy <= 3; copy++) {
+  BEATS.forEach(([piece, , pattern], i) => {
+    const from = i ? pieceEndX[BEATS[i - 1][0]] : pieceEndX.loop - TILE;
+    const el = document.createElement('div');
+    el.className = 'room';
+    world.append(el);
+    rooms.push({ el, pattern, x0: from + copy * TILE - FADE / 2, x1: pieceEndX[piece] + copy * TILE + FADE / 2 });
+  });
+}
 
 // One copy without the loop piece, with a margin — the still view for reduced motion
 thread.setAttribute('d', THREAD.slice(0, -1).map(([, d]) => d).join(' '));
@@ -210,23 +217,6 @@ const shift = (d, dx) => d.replace(/(-?[\d.]+)[ ,]+(-?[\d.]+)/g, (_, x, y) => `$
 const NEXT = ONE.replace(/^M [\d. ]+/, '');
 thread.setAttribute('d', [ONE, shift(NEXT, TILE), shift(NEXT, 2 * TILE)].join(' '));
 const LENGTH = thread.getTotalLength();
-
-// The city: copies of one stretch side by side (enough for the whole walk and the still view), each scaled so a
-// stretch is TILE × CITY_SPEED wide and its ground sits on CITY_GROUND. render() slides the lot with the camera.
-const cityOn = new URLSearchParams(location.search).get('city') !== 'off';
-if (cityOn) {
-  const width = TILE * CITY_SPEED;
-  const scale = width / (CITY_TILE.x1 - CITY_TILE.x0);
-  for (let n = -1; n <= 4; n++) {
-    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    use.setAttribute('href', '#city-tile');
-    use.setAttribute('transform',
-      `translate(${n * width} ${CITY_GROUND - CITY_TILE.ground * scale}) scale(${scale}) translate(${-CITY_TILE.x0} 0)`);
-    city.append(use);
-  }
-} else {
-  city.remove();
-}
 
 // Camera x for every point of the line, averaged so it glides instead of jiggling with each stroke
 const STEP = 10;
@@ -282,26 +272,26 @@ function heading(head) {
   return travel;
 }
 
-// Circle: `shown` is the page colour; a change grows `reveal` (already in the new colour) from the eyes,
-// then hands the colour to the page and hides the circle again
-let shown = null, eyesAt = { x: 0, y: 0 };
-const circle = { r: 0, tween: null };
-function drawCircle() {
-  const far = Math.hypot(Math.max(eyesAt.x, innerWidth - eyesAt.x), Math.max(eyesAt.y, innerHeight - eyesAt.y));
-  reveal.style.clipPath = `circle(${circle.r * far}px at ${eyesAt.x}px ${eyesAt.y}px)`;
-}
-function setColour(color, grow) {
-  if (color === shown) return;
-  if (circle.tween) circle.tween.progress(1);   // finish a circle still growing (only when scrubbing)
-  shown = color;
-  const toPage = () => bgTargets.forEach((el) => { el.dataset.bg = color; });
-  if (!grow) { toPage(); return; }
-  reveal.dataset.bg = color;
-  circle.r = 0;
-  circle.tween = gsap.to(circle, {
-    r: 1, duration: REVEAL, ease: 'power2.in', onUpdate: drawCircle,
-    onComplete: () => { toPage(); circle.r = 0; circle.tween = null; drawCircle(); },
-  });
+// Backdrop: the world strip sits where drawing x = 0 lands on screen; the rooms are re-laid out only when the
+// zoom changes (resize), so every frame is just one transform
+let roomsZoom = 0, gridY = null;
+function backdrop(view, k) {
+  if (k !== roomsZoom) {
+    roomsZoom = k;
+    world.style.setProperty('--cell', `${CELL * k}px`);
+    world.style.setProperty('--fade', `${FADE * k}px`);
+    rooms.forEach(({ el, x0, x1 }) => {
+      el.style.left = `${x0 * k}px`;
+      el.style.width = `${(x1 - x0) * k}px`;
+      el.style.setProperty('--px', `${-x0 * k}px`);   // pattern starts at drawing x = 0, not at the room's edge
+    });
+  }
+  // The viewBox is centred in the SVG when its shape doesn't match (the still view)
+  const dpr = window.devicePixelRatio || 1;
+  const x = screen.left + (screen.w - view.w * k) / 2 - view.x * k;
+  const y = screen.top + (screen.h - view.h * k) / 2 - view.y * k;
+  world.style.transform = `translate3d(${Math.round(x * dpr) / dpr}px, 0, 0)`;
+  if (y !== gridY) { gridY = y; world.style.setProperty('--py', `${y}px`); }
 }
 
 function render() {
@@ -312,24 +302,8 @@ function render() {
   // Camera
   const view = camera(head);
   svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
-
-  // The city moves CITY_SPEED as fast as the camera: shifted along by the rest of the camera's move
-  if (cityOn) city.setAttribute('transform', `translate(${view.x * (1 - CITY_SPEED) + CITY_SHIFT} 0)`);
   const pxPerUnit = Math.min(screen.w / view.w, screen.h / view.h);
-
-  // Where the eyes are on screen (the viewBox is centred in the SVG when its shape doesn't match, as in the
-  // still view) — the circle opens from there
-  const p = thread.getPointAtLength(head);
-  eyesAt = {
-    x: screen.left + (screen.w - view.w * pxPerUnit) / 2 + (p.x - view.x) * pxPerUnit,
-    y: screen.top + (screen.h - view.h * pxPerUnit) / 2 + (p.y - view.y) * pxPerUnit,
-  };
-
-  // Background: the colour of the beat the eyes are in — grown from the eyes (a plain switch when there's no
-  // animation or before the first frame)
-  const beat = BEAT_ENDS.findIndex((end) => lapPos <= end + 0.5);
-  setColour(BEATS[beat < 0 ? BEATS.length - 1 : beat][2], shown !== null && !state.still && !!window.gsap);
-  if (circle.tween) drawCircle();   // the circle's centre follows the eyes while it grows
+  backdrop(view, pxPerUnit);
 
   // Show the path up to the eyes
   thread.style.strokeDasharray = `${head} ${LENGTH + 1}`;
@@ -337,6 +311,7 @@ function render() {
   thread.style.visibility = head > 0.5 ? 'visible' : 'hidden';
 
   // Eyes sit on the tip of the line and stay upright; they keep a readable size when zoomed out
+  const p = thread.getPointAtLength(head);
   const scale = state.size * Math.max(1, MIN_EYES_PX / (EYES_H * pxPerUnit));
   eyes.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${scale})`);
   eyesBlink.setAttribute('transform', `scale(1 ${Math.max(0.08, state.blink)})`);
@@ -354,6 +329,29 @@ function render() {
 }
 
 window.addEventListener('resize', () => { measure(); render(); });
+
+// Try-out bar: pattern (every room the same, or «mix» = each beat's own) and backdrop colour, kept in the URL
+const params = new URLSearchParams(location.search);
+const choice = {
+  p: PATTERNS.includes(params.get('p')) ? params.get('p') : 'mix',
+  c: COLOURS.includes(params.get('c')) ? params.get('c') : 'orange',
+};
+function applyChoice() {
+  rooms.forEach(({ el, pattern }) => { el.dataset.pattern = choice.p === 'mix' ? pattern : choice.p; });
+  document.body.dataset.bg = choice.c;
+  document.querySelectorAll('.tryout [data-p]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.p === choice.p));
+  document.querySelectorAll('.tryout [data-c]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.c === choice.c));
+  history.replaceState(null, '', `?p=${choice.p}&c=${choice.c}`);
+}
+document.querySelector('.tryout').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.p) choice.p = b.dataset.p;
+  if (b.dataset.c) choice.c = b.dataset.c;
+  applyChoice();
+});
+applyChoice();
+
 render();   // start hidden (no line, no eyes) until the first frame
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -366,7 +364,6 @@ if (reduceMotion || !window.gsap) {
   render();
 } else {
   gsap.to(state, { size: 1, duration: APPEAR, ease: 'back.out(2)', onUpdate: render });
-  if (cityOn) gsap.from(city, { opacity: 0, duration: 1.2, ease: 'power1.out' });   // the city fades up once
 
   // One lap, repeated forever. From the second lap on the eyes walk the second copy (see ENDLESS WALK).
   const tl = loopTl = gsap.timeline({ repeat: -1, onUpdate: render, onRepeat: () => { state.lapped = true; } });

@@ -1,7 +1,7 @@
 const between = (min, max) => Math.round(min + Math.random() * (max - min));
 
 /* ============================================================
-   LETTER SHUFFLE — shared by the hero title (03) and the wordmark (09b)
+   LETTER SHUFFLE — used by the wordmark (09b)
    Each letter sits in a fixed-width slot (as wide as its widest style) inside
    a no-wrap word, so switching fonts never pushes its neighbours and lines only
    break between words. data-f="0…8" picks the style (CSS: .shuffle [data-f]).
@@ -100,95 +100,399 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 }
 
 /* ============================================================
-   03 · HERO — «Սովորիր» + a phrase whose letters scramble into place
-   (the title's own font — no style changes). After each sentence settles, the backdrop simply changes to the
-   next palette colour. Colours + matching text colour live in CSS (.hero[data-bg="…"]).
-   Phrases live in the data-phrases attribute in index.html.
+   03 · HERO — watching eyes: one line tells a tiny story and writes «AI քեզ բան», with Yerevan behind it
+   A pair of eyes rides the tip of the line and the line is revealed behind them (stroke-dasharray) while a
+   camera (the SVG's viewBox) follows them scene by scene; the pupils glance around and blink now and then.
+   It never stops: the end of «բան» swoops straight into the next «AI» (see ENDLESS WALK).
+   Story: AI → a developer walks by with a laptop → a photographer takes a photo → քեզ
+          → a teacher points at a board and draws a rising chart → բան
+   Each scene has its colour: it opens from the eyes as a circle (.hero__reveal), then becomes the hero's
+   (data-bg on .hero and .hero__bg; the colours live in tailwind.css). Behind it all, a line-art Yerevan drifts
+   by slower than the line (.walk__city). Needs GSAP (loaded before this file); without it, or with reduced
+   motion, the whole drawing shows still. Prototyped in hero-eyes/.
    ============================================================ */
-// Colours change instantly, in this order (the «warhol» palette, see --color-pop-* in tailwind.css)
-const HERO_COLORS = ['orange', 'yellow', 'mint', 'cyan', 'tan', 'orchid'];   // the page opens on the first one
-const HERO_BRAND = 'AI քեզ բան';
-
-(function heroShuffle() {
+(function heroWalk() {
   const hero = document.querySelector('.hero');
-  const el = document.querySelector('.hero__typed');
-  if (!hero || !el) return;
+  const svg = hero?.querySelector('.walk');
+  if (!svg) return;
 
-  const phrases = JSON.parse(el.dataset.phrases);
-  // After every sentence the brand takes the whole line (same size, without «Սովորիր»); the colour changes with every line
-  const steps = phrases.flatMap((text) => [{ text }, { text: HERO_BRAND, brand: true }]);
-  const HOLD = 1600;                                   // ms every settled line (sentence or «AI քեզ բան») stays, with its colour
-  const INTRO_DELAY = 300;                             // ms after the page is ready before the first scramble
-  // The wordmark's flip style (letters flip together, then settle left → right), just quicker; no font changes (styles: false).
-  const TIMING = { frame: 60, revealStart: 80, revealStep: 20, revealJitter: 60, settle: 0 };
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const bg = hero.querySelector('.hero__bg');
-  const nextColor = () => {
-    const color = HERO_COLORS[(HERO_COLORS.indexOf(hero.dataset.bg) + 1) % HERO_COLORS.length];
-    hero.dataset.bg = bg.dataset.bg = color;
-  };
 
-  // Only wait for the font the hero title uses, not every font on the page
-  const title = el.closest('.hero__title');
-  const heroFonts = document.fonts.load(getComputedStyle(title).font, phrases.join('')).catch(() => {});
+  /* ------------------------------------------------------------------
+     THE THREAD — one path, split into pieces so each letter / scene is easy to tweak.
+     Every piece starts where the previous one ends (only the first has "M").
+     Guide lines (viewBox units): baseline y=400 · x-height y=300 ·
+     capitals / ascenders y≈228 · descenders y≈470 · the figures stand on the ground y=440.
+     ------------------------------------------------------------------ */
+  const THREAD = [
+    // lead-in: out from under the eyes, one lazy loop, then a long swash under the A up to its right foot
+    ['lead-in', 'M 50 468 C 85 490, 130 482, 140 458 C 148 438, 130 424, 116 436 C 102 448, 114 472, 142 470' +
+                ' C 200 468, 300 440, 324 402'],
 
-  let index = 0;
-  heroFonts.then(() => {
-    const spell = makeSpeller(title, { styles: false });
+    // A: up the right leg, down the left, curl at the foot, crossbar left → right
+    ['A', 'C 314 360, 290 285, 273 231 C 270 223, 265 223, 262 231 C 245 285, 222 350, 206 398' +
+          ' C 202 410, 188 414, 185 398 C 182 372, 200 344, 228 340 C 252 339, 282 339, 306 340'],
 
-    // Invisible slotted copies of every phrase share the title's grid cell, so the title is
-    // always as tall as the longest phrase and nothing below moves while it scrambles.
-    const line = el.parentElement;
-    steps.forEach(({ text, brand }) => {
-      const ghost = line.cloneNode(true);
-      ghost.classList.add('hero__ghost');
-      ghost.classList.toggle('is-brand', !!brand);
-      const typed = ghost.querySelector('.hero__typed');
-      typed.removeAttribute('data-phrases');
-      spell(typed, text);
-      line.parentElement.appendChild(ghost);
-    });
-    const show = () => {
-      const { text, brand } = steps[index];
-      line.classList.toggle('is-brand', !!brand);
-      return spell(el, text);
-    };
-    show();
+    // I: the crossbar sweeps up into the stem
+    ['I', 'C 330 341, 356 300, 371 232 C 373 290, 372 350, 372 400'],
 
-    if (reduceMotion) {   // no scrambling: swap whole phrases, then the colour
-      setInterval(() => {
-        index = (index + 1) % steps.length;
-        show();
-        nextColor();
-      }, HOLD + 1000);
-      return;
-    }
+    // scene 1 · developer: walks along carrying an open laptop in front of them
+    ['developer', 'C 372 425, 386 440, 412 440 C 436 440, 460 440, 480 440' +          // ground
+                  ' C 474 437, 469 434, 467 430' +                                      // back foot, heel up
+                  ' C 472 418, 480 408, 485 398 C 490 385, 495 368, 500 352' +          // back leg
+                  ' C 502 330, 503 305, 507 288' +                                      // back
+                  ' C 500 284, 497 272, 499 262 C 501 250, 511 246, 518 247' +          // head
+                  ' C 528 249, 534 258, 532 268 C 530 277, 523 282, 514 286' +
+                  ' C 506 298, 496 310, 490 322 C 487 328, 484 334, 482 340' +          // back arm swings…
+                  ' C 484 334, 487 328, 490 322 C 496 310, 506 298, 514 290' +          // …and back
+                  ' C 517 302, 519 314, 522 322 C 532 326, 542 324, 550 322' +          // front arm to the hand
+                  ' L 548 326 L 551 290 L 589 290 L 592 326' +                          // laptop: screen
+                  ' L 598 336 L 542 336 L 548 326 L 592 326 L 550 326 L 550 322' +      // keyboard, back to the hand
+                  ' C 542 324, 532 326, 522 322 C 519 314, 517 306, 515 300' +          // forearm back to the chest
+                  ' C 516 318, 514 336, 511 352' +                                      // chest
+                  ' C 514 368, 519 382, 522 395 C 525 410, 528 425, 532 437' +          // front leg
+                  ' C 536 440, 542 440, 550 440 C 575 440, 595 440, 612 432'],          // foot, ground
 
-    let cancel = () => {}, timer = 0, running = false;
-    function play(advance = true) {
-      if (advance) index = (index + 1) % steps.length;
-      if (advance) nextColor();   // the colour switches the instant the next line starts (not for the opening sentence: it keeps the first colour)
-      cancel = shuffleIn(show(), {
-        styles: false,
-        timing: TIMING,
-        onDone: () => { timer = setTimeout(play, HOLD); },
-      });
-    }
-    const stop = () => { cancel(); clearTimeout(timer); running = false; };
-    // First time: scramble the opening phrase in almost at once, so there's motion straight away.
-    // Coming back to the hero later: resume after a short beat.
-    let intro = true;
-    const start = () => {
-      running = true;
-      timer = setTimeout(() => { play(!intro); intro = false; }, intro ? INTRO_DELAY : 600);
-    };
+    // scene 2 · photographer: a firm stance, camera up to the eye… and the photo they took stands next to them
+    ['photographer', 'C 628 438, 640 440, 660 440 C 680 440, 700 440, 716 440' +       // ground
+                     ' C 722 420, 730 390, 736 370 C 738 362, 740 356, 742 352' +       // back leg
+                     ' C 744 330, 745 306, 747 288' +                                   // back
+                     ' C 740 284, 737 272, 739 262 C 741 250, 751 246, 758 247' +       // head
+                     ' C 768 249, 774 258, 772 268 C 770 277, 763 282, 754 286' +
+                     ' C 758 296, 766 304, 774 300 C 778 292, 780 282, 780 274' +       // arm up to the camera
+                     ' L 808 274 L 808 270 L 818 270 L 818 256 L 808 256 L 808 252' +  // camera: bottom, lens
+                     ' L 798 252 L 796 246 L 788 246 L 786 252 L 780 252 L 780 274' +  // top, viewfinder, back
+                     ' C 780 282, 778 292, 774 300 C 766 304, 758 298, 754 294' +       // arm back down
+                     ' C 755 316, 756 336, 757 354' +                                   // chest
+                     ' C 764 380, 778 410, 788 438 C 794 440, 800 440, 808 440' +       // front leg, lunging
+                     ' C 830 440, 846 440, 860 440' +                                   // ground
+                     ' L 860 376 L 920 376 L 920 420 L 910 420 L 898 398 L 890 410' +   // the photo: frame,
+                     ' L 878 390 L 864 420 L 860 420 L 860 440 L 920 440' +             // mountains, back down
+                     ' C 950 440, 972 432, 985 420 C 995 410, 1000 400, 1005 392'],     // and up into ք
 
-    if (!('IntersectionObserver' in window)) { start(); return; }
-    new IntersectionObserver(([entry]) => {   // pause while the hero is scrolled away
-      if (entry.isIntersecting && !running) start();
-      else if (!entry.isIntersecting && running) stop();
-    }).observe(hero);
+    // ք: up the stem, bowl, down the descender, loop into the crossbar
+    ['ք', 'C 1007 360, 1006 330, 1006 300 C 1012 293, 1074 288, 1076 345 C 1078 398, 1026 402, 1006 394' +
+          ' C 1004 420, 1006 450, 1006 472 C 1006 488, 986 490, 985 468 C 984 450, 992 441, 1008 440' +
+          ' C 1030 439, 1054 440, 1072 438'],
+
+    // ե: tall stem, bowl, right stem, bar (out and back)
+    ['ե', 'C 1090 437, 1101 405, 1105 340 C 1108 290, 1109 250, 1111 229 C 1112 223, 1117 223, 1117 232' +
+          ' C 1117 290, 1116 345, 1119 376 C 1123 402, 1168 404, 1174 374 C 1176 350, 1176 322, 1176 305' +
+          ' C 1176 300, 1164 298, 1150 298 C 1135 298, 1122 298, 1118 301 C 1125 306, 1160 307, 1194 305'],
+
+    // զ: over the bowl top, bowl anticlockwise, stem down, foot right
+    ['զ', 'C 1222 306, 1260 304, 1287 302 C 1272 292, 1224 292, 1222 348 C 1220 402, 1278 406, 1286 368' +
+          ' C 1288 345, 1287 320, 1287 303 C 1288 340, 1287 420, 1286 466 C 1286 472, 1292 472, 1300 472' +
+          ' C 1310 472, 1312 471, 1318 470'],
+
+    // scene 3 · teacher: points at a board, and the pointer draws a rising chart on it
+    ['teacher', 'C 1330 470, 1340 452, 1352 444 C 1358 440, 1364 440, 1370 440' +     // ground
+                ' C 1374 410, 1380 380, 1384 356' +                                     // back leg
+                ' C 1384 330, 1384 306, 1388 288' +                                     // back
+                ' C 1381 284, 1378 272, 1380 262 C 1382 250, 1392 246, 1399 247' +      // head
+                ' C 1409 249, 1415 258, 1413 268 C 1411 277, 1404 282, 1395 286' +
+                ' C 1402 300, 1412 310, 1422 306 L 1456 296' +                          // arm, pointer
+                ' L 1472 280 L 1486 290 L 1502 262 L 1514 270 L 1524 236' +             // the chart rises…
+                ' L 1514 270 L 1502 262 L 1486 290 L 1472 280 L 1456 296' +             // …back to the tip
+                ' L 1422 306 C 1412 310, 1402 304, 1395 296' +                          // pointer, arm back
+                ' C 1392 320, 1390 340, 1388 356' +                                     // chest
+                ' C 1392 380, 1398 410, 1402 438 C 1406 440, 1414 440, 1422 440' +      // front leg, foot
+                ' L 1438 440 L 1456 324' +                                              // easel leg
+                ' L 1444 324 L 1444 224 L 1530 224 L 1530 324 L 1456 324' +             // the board
+                ' L 1518 324 L 1532 440 L 1540 440'],                                   // easel leg, ground
+
+    // բ: in along the bar, up the right leg, arch, stem down, swoop out
+    ['բ', 'C 1558 440, 1568 401, 1590 400 C 1610 399, 1634 400, 1662 400 C 1656 396, 1655 388, 1655 376' +
+          ' C 1655 350, 1655 330, 1655 318 C 1654 306, 1642 298, 1626 298 C 1610 298, 1598 306, 1597 322' +
+          ' C 1596 360, 1597 420, 1597 470 C 1597 488, 1630 490, 1658 470 C 1674 456, 1680 400, 1684 302'],
+
+    // ա: three stems joined by two cups
+    ['ա', 'C 1686 330, 1686 355, 1687 372 C 1690 406, 1733 408, 1736 372 C 1738 350, 1738 325, 1738 302' +
+          ' C 1740 330, 1741 355, 1741 372 C 1744 406, 1786 408, 1789 372 C 1791 350, 1791 325, 1791 302' +
+          ' C 1793 340, 1794 380, 1794 400 C 1794 410, 1802 414, 1814 410'],
+
+    // ն: looped head, S down into the bowl, right stem
+    ['ն', 'C 1824 404, 1836 350, 1844 292 C 1847 276, 1844 264, 1836 265 C 1827 266, 1826 280, 1833 292' +
+          ' C 1839 305, 1838 340, 1840 372 C 1844 406, 1886 408, 1890 372 C 1892 350, 1892 325, 1892 302' +
+          ' C 1894 340, 1895 380, 1895 400'],
+
+    // tail: out of the word and away
+    ['tail', 'C 1896 418, 1918 424, 1940 410 C 1962 396, 1972 366, 1990 350'],
+
+    // loop: swoops down into the start of the next drawing (the lead-in's first point, one TILE to the right)
+    ['loop', 'C 2010 330, 2036 332, 2050 370 C 2060 400, 2064 438, 2110 468'],
+  ];
+
+  /* ------------------------------------------------------------------
+     STORY BEATS — each beat (up to the end of its piece) has its own background colour (the «warhol» palette,
+     --color-pop-*; the hero's data-bg colours live in tailwind.css). The eyes walk one lap in LAP_TIME seconds
+     at one steady pace, never stopping: the colour changes as they pass the end of a beat.
+     One lap draws the whole drawing once; then the next copy follows straight on, forever.
+     ------------------------------------------------------------------ */
+  const BEATS = [
+    ['I', 'orange'],            // AI
+    ['developer', 'yellow'],    // someone walks with a laptop…
+    ['photographer', 'mint'],   // …takes a photo
+    ['զ', 'cyan'],              // քեզ
+    ['teacher', 'tan'],         // someone teaches at a board
+    ['loop', 'orchid'],         // բան, and the swoop into the next «AI»
+  ];
+  const LAP_TIME = 18.8;
+
+  /* ENDLESS WALK — the drawing repeats every TILE units to the right (the 'loop' piece ends exactly one TILE
+     after the lead-in starts). The path holds three copies; the eyes walk the second one, and when they reach
+     its end they jump back to its start: the view is identical there, so the jump can't be seen. */
+  const TILE = 2060;
+  const APPEAR = 0.4;        // eyes pop in once, when the page opens
+
+  /* CAMERA — shows a window VIEW_H units tall (as wide as the screen allows) around the eyes */
+  const VIEW_TOP = 130;      // top edge of the camera window
+  const VIEW_H = 380;        // height of the camera window (sky above the figures → below the descenders)
+  const SMOOTH = 450;        // camera glides on the average position of ±450 units of line around the eyes
+
+  /* LOOK */
+  const THREAD_WIDTH = 3;    // SVG units…
+  const MIN_THREAD_PX = 1.2; // …but never thinner than this on screen (the zoomed-out view)
+  const EYES_H = 28;         // height of the eyes in SVG units (index.html: r = 14)
+  const MIN_EYES_PX = 14;    // …never smaller than this on screen
+  const PUPIL_TRAVEL = 6;    // how far a pupil can move from the centre of its eye (SVG units)
+
+  /* EYES — every GLANCE seconds (random within the range) the eyes pick somewhere new to look.
+     'ahead' follows the direction the line is travelling; the rest are fixed directions (x right, y down). */
+  const GLANCE = [0.7, 1.8];
+  const LOOKS = [
+    'ahead', 'ahead', 'ahead',           // mostly: where the line is going
+    { x: 0, y: 0.15 },                   // at you
+    { x: -0.9, y: 0.35 },                // back at what was just drawn
+    { x: 0.75, y: -0.7 },                // up and ahead
+    { x: -0.7, y: -0.7 },                // up and behind
+    { x: 0.2, y: 0.95 },                 // down at the ground
+  ];
+  const BLINK = [2.2, 5];    // seconds between blinks (random within the range)
+
+  /* CIRCLE — the next colour grows from the eyes to the farthest corner of the hero in REVEAL seconds:
+     it opens at once and slows down as it sweeps off screen */
+  const REVEAL = 0.9;
+
+  /* CITY — Yerevan behind the drawing (index.html: #walk-city-tile, drawn in its own pixels: x 55 → 1740, ground y 400).
+     It moves at CITY_SPEED of the camera's speed, so it drifts past slower than the line and the landmarks change as
+     the eyes walk. One stretch of city is TILE × CITY_SPEED units wide, so the endless-walk jump lands on the same
+     view of the city too. */
+  const CITY_SPEED = 0.5;
+  const CITY_GROUND = 440;   // the city stands on the figures' ground
+  const CITY_SHIFT = 50;     // slides the city along: Republic Square behind the photographer, Matenadaran behind the teacher
+  const CITY_TILE = { x0: 55, x1: 1740, ground: 400 };
+
+
+  /* ------------------------------------------------------------------ */
+
+  const bgTargets = [hero, hero.querySelector('.hero__bg')];
+  const reveal = hero.querySelector('.hero__reveal');
+  const city = svg.querySelector('.walk__city');
+  const thread = svg.querySelector('.walk__thread');
+  const eyes = svg.querySelector('.walk__eyes');
+  const eyesBlink = svg.querySelector('.walk__blink');
+  const pupils = [...svg.querySelectorAll('.walk__pupil')];
+  const PUPIL_HOME = pupils.map((p) => +p.getAttribute('cx'));
+
+  // Where each piece ends along one copy of the drawing (for the story beats)
+  const pieceEnd = {};
+  THREAD.forEach(([name], i) => {
+    thread.setAttribute('d', THREAD.slice(0, i + 1).map(([, d]) => d).join(' '));
+    pieceEnd[name] = thread.getTotalLength();
   });
+  const LAP = pieceEnd.loop;   // length of one copy
+  const BEAT_ENDS = BEATS.map(([piece]) => pieceEnd[piece]);
+
+  // One copy without the loop piece, with a margin — the still view for reduced motion
+  thread.setAttribute('d', THREAD.slice(0, -1).map(([, d]) => d).join(' '));
+  const bbox = thread.getBBox();
+  const FULL = { x: bbox.x - 40, y: bbox.y - 40, w: bbox.width + 80, h: bbox.height + 80 };
+
+  // Three copies in a row: shift every x by TILE, and drop the "M x y" so each copy carries on from the last
+  const ONE = THREAD.map(([, d]) => d).join(' ');
+  const shift = (d, dx) => d.replace(/(-?[\d.]+)[ ,]+(-?[\d.]+)/g, (_, x, y) => `${+x + dx} ${y}`);
+  const NEXT = ONE.replace(/^M [\d. ]+/, '');
+  thread.setAttribute('d', [ONE, shift(NEXT, TILE), shift(NEXT, 2 * TILE)].join(' '));
+  const LENGTH = thread.getTotalLength();
+
+  // The city: copies of one stretch side by side (enough for the whole walk and the still view), each scaled so a
+  // stretch is TILE × CITY_SPEED wide and its ground sits on CITY_GROUND. render() slides the lot with the camera.
+  const cityWidth = TILE * CITY_SPEED;
+  const cityScale = cityWidth / (CITY_TILE.x1 - CITY_TILE.x0);
+  for (let n = -1; n <= 4; n++) {
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', '#walk-city-tile');
+    use.setAttribute('transform',
+      `translate(${n * cityWidth} ${CITY_GROUND - CITY_TILE.ground * cityScale}) scale(${cityScale}) translate(${-CITY_TILE.x0} 0)`);
+    city.append(use);
+  }
+
+  // Camera x for every point of the line, averaged so it glides instead of jiggling with each stroke
+  const STEP = 10;
+  const camX = (() => {
+    const xs = [];
+    for (let l = 0; l <= LENGTH + STEP; l += STEP) xs.push(thread.getPointAtLength(Math.min(l, LENGTH)).x);
+    const r = Math.round(SMOOTH / STEP);
+    return xs.map((_, i) => {
+      const part = xs.slice(Math.max(0, i - r), i + r + 1);
+      return part.reduce((a, b) => a + b, 0) / part.length;
+    });
+  })();
+
+  // Animated values: `pos` = how far the eyes are through the current lap (0 → 1), `lapped` = whether a lap is
+  // already behind them (then they walk the second copy, with the first one drawn behind),
+  // `size` = eye size, `still` = show the whole drawing instead of following, `blink` = 1 open → 0 shut
+  const state = { pos: 0, lapped: false, size: 0, still: false, blink: 1 };
+
+  // Where the pupils point: `target` is chosen by the glances, `look` eases towards it every frame
+  let target = 'ahead';
+  const look = { x: 1, y: 0 };
+  let lastHead = 0;
+  let travel = { x: 1, y: 0 };
+
+  let loopTl = null;   // the lap timeline, once it exists
+
+  let screen = { w: 1, h: 1 };
+  function measure() { screen = { w: svg.clientWidth || 1, h: svg.clientHeight || 1 }; }
+  measure();
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = ([a, b]) => a + Math.random() * (b - a);
+
+  function camera(len) {
+    if (state.still) return FULL;
+    // Follow view: fixed height, as wide as the SVG's shape allows, centred on the smoothed eye position
+    const w = VIEW_H * (screen.w / screen.h);
+    const i = len / STEP, i0 = Math.floor(i);
+    const x = lerp(camX[i0], camX[i0 + 1] ?? camX[i0], i - i0);
+    return { x: x - w / 2, y: VIEW_TOP, w, h: VIEW_H };
+  }
+
+  // Direction the line is heading at the eyes (a short look back along the path), or the last one if it isn't moving
+  function heading(head) {
+    const back = thread.getPointAtLength(Math.max(0, head - 14));
+    const here = thread.getPointAtLength(head);
+    const dx = here.x - back.x, dy = here.y - back.y, d = Math.hypot(dx, dy);
+    if (Math.abs(head - lastHead) > 0.2 && d > 1) travel = { x: dx / d, y: dy / d };
+    lastHead = head;
+    return travel;
+  }
+
+  // Circle: `shown` is the hero's colour; a change grows .hero__reveal (already in the new colour) from the eyes,
+  // then hands the colour to the hero and hides the circle again. `eyesInSvg` is where the eyes are inside the SVG
+  // (render() keeps it up to date); the circle is placed on the reveal layer, which scrolls with the hero.
+  let shown = null, eyesInSvg = { x: 0, y: 0 };
+  const circle = { r: 0, tween: null };
+  function drawCircle() {
+    const box = reveal.getBoundingClientRect(), frame = svg.getBoundingClientRect();
+    const x = frame.left - box.left + eyesInSvg.x, y = frame.top - box.top + eyesInSvg.y;
+    const far = Math.hypot(Math.max(x, box.width - x), Math.max(y, box.height - y));
+    reveal.style.clipPath = `circle(${circle.r * far}px at ${x}px ${y}px)`;
+  }
+  function setColour(color, grow) {
+    if (color === shown) return;
+    if (circle.tween) circle.tween.progress(1);   // finish a circle still growing
+    shown = color;
+    const toHero = () => bgTargets.forEach((el) => { el.dataset.bg = color; });
+    if (!grow) { toHero(); return; }
+    reveal.dataset.bg = color;
+    circle.r = 0;
+    circle.tween = gsap.to(circle, {
+      r: 1, duration: REVEAL, ease: 'power2.out', onUpdate: drawCircle,
+      onComplete: () => { toHero(); circle.r = 0; circle.tween = null; drawCircle(); },
+    });
+  }
+
+  function render() {
+    const lapPos = state.pos * LAP;
+    const lapped = state.lapped || (loopTl && loopTl.iteration() > 1);
+    const head = (lapped ? LAP : 0) + lapPos;
+
+    // Camera
+    const view = camera(head);
+    svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
+
+    // The city moves CITY_SPEED as fast as the camera: shifted along by the rest of the camera's move
+    city.setAttribute('transform', `translate(${view.x * (1 - CITY_SPEED) + CITY_SHIFT} 0)`);
+    const pxPerUnit = Math.min(screen.w / view.w, screen.h / view.h);
+
+    // Where the eyes are inside the SVG (the viewBox is centred when its shape doesn't match, as in the still
+    // view) — the circle opens from there
+    const p = thread.getPointAtLength(head);
+    eyesInSvg = {
+      x: (screen.w - view.w * pxPerUnit) / 2 + (p.x - view.x) * pxPerUnit,
+      y: (screen.h - view.h * pxPerUnit) / 2 + (p.y - view.y) * pxPerUnit,
+    };
+
+    // Backdrop: the colour of the beat the eyes are in — grown from the eyes (a plain switch when there's no
+    // animation or before the first frame)
+    const beat = BEAT_ENDS.findIndex((end) => lapPos <= end + 0.5);
+    setColour(BEATS[beat < 0 ? BEATS.length - 1 : beat][1], shown !== null && !state.still && !!window.gsap);
+    if (circle.tween) drawCircle();   // the circle's centre follows the eyes while it grows
+
+    // Show the path up to the eyes
+    thread.style.strokeDasharray = `${head} ${LENGTH + 1}`;
+    thread.style.strokeWidth = Math.max(THREAD_WIDTH, MIN_THREAD_PX / pxPerUnit);
+    thread.style.visibility = head > 0.5 ? 'visible' : 'hidden';
+
+    // Eyes sit on the tip of the line and stay upright; they keep a readable size when zoomed out
+    const scale = state.size * Math.max(1, MIN_EYES_PX / (EYES_H * pxPerUnit));
+    eyes.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${scale})`);
+    eyesBlink.setAttribute('transform', `scale(1 ${Math.max(0.08, state.blink)})`);
+
+    // Pupils ease towards where the eyes want to look
+    const dir = heading(head);
+    const want = target === 'ahead' ? dir : target;
+    look.x = lerp(look.x, want.x, 0.25);
+    look.y = lerp(look.y, want.y, 0.25);
+    const m = Math.hypot(look.x, look.y), k = m > 1 ? 1 / m : 1;
+    pupils.forEach((pupil, i) => {
+      pupil.setAttribute('cx', PUPIL_HOME[i] + look.x * k * PUPIL_TRAVEL);
+      pupil.setAttribute('cy', look.y * k * PUPIL_TRAVEL);
+    });
+  }
+
+  window.addEventListener('resize', () => { measure(); render(); });
+  render();   // start hidden (no line, no eyes) until the first frame
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduceMotion || !window.gsap) {
+    // No animation: show one whole drawing with the eyes resting at the end of «բան», looking at you
+    Object.assign(state, { pos: pieceEnd.tail / LAP, size: 1, still: true });
+    target = { x: 0, y: 0.15 };
+    Object.assign(look, target);
+    render();
+    return;
+  }
+
+  gsap.to(state, { size: 1, duration: APPEAR, ease: 'back.out(2)', onUpdate: render });
+  gsap.from(city, { opacity: 0, duration: 1.2, ease: 'power1.out' });   // the city fades up once
+
+  // One lap at one steady pace, repeated forever (so the walk never stops, even from one lap into the next).
+  // From the second lap on the eyes walk the second copy (see ENDLESS WALK).
+  const tl = loopTl = gsap.timeline({ repeat: -1, onUpdate: render, onRepeat: () => { state.lapped = true; } });
+  tl.fromTo(state, { pos: 0 }, { pos: 1, duration: LAP_TIME, ease: 'none', immediateRender: false });
+
+  // Glances and blinks run on their own clocks, independent of the drawing
+  const glance = gsap.delayedCall(rand(GLANCE), function next() {
+    target = LOOKS[Math.floor(Math.random() * LOOKS.length)];
+    glance.delay(rand(GLANCE)).restart(true);
+  });
+  const blink = gsap.delayedCall(rand(BLINK), function next() {
+    gsap.timeline({ onUpdate: render })
+      .to(state, { blink: 0, duration: 0.07, ease: 'power1.in' })
+      .to(state, { blink: 1, duration: 0.12, ease: 'power1.out' });
+    blink.delay(rand(BLINK)).restart(true);
+  });
+
+  // Pause everything while the hero is scrolled away
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      const on = entry.isIntersecting;
+      [tl, glance, blink].forEach((a) => (on ? a.resume() : a.pause()));
+    }).observe(svg);
+  }
 })();
 
 /* ============================================================
@@ -268,11 +572,13 @@ const HERO_BRAND = 'AI քեզ բան';
 /* ============================================================
    01 / 04 · Scroll state
    After the page is scrolled: the orange announcement bar slides down out
-   of view and the webinar bar appears in its place at the bottom.
+   of view and the webinar bar appears in its place at the bottom, and the
+   floating buttons (12) come in with it.
    ============================================================ */
 (function scrollState() {
   const promo = document.querySelector('.promo');
   const topbar = document.querySelector('.topbar');
+  const fabs = document.querySelector('.fabs');
   const THRESHOLD = 80;
   let scrolled = null;
 
@@ -282,6 +588,7 @@ const HERO_BRAND = 'AI քեզ բան';
     scrolled = next;
     document.body.classList.toggle('is-scrolled', scrolled);
     if (promo) promo.inert = !scrolled;
+    if (fabs) fabs.inert = !scrolled;
     if (topbar) topbar.inert = scrolled;   // hidden bars can't be tabbed to
   }
 

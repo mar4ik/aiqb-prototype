@@ -1,0 +1,183 @@
+/* Pattern backdrops — a copy of ../hero-eyes where the beat-by-beat colour cuts are replaced by CSS patterns.
+   One backdrop colour (--bg, picked in the try-out bar) with a pattern drawn in a darker shade of it (--ink),
+   quiet enough that the black line stays the loudest thing on screen.
+   The patterns live in the drawing's world: script.js sets --cell (one pattern period, 20 SVG units, in px),
+   --fade, and each room's --px / --py, and slides .backdrop__world with the camera. */
+:root {
+  --thread: #000000;        /* --color-black, the hero's text colour on every backdrop */
+}
+
+body                   { --bg: #f78154; }   /* --color-pop-orange */
+body[data-bg="yellow"] { --bg: #ffd062; }   /* --color-pop-yellow */
+body[data-bg="mint"]   { --bg: #74deb9; }   /* --color-pop-mint */
+body[data-bg="cyan"]   { --bg: #7ee8fa; }   /* --color-pop-cyan */
+body[data-bg="paper"]  { --bg: #fafafa; }   /* --color-zinc-50 */
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; margin: 0; }
+
+body {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--bg);
+  font-family: system-ui, sans-serif;
+}
+
+/* ---------- Backdrop ---------- */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  --ink: color-mix(in oklab, var(--bg), #000 12%);       /* pattern colour: a shade of the backdrop */
+  --ink-soft: color-mix(in oklab, var(--bg), #000 6%);   /* for patterns that fill whole areas (checker) */
+  --hair: 1.5px;                                         /* line width of lines / grid */
+}
+
+/* The world strip: rooms are placed in it at drawing x × zoom; script.js translates it with the camera */
+.backdrop__world {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* One room per story beat. Rooms are opaque and overlap by --fade: the right one fades in over the left,
+   a true crossfade (no lighter band where the same pattern meets itself). */
+.room {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-color: var(--bg);
+  background-size: var(--cell) var(--cell);
+  background-position: var(--px) var(--py);   /* keeps every room on the one world grid */
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade));
+}
+
+/* Ruled paper: a line every cell, so the baseline, x-height and the ground the figures stand on are all on a line */
+.room[data-pattern="lines"] {
+  background-image: linear-gradient(var(--ink) 0 var(--hair), transparent 0);
+}
+
+/* Graph paper */
+.room[data-pattern="grid"] {
+  background-image:
+    linear-gradient(var(--ink) 0 var(--hair), transparent 0),
+    linear-gradient(90deg, var(--ink) 0 var(--hair), transparent 0);
+}
+
+/* Dot grid (a design-tool canvas) */
+.room[data-pattern="dots"] {
+  background-image: radial-gradient(circle, var(--ink) 0 12%, transparent 14%);
+}
+
+/* Transparency checkerboard (an image editor) */
+.room[data-pattern="checker"] {
+  background-image: conic-gradient(var(--ink-soft) 0 25%, transparent 0 50%, var(--ink-soft) 0 75%, transparent 0);
+}
+
+/* Diagonal pinstripes */
+.room[data-pattern="stripes"] {
+  background-image: linear-gradient(135deg, var(--ink) 0 8%, transparent 0 50%, var(--ink) 0 58%, transparent 0);
+}
+
+/* ---------- Stage ---------- */
+
+.stage {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 16px;
+}
+
+/* The SVG is the camera's frame: script.js moves the viewBox inside this shape */
+.yarn {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 5;
+}
+
+.yarn__thread {
+  fill: none;
+  stroke: var(--thread);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The eyes: white with black pupils, a thin outline in the line's colour so they read on every backdrop */
+.eyes__white {
+  fill: #ffffff;
+  stroke: var(--thread);
+  stroke-width: 2.5;
+}
+
+.eyes__pupil { fill: var(--thread); }
+
+/* ---------- Try-out bar (experiment only) ---------- */
+
+.tryout {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 16px;
+  width: max-content;
+  max-width: calc(100% - 32px);
+  padding: 6px;
+  border-radius: 24px;
+  background: #000;
+  color: #fff;
+  font-size: 14px;
+}
+
+.tryout__group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.tryout button {
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.tryout button:hover { background: #27272a; }                  /* --color-zinc-800 */
+.tryout button[aria-pressed="true"] { background: #fff; color: #000; }
+.tryout button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+.tryout__swatch {
+  width: 24px;
+  height: 24px;
+  padding: 0 !important;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+}
+
+.tryout__swatch[data-c="orange"] { background: #f78154 !important; }
+.tryout__swatch[data-c="yellow"] { background: #ffd062 !important; }
+.tryout__swatch[data-c="mint"]   { background: #74deb9 !important; }
+.tryout__swatch[data-c="cyan"]   { background: #7ee8fa !important; }
+.tryout__swatch[data-c="paper"]  { background: #fafafa !important; }
+.tryout__swatch[aria-pressed="true"] { box-shadow: 0 0 0 2px #000, 0 0 0 4px #fff; }
+
+/* Phones: a taller frame, so each scene fills the screen */
+@media (max-width: 640px) {
+  .yarn { aspect-ratio: 4 / 3; }
+  .tryout { gap: 8px; font-size: 13px; }
+  .tryout button { padding: 6px 8px; }
+}

@@ -8,11 +8,14 @@
    Story: AI → a developer walks by with a laptop → a photographer takes a photo → քեզ
           → a teacher points at a board and draws a rising chart → բան
 
-   A copy of ../hero-yarn with the eyes in place of the yarn ball; the markup it needs is in index.html
-   (.yarn, #thread, #eyes, #eyes-blink, #pupil-l, #pupil-r). GSAP loads first, this file as a module.
-   Every element marked data-yarn-bg gets data-bg="<colour>" for the current scene — the page's CSS turns that
-   into the backdrop. The new colour doesn't cut in: it opens from the eyes as a circle (#reveal, see CIRCLE).
-   Behind it all, a line-art Yerevan drifts by slower than the line (#city, see CITY); ?city=off hides it. */
+   A copy of ../hero-eyes with new ways for the backdrop colour to change between beats (see BACKDROP below),
+   switched in the try-out bar:
+   · place  — each beat is a «room» of solid colour laid out in the drawing's coordinates, so the next colour
+              slides in with the camera and the eyes walk into it
+   · circle — when the eyes finish a beat, the next colour opens from them as a circle
+   · cut    — the instant cut of ../hero-eyes, for comparison
+   The markup it needs is in index.html (.yarn, #thread, #eyes, #eyes-blink, #pupil-l, #pupil-r, #world, #reveal,
+   .tryout). GSAP loads first, this file as a module. Colours live in styles.css ([data-bg="<colour>"]). */
 
 /* ------------------------------------------------------------------
    THE THREAD — one path, split into pieces so each letter / scene is easy to tweak.
@@ -121,17 +124,18 @@ const THREAD = [
 
 /* ------------------------------------------------------------------
    STORY BEATS — the eyes reach the end of each piece after N seconds, and each beat has its own
-   background colour (the site hero's «warhol» palette, in the same order; colours live in styles.css).
+   background colour in each palette (the site hero's «warhol» palette; colours live in styles.css).
    The eyes ease in and out of every beat, so they take a breath between scenes — that's when the colour changes.
    One lap of beats draws the whole drawing once (≈ 19s); then the next copy follows straight on, forever.
    ------------------------------------------------------------------ */
 const BEATS = [
-  ['I', 2.4, 'orange'],            // AI
-  ['developer', 3.2, 'yellow'],    // someone walks with a laptop…
-  ['photographer', 3.8, 'mint'],   // …takes a photo
-  ['զ', 2.4, 'cyan'],              // քեզ
-  ['teacher', 3.6, 'tan'],         // someone teaches at a board
-  ['loop', 3.4, 'orchid'],         // բան, and the swoop into the next «AI»
+  //                            six (as now)  three (one per word)
+  ['I', 2.4,            { six: 'orange', three: 'orange' }],   // AI
+  ['developer', 3.2,    { six: 'yellow', three: 'orange' }],   // someone walks with a laptop…
+  ['photographer', 3.8, { six: 'mint',   three: 'yellow' }],   // …takes a photo
+  ['զ', 2.4,            { six: 'cyan',   three: 'yellow' }],   // քեզ
+  ['teacher', 3.6,      { six: 'tan',    three: 'mint' }],     // someone teaches at a board
+  ['loop', 3.4,         { six: 'orchid', three: 'mint' }],     // բան, and the swoop into the next «AI»
 ];
 
 /* ENDLESS WALK — the drawing repeats every TILE units to the right (the 'loop' piece ends exactly one TILE
@@ -165,39 +169,49 @@ const LOOKS = [
 ];
 const BLINK = [2.2, 5];    // seconds between blinks (random within the range)
 
-/* CIRCLE — the next colour grows from the eyes to the farthest corner of the screen in REVEAL seconds;
-   it starts slow (a bloom behind the eyes) and speeds up as it sweeps off screen */
+/* BACKDROP — how the colour changes (the try-out bar picks one of TRANSITIONS and one of PALETTES)
+   place:  one room per beat, from where the previous beat ends to where this one ends (drawing x), so the
+           boundary sits exactly where the eyes pause between two beats
+   circle: the next colour grows from the eyes to the farthest corner of the screen in REVEAL seconds;
+           it starts slow (a bloom behind the eyes) and speeds up as it sweeps off screen */
+const TRANSITIONS = ['place', 'circle', 'cut'];
+const PALETTES = ['six', 'three'];
 const REVEAL = 0.7;
-
-/* CITY — Yerevan behind the drawing (index.html: #city-tile, drawn in its own pixels: x 55 → 1740, ground y 400).
-   It moves at CITY_SPEED of the camera's speed, so it drifts past slower than the line and the landmarks change as
-   the eyes walk. One stretch of city is TILE × CITY_SPEED units wide, so the endless-walk jump lands on the same
-   view of the city too. */
-const CITY_SPEED = 0.5;
-const CITY_GROUND = 440;   // the city stands on the figures' ground
-const CITY_SHIFT = 50;     // slides the city along: Republic Square behind the photographer, Matenadaran behind the teacher
-const CITY_TILE = { x0: 55, x1: 1740, ground: 400 };
 
 /* ------------------------------------------------------------------ */
 
 const svg = document.querySelector('.yarn');
-const bgTargets = document.querySelectorAll('[data-yarn-bg]');
+const world = document.getElementById('world');
 const reveal = document.getElementById('reveal');
-const city = document.getElementById('city');
 const thread = document.getElementById('thread');
 const eyes = document.getElementById('eyes');
 const eyesBlink = document.getElementById('eyes-blink');
 const pupils = [document.getElementById('pupil-l'), document.getElementById('pupil-r')];
 const PUPIL_HOME = pupils.map((p) => +p.getAttribute('cx'));
 
-// Where each piece ends along one copy of the drawing (for the story beats)
+// Where each piece ends along one copy of the drawing (for the story beats), and at which x (for the rooms)
 const pieceEnd = {};
+const pieceEndX = {};
 THREAD.forEach(([name], i) => {
   thread.setAttribute('d', THREAD.slice(0, i + 1).map(([, d]) => d).join(' '));
   pieceEnd[name] = thread.getTotalLength();
+  pieceEndX[name] = thread.getPointAtLength(pieceEnd[name]).x;
 });
 const LAP = pieceEnd.loop;   // length of one copy
 const BEAT_ENDS = BEATS.map(([piece]) => pieceEnd[piece]);
+
+// The rooms: one per beat, for five copies of the drawing (one before the walk, one after — enough to cover
+// any screen)
+const rooms = [];
+for (let copy = -1; copy <= 3; copy++) {
+  BEATS.forEach(([piece, , colours], i) => {
+    const from = i ? pieceEndX[BEATS[i - 1][0]] : pieceEndX.loop - TILE;
+    const el = document.createElement('div');
+    el.className = 'room';
+    world.append(el);
+    rooms.push({ el, colours, x0: from + copy * TILE, x1: pieceEndX[piece] + copy * TILE });
+  });
+}
 
 // One copy without the loop piece, with a margin — the still view for reduced motion
 thread.setAttribute('d', THREAD.slice(0, -1).map(([, d]) => d).join(' '));
@@ -210,23 +224,6 @@ const shift = (d, dx) => d.replace(/(-?[\d.]+)[ ,]+(-?[\d.]+)/g, (_, x, y) => `$
 const NEXT = ONE.replace(/^M [\d. ]+/, '');
 thread.setAttribute('d', [ONE, shift(NEXT, TILE), shift(NEXT, 2 * TILE)].join(' '));
 const LENGTH = thread.getTotalLength();
-
-// The city: copies of one stretch side by side (enough for the whole walk and the still view), each scaled so a
-// stretch is TILE × CITY_SPEED wide and its ground sits on CITY_GROUND. render() slides the lot with the camera.
-const cityOn = new URLSearchParams(location.search).get('city') !== 'off';
-if (cityOn) {
-  const width = TILE * CITY_SPEED;
-  const scale = width / (CITY_TILE.x1 - CITY_TILE.x0);
-  for (let n = -1; n <= 4; n++) {
-    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    use.setAttribute('href', '#city-tile');
-    use.setAttribute('transform',
-      `translate(${n * width} ${CITY_GROUND - CITY_TILE.ground * scale}) scale(${scale}) translate(${-CITY_TILE.x0} 0)`);
-    city.append(use);
-  }
-} else {
-  city.remove();
-}
 
 // Camera x for every point of the line, averaged so it glides instead of jiggling with each stroke
 const STEP = 10;
@@ -282,6 +279,23 @@ function heading(head) {
   return travel;
 }
 
+const choice = { t: 'place', pal: 'six' };   // set from the URL / try-out bar below
+
+// Place: the world strip sits where drawing x = 0 lands on screen; the rooms are re-laid out only when the
+// zoom changes (resize), so every frame is just one transform
+let roomsZoom = 0;
+function slideRooms(origin, k) {
+  if (k !== roomsZoom) {
+    roomsZoom = k;
+    rooms.forEach(({ el, x0, x1 }) => {
+      el.style.left = `${x0 * k}px`;
+      el.style.width = `${(x1 - x0) * k + 1}px`;   // +1px: no seam between two rooms
+    });
+  }
+  const dpr = window.devicePixelRatio || 1;
+  world.style.transform = `translate3d(${Math.round(origin.x * dpr) / dpr}px, 0, 0)`;
+}
+
 // Circle: `shown` is the page colour; a change grows `reveal` (already in the new colour) from the eyes,
 // then hands the colour to the page and hides the circle again
 let shown = null, eyesAt = { x: 0, y: 0 };
@@ -290,17 +304,16 @@ function drawCircle() {
   const far = Math.hypot(Math.max(eyesAt.x, innerWidth - eyesAt.x), Math.max(eyesAt.y, innerHeight - eyesAt.y));
   reveal.style.clipPath = `circle(${circle.r * far}px at ${eyesAt.x}px ${eyesAt.y}px)`;
 }
-function setColour(color, grow) {
-  if (color === shown) return;
-  if (circle.tween) circle.tween.progress(1);   // finish a circle still growing (only when scrubbing)
-  shown = color;
-  const toPage = () => bgTargets.forEach((el) => { el.dataset.bg = color; });
-  if (!grow) { toPage(); return; }
-  reveal.dataset.bg = color;
+function setColour(colour, grow) {
+  if (colour === shown) return;
+  if (circle.tween) circle.tween.progress(1);   // finish a circle still growing (only when scrubbing / switching)
+  shown = colour;
+  if (!grow) { document.body.dataset.bg = colour; return; }
+  reveal.dataset.bg = colour;
   circle.r = 0;
   circle.tween = gsap.to(circle, {
     r: 1, duration: REVEAL, ease: 'power2.in', onUpdate: drawCircle,
-    onComplete: () => { toPage(); circle.r = 0; circle.tween = null; drawCircle(); },
+    onComplete: () => { document.body.dataset.bg = colour; circle.r = 0; circle.tween = null; drawCircle(); },
   });
 }
 
@@ -312,24 +325,24 @@ function render() {
   // Camera
   const view = camera(head);
   svg.setAttribute('viewBox', `${view.x} ${view.y} ${view.w} ${view.h}`);
-
-  // The city moves CITY_SPEED as fast as the camera: shifted along by the rest of the camera's move
-  if (cityOn) city.setAttribute('transform', `translate(${view.x * (1 - CITY_SPEED) + CITY_SHIFT} 0)`);
   const pxPerUnit = Math.min(screen.w / view.w, screen.h / view.h);
 
-  // Where the eyes are on screen (the viewBox is centred in the SVG when its shape doesn't match, as in the
-  // still view) — the circle opens from there
-  const p = thread.getPointAtLength(head);
-  eyesAt = {
-    x: screen.left + (screen.w - view.w * pxPerUnit) / 2 + (p.x - view.x) * pxPerUnit,
-    y: screen.top + (screen.h - view.h * pxPerUnit) / 2 + (p.y - view.y) * pxPerUnit,
+  // Where drawing (0, 0) lands on screen (the viewBox is centred in the SVG when its shape doesn't match,
+  // as in the still view) — to place the rooms and find the eyes on screen
+  const origin = {
+    x: screen.left + (screen.w - view.w * pxPerUnit) / 2 - view.x * pxPerUnit,
+    y: screen.top + (screen.h - view.h * pxPerUnit) / 2 - view.y * pxPerUnit,
   };
+  const p = thread.getPointAtLength(head);
+  eyesAt = { x: origin.x + p.x * pxPerUnit, y: origin.y + p.y * pxPerUnit };
 
-  // Background: the colour of the beat the eyes are in — grown from the eyes (a plain switch when there's no
-  // animation or before the first frame)
-  const beat = BEAT_ENDS.findIndex((end) => lapPos <= end + 0.5);
-  setColour(BEATS[beat < 0 ? BEATS.length - 1 : beat][2], shown !== null && !state.still && !!window.gsap);
-  if (circle.tween) drawCircle();   // the circle's centre follows the eyes while it grows
+  // Backdrop: rooms slide with the camera (place), or the page takes the colour of the beat the eyes are in
+  if (choice.t === 'place') slideRooms(origin, pxPerUnit);
+  else {
+    const beat = BEAT_ENDS.findIndex((end) => lapPos <= end + 0.5);
+    setColour(BEATS[beat < 0 ? BEATS.length - 1 : beat][2][choice.pal], choice.t === 'circle' && !state.still);
+    if (circle.tween) drawCircle();   // the circle's centre follows the eyes while it grows
+  }
 
   // Show the path up to the eyes
   thread.style.strokeDasharray = `${head} ${LENGTH + 1}`;
@@ -354,6 +367,30 @@ function render() {
 }
 
 window.addEventListener('resize', () => { measure(); render(); });
+
+// Try-out bar: transition and palette, kept in the URL. Switching jumps straight to the new look (no circle).
+const params = new URLSearchParams(location.search);
+if (TRANSITIONS.includes(params.get('t'))) choice.t = params.get('t');
+if (PALETTES.includes(params.get('pal'))) choice.pal = params.get('pal');
+function applyChoice() {
+  rooms.forEach(({ el, colours }) => { el.dataset.bg = colours[choice.pal]; });
+  world.hidden = choice.t !== 'place';
+  if (circle.tween) circle.tween.progress(1);
+  shown = null;
+  document.querySelectorAll('.tryout [data-t]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.t === choice.t));
+  document.querySelectorAll('.tryout [data-pal]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.pal === choice.pal));
+  history.replaceState(null, '', `?t=${choice.t}&pal=${choice.pal}`);
+}
+document.querySelector('.tryout').addEventListener('click', (e) => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.dataset.t) choice.t = b.dataset.t;
+  if (b.dataset.pal) choice.pal = b.dataset.pal;
+  applyChoice();
+  render();
+});
+applyChoice();
+
 render();   // start hidden (no line, no eyes) until the first frame
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -366,7 +403,6 @@ if (reduceMotion || !window.gsap) {
   render();
 } else {
   gsap.to(state, { size: 1, duration: APPEAR, ease: 'back.out(2)', onUpdate: render });
-  if (cityOn) gsap.from(city, { opacity: 0, duration: 1.2, ease: 'power1.out' });   // the city fades up once
 
   // One lap, repeated forever. From the second lap on the eyes walk the second copy (see ENDLESS WALK).
   const tl = loopTl = gsap.timeline({ repeat: -1, onUpdate: render, onRepeat: () => { state.lapped = true; } });
