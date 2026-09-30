@@ -422,6 +422,9 @@ body.is-menu-open { overflow: hidden; }
   aspect-ratio: 12 / 5;
   overflow: visible;   /* the city and the line run on to the screen's edges (the page clips sideways overflow) */
 }
+/* Until the walk starts (.is-ready, script.js — once the page has loaded) only the backdrop shows: no eyes
+   waiting at the drawing's corner, no city half in */
+.walk:not(.is-ready) :is(.walk__eyes, .walk__city) { visibility: hidden; }
 .walk__thread {
   fill: none;
   stroke: var(--hero-fg);

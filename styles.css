@@ -1042,6 +1042,10 @@
     overflow: visible;
   }
 
+  .walk:not(.is-ready) :is(.walk__eyes, .walk__city) {
+    visibility: hidden;
+  }
+
   .walk__thread {
     fill: none;
     stroke: var(--hero-fg);

@@ -327,11 +327,45 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     city.append(use);
   }
 
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = ([a, b]) => a + Math.random() * (b - a);
+
+  // Points along one copy of the line, every LUT_STEP units, measured once — render() looks them up instead of
+  // asking the path. (Asking the long three-copy path is slow: it measures from its start every time, so the
+  // camera below took seconds and blocked the page.) Each piece is measured on its own short path; the other
+  // copies are the same points TILE further right.
+  const LUT_STEP = 2;
+  const lut = { xs: [], ys: [] };
+  {
+    const probe = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    svg.append(probe);
+    const ends = THREAD.map(([name]) => pieceEnd[name]);
+    const endPoint = (d) => d.trim().split(/[ ,]+/).slice(-2).join(' ');   // a piece ends on its last x y
+    let i = -1, from = 0;
+    for (let s = 0; s <= LAP; s += LUT_STEP) {
+      while (i < 0 || (s > ends[i] && i < ends.length - 1)) {   // on to the piece that holds this length
+        i++;
+        from = i ? ends[i - 1] : 0;
+        probe.setAttribute('d', i ? `M ${endPoint(THREAD[i - 1][1])} ${THREAD[i][1]}` : THREAD[0][1]);
+      }
+      const p = probe.getPointAtLength(Math.min(s, ends[i]) - from);
+      lut.xs.push(p.x);
+      lut.ys.push(p.y);
+    }
+    probe.remove();
+  }
+  function pointAt(len) {
+    const copy = Math.floor(len / LAP);
+    const i = (len - copy * LAP) / LUT_STEP, i0 = Math.floor(i), last = lut.xs.length - 1;
+    const a = Math.min(i0, last), b = Math.min(i0 + 1, last);
+    return { x: lerp(lut.xs[a], lut.xs[b], i - i0) + copy * TILE, y: lerp(lut.ys[a], lut.ys[b], i - i0) };
+  }
+
   // Camera x for every point of the line, averaged so it glides instead of jiggling with each stroke
   const STEP = 10;
   const camX = (() => {
     const xs = [];
-    for (let l = 0; l <= LENGTH + STEP; l += STEP) xs.push(thread.getPointAtLength(Math.min(l, LENGTH)).x);
+    for (let l = 0; l <= LENGTH + STEP; l += STEP) xs.push(pointAt(Math.min(l, LENGTH)).x);
     const r = Math.round(SMOOTH / STEP);
     return xs.map((_, i) => {
       const part = xs.slice(Math.max(0, i - r), i + r + 1);
@@ -356,9 +390,6 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   function measure() { screen = { w: svg.clientWidth || 1, h: svg.clientHeight || 1 }; }
   measure();
 
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const rand = ([a, b]) => a + Math.random() * (b - a);
-
   function camera(len) {
     if (state.still) return FULL;
     // Follow view: fixed height, as wide as the SVG's shape allows, centred on the smoothed eye position
@@ -370,8 +401,8 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
   // Direction the line is heading at the eyes (a short look back along the path), or the last one if it isn't moving
   function heading(head) {
-    const back = thread.getPointAtLength(Math.max(0, head - 14));
-    const here = thread.getPointAtLength(head);
+    const back = pointAt(Math.max(0, head - 14));
+    const here = pointAt(head);
     const dx = here.x - back.x, dy = here.y - back.y, d = Math.hypot(dx, dy);
     if (Math.abs(head - lastHead) > 0.2 && d > 1) travel = { x: dx / d, y: dy / d };
     lastHead = head;
@@ -418,7 +449,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
     // Where the eyes are inside the SVG (the viewBox is centred when its shape doesn't match, as in the still
     // view) — the circle opens from there
-    const p = thread.getPointAtLength(head);
+    const p = pointAt(head);
     eyesInSvg = {
       x: (screen.w - view.w * pxPerUnit) / 2 + (p.x - view.x) * pxPerUnit,
       y: (screen.h - view.h * pxPerUnit) / 2 + (p.y - view.y) * pxPerUnit,
@@ -463,35 +494,51 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     target = { x: 0, y: 0.15 };
     Object.assign(look, target);
     render();
+    svg.classList.add('is-ready');
     return;
   }
 
-  gsap.to(state, { size: 1, duration: APPEAR, ease: 'back.out(2)', onUpdate: render });
-  gsap.from(city, { opacity: 0, duration: 1.2, ease: 'power1.out' });   // the city fades up once
+  // The walk starts once the page has loaded (images, fonts, the city), so its first frames run smoothly instead
+  // of competing with the rest of the page — or after START_WAIT at the latest, so a slow connection doesn't
+  // leave the hero empty. Until then the eyes and the city are hidden (.walk:not(.is-ready) in tailwind.css).
+  const START_WAIT = 3000;   // ms
+  let started = false;
+  const begin = () => { if (!started) { started = true; start(); } };
+  if (document.readyState === 'complete') begin();
+  else {
+    window.addEventListener('load', begin, { once: true });
+    setTimeout(begin, START_WAIT);
+  }
 
-  // One lap at one steady pace, repeated forever (so the walk never stops, even from one lap into the next).
-  // From the second lap on the eyes walk the second copy (see ENDLESS WALK).
-  const tl = loopTl = gsap.timeline({ repeat: -1, onUpdate: render, onRepeat: () => { state.lapped = true; } });
-  tl.fromTo(state, { pos: 0 }, { pos: 1, duration: LAP_TIME, ease: 'none', immediateRender: false });
+  function start() {
+    svg.classList.add('is-ready');
+    gsap.to(state, { size: 1, duration: APPEAR, ease: 'back.out(2)', onUpdate: render });
+    gsap.from(city, { opacity: 0, duration: 1.2, ease: 'power1.out' });   // the city fades up once
 
-  // Glances and blinks run on their own clocks, independent of the drawing
-  const glance = gsap.delayedCall(rand(GLANCE), function next() {
-    target = LOOKS[Math.floor(Math.random() * LOOKS.length)];
-    glance.delay(rand(GLANCE)).restart(true);
-  });
-  const blink = gsap.delayedCall(rand(BLINK), function next() {
-    gsap.timeline({ onUpdate: render })
-      .to(state, { blink: 0, duration: 0.07, ease: 'power1.in' })
-      .to(state, { blink: 1, duration: 0.12, ease: 'power1.out' });
-    blink.delay(rand(BLINK)).restart(true);
-  });
+    // One lap at one steady pace, repeated forever (so the walk never stops, even from one lap into the next).
+    // From the second lap on the eyes walk the second copy (see ENDLESS WALK).
+    const tl = loopTl = gsap.timeline({ repeat: -1, onUpdate: render, onRepeat: () => { state.lapped = true; } });
+    tl.fromTo(state, { pos: 0 }, { pos: 1, duration: LAP_TIME, ease: 'none', immediateRender: false });
 
-  // Pause everything while the hero is scrolled away
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(([entry]) => {
-      const on = entry.isIntersecting;
-      [tl, glance, blink].forEach((a) => (on ? a.resume() : a.pause()));
-    }).observe(svg);
+    // Glances and blinks run on their own clocks, independent of the drawing
+    const glance = gsap.delayedCall(rand(GLANCE), function next() {
+      target = LOOKS[Math.floor(Math.random() * LOOKS.length)];
+      glance.delay(rand(GLANCE)).restart(true);
+    });
+    const blink = gsap.delayedCall(rand(BLINK), function next() {
+      gsap.timeline({ onUpdate: render })
+        .to(state, { blink: 0, duration: 0.07, ease: 'power1.in' })
+        .to(state, { blink: 1, duration: 0.12, ease: 'power1.out' });
+      blink.delay(rand(BLINK)).restart(true);
+    });
+
+    // Pause everything while the hero is scrolled away
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        const on = entry.isIntersecting;
+        [tl, glance, blink].forEach((a) => (on ? a.resume() : a.pause()));
+      }).observe(svg);
+    }
   }
 })();
 
