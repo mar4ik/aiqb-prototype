@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@100..900&family=Noto+Serif+Armenian:wght@400..900&family=Handjet:wght,ELGR,ELSH@100..900,1..2,0..16&family=Google+Sans:wght@700&family=Iosevka+Charon:wght@700&display=swap" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=floating-contact-18" />
 </head>
 <body>
 
@@ -28,7 +28,9 @@
        ========================================================= -->
   <header class="nav-wrap">
     <nav class="nav">
-      <a href="#" class="nav__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI քեզ բան" /></a>
+      <a href="#" class="nav__logo">
+        <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
+      </a>
       <div class="nav__links" id="nav-menu">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="#packages" class="nav__link">Դասընթացներ</a>
@@ -737,7 +739,7 @@
             <span class="wordmark__fact"><i class="ic ic--lg ic--calendar" aria-hidden="true"></i>Ընթացիկ ամսվա 19-ին</span>
             <span class="wordmark__fact"><i class="ic ic--lg ic--clock" aria-hidden="true"></i>19 : 00 - ին</span>
           </p>
-          <a href="#" class="btn btn--primary btn--md">Գրանցվիր</a>
+          <a href="#" class="btn btn--primary btn--md">Գրանցվել</a>
         </div>
       </div>
     </section>
@@ -822,10 +824,16 @@
   <footer class="footer">
     <div class="footer__cols">
       <div class="footer__brand">
-        <a href="#" class="footer__logo"><img src="assets/logos/AIQB_logo.svg" alt="AI քեզ բան" /></a>
-        <p class="footer__tagline">Հայաստանում AI կրթության<br />լավագույն ծրագիր</p>
-        <img class="footer__gerb" src="assets/logos/armgerb.svg" alt="" />
-        <p class="footer__tagline">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        <div class="footer__brand-row">
+          <a href="#" class="footer__logo">
+            <img src="assets/logos/logo_arm_dark.svg" alt="AI քեզ բան" />
+          </a>
+          <p class="footer__tagline">Հայաստանում AI կրթության<br />լավագույն ծրագիր</p>
+        </div>
+        <div class="footer__brand-row">
+          <img class="footer__gerb" src="assets/logos/armgerb.svg" alt="" />
+          <p class="footer__tagline">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
       </div>
 
       <div class="footer__links">
@@ -837,6 +845,7 @@
           <a href="#mission">Մեր առաքելությունը</a>
           <a href="#referral">Հրավիրիր ընկերոջդ</a>
           <a href="#faq">Հաճախ տրվող հարցեր</a>
+          <a href="https://aiqezban.ai/join">Միացիր մեր թիմին</a>
         </nav>
         <div class="footer__col">
           <p class="footer__heading">Կապ</p>
@@ -877,24 +886,29 @@
        04 · WEBINAR BAR (appears on scroll, fixed to the bottom)
        ========================================================= -->
   <div class="promo" inert>
-    <div class="promo__text">
-      <strong>Միացիր վեբինարին</strong>
-      <span><i class="ic ic--calendar" aria-hidden="true"></i>հոկտեմբերի 19-ին</span>
+    <div class="promo__text">   <!-- short copy on mobile, where the bar shares the row with the floating buttons -->
+      <strong><span class="promo__long">Միացիր վեբինարին</span><span class="promo__short">Վեբինար</span></strong>
+      <span class="promo__date"><i class="ic ic--calendar" aria-hidden="true"></i><span class="promo__long">հոկտեմբերի 19-ին</span><span class="promo__short">հոկտ. 19</span></span>
     </div>
-    <a href="#" class="btn btn--white btn--sm promo__btn">Գրանցվել</a>
+    <a href="#" class="btn btn--white btn--sm promo__btn" aria-label="Գրանցվել վեբինարին"><i class="ic ic--calendar-plus" aria-hidden="true"></i><span class="promo__btn-label">Գրանցվել</span></a>   <!-- icon only below 1280px while the contact group is open -->
   </div>
 
   <!-- =========================================================
-       12 · FLOATING ACTION BUTTONS (appear on scroll, like the webinar bar)
+       12 · FLOATING ACTION BUTTONS (appear on scroll, like the webinar bar):
+       the contact button opens phone / Telegram / WhatsApp as one group and
+       stays outside it as the ✕; back to top last
        ========================================================= -->
   <div class="fabs" inert>
-    <a href="tel:+37444199199" class="fab fab--label fab--accent" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i>+374 44 199 199</a>
-    <a href="https://t.me/AI_qez_banakan_bot" class="fab fab--telegram" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic--lg ic--telegram" aria-hidden="true"></i></a>
-    <a href="https://wa.me/37441958510" class="fab fab--whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><i class="ic ic--lg ic--whatsapp" aria-hidden="true"></i></a>
+    <div class="fab-group" id="contact-actions">
+      <a href="tel:+37444199199" class="fab fab--label" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i><span class="fab__label">+374 44 199 199</span></a>
+      <a href="https://t.me/AI_qez_banakan_bot" class="fab" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic--lg ic--telegram" aria-hidden="true"></i></a>
+      <a href="https://wa.me/37441958510" class="fab" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><i class="ic ic--lg ic--whatsapp" aria-hidden="true"></i></a>
+    </div>
+    <button type="button" class="fab fab--contact" aria-label="Կապ" aria-expanded="false" aria-controls="contact-actions"><i class="ic ic--phone fab__open-icon" aria-hidden="true"></i><i class="ic ic--x fab__close-icon" aria-hidden="true"></i></button>
     <button type="button" class="fab fab--top" aria-label="Վերև"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js"></script>
+  <script src="script.js?v=floating-contact-9"></script>
 </body>
 </html>

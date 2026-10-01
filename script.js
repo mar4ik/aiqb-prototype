@@ -671,6 +671,35 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
+   12b · Contact group
+   Phone / Telegram / WhatsApp sit behind one contact button, which
+   opens them as one group and stays outside it as the ✕ that closes it.
+   Below 1280px the webinar bar folds into an icon-only CTA at the start
+   of the row while the group is open (body.is-contact-open).
+   ============================================================ */
+(function contactGroup() {
+  const trigger = document.querySelector('.fab--contact');
+  const actions = [...document.querySelectorAll('.fab-group .fab')];
+  const promoBtn = document.querySelector('.promo__btn');
+  if (!trigger || !actions.length) return;
+
+  function setOpen(open) {
+    document.body.classList.toggle('is-contact-open', open);
+    trigger.setAttribute('aria-expanded', String(open));
+    trigger.setAttribute('aria-label', open ? 'Փակել կապի կոճակները' : 'Կապ');
+  }
+
+  trigger.addEventListener('click', () => setOpen(!document.body.classList.contains('is-contact-open')));
+  actions.forEach((action) => action.addEventListener('click', () => setOpen(false)));
+  promoBtn?.addEventListener('click', () => setOpen(false));
+  window.addEventListener('scroll', () => {
+    if (!document.body.classList.contains('is-scrolled')) setOpen(false);
+  }, { passive: true });
+
+  setOpen(false);
+})();
+
+/* ============================================================
    06 · TEACHERS — prev / next arrows for the card row
    ============================================================ */
 (function teachersCarousel() {

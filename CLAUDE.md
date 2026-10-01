@@ -19,8 +19,8 @@ There's no component folder: the **atomic components are the shared classes in `
 |---|---|---|
 | Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons; the hero CTAs) · `--md` (56px) · `--lg` (64px, hero only); optional `--block` | every clickable action (links styled as buttons too) |
 | Pill / tag | `.pill` + `--deal` (orange −%) · `--save` (green) · `--gift` (violet) · `--zoom` (grey) | discounts, labels, badges |
-| Icon | `.ic` + `.ic--calendar` · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
-| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · colour: `--accent` (webinar-bar orange) · `--telegram` · `--whatsapp` · `--top` (back to top) | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
+| Icon | `.ic` + `.ic--calendar` · `--calendar-plus` (register) · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
+| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
 | Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
 | Round arrow | `.pro-card__arrow` / `.teachers__arrow` | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |

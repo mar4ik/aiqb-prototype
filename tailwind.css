@@ -218,14 +218,23 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: --spacing(3) --spacing(4) --spacing(3) --spacing(7);
+  padding: --spacing(3) --spacing(4) --spacing(3) --spacing(3);
   background: color-mix(in oklab, var(--color-white) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   border: 1px solid var(--line);   /* soft outline all around the pill */
   border-radius: var(--radius-full);
 }
-.nav__logo { display: block; flex-shrink: 0; }
-.nav__logo img { height: --spacing(10); width: auto; }
+.nav__logo {
+  display: inline-flex;
+  width: --spacing(10);
+  height: --spacing(10);
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+}
+.nav__logo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .nav__links { display: flex; align-items: center; gap: --spacing(1); }
 .nav__link {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
@@ -489,7 +498,7 @@ body.is-menu-open { overflow: hidden; }
   gap: --spacing(10);
   padding: --spacing(3) --spacing(3) --spacing(3) --spacing(6);
   border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--color-accent) 90%, transparent);
+  background: color-mix(in oklab, var(--color-green-600) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   color: var(--color-white);
 }
@@ -497,13 +506,15 @@ body.is-menu-open { overflow: hidden; }
 /* title + date read as one unit: bold title, smaller softer date with the same calendar icon as the package cards */
 .promo__text { display: flex; flex-direction: column; z-index: 3; white-space: nowrap; }   /* title + date add up to exactly the button's 40px, so the bar's padding is the same on all sides of the button */
 .promo__text strong { font-weight: var(--font-weight-bold); font-size: var(--text-lg); line-height: var(--leading-tight); }
-.promo__text span {
+.promo__date {
   display: flex; align-items: center; gap: --spacing(1.5);
   font-size: var(--text-sm); line-height: var(--leading-tight);
   color: color-mix(in oklab, var(--color-white) 85%, transparent);
 }
 .promo__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 .promo__btn { z-index: 2; }
+.promo__btn .ic { display: none; }   /* the register icon: only in the compact bar (below xl, contact group open) */
+.promo__short { display: none; }   /* short title / date for the mobile row (full copy everywhere else) */
 
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
@@ -919,6 +930,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .ic--lg { width: --spacing(6); height: --spacing(6); }   /* size scale: default 18px · --lg 24px (brand logos in the floating buttons) */
 .ic--calendar   { --i: url("assets/icons/calendar.svg"); }
+.ic--calendar-plus { --i: url("assets/icons/calendar-plus.svg"); }   /* register (the webinar bar's compact button) */
 .ic--clock      { --i: url("assets/icons/clock.svg"); }
 .ic--check      { --i: url("assets/icons/check.svg"); }
 .ic--x          { --i: url("assets/icons/x.svg"); }
@@ -1445,16 +1457,22 @@ body.is-menu-open { overflow: hidden; }
   display: flex; flex-direction: column; gap: --spacing(8);
 }
 .footer__cols { display: flex; justify-content: space-between; align-items: flex-start; gap: --spacing(12); }
-/* Two matching rows — [logo | tagline] and [coat of arms | endorsement]: the images share
-   one column, so both texts start on the same left edge */
 .footer__brand {
-  display: grid; grid-template-columns: auto 1fr; align-items: center;
-  gap: --spacing(5) --spacing(4);
+  --footer-brand-media-w: --spacing(29.5);
+  display: flex;
+  flex-direction: column;
+  gap: --spacing(4);
   max-width: --spacing(100);
 }
-.footer__gerb { justify-self: start; width: --spacing(10); height: auto; }   /* left edge lines up with the logo's */
-.footer__logo { display: block; }
-.footer__logo img { height: --spacing(12); width: auto; }
+.footer__brand-row {
+  display: grid;
+  grid-template-columns: var(--footer-brand-media-w) 1fr;
+  align-items: center;
+  gap: --spacing(4);
+}
+.footer__gerb { width: --spacing(10); height: auto; justify-self: end; }
+.footer__logo { display: block; justify-self: end; }
+.footer__logo img { display: block; height: --spacing(5.5); width: auto; }
 .footer__tagline { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-slate-600); }
 
 .footer__links { display: flex; gap: --spacing(24); }
@@ -1497,7 +1515,7 @@ body.is-menu-open { overflow: hidden; }
 /* The row comes in once the page is scrolled, the way the webinar bar (04) does: it slides up and fades in
    (body.is-scrolled; script.js also makes it inert until then, so its hidden links can't be tabbed to) */
 .fabs {
-  position: fixed; right: --spacing(14); bottom: --spacing(8); z-index: 50;
+  position: fixed; right: --spacing(14); bottom: --spacing(6); z-index: 50;   /* bottom edge in line with the webinar bar's (04) */
   display: flex; gap: --spacing(2);
   translate: 0 calc(100% + --spacing(15)); opacity: 0;
   transition: translate .4s var(--ease-smooth), opacity .3s ease, bottom .35s ease;
@@ -1507,7 +1525,7 @@ body.is-menu-open { overflow: hidden; }
   display: flex; align-items: center; justify-content: center;
   width: --spacing(12); height: --spacing(12);
   color: var(--color-white);
-  background: var(--color-primary);
+  background: var(--color-slate-900);
   border-radius: var(--radius-full);
   transition: transform var(--default-transition-duration);
 }
@@ -1518,9 +1536,28 @@ body.is-menu-open { overflow: hidden; }
   font-weight: var(--font-weight-semibold); font-size: var(--text-base); line-height: --spacing(5);
   white-space: nowrap;
 }
-.fab--accent { background: color-mix(in oklab, var(--color-accent) 90%, transparent); backdrop-filter: blur(var(--blur-sm)); }   /* same orange as the webinar bar (04) */
-.fab--telegram { background: var(--color-telegram); }
-.fab--whatsapp { background: var(--color-whatsapp); }
+/* contact: opens the group below; while it's open it turns dark with an ✕ and stays outside the group */
+.fab--contact,
+.fab-group {
+  background: color-mix(in oklab, var(--color-green-600) 90%, transparent);
+  backdrop-filter: blur(var(--blur-sm));
+}
+.fab__close-icon { display: none; }
+.is-contact-open .fab__open-icon { display: none; }
+.is-contact-open .fab__close-icon { display: block; }
+.is-contact-open .fab--contact { background: var(--color-slate-900); backdrop-filter: none; }
+/* group: several .fab in one glass pill, as tall as a single .fab (4px inset around 40px items);
+   shown while the contact is open (body.is-contact-open, script.js) */
+.fab-group {
+  display: none; align-items: center;
+  padding: --spacing(1);
+  border-radius: var(--radius-full);
+  transform-origin: right center;
+}
+.is-contact-open .fab-group { display: flex; animation: fab-group-in .25s var(--ease-smooth); }
+.fab-group .fab { width: --spacing(10); height: --spacing(10); background: none; transition: background-color var(--default-transition-duration); }
+.fab-group .fab:hover { transform: none; background: color-mix(in oklab, var(--color-white) 15%, transparent); }
+.fab-group .fab--label { width: auto; padding-inline: --spacing(4); }
 /* back to top: dark so it doesn't read as a contact. Its slot in the row is kept (no jump);
    it fades in once the first screen is scrolled past (body.is-past-fold, script.js) */
 .fab--top {
@@ -1554,8 +1591,22 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 @media (width < theme(--breakpoint-xl)) {
   .stats__col--left { width: 58%; }
-  /* the FAB row is too wide to sit beside the centred webinar bar: lift it above once the bar is in */
-  .is-scrolled .fabs { bottom: --spacing(25); }
+  /* Webinar bar + floating buttons stay on one bottom line. The open contact row doesn't fit beside the
+     bar here, so while it's open the bar folds into its CTA at the start of the row, styled like a .fab:
+     48px circle, white icon on the bar's green. Closing the group brings the full bar back. */
+  .fab-group .fab--label { width: --spacing(10); padding-inline: 0; }   /* phone: icon only, so the open row has a fixed width */
+  .fab__label { display: none; }
+  .promo { transition: transform .4s var(--ease-smooth), opacity .3s ease, left .35s var(--ease-smooth), width .35s var(--ease-smooth), padding .35s var(--ease-smooth); }
+  .is-contact-open .promo {
+    left: calc(100% - --spacing(14) - --spacing(60) - --spacing(2) - --spacing(12));   /* gutter + the open row (group 32 + ✕ 12 + ↑ 12 + 2 gaps) + a gap + its own 48px */
+    width: --spacing(12);
+    gap: 0; padding: 0;
+    transform: none;
+  }
+  .is-contact-open .promo__text,
+  .is-contact-open .promo__btn-label { display: none; }
+  .is-contact-open .promo__btn { width: --spacing(12); height: --spacing(12); padding: 0; background: none; color: var(--color-white); }   /* no white fill: the whole circle is the button */
+  .is-contact-open .promo__btn .ic { display: block; }
 }
 
 @media (width < theme(--breakpoint-lg)) {
@@ -1612,8 +1663,9 @@ body.is-menu-open { overflow: hidden; }
   .topbar { width: calc(100% - --spacing(8)); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
   .topbar__item { gap: --spacing(2.5); width: 100%; justify-content: space-between; }
   .topbar__text { font-size: var(--text-xs); white-space: normal; line-height: var(--leading-tight); }
-  .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(5); }
-  .nav__logo img { height: --spacing(8); }
+  .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(2); }
+  .footer__brand { --footer-brand-media-w: --spacing(21.5); }
+  .footer__logo img { height: --spacing(4); }
   .subnav__cols { grid-template-columns: 1fr; }
   .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
   .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
@@ -1621,10 +1673,26 @@ body.is-menu-open { overflow: hidden; }
   .hero__title { font-size: var(--text-2xl); }
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { width: 100%; }
-  .promo { width: calc(100% - --spacing(8)); gap: --spacing(4); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
+  /* one row on the bottom line: [webinar bar][contact][↑], all 48px tall. The bar is anchored left
+     (not centred) and leaves room for the closed row, so it can fold into the open one (see xl above) */
+  .promo {
+    left: --spacing(4); bottom: --spacing(4);
+    width: calc(100% - --spacing(36)); max-width: none;   /* both gutters (4 + 4) + the closed row (contact 12 + ↑ 12 + gap 2) + a gap (2) */
+    gap: --spacing(3); padding: --spacing(1) --spacing(1) --spacing(1) --spacing(4);   /* the 40px button with the 4px inset of .fab-group */
+    overflow: hidden;
+    transform: translateY(calc(100% + --spacing(15)));
+    container-type: inline-size;   /* the copy below switches on the bar's own width */
+  }
+  .is-scrolled .promo { transform: none; }
+  .promo__text strong { font-size: var(--text-base); }
+  .promo__date { font-size: var(--text-xs); }
+  @container (width < theme(--container-xs)) {   /* too narrow for the full copy (phones under ~460px) */
+    .promo__long { display: none; }
+    .promo__short { display: inline; }
+  }
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
-  .fab--top { position: absolute; right: 0; bottom: calc(100% + --spacing(2)); }   /* no room for a 4th in the row: stack it above WhatsApp */
+  .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
   .pkg { padding: --spacing(6); }
   .pkg__name { font-size: var(--text-5xl); line-height: var(--text-5xl--line-height); }
   .pkg__desc { font-size: var(--text-lg); }
@@ -1677,6 +1745,7 @@ body.is-menu-open { overflow: hidden; }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
 @keyframes progress-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
+@keyframes fab-group-in { from { opacity: 0; scale: .9; } }
 @keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
