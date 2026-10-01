@@ -143,7 +143,8 @@
   body {
     background: var(--color-white);
     color: var(--color-ink-900);
-    @apply text-aqb-body-s;          /* text default: Body S (BRAND.md) */
+    @apply text-aqb-label;           /* default copy is compact; feature/marketing copy opts into larger body tokens */
+    font-weight: var(--font-weight-text);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;              /* fallback for browsers without overflow: clip */
     overflow-x: clip;
@@ -563,6 +564,7 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 /* «Ի՞նչ սովորել» band: the brand's Black ground, full-bleed (same box-shadow trick as the packages band) */
 .courses {
+  --learn-edge: var(--page-x);
   display: flex;
   flex-direction: column;
   gap: var(--card-gap);
@@ -570,7 +572,24 @@ body.is-menu-open { overflow: hidden; }
   box-shadow: 0 0 0 100vmax var(--color-black);
   clip-path: inset(0 -100vmax);
 }
-.courses > .section-title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); color: var(--color-white); }   /* white on Black */
+.courses__top {
+  display: flex; align-items: center; justify-content: space-between; gap: --spacing(4);
+  margin-bottom: calc(var(--title-gap) - var(--card-gap));
+}
+.courses__top .section-title { color: var(--color-white); }   /* white on Black */
+.courses__nav { display: flex; gap: --spacing(2); }
+.courses__arrow {
+  display: grid; place-items: center;
+  width: --spacing(11); height: --spacing(11);
+  border-radius: var(--radius-full);
+  background: color-mix(in oklab, var(--color-white) 14%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-white) 24%, transparent);
+  color: var(--color-white);
+  transition: background-color var(--default-transition-duration), opacity var(--default-transition-duration);
+}
+.courses__arrow:hover { background: color-mix(in oklab, var(--color-white) 22%, transparent); }
+.courses__arrow:disabled { opacity: .35; cursor: default; }
+.courses__arrow .ic { width: --spacing(5); height: --spacing(5); }
 
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
@@ -693,8 +712,8 @@ body.is-menu-open { overflow: hidden; }
   display: grid;
   grid-row: span 6;
   grid-template-rows: subgrid;
-  row-gap: --spacing(5);
-  padding: --spacing(8);
+  row-gap: --spacing(4.5);
+  padding: --spacing(7);
   background: var(--color-white);
   border: 1px solid transparent;
   border-radius: var(--radius-3xl);
@@ -759,7 +778,7 @@ body.is-menu-open { overflow: hidden; }
    back and the gift wiggles once to sell Bundle. Hovering the faded card brings it back — but only once
    the mouse has moved (.is-hover-ready): after the scroll the cursor may have landed on it, and that
    alone shouldn't undo the fade.
-   .pkg-spot is a light-green banner in the picked card's head (under the name) naming the topic;
+   .pkg-spot is a soft grey banner in the picked card's head (under the name) naming the topic;
    its .dismiss ✕ hides it and ends the spotlight.
    .packages gets a scroll margin so the lifted cards clear the nav when the page scrolls to them. */
 .packages { scroll-margin-top: --spacing(6); }
@@ -769,9 +788,10 @@ body.is-menu-open { overflow: hidden; }
   display: flex; align-items: flex-start; gap: --spacing(2);
   margin: --spacing(1) 0;
   padding: --spacing(4) --spacing(4.5);   /* = .pkg__schedule box */
-  background: var(--color-feed-teal);
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: var(--radius-2xl);
-  @apply text-aqb-body-s; color: var(--color-black);   /* feed colour: black text */
+  @apply text-aqb-label; color: var(--color-ink-900);
   text-wrap: pretty;
   transition: opacity .5s;
 }
@@ -795,14 +815,14 @@ body.is-menu-open { overflow: hidden; }
 }
 
 /* Row 1 · head */
-.pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2.5); }
+.pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2); }
 .pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; description fits on 2 lines */
 .pkg__name {
   @apply text-aqb-headline-h1 italic;
   color: var(--color-ink-900);
 }
-.pkg__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }
-.pkg__desc { @apply text-aqb-body-s; color: var(--color-ink-600); }
+.pkg__tagline { @apply text-aqb-body-s; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }
+.pkg__desc { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
 
 .pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
@@ -834,7 +854,7 @@ body.is-menu-open { overflow: hidden; }
 .pkg__price .pkg__old ~ .pkg__amount { flex-basis: 100%; }   /* discounted price drops below the old price + tags */
 .pkg__amount { @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); white-space: nowrap; }
 .pkg__old {
-  @apply text-aqb-body-m; color: var(--color-ink-400);
+  @apply text-aqb-body-s; color: var(--color-ink-400);
   text-decoration: line-through; text-decoration-color: var(--color-accent); text-decoration-thickness: 3px;
   white-space: nowrap;
 }
@@ -874,8 +894,8 @@ body.is-menu-open { overflow: hidden; }
 .tool-pill--lg img { width: --spacing(7); height: --spacing(7); border-radius: var(--radius-md); }
 
 /* Row 6 · features */
-.pkg__features { display: flex; flex-direction: column; gap: --spacing(3); }
-.pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); @apply text-aqb-body-s; color: var(--color-ink-900); }
+.pkg__features { display: flex; flex-direction: column; gap: --spacing(2.5); }
+.pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
 .pkg__features li.is-off { color: var(--color-ink-400); }   /* muted, but still readable */
 .pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-ink-400); }
@@ -901,20 +921,33 @@ body.is-menu-open { overflow: hidden; }
 }
 .endorse--strip img { width: --spacing(10); }
 
-/* «What you'll learn» — Pinterest-style grid.
-   Desktop: 3 explicit columns, tile heights set inline (--h).
-   Tablet/phone: the columns dissolve into CSS columns. */
-.learn-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--card-gap); align-items: start; }
-.learn-col { display: flex; flex-direction: column; gap: var(--card-gap); }
+/* «What you'll learn» — one-row slider with mixed small / large image cards. */
+.learn-grid {
+  display: flex;
+  align-items: stretch;
+  gap: var(--card-gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding-right: var(--learn-edge);
+  margin-right: calc(var(--learn-edge) * -1);
+}
+.learn-grid::-webkit-scrollbar { display: none; }
+/* soft fade on the right while more cards follow; removed at the end of the row */
+.learn-grid:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - --spacing(35)), transparent); }
+.learn-col { display: contents; }
 .learn-tile {
   position: relative;
-  display: block;                    /* most tiles are links to the packages */
-  height: var(--h, --spacing(70));
+  display: block;                    /* each tile is a slide and links to the packages */
+  flex: 0 0 clamp(--spacing(82), var(--w, --spacing(96)), --spacing(128));
+  height: clamp(--spacing(128), 62vh, --spacing(180));
   overflow: hidden;
   border-radius: var(--radius-3xl);
   background: var(--color-ink-900);
   isolation: isolate;
   break-inside: avoid;
+  scroll-snap-align: start;
 }
 .learn-tile > img {
   position: absolute; inset: 0;
@@ -947,12 +980,14 @@ body.is-menu-open { overflow: hidden; }
 }
 .learn-tile__title {
   position: absolute;
-  left: --spacing(6); right: --spacing(6); bottom: --spacing(5.5);
+  inset-inline: --spacing(7);
+  bottom: --spacing(6);
   z-index: 2;
-  @apply text-aqb-subhead;
+  @apply text-aqb-body-m;
   color: var(--color-white);
   text-shadow: 0 2px 14px color-mix(in oklab, var(--color-black) 45%, transparent);
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 
 /* ============================================================
@@ -1068,7 +1103,7 @@ body.is-menu-open { overflow: hidden; }
 .teacher__head { display: flex; flex-direction: column; gap: --spacing(1); width: 100%; }
 .teacher__name { @apply text-aqb-subhead; color: var(--color-ink-900); }
 .teacher__role { @apply text-aqb-label; color: var(--color-ink-900); }
-.teacher__bio { @apply text-aqb-body-s; color: var(--color-ink-700); }
+.teacher__bio { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
 
 .chips { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 .chip {
@@ -1085,7 +1120,12 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    07 · STATS («Թվերով»)
    ============================================================ */
-.stats { display: flex; flex-direction: column; gap: var(--title-gap); }
+.stats {
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--surface);
+  box-shadow: 0 0 0 100vmax var(--surface);
+  clip-path: inset(0 -100vmax);
+}
 .stats__grid { display: flex; gap: var(--card-gap); }
 .stats__col { display: flex; flex-direction: column; gap: var(--card-gap); }
 .stats__col--left { width: --spacing(208.5); flex: none; }
@@ -1094,7 +1134,7 @@ body.is-menu-open { overflow: hidden; }
 .stat-card {
   position: relative;
   overflow: hidden;
-  background: var(--surface);
+  background: var(--color-white);
   border-radius: var(--radius-3xl);
   display: flex;
   align-items: center;
@@ -1123,7 +1163,7 @@ body.is-menu-open { overflow: hidden; }
   width: --spacing(12); height: --spacing(12);
   margin-left: calc(--spacing(3) * -1);
   border-radius: var(--radius-full);
-  border: 3px solid var(--surface);
+  border: 3px solid var(--color-white);
   object-fit: cover; object-position: center 20%;
   transition: transform .2s ease;
 }
@@ -1153,7 +1193,7 @@ body.is-menu-open { overflow: hidden; }
   flex: none;
   width: --spacing(16); height: --spacing(16);
   border-radius: var(--radius-full);
-  border: 3px solid var(--surface);
+  border: 3px solid var(--color-white);
   background: var(--av, var(--color-primary));
   overflow: hidden;
   transition: transform .2s ease;
@@ -1217,7 +1257,7 @@ body.is-menu-open { overflow: hidden; }
 .mission__row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: --spacing(12); position: relative; z-index: 1; }
 .mission__title { white-space: nowrap; }
 .mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); padding-top: var(--title-gap); }
-.mission__text { @apply text-aqb-body-s; color: var(--color-ink-600); max-width: --spacing(86); }
+.mission__text { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); max-width: --spacing(86); }
 
 .mission__right { width: --spacing(100); display: flex; flex-direction: column; gap: --spacing(2.5); }
 .mission__num {   /* same as the stat numbers */
@@ -1242,7 +1282,7 @@ body.is-menu-open { overflow: hidden; }
   will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) { .progress__fill::after { animation: none; } }
-.mission__note { @apply text-aqb-body-s; color: var(--color-ink-700); max-width: --spacing(96); }
+.mission__note { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); max-width: --spacing(96); }
 
 .mission__lighthouse {
   position: absolute;
@@ -1274,18 +1314,20 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    09 · REFERRAL
    ============================================================ */
-.referral { display: flex; justify-content: center; }
-/* Grey panel holding the whole section; cards on it are white */
+.referral {
+  display: flex; justify-content: center;
+  background: var(--surface);
+  box-shadow: 0 0 0 100vmax var(--surface);
+  clip-path: inset(0 -100vmax);
+}
+/* Full-width grey band; cards on it are white */
 .referral__panel {
   width: 100%;
   display: flex; align-items: stretch; gap: --spacing(12);
-  padding: --spacing(12);
-  background: var(--surface);
-  border-radius: var(--radius-3xl);
 }
 .referral__left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--title-gap); }
 .referral__head { display: flex; flex-direction: column; gap: --spacing(3); }
-.referral__sub { @apply text-aqb-body-s; color: var(--color-ink-600); }
+.referral__sub { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
 .referral__panel .promo-form { align-self: center; }   /* card hugs its content instead of stretching to the left column */
 
 /* Friends ladder: 10 Armenian-letter avatars, #1 and #10 are the reward steps */
@@ -1345,7 +1387,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .reward--first .reward__prize { color: var(--color-accent); }
 .reward--last  .reward__prize { color: var(--color-primary); }
-.reward__desc { @apply text-aqb-body-s; color: var(--color-ink-700); }
+.reward__desc { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
 
 /* Form card — the promo-code form and the doctor pre-registration form */
 .promo-form {
@@ -1371,7 +1413,8 @@ body.is-menu-open { overflow: hidden; }
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  @apply text-aqb-body-s;
+  @apply text-aqb-label;
+  font-weight: var(--font-weight-text);
   color: var(--color-ink-900);
   outline: none;
 }
@@ -1383,7 +1426,7 @@ body.is-menu-open { overflow: hidden; }
   padding: --spacing(3.5) --spacing(4);
   background: var(--surface);
   border-right: 1px solid var(--line);
-  @apply text-aqb-body-s; color: var(--color-ink-900);
+  @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-900);
 }
 .field__input--grouped { border: 0; border-radius: 0; padding: --spacing(3.5) --spacing(4); flex: 1; min-width: 0; }
 
@@ -1405,7 +1448,7 @@ body.is-menu-open { overflow: hidden; }
 .faq__item summary {
   display: flex; align-items: center; justify-content: space-between; gap: --spacing(3);
   padding: --spacing(5);
-  @apply text-aqb-body-s; color: var(--color-ink-600);
+  @apply text-aqb-label; color: var(--color-ink-600);
   cursor: pointer;
   list-style: none;
 }
@@ -1422,7 +1465,7 @@ body.is-menu-open { overflow: hidden; }
 .faq__answer {
   display: flex; flex-direction: column; gap: --spacing(3);
   padding: 0 --spacing(5) --spacing(5.5);
-  @apply text-aqb-body-s; color: var(--color-ink-700);
+  @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700);
 }
 .faq__answer strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
 .faq__answer a { text-decoration: underline; text-underline-offset: 3px; }
@@ -1687,9 +1730,7 @@ body.is-menu-open { overflow: hidden; }
   .pkg-spot { display: none; }   /* stacked cards: the tiles just scroll to their package */
   .pro-grid { grid-template-columns: 1fr; max-width: --spacing(140); margin: 0 auto; }
   .pro-card { height: --spacing(80); }
-  .learn-grid { display: block; columns: 2; column-gap: var(--card-gap); }
-  .learn-col { display: contents; }
-  .learn-tile { margin-bottom: var(--card-gap); }
+  .learn-tile { flex-basis: min(var(--w, --spacing(96)), calc(100vw - --spacing(20))); height: clamp(--spacing(112), 56vh, --spacing(152)); }
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(12); }
   .referral__panel { flex-direction: column; }
   .promo-form { width: 100%; }
@@ -1731,9 +1772,13 @@ body.is-menu-open { overflow: hidden; }
   .pkg--bundle .pkg__head { padding-right: --spacing(22); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
-  .learn-grid { columns: 1; }
-  .learn-col:last-child .learn-tile:last-child { margin-bottom: 0; }
-  .learn-tile { height: min(var(--h), --spacing(90)); }
+  .courses__top { align-items: flex-end; }
+  .learn-grid { padding-right: --spacing(4); margin-right: calc(--spacing(4) * -1); }
+  .learn-tile {
+    flex-basis: min(var(--w, --spacing(92)), 86vw);
+    height: clamp(--spacing(96), 58vh, --spacing(128));
+  }
+  .learn-tile__title { inset-inline: --spacing(5); bottom: --spacing(5); @apply text-aqb-body-s; }
   .teachers__row { padding-right: --spacing(4); }
   .teachers__top { padding-right: --spacing(4); }
   .teacher { width: 78vw; }
@@ -1747,7 +1792,6 @@ body.is-menu-open { overflow: hidden; }
   .stat-card--fill { min-height: --spacing(45); }
   .mission__title { white-space: normal; }
   .mission__right, .progress, .mission__label { width: 100%; white-space: normal; }
-  .referral__panel { padding: --spacing(6); }
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
   .ladder .avatar--letter { @apply text-aqb-caption; }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }

@@ -705,33 +705,42 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   06 · TEACHERS — prev / next arrows for the card row
+   05 / 06 · Slider arrows for the learn tiles and teacher cards
    ============================================================ */
-(function teachersCarousel() {
-  const row = document.querySelector('.teachers__row');
-  const arrows = document.querySelectorAll('.teachers__arrow');
-  if (!row || !arrows.length) return;
+(function cardSliders() {
+  const sliders = [
+    { row: '.learn-grid', arrows: '.courses__arrow', item: '.learn-tile' },
+    { row: '.teachers__row', arrows: '.teachers__arrow', item: '.teacher' },
+  ];
 
-  const step = () => {
-    const card = row.querySelector('.teacher');
-    return card ? card.getBoundingClientRect().width + 16 : row.clientWidth * 0.8;
-  };
+  sliders.forEach(({ row: rowSelector, arrows: arrowSelector, item }) => {
+    const row = document.querySelector(rowSelector);
+    const arrows = document.querySelectorAll(arrowSelector);
+    if (!row || !arrows.length) return;
 
-  function update() {
-    const max = row.scrollWidth - row.clientWidth - 2;
-    arrows[0].disabled = row.scrollLeft <= 2;
-    arrows[1].disabled = row.scrollLeft >= max;
-    row.classList.toggle('is-end', row.scrollLeft >= max);   // drop the right-edge fade at the end
-  }
+    const step = () => {
+      const card = row.querySelector(item);
+      if (!card) return row.clientWidth * 0.8;
+      const gap = parseFloat(getComputedStyle(row).columnGap || getComputedStyle(row).gap) || 0;
+      return card.getBoundingClientRect().width + gap;
+    };
 
-  arrows.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      row.scrollBy({ left: step() * Number(btn.dataset.dir), behavior: 'smooth' });
+    function update() {
+      const max = row.scrollWidth - row.clientWidth - 2;
+      arrows[0].disabled = row.scrollLeft <= 2;
+      arrows[1].disabled = row.scrollLeft >= max;
+      row.classList.toggle('is-end', row.scrollLeft >= max);   // drop the right-edge fade at the end
+    }
+
+    arrows.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        row.scrollBy({ left: step() * Number(btn.dataset.dir), behavior: 'smooth' });
+      });
     });
+    row.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
   });
-  row.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update);
-  update();
 })();
 
 /* ============================================================

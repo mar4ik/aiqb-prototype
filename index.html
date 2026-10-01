@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI քեզ բան</title>
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=learn-images-2" />
+  <link rel="stylesheet" href="styles.css?v=learn-widths-2" />
 </head>
 <body>
 
@@ -137,46 +137,52 @@
          Rows inside the 3 cards line up via CSS subgrid.
          ========================================================= -->
     <section class="courses" id="courses">
-      <h2 class="section-title">Ի՞նչ սովորել</h2>
+      <div class="courses__top">
+        <h2 class="section-title">Ի՞նչ սովորել</h2>
+        <div class="courses__nav">
+          <button type="button" class="courses__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="courses__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
 
       <!-- What you'll learn: 3 columns of different heights (Pinterest style), then the packages.
            Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js).
            Titles are short; data-topic keeps the full wording for the package's banner sentence -->
-      <div class="learn-grid">
+      <div class="learn-grid" aria-label="Ի՞նչ սովորել">
           <div class="learn-col">
-            <a class="learn-tile" style="--h:380px" href="#packages" data-pkg="start">
+            <a class="learn-tile" style="--h:380px; --w:480px" href="#packages" data-pkg="start">
               <img src="assets/learn/basics-vr-pink.webp" alt="Մարդ VR ակնոցով վարդագույն ֆոնի վրա" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="AI հիմունքներ, Prompt Engineering, AI անվտանգություն">AI հիմունքներ, պրոմպտեր և անվտանգություն</h4>
             </a>
-            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="start">
+            <a class="learn-tile" style="--h:544px; --w:330px" href="#packages" data-pkg="levelup">
+              <img src="assets/learn/images-face-paint.webp" alt="Դիմանկար վառ գույներով դիմահարդարմամբ" loading="lazy" />
+              <h4 class="learn-tile__title" data-topic="Տպավորիչ նկարների գեներացիա">Տպավորիչ նկարներ</h4>
+            </a>
+            <a class="learn-tile" style="--h:220px; --w:500px" href="#packages" data-pkg="start">
               <img src="assets/learn/presentations-city-window.webp" alt="Ապագայի քաղաք՝ կլոր պատուհանից" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Պրեզենտացիաների և ելույթի խոսքի ակնթարթային գեներացիա">Ակնթարթային պրեզենտացիաներ և ելույթներ</h4>
             </a>
-            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:220px; --w:330px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/websites-capsule.webp" alt="Թռչող ֆուտուրիստական կապսուլ երկնքում" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Կայքերի գեներացիա՝ առանց ծրագրավորման գիտելիքների">Կայքեր՝ առանց կոդի</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" style="--h:300px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:300px; --w:470px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/research-astronaut.webp" alt="Տիեզերագնաց վարդագույն սաղավարտով" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Խորը հետազոտություններ և աղբյուրներով հիմնավորված բովանդակություն">Խորը հետազոտություններ՝ աղբյուրներով</h4>
             </a>
-            <a class="learn-tile" style="--h:544px" href="#packages" data-pkg="levelup">
-              <img src="assets/learn/images-face-paint.webp" alt="Դիմանկար վառ գույներով դիմահարդարմամբ" loading="lazy" />
-              <h4 class="learn-tile__title" data-topic="Տպավորիչ նկարների գեներացիա">Տպավորիչ նկարներ</h4>
-            </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" style="--h:420px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:420px; --w:330px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/video-river-portrait.webp" alt="Կինեմատոգրաֆիկ դիմանկար գետի մոտ" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Սցենարից վիդեոների գեներացիա">Վիդեոներ՝ սցենարից</h4>
             </a>
-            <a class="learn-tile" style="--h:180px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:180px; --w:340px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/automation-car-factory.webp" alt="Աշխատող կապույտ կոմբինեզոնով՝ կարմիր մեքենայի մոտ, արտադրամասում" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Գործընթացների ավտոմատացում AI-ով">Ավտոմատացում AI-ով</h4>
             </a>
-            <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
+            <a class="learn-tile" style="--h:220px; --w:340px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/agents-robot-hand.webp" alt="Ռոբոտի ձեռք նոութբուքի ստեղնաշարի վրա" loading="lazy" />
               <h4 class="learn-tile__title" data-topic="Ինքնավար ագենտների ստեղծում">Ինքնավար AI ագենտներ</h4>
             </a>
@@ -641,7 +647,7 @@
     <section class="mission" id="mission">
       <div class="mission__row">
         <div class="mission__left">
-          <h2 class="section-title mission__title">Մեր առաքելու&shy;թյունը՝<br />1,000,000 AI-գրագետ հայ</h2>   <!-- &shy;: on phones the word is wider than the screen at the smallest headline size; it breaks here, with a hyphen -->
+          <h2 class="section-title mission__title">Մեր առաքելու&shy;թյունը՝<br />1,000,000 AI-գրագետ<br />հայ</h2>   <!-- &shy;: on phones the word is wider than the screen at the smallest headline size; it breaks here, with a hyphen -->
           <div class="mission__body">
             <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական<br />AI գրագիտություն։</p>
             <a href="#packages" class="btn btn--primary btn--md">Սկսիր սովորել</a>
@@ -907,6 +913,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=dark-learn-1"></script>
+  <script src="script.js?v=learn-slider-1"></script>
 </body>
 </html>
