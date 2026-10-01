@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AI քեզ բան</title>
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Armenian:wght@100..900&family=Noto+Serif+Armenian:wght@400..900&family=Handjet:wght,ELGR,ELSH@100..900,1..2,0..16&family=Google+Sans:wght@700&family=Iosevka+Charon:wght@700&display=swap" />
-  <link rel="stylesheet" href="styles.css?v=floating-contact-18" />
+  <link rel="stylesheet" href="styles.css?v=learn-images-2" />
 </head>
 <body>
 
@@ -95,10 +92,10 @@
     <!-- =========================================================
          03 · HERO
          ========================================================= -->
-    <section class="hero" data-bg="orange">
+    <section class="hero" data-bg="sky">
       <!-- Solid colour backdrop; each scene of the eyes' walk opens its colour from the eyes as a circle
            (.hero__reveal), then it becomes the backdrop's (script.js · 03). -->
-      <div class="hero__bg" data-bg="orange" aria-hidden="true"></div>
+      <div class="hero__bg" data-bg="sky" aria-hidden="true"></div>
       <div class="hero__reveal" aria-hidden="true"></div>
       <!-- The eyes' walk: one line writes «AI քեզ բան» through little scenes (a developer, a photographer, a teacher)
            with Yerevan behind. script.js builds the line and moves the viewBox like a camera following the eyes. -->
@@ -117,20 +114,20 @@
           <!-- Eyes: the outer <g> follows the tip of the line, the inner <g> blinks, the pupils look around -->
           <g class="walk__eyes">
             <g class="walk__blink">
-              <circle class="walk__white" cx="-13" cy="0" r="14" />
-              <circle class="walk__white" cx="13" cy="0" r="14" />
-              <circle class="walk__pupil" cx="-13" cy="0" r="6.5" />
-              <circle class="walk__pupil" cx="13" cy="0" r="6.5" />
+              <!-- The brand's eyes (96 × 50, no outline, no ™), scaled to the walk's 42-unit eye height (42 / 49.96; script.js
+                   EYES_H) and centred on 0,0; script.js moves the pupils in these units -->
+              <g transform="scale(0.84067) translate(-47.995 -24.98)">
+                <ellipse class="walk__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+                <ellipse class="walk__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+                <circle class="walk__pupil" cx="23.05" cy="24.98" r="10.93" />
+                <circle class="walk__pupil" cx="72.94" cy="24.98" r="10.93" />
+              </g>
             </g>
           </g>
         </svg>
       </div>
-      <!-- The promise -->
-      <h1 class="hero__title">Սովորիր AI առանց գլխացավանքի</h1>
-      <div class="hero__actions">
-        <a href="#packages" class="btn btn--primary btn--base">Դասընթացներ</a>
-        <a href="#referral" class="btn btn--white btn--base">Ստացիր պրոմոկոդ</a>
-      </div>
+      <!-- The promise; its first word is the call to action (to the packages), a Blue speech bubble the eyes are saying -->
+      <h1 class="hero__title"><a href="#packages" class="btn btn--primary btn--inline">Սովորի՛ր</a> աշխատել<br />AI-ի հետ այսօր</h1>
 
     </section>
 
@@ -143,44 +140,45 @@
       <h2 class="section-title">Ի՞նչ սովորել</h2>
 
       <!-- What you'll learn: 3 columns of different heights (Pinterest style), then the packages.
-           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js) -->
+           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js).
+           Titles are short; data-topic keeps the full wording for the package's banner sentence -->
       <div class="learn-grid">
           <div class="learn-col">
             <a class="learn-tile" style="--h:380px" href="#packages" data-pkg="start">
               <img src="assets/learn/basics-vr-pink.webp" alt="Մարդ VR ակնոցով վարդագույն ֆոնի վրա" loading="lazy" />
-              <h4 class="learn-tile__title">AI հիմունքներ, Prompt Engineering, AI անվտանգություն</h4>
+              <h4 class="learn-tile__title" data-topic="AI հիմունքներ, Prompt Engineering, AI անվտանգություն">AI հիմունքներ, պրոմպտեր և անվտանգություն</h4>
             </a>
             <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="start">
-              <img src="assets/learn/presentations-vr-purple.webp" alt="Մարդ VR ակնոցով մանուշակագույն լույսի ներքո" loading="lazy" />
-              <h4 class="learn-tile__title">Պրեզենտացիաների և ելույթի խոսքի ակնթարթային գեներացիա</h4>
+              <img src="assets/learn/presentations-city-window.webp" alt="Ապագայի քաղաք՝ կլոր պատուհանից" loading="lazy" />
+              <h4 class="learn-tile__title" data-topic="Պրեզենտացիաների և ելույթի խոսքի ակնթարթային գեներացիա">Ակնթարթային պրեզենտացիաներ և ելույթներ</h4>
             </a>
             <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/websites-capsule.webp" alt="Թռչող ֆուտուրիստական կապսուլ երկնքում" loading="lazy" />
-              <h4 class="learn-tile__title">Կայքերի գեներացիա՝ առանց ծրագրավորման գիտելիքների</h4>
+              <h4 class="learn-tile__title" data-topic="Կայքերի գեներացիա՝ առանց ծրագրավորման գիտելիքների">Կայքեր՝ առանց կոդի</h4>
             </a>
           </div>
           <div class="learn-col">
             <a class="learn-tile" style="--h:300px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/research-astronaut.webp" alt="Տիեզերագնաց վարդագույն սաղավարտով" loading="lazy" />
-              <h4 class="learn-tile__title">Խորը հետազոտություններ և աղբյուրներով հիմնավորված բովանդակություն</h4>
+              <h4 class="learn-tile__title" data-topic="Խորը հետազոտություններ և աղբյուրներով հիմնավորված բովանդակություն">Խորը հետազոտություններ՝ աղբյուրներով</h4>
             </a>
             <a class="learn-tile" style="--h:544px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/images-face-paint.webp" alt="Դիմանկար վառ գույներով դիմահարդարմամբ" loading="lazy" />
-              <h4 class="learn-tile__title">Տպավորիչ նկարների գեներացիա</h4>
+              <h4 class="learn-tile__title" data-topic="Տպավորիչ նկարների գեներացիա">Տպավորիչ նկարներ</h4>
             </a>
           </div>
           <div class="learn-col">
             <a class="learn-tile" style="--h:420px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/video-river-portrait.webp" alt="Կինեմատոգրաֆիկ դիմանկար գետի մոտ" loading="lazy" />
-              <h4 class="learn-tile__title">Սցենարից վիդեոների գեներացիա</h4>
+              <h4 class="learn-tile__title" data-topic="Սցենարից վիդեոների գեներացիա">Վիդեոներ՝ սցենարից</h4>
             </a>
-            <a class="learn-tile learn-tile--color" style="--h:180px" href="#packages" data-pkg="levelup">
-              <img class="learn-tile__art" src="assets/hero/gear.webp" alt="" aria-hidden="true" />
-              <h4 class="learn-tile__title">Գործընթացների ավտոմատացում AI-ով</h4>
+            <a class="learn-tile" style="--h:180px" href="#packages" data-pkg="levelup">
+              <img src="assets/learn/automation-car-factory.webp" alt="Աշխատող կապույտ կոմբինեզոնով՝ կարմիր մեքենայի մոտ, արտադրամասում" loading="lazy" />
+              <h4 class="learn-tile__title" data-topic="Գործընթացների ավտոմատացում AI-ով">Ավտոմատացում AI-ով</h4>
             </a>
             <a class="learn-tile" style="--h:220px" href="#packages" data-pkg="levelup">
               <img src="assets/learn/agents-robot-hand.webp" alt="Ռոբոտի ձեռք նոութբուքի ստեղնաշարի վրա" loading="lazy" />
-              <h4 class="learn-tile__title">Ինքնավար ագենտների ստեղծում</h4>
+              <h4 class="learn-tile__title" data-topic="Ինքնավար ագենտների ստեղծում">Ինքնավար AI ագենտներ</h4>
             </a>
           </div>
       </div>
@@ -643,7 +641,7 @@
     <section class="mission" id="mission">
       <div class="mission__row">
         <div class="mission__left">
-          <h2 class="section-title mission__title">Մեր առաքելությունը՝<br />1,000,000 AI-գրագետ հայ</h2>
+          <h2 class="section-title mission__title">Մեր առաքելու&shy;թյունը՝<br />1,000,000 AI-գրագետ հայ</h2>   <!-- &shy;: on phones the word is wider than the screen at the smallest headline size; it breaks here, with a hyphen -->
           <div class="mission__body">
             <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական<br />AI գրագիտություն։</p>
             <a href="#packages" class="btn btn--primary btn--md">Սկսիր սովորել</a>
@@ -909,6 +907,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=floating-contact-9"></script>
+  <script src="script.js?v=dark-learn-1"></script>
 </body>
 </html>

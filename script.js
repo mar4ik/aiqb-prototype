@@ -4,9 +4,9 @@ const between = (min, max) => Math.round(min + Math.random() * (max - min));
    LETTER SHUFFLE — used by the wordmark (09b)
    Each letter sits in a fixed-width slot (as wide as its widest style) inside
    a no-wrap word, so switching fonts never pushes its neighbours and lines only
-   break between words. data-f="0…8" picks the style (CSS: .shuffle [data-f]).
+   break between words. data-f="0…5" picks the style (CSS: .shuffle [data-f]): Adelle Sans ARM only.
    ============================================================ */
-const SHUFFLE_STYLES = 9;
+const SHUFFLE_STYLES = 6;
 const SHUFFLE_TIMING = {
   frame: 140,          // ms between flips — all letters flip together
   revealStart: 450,    // ms before the first letter settles
@@ -223,18 +223,18 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   ];
 
   /* ------------------------------------------------------------------
-     STORY BEATS — each beat (up to the end of its piece) has its own background colour (the «warhol» palette,
-     --color-pop-*; the hero's data-bg colours live in tailwind.css). The eyes walk one lap in LAP_TIME seconds
+     STORY BEATS — each beat (up to the end of its piece) has its own background colour (brand colours,
+     BRAND.md; the hero's data-bg colours live in tailwind.css). The eyes walk one lap in LAP_TIME seconds
      at one steady pace, never stopping: the colour changes as they pass the end of a beat.
      One lap draws the whole drawing once; then the next copy follows straight on, forever.
      ------------------------------------------------------------------ */
   const BEATS = [
-    ['I', 'orange'],            // AI
+    ['I', 'sky'],               // AI — the page opens on calm Sky
     ['developer', 'yellow'],    // someone walks with a laptop…
-    ['photographer', 'mint'],   // …takes a photo
-    ['զ', 'cyan'],              // քեզ
+    ['photographer', 'teal'],   // …takes a photo
+    ['զ', 'pink'],              // քեզ
     ['teacher', 'tan'],         // someone teaches at a board
-    ['loop', 'orchid'],         // բան, and the swoop into the next «AI»
+    ['loop', 'yellow'],         // բան, and the swoop into the next «AI» (back to Sky)
   ];
   const LAP_TIME = 18.8;
 
@@ -252,16 +252,19 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   /* LOOK */
   const THREAD_WIDTH = 3;    // SVG units…
   const MIN_THREAD_PX = 1.2; // …but never thinner than this on screen (the zoomed-out view)
-  const EYES_H = 28;         // height of the eyes in SVG units (index.html: r = 14)
-  const MIN_EYES_PX = 14;    // …never smaller than this on screen
-  const PUPIL_TRAVEL = 6;    // how far a pupil can move from the centre of its eye (SVG units)
+  const EYES_H = 42;         // height of the eyes in SVG units (index.html scales the brand's 50-unit eyes down to it)
+  const MIN_EYES_PX = 21;    // …never smaller than this on screen
+  /* Pupils, in the brand eyes' own units (Figma «Eyes» directions): they move on an oval, 9 sideways and 10.54 up or
+     down from the centre of the eye; «at rest» (looking at you) both lean in by 3.78 */
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };
+  const PUPIL_REST = 3.78;
 
   /* EYES — every GLANCE seconds (random within the range) the eyes pick somewhere new to look.
      'ahead' follows the direction the line is travelling; the rest are fixed directions (x right, y down). */
   const GLANCE = [0.7, 1.8];
   const LOOKS = [
     'ahead', 'ahead', 'ahead',           // mostly: where the line is going
-    { x: 0, y: 0.15 },                   // at you
+    { x: 0, y: 0 },                      // at you (the brand's «at rest»)
     { x: -0.9, y: 0.35 },                // back at what was just drawn
     { x: 0.75, y: -0.7 },                // up and ahead
     { x: -0.7, y: -0.7 },                // up and behind
@@ -292,7 +295,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   const eyes = svg.querySelector('.walk__eyes');
   const eyesBlink = svg.querySelector('.walk__blink');
   const pupils = [...svg.querySelectorAll('.walk__pupil')];
-  const PUPIL_HOME = pupils.map((p) => +p.getAttribute('cx'));
+  const PUPIL_HOME = pupils.map((p) => ({ x: +p.getAttribute('cx'), y: +p.getAttribute('cy') }));
 
   // Where each piece ends along one copy of the drawing (for the story beats)
   const pieceEnd = {};
@@ -477,9 +480,11 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     look.x = lerp(look.x, want.x, 0.25);
     look.y = lerp(look.y, want.y, 0.25);
     const m = Math.hypot(look.x, look.y), k = m > 1 ? 1 / m : 1;
+    const rest = PUPIL_REST * (1 - Math.min(1, m));   // the nearer to «at rest», the more the pupils lean in
     pupils.forEach((pupil, i) => {
-      pupil.setAttribute('cx', PUPIL_HOME[i] + look.x * k * PUPIL_TRAVEL);
-      pupil.setAttribute('cy', look.y * k * PUPIL_TRAVEL);
+      const inward = i === 0 ? 1 : -1;                 // left eye leans right, right eye leans left
+      pupil.setAttribute('cx', PUPIL_HOME[i].x + look.x * k * PUPIL_TRAVEL.x + inward * rest);
+      pupil.setAttribute('cy', PUPIL_HOME[i].y + look.y * k * PUPIL_TRAVEL.y);
     });
   }
 
@@ -491,7 +496,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   if (reduceMotion || !window.gsap) {
     // No animation: show one whole drawing with the eyes resting at the end of «բան», looking at you
     Object.assign(state, { pos: pieceEnd.tail / LAP, size: 1, still: true });
-    target = { x: 0, y: 0.15 };
+    target = { x: 0, y: 0 };   // at rest
     Object.assign(look, target);
     render();
     svg.classList.add('is-ready');
@@ -838,7 +843,8 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
     const behavior = reduceMotion.matches ? 'instant' : 'smooth';
     if (!wide.matches) { card.scrollIntoView({ behavior }); return; }
 
-    card.querySelector('.pkg-spot__topic').textContent = tile.querySelector('.learn-tile__title').textContent;
+    const title = tile.querySelector('.learn-tile__title');
+    card.querySelector('.pkg-spot__topic').textContent = title.dataset.topic || title.textContent;   // the full wording reads as a sentence
     notes.forEach((note) => { note.hidden = !card.contains(note); });   // one banner at a time
     end();   // replay the lift for a second tile
     packages.scrollIntoView({ behavior });
@@ -866,8 +872,134 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 })();
 
 /* ============================================================
+   Brand shapes — shared by the bubble-shaped tiles (05c) and the hero's bubble button (03b)
+   roundedOutline: a closed path through [x, y, radius] points, each corner rounded with a circle-like curve
+   (radius 0 = sharp). shapeElement: cuts an element to that outline (clip-path) and adds a ring along it for
+   keyboard focus (.shape-ring), since the clipped element loses its outline.
+   ============================================================ */
+function roundedOutline(pts) {
+  const K = 0.5523, n = pts.length, parts = [];
+  const f = (v) => v.map((c) => c.toFixed(1)).join(' ');
+  pts.forEach(([x, y, rad], i) => {
+    const [px, py] = pts[(i + n - 1) % n], [nx, ny] = pts[(i + 1) % n];
+    const l1 = Math.hypot(x - px, y - py), l2 = Math.hypot(nx - x, ny - y);
+    const u1 = [(x - px) / l1, (y - py) / l1], u2 = [(nx - x) / l2, (ny - y) / l2];
+    const k = Math.min(rad, l1 / 2, l2 / 2);
+    const s = [x - u1[0] * k, y - u1[1] * k], e = [x + u2[0] * k, y + u2[1] * k];
+    const c1 = [s[0] + u1[0] * k * K, s[1] + u1[1] * k * K], c2 = [e[0] - u2[0] * k * K, e[1] - u2[1] * k * K];
+    parts.push(`${i ? 'L' : 'M'} ${f(s)} C ${f(c1)} ${f(c2)} ${f(e)}`);
+  });
+  return parts.join(' ') + ' Z';
+}
+function shapeElement(el, pts) {
+  const d = roundedOutline(pts);
+  el.style.clipPath = `path('${d}')`;
+  let ring = el.querySelector(':scope > .shape-ring');
+  if (!ring) {
+    ring = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    ring.setAttribute('class', 'shape-ring');
+    ring.setAttribute('aria-hidden', 'true');
+    ring.append(document.createElementNS('http://www.w3.org/2000/svg', 'path'));
+    el.append(ring);
+  }
+  ring.firstChild.setAttribute('d', d);
+  el.classList.add('is-shaped');
+}
+const canClip = 'clipPath' in document.documentElement.style;
+
+/* ============================================================
+   03b · The hero's bubble button («Սովորի՛ր», .btn--inline)
+   Cut to the brand's chat bubble at its real size: straight sides with small corners (8), the right side
+   stepping in a little at the bottom, then an angled tail at the bottom-right pointing down; from the tail the
+   bottom edge falls away to the bottom-left corner. The tail takes the button's extra bottom padding (T);
+   proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
+   ============================================================ */
+(function heroBubble() {
+  const buttons = [...document.querySelectorAll('.btn--inline')];
+  if (!buttons.length || !canClip) return;
+  function shape(el) {
+    const W = el.offsetWidth, H = el.offsetHeight;
+    const cs = getComputedStyle(el);
+    const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
+    if (!W || !H || T <= 0) return;
+    const Hb = H - T, e = 0.17 * T;
+    shapeElement(el, [
+      [0, 0, 8], [W, 0, 8],
+      [W, Hb, 4],                               // the right side ends…
+      [W - e, Hb + 0.13 * T, 6],                // …stepping in a little
+      [W - e, H, 3],                            // the tail's straight side, down to its tip
+      [W - e - 0.6 * T, Hb + 0.34 * T, 8],      // the tail's angled side, back up to the bottom edge
+      [0, H, 8],                                // the bottom edge falls away to the bottom-left corner
+    ]);
+  }
+  const all = () => buttons.forEach(shape);
+  all();
+  const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target)));
+  buttons.forEach((b) => resizer.observe(b));
+  document.fonts?.ready.then(all);
+})();
+
+/* ============================================================
+   05c · Bubble-shaped tiles (BRAND.md → Bubble construction)
+   Each «Ի՞նչ սովորել» tile is cut into the brand bubble: rounded rectangles merged (outer corners 24, inner
+   12: the brand's 20 / 10 ratio, at the site's tile rounding), with one straight, angled tail at a top corner, a
+   stepped corner, and on some a slit in the right side. Every tile gets its own mix (SHAPES, in page order),
+   computed for its real size, and nothing is cut where the title sits. Without script the tiles stay rounded
+   rectangles.
+   ============================================================ */
+(function learnShapes() {
+  const tiles = [...document.querySelectorAll('.learn-tile')];
+  if (!tiles.length || !canClip) return;
+  const SHAPES = [
+    'tail-left slit',             // AI հիմունքներ — the bubble as drawn in the brandbook
+    'tail-right',                 // Պրեզենտացիաներ
+    'step-left',                  // Կայքեր
+    'step-right slit',            // Հետազոտություններ
+    'step-left tail-right slit',  // Նկարներ
+    'tail-left',                  // Վիդեոներ
+    'step-right',                 // Ավտոմատացում
+    'step-left tail-right',       // Ագենտներ
+  ];
+  const R = 24, r = 12, TAIL = 22, SLIT = 12, INSET = 16;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+  function shape(tile, i) {
+    const W = tile.clientWidth, H = tile.clientHeight;
+    if (!W || !H) return;
+    const has = (f) => (SHAPES[i % SHAPES.length] || '').split(' ').includes(f);
+    const title = tile.querySelector('.learn-tile__title');
+    const safe = title ? title.offsetTop - 12 : H;   // keep every cut above the title
+    const a = clamp(W * 0.3, 56, 150);
+    const t = Math.min(clamp(H * 0.12, 28, 52), safe - 8);
+    const s = Math.round(H * 0.38);
+    const left = t >= 20 && (has('tail-left') ? 'tail' : has('step-left') ? 'step' : null);
+    const right = t >= 20 && (has('tail-right') ? 'tail' : has('step-right') ? 'step' : null);
+    const slit = has('slit') && s >= t + 2 * R && s + SLIT + 2 * R < safe;
+
+    const pts = [];
+    if (left) pts.push([0, t, R], [a, t, r], left === 'tail' ? [a - TAIL, 0, 0] : [a, 0, R]);
+    else pts.push([0, 0, R]);
+    if (right) pts.push(right === 'tail' ? [W - a + TAIL, 0, 0] : [W - a, 0, R], [W - a, t, r], [W, t, R]);
+    else pts.push([W, 0, R]);
+    if (slit) {
+      const d = Math.round(W * 0.38);
+      pts.push([W, s, R], [W - d, s, SLIT / 2], [W - d, s + SLIT, SLIT / 2], [W - INSET, s + SLIT, R], [W - INSET, H, R]);
+    } else pts.push([W, H, R]);
+    pts.push([0, H, R]);
+    shapeElement(tile, pts);
+  }
+
+  const all = () => tiles.forEach(shape);
+  all();
+  const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target, tiles.indexOf(en.target))));
+  tiles.forEach((tile) => resizer.observe(tile));   // reshape when a tile changes size (screen width, layout)
+  document.fonts?.ready.then(all);   // titles settle once the font is in, which can move the safe line
+})();
+
+
+/* ============================================================
    08 · MISSION — lighthouse, drawn as SVG and added to the mission section
-   Green gradients, checkered tower,
+   Teal shading, checkered tower,
    lantern room, railing, roof, hill; the light is warm yellow. The lantern turns: two opposite beams
    stretch out and shrink as they sweep round (a beam pointing away passes
    behind the tower); when one faces the viewer the windows flash and a
@@ -881,7 +1013,7 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
   const W = 587, H = 900, CX = 293, LY = 260;   // viewBox; lantern centre
   const PERIOD = 7000;                           // ms per full turn of the lantern
   const REACH = 285;                             // beam length when side-on
-  const c = (name) => `var(--lh-${name.replace('emerald-', '')})`;   // palette lives in CSS (.mission__lighthouse)
+  const c = (name) => `var(--lh-${name})`;   // palette lives in CSS (.mission__lighthouse): Teal 50–900, glow 100–400
   const el = (tag, attrs = {}, parent) => {
     const n = document.createElementNS(NS, tag);
     for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
@@ -898,10 +1030,10 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
 
   const svg = el('svg', { class: 'mission__lighthouse', viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
   const defs = el('defs', {}, svg);
-  gradient(defs, 'lh-hill', [[0, c('emerald-900')], [.45, c('emerald-600')], [1, c('emerald-200')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
-  gradient(defs, 'lh-dark', [[0, c('emerald-800')], [1, c('emerald-600')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
-  gradient(defs, 'lh-light', [[0, c('emerald-500')], [1, c('emerald-100')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
-  gradient(defs, 'lh-lantern', [[0, c('emerald-700')], [1, c('emerald-400')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
+  gradient(defs, 'lh-hill', [[0, c('900')], [.45, c('600')], [1, c('200')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
+  gradient(defs, 'lh-dark', [[0, c('800')], [1, c('600')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
+  gradient(defs, 'lh-light', [[0, c('500')], [1, c('100')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
+  gradient(defs, 'lh-lantern', [[0, c('700')], [1, c('400')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
   gradient(defs, 'lh-ray', [[0, c('glow-400')], [1, c('glow-300'), 0]], { x1: 0, y1: 1, x2: 0, y2: 0 });
   gradient(defs, 'lh-halo', [[0, c('glow-200'), .95], [.5, c('glow-300'), .4], [1, c('glow-300'), 0]], { cx: .5, cy: .5, r: .5 });
   const beamGrads = ['a', 'b'].map((k) => gradient(defs, `lh-beam-${k}`,
@@ -929,7 +1061,7 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
   });
   // gallery: deck, balusters, top rail
   el('rect', { x: 203, y: 334, width: 182, height: 15, rx: 4, fill: 'url(#lh-dark)' }, house);
-  for (let x = 211; x <= 375; x += 12) el('rect', { x, y: 306, width: 4, height: 29, fill: c('emerald-700') }, house);
+  for (let x = 211; x <= 375; x += 12) el('rect', { x, y: 306, width: 4, height: 29, fill: c('700') }, house);
   el('rect', { x: 203, y: 299, width: 182, height: 8, rx: 4, fill: 'url(#lh-dark)' }, house);
   // lantern room + windows (the windows light up)
   el('rect', { x: 242, y: 228, width: 104, height: 72, fill: 'url(#lh-lantern)' }, house);
@@ -938,7 +1070,7 @@ document.querySelectorAll('[data-loop]').forEach((track) => {
   el('rect', { x: 299, y: 238, width: 38, height: 46, rx: 2 }, windows);
   // roof + finial
   el('polygon', { points: `218,231 ${CX},176 368,231`, fill: 'url(#lh-dark)' }, house);
-  el('circle', { cx: CX, cy: 166, r: 16, fill: c('emerald-700') }, house);
+  el('circle', { cx: CX, cy: 166, r: 16, fill: c('700') }, house);
 
   // Each beam is drawn twice — once behind the tower, once in front — and the two cross-fade
   // as it swings past the side. (Swapping one polygon between layers made it pop every half turn.)

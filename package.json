@@ -4,7 +4,10 @@
   "scripts": {
     "build": "npm run build:css && node scripts/dist.mjs",
     "build:css": "tailwindcss -i ./tailwind.css -o ./styles.css --optimize",
-    "dev": "tailwindcss -i ./tailwind.css -o ./styles.css --watch"
+    "dev": "tailwindcss -i ./tailwind.css -o ./styles.css --watch",
+    "lint": "node scripts/lint-brand.mjs",
+    "lint:colors": "node scripts/lint-brand.mjs colors",
+    "lint:type": "node scripts/lint-brand.mjs type"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

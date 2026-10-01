@@ -4,6 +4,9 @@ Static site: `index.html` + `doctor-register.html`, `script.js`, and Tailwind v4
 `tailwind.css` is the source stylesheet; `styles.css` is generated from it (`npm run build:css`) — never edit `styles.css` by hand.
 `npm run build` regenerates `styles.css` and copies the site into `dist/` (what Vercel deploys from `master`).
 
+## Brand
+**`BRAND.md` is the source of truth** for every design decision it covers (colour, typography and graphic elements so far, from the Figma brandbook). Read it before choosing a colour, size or weight. If a request or existing code conflicts with it, flag the conflict instead of guessing.
+
 ## Rules
 
 ### Git
@@ -17,10 +20,10 @@ There's no component folder: the **atomic components are the shared classes in `
 
 | Atom | Classes | Use for |
 |---|---|---|
-| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons; the hero CTAs) · `--md` (56px) · `--lg` (64px, hero only); optional `--block` | every clickable action (links styled as buttons too) |
-| Pill / tag | `.pill` + `--deal` (orange −%) · `--save` (green) · `--gift` (violet) · `--zoom` (grey) | discounts, labels, badges |
+| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons) · `--md` (56px) · `--lg` (64px, hero only); optional `--block`; `--inline`: a word inside a headline that is the button (keeps the headline's type, cut to the brand chat bubble by `script.js`; the hero's «Սովորի՛ր») | every clickable action (links styled as buttons too) |
+| Pill / tag | `.pill` + `--deal` (Orange, white −%) · `--save` (pale green) · `--gift` (violet, white text) — the Bundle's own colours · `--zoom` (grey) | discounts, labels, badges |
 | Icon | `.ic` + `.ic--calendar` · `--calendar-plus` (register) · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
-| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
+| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (webinar campaign green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
 | Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
 | Round arrow | `.pro-card__arrow` / `.teachers__arrow` | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |
@@ -30,6 +33,7 @@ There's no component folder: the **atomic components are the shared classes in `
 | Nav link | `.nav__link`, `.subnav__link` | navigation text links |
 | Section title | `.section-title` | every section heading |
 | Avatar | `.avatar` (`--letter`), `.face-pile` | people |
+| Bubble shape | elements cut into a brand shape by `script.js` (`shapeElement`): the learn tiles (learnShapes: tail / step / slit per tile, nothing cut over the title) and the hero's chat-bubble button (heroBubble); `.shape-ring` shows keyboard focus | shaping containers themselves, never patterns inside them (BRAND.md → Graphic elements) |
 
 Rules:
 - **Never restyle an atom locally.** Don't give one button a new padding, radius, colour or font size inside a section. If something is really needed, add a **variant** to the atom (e.g. `.btn--ghost`, `.pill--info`) next to its siblings in `tailwind.css`, so it's reusable.
@@ -39,12 +43,21 @@ Rules:
 - **Links vs buttons:** text links (nav, sub nav, footer) change **colour only** on hover; background and pill hover states are for buttons.
 
 ### Consistency
-- **Font hierarchy:** match the existing type scale and weights — section titles, card names (`.pkg__name`), body text, labels. Don't add new sizes or weights for one element; reuse what a comparable element already uses. Font is always Adelle Sans ARM (`--font-sans`).
-- **Colour roles** (from the header of `tailwind.css`): text is slate (900 headings/body, 700 copy, 600 secondary, 400 muted); surfaces are zinc via `--surface` / `--surface-strong` / `--line`; brand is `--color-primary` (blue) and `--color-accent` (orange). Don't bring in other colours for text or surfaces. The only exception: `--color-telegram` / `--color-whatsapp`, used only on their own floating buttons.
+- **Typography:** `BRAND.md` → Typography. Adelle Sans ARM only, in three cuts: ExtraBold Italic for headlines, Regular for text, SemiBold for details (`--font-weight-headline / -text / -detail`). Tailwind's default sizes, weights, tracking and line heights are switched off; only the AQB text styles exist.
+  - **Set type with one line:** `@apply text-aqb-<style>;` (display-xxl 192 · display-xl 128 · display-l 96 · headline-h1 64 · headline-h2 48 · subhead 32 · body-l 28 · body-m 24 · body-s 20 · label 16 · caption 14). It brings size, line height (102% headlines / 112% text) and tracking (−2.4% from 24px up). Display and headline styles also take `italic`.
+  - **Pick by job, not by looks:** headlines (section titles, names, big numbers) → display / headline; card and form titles → subhead; reading text → body (body-s is the default and the smallest text size); nav, buttons, dates, times, formats → label; small print, pills, footer → caption. Kicker → regular, headline → ExtraBold Italic, detail → SemiBold, one of each per composition; sentence case.
+  - **Phones** step down the same scale, never to in-between sizes: display → headline-h1 / display-l, headline-h1 → headline-h2. headline-h2 (48) is the smallest headline, so a long word that doesn't fit gets a soft hyphen (`&shy;`) at a syllable break (see the mission title).
+  - The only non-type `line-height` allowed is a layout box (`--spacing(n)`) that sets a control's height (buttons, tabs, the phone pill); say so in a comment.
+- **Colour:** brand colours only (`BRAND.md`). Tailwind's stock palette is switched off (`--color-*: initial`), so `slate`, `zinc`, `green-600`… don't exist. Use:
+  - **Text:** `--color-ink-900` (headings, body) · `700` (copy) · `600` (secondary) · `400` (muted). Every step is Ink lightened toward white and reaches WCAG AA on white and on `--surface`; don't go lighter.
+  - **Surfaces:** `--surface` / `--surface-strong` / `--line` (Grey tints, `--color-grey-*`).
+  - **Brand:** `--color-primary` (Blue), `--color-accent` (Orange); feed colours (`--color-feed-*`) and Violet / Tan (`--color-limited-*`) always carry black text; white on Orange only for text of 24px and up.
+  - **Campaign colours:** `--color-campaign-*` (BRAND.md lets a campaign bring its own), e.g. `--color-campaign-green` on the webinar bar and floating buttons, and `--color-campaign-bundle-*`: the Bundle card's own colours.
+  - No raw hex / `rgb()` / named colours outside `@theme`, and no gradients on brand colours. New shades are derived from brand tokens with `color-mix()`. `npm run lint:colors` enforces all of this.
 - **Spacing:** use the existing rhythm (`--page-x`, `--section-y`, `--card-gap`, `--title-gap`) and `--spacing(n)` steps already used for similar elements. Similar things get identical spacing.
 
 ### Before saying you're done
 1. **Navbar and menu work on desktop and mobile.** Check in the browser at desktop width (≥1024px) and mobile width (375px):
    - Desktop: the «Դասընթացներ» sub nav opens on hover and on click, and closes on link click, Escape and outside click.
    - Mobile: the burger opens and closes the menu, the «Դասընթացներ» accordion expands, tapping a link closes the menu, and nothing scrolls sideways.
-2. **Run lint and tests** and report the results. No lint or test scripts exist yet (`package.json` has only `build`, `build:css` and `dev`). Until they're added, run `npm run build`, confirm it succeeds, and say plainly that there's no lint or test setup.
+2. **Run lint and tests** and report the results. `npm run lint` runs the brand check (`scripts/lint-brand.mjs`: colour and typography against `BRAND.md`; `lint:colors` / `lint:type` run one half); there are no tests yet. Run `npm run lint` and `npm run build`, confirm both succeed, and say plainly that there's no test setup.

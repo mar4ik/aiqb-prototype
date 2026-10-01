@@ -7,11 +7,11 @@
    Every colour, spacing, radius, type size, shadow and breakpoint below
    comes from a Tailwind theme token (var(--color-…), --spacing(n),
    var(--radius-…), var(--text-…), theme(--breakpoint-…)).
-   Rules of thumb used across the file:
-     · text        → slate  (900 headings/body, 700 copy, 600 secondary, 400 muted)
-     · surfaces    → zinc   (100 grey sections/cards, 200 strong/borders, 300 dashed)
-     · brand       → --color-primary (blue) and --color-accent (orange)
-     · third-party → --color-telegram / --color-whatsapp, only on their own floating buttons
+   Colours are brand colours only (BRAND.md; Tailwind's stock palette is switched off). Rules of thumb:
+     · text        → ink   (900 headings/body, 700 copy, 600 secondary, 400 muted — all WCAG AA)
+     · surfaces    → grey  (100 grey sections/cards, 200 strong/borders, 300 dashed)
+     · brand       → --color-primary (Blue) and --color-accent (Orange)
+     · feed colours (teal, yellow, sky, pink) and violet / tan carry black text
    Tailwind utilities are available too for new markup; the component
    classes live in @layer components, so utilities can override them.
    ============================================================ */
@@ -19,55 +19,96 @@
 @source "./index.html";
 @source "./doctor-register.html";
 
-/* Adelle Sans ARM is the site typeface (files in /fonts); the wordmark shuffle (09b) also mixes in
-   Noto Sans/Serif Armenian, Handjet, Google Sans and Iosevka Charon from Google Fonts (linked in index.html) */
+/* Adelle Sans ARM is the only typeface (BRAND.md; files in /fonts), in the brand's three cuts:
+   Regular (400) for text, SemiBold (600) for details, ExtraBold Italic (800 italic) for headlines */
 @font-face { font-family: "Adelle Sans ARM"; font-weight: 400; font-style: normal; font-display: swap;
   src: url("fonts/AdelleSans_ARM-Regular.ttf") format("truetype"); }
-@font-face { font-family: "Adelle Sans ARM"; font-weight: 400; font-style: italic; font-display: swap;
-  src: url("fonts/AdelleSans_ARM-Italic.ttf") format("truetype"); }
 @font-face { font-family: "Adelle Sans ARM"; font-weight: 600; font-style: normal; font-display: swap;
   src: url("fonts/AdelleSans_ARM-SemiBold.ttf") format("truetype"); }
-@font-face { font-family: "Adelle Sans ARM"; font-weight: 700; font-style: normal; font-display: swap;
-  src: url("fonts/AdelleSans_ARM-Bold.ttf") format("truetype"); }
-@font-face { font-family: "Adelle Sans ARM"; font-weight: 700; font-style: italic; font-display: swap;
-  src: url("fonts/AdelleSans_ARM-BoldItalic.ttf") format("truetype"); }
-@font-face { font-family: "Adelle Sans ARM"; font-weight: 900; font-style: normal; font-display: swap;
-  src: url("fonts/AdelleSans_ARM-Heavy.ttf") format("truetype"); }
-@font-face { font-family: "Adelle Sans ARM"; font-weight: 900; font-style: italic; font-display: swap;
-  src: url("fonts/AdelleSans_ARM-HeavyItalic.ttf") format("truetype"); }
+@font-face { font-family: "Adelle Sans ARM"; font-weight: 800; font-style: italic; font-display: swap;   /* the brand's headline weight */
+  src: url("fonts/AdelleSans_ARM-ExtraboldItalic.ttf") format("truetype"); }
 
 /* ============================================================
    THEME — project tokens on top of Tailwind's defaults
    ============================================================ */
 @theme {
+  --color-*: initial;   /* Tailwind's stock palette is off: only the colours below exist (npm run lint checks it) */
+  --text-*: initial;          /* …and so are its type sizes, weights, tracking and line heights: only the AQB ones below */
+  --font-weight-*: initial;
+  --tracking-*: initial;
+  --leading-*: initial;
   --font-sans: "Adelle Sans ARM", system-ui, sans-serif;
 
-  /* Brand (kept exact — Tailwind v4's own blue-600 is a different blue) */
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-accent: #ff5e16;          /* orange: banners, «Շուտով», −10% */
-  --color-accent-soft: #ff7a3d;     /* lighter orange for decoration */
+  /* Brand palette — exact brandbook values, named after their Figma variables (see BRAND.md) */
+  --color-brand-blue: #1e66ee;      /* primary */
+  --color-brand-orange: #ff5e16;    /* accent */
+  --color-neutral-black: #000000;   /* the default ground */
+  --color-neutral-ink: #1e1e21;
+  --color-neutral-grey: #d1d1d1;
+  --color-neutral-white: #ffffff;
+  --color-feed-teal: #00c4b1;       /* feed colours: black text only */
+  --color-feed-yellow: #ffca53;
+  --color-feed-sky: #a2d4ff;
+  --color-feed-pink: #ffb0e8;
+  --color-limited-violet: #6868e4;  /* occasional; black text */
+  --color-limited-tan: #bd8164;
 
-  /* Third-party brand colours (Simple Icons values) — only on .fab--telegram / .fab--whatsapp */
-  --color-telegram: #26a5e4;
-  --color-whatsapp: #25d366;
+  /* The usual names for the brand's black and white */
+  --color-black: var(--color-neutral-black);
+  --color-white: var(--color-neutral-white);
 
-  /* Hero backdrop palette: the «warhol» palette (coolors), flat pop-art pastels */
-  --color-pop-orchid: #df86d9;
-  --color-pop-yellow: #ffd062;
-  --color-pop-cyan: #7ee8fa;
-  --color-pop-mint: #74deb9;
-  --color-pop-orange: #f78154;
-  --color-pop-tan: #b48164;         /* not in Tailwind's palette */
+  /* Ink — text: Ink lightened toward white. Every step reaches WCAG AA on white and on --surface */
+  --color-ink-950: var(--color-neutral-black);   /* photo scrims */
+  --color-ink-900: var(--color-neutral-ink);     /* headings, body */
+  --color-ink-800: color-mix(in oklab, var(--color-neutral-ink) 90%, var(--color-neutral-white));
+  --color-ink-700: color-mix(in oklab, var(--color-neutral-ink) 80%, var(--color-neutral-white));   /* copy */
+  --color-ink-600: color-mix(in oklab, var(--color-neutral-ink) 72%, var(--color-neutral-white));   /* secondary */
+  --color-ink-500: color-mix(in oklab, var(--color-neutral-ink) 66%, var(--color-neutral-white));
+  --color-ink-400: color-mix(in oklab, var(--color-neutral-ink) 60%, var(--color-neutral-white));   /* muted: the lightest text that still reaches AA */
+
+  /* Grey — surfaces and borders: Grey tinted toward white */
+  --color-grey-50: color-mix(in oklab, var(--color-neutral-grey) 10%, var(--color-neutral-white));
+  --color-grey-100: color-mix(in oklab, var(--color-neutral-grey) 25%, var(--color-neutral-white));   /* --surface */
+  --color-grey-200: color-mix(in oklab, var(--color-neutral-grey) 60%, var(--color-neutral-white));   /* --surface-strong, --line */
+  --color-grey-300: var(--color-neutral-grey);
+
+  /* Roles — what components use */
+  --color-primary: var(--color-brand-blue);
+  --color-primary-hover: color-mix(in oklab, var(--color-brand-blue) 85%, var(--color-neutral-black));   /* the brandbook has no hover shade: Blue, a step darker */
+  --color-accent: var(--color-brand-orange);   /* banners, «Շուտով», −10% */
+
+  /* Campaign colours — a campaign can bring its own scheme (BRAND.md) */
+  --color-campaign-green: oklch(62.7% 0.194 149.214);   /* Tailwind's green-600: webinar bar, floating buttons */
+  /* Bundle: the card keeps its original colours (owner's call) — a blue wash, the travelling ribbon border, its pills */
+  --color-campaign-bundle-wash: oklch(97% 0.014 254.604);          /* Tailwind's blue-50: card + sub nav promo background */
+  --color-campaign-bundle-blue: oklch(70.7% 0.165 254.624);        /* blue-400: the ribbon's light band */
+  --color-campaign-bundle-violet: oklch(54.1% 0.281 293.009);      /* violet-600: ribbon band, gift pill */
+  --color-campaign-bundle-save: oklch(96.2% 0.044 156.743);        /* green-100: savings pill */
+  --color-campaign-bundle-save-text: oklch(52.7% 0.154 150.069);   /* green-700: savings pill text */
+
+  /* Type — the brand's AQB text styles (BRAND.md). text-aqb-* sets size, line height, tracking and weight;
+     headlines (display, headline) also need italic. Tracking −2.4% from 24px up, 0 below; line height 102% for
+     headlines, 112% for text. */
+  --font-weight-headline: 800;    /* ExtraBold Italic */
+  --font-weight-text: 400;        /* Regular */
+  --font-weight-detail: 600;      /* SemiBold */
+  --leading-aqb-headline: 1.02;
+  --leading-aqb-text: 1.12;
+  --tracking-aqb: -0.024em;
+  --text-aqb-display-xxl: 12rem;    --text-aqb-display-xxl--line-height: var(--leading-aqb-headline); --text-aqb-display-xxl--letter-spacing: var(--tracking-aqb); --text-aqb-display-xxl--font-weight: var(--font-weight-headline);   /* 192 */
+  --text-aqb-display-xl: 8rem;      --text-aqb-display-xl--line-height: var(--leading-aqb-headline);  --text-aqb-display-xl--letter-spacing: var(--tracking-aqb);  --text-aqb-display-xl--font-weight: var(--font-weight-headline);    /* 128 */
+  --text-aqb-display-l: 6rem;       --text-aqb-display-l--line-height: var(--leading-aqb-headline);   --text-aqb-display-l--letter-spacing: var(--tracking-aqb);   --text-aqb-display-l--font-weight: var(--font-weight-headline);     /* 96 */
+  --text-aqb-headline-h1: 4rem;     --text-aqb-headline-h1--line-height: var(--leading-aqb-headline); --text-aqb-headline-h1--letter-spacing: var(--tracking-aqb); --text-aqb-headline-h1--font-weight: var(--font-weight-headline);   /* 64 */
+  --text-aqb-headline-h2: 3rem;     --text-aqb-headline-h2--line-height: var(--leading-aqb-headline); --text-aqb-headline-h2--letter-spacing: var(--tracking-aqb); --text-aqb-headline-h2--font-weight: var(--font-weight-headline);   /* 48 */
+  --text-aqb-subhead: 2rem;         --text-aqb-subhead--line-height: var(--leading-aqb-text);         --text-aqb-subhead--letter-spacing: var(--tracking-aqb);     --text-aqb-subhead--font-weight: var(--font-weight-detail);         /* 32 */
+  --text-aqb-body-l: 1.75rem;       --text-aqb-body-l--line-height: var(--leading-aqb-text);          --text-aqb-body-l--letter-spacing: var(--tracking-aqb);      --text-aqb-body-l--font-weight: var(--font-weight-text);            /* 28 */
+  --text-aqb-body-m: 1.5rem;        --text-aqb-body-m--line-height: var(--leading-aqb-text);          --text-aqb-body-m--letter-spacing: var(--tracking-aqb);      --text-aqb-body-m--font-weight: var(--font-weight-text);            /* 24 */
+  --text-aqb-body-s: 1.25rem;       --text-aqb-body-s--line-height: var(--leading-aqb-text);          --text-aqb-body-s--letter-spacing: 0;                        --text-aqb-body-s--font-weight: var(--font-weight-text);            /* 20 */
+  --text-aqb-label: 1rem;           --text-aqb-label--line-height: var(--leading-aqb-text);           --text-aqb-label--letter-spacing: 0;                         --text-aqb-label--font-weight: var(--font-weight-detail);           /* 16 */
+  --text-aqb-caption: 0.875rem;     --text-aqb-caption--line-height: var(--leading-aqb-text);         --text-aqb-caption--letter-spacing: 0;                       --text-aqb-caption--font-weight: var(--font-weight-detail);         /* 14 */
 
   /* Pill radius (Tailwind's rounded-full value) */
   --radius-full: calc(infinity * 1px);
-
-  /* Display sizes for the big stat numbers (no default step near 80 / 160px) */
-  --text-display: 5rem;
-  --text-display--line-height: 1;
-  --text-display-xl: 10rem;
-  --text-display-xl--line-height: 1;
 
   /* Tablet breakpoint: layouts collapse at 1100px (Tailwind default lg is 1024px) */
   --breakpoint-lg: 68.75rem;
@@ -87,9 +128,9 @@
   --card-gap: --spacing(6);         /* between cards */
 
   /* Semantic greys (all zinc) */
-  --surface: var(--color-zinc-100);          /* grey sections, panels, cards on white, chips, hovers */
-  --surface-strong: var(--color-zinc-200);   /* tab track on grey, disabled button */
-  --line: var(--color-zinc-200);             /* every 1px border */
+  --surface: var(--color-grey-100);          /* grey sections, panels, cards on white, chips, hovers */
+  --surface-strong: var(--color-grey-200);   /* tab track on grey, disabled button */
+  --line: var(--color-grey-200);             /* every 1px border */
 }
 @media (width < theme(--breakpoint-lg)) { :root { --page-x: --spacing(10); --section-y: --spacing(16); } }
 @media (width < theme(--breakpoint-md)) { :root { --page-x: --spacing(4); --section-y: --spacing(12); --title-gap: --spacing(6); } }
@@ -101,26 +142,25 @@
   html { scroll-behavior: smooth; scroll-padding-top: 96px; overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip so phones never pan sideways */
   body {
     background: var(--color-white);
-    color: var(--color-slate-900);
-    line-height: normal;             /* the design was built on the font's natural line height */
+    color: var(--color-ink-900);
+    @apply text-aqb-body-s;          /* text default: Body S (BRAND.md) */
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;              /* fallback for browsers without overflow: clip */
     overflow-x: clip;
   }
   button { cursor: pointer; }
+  b, strong { font-weight: var(--font-weight-detail); }   /* emphasis is a detail: SemiBold, not the browser's bold */
 }
 
-@property --ribbon-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+
+@property --ribbon-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }   /* the Bundle ribbon (05) */
 
 @layer components {
 
 /* One section-title style for every section */
 .section-title {
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-4xl);
-  line-height: var(--text-4xl--line-height);
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-slate-900);
+  @apply text-aqb-headline-h2 italic;
+  color: var(--color-ink-900);
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
@@ -140,27 +180,40 @@
   gap: --spacing(1.5);
   border: 1px solid transparent;   /* every button has a 1px border, so filled and outline sizes match */
   border-radius: var(--radius-full);
-  font-weight: var(--font-weight-semibold);
-  line-height: --spacing(6);
+  font-weight: var(--font-weight-detail);
+  line-height: --spacing(6);   /* a layout box, not type: it sets the button heights (40 / 48 / 56) */
   white-space: nowrap;
   transition: background-color var(--default-transition-duration), color var(--default-transition-duration), border-color var(--default-transition-duration), box-shadow var(--default-transition-duration), transform var(--default-transition-duration);
 }
 .btn--primary { background: var(--color-primary); color: var(--color-white); }
 .btn--primary:hover:not(:disabled) { background: var(--color-primary-hover); }
-.btn:disabled { background: var(--surface-strong); color: var(--color-slate-400); box-shadow: none; cursor: not-allowed; }
-.btn--outline { background: var(--color-white); border-color: var(--line); color: var(--color-slate-900); }
-.btn--outline:hover { background: var(--color-zinc-50); }
-.btn--white { background: var(--color-white); color: var(--color-slate-900); }
-.btn--dark { background: var(--color-slate-900); color: var(--color-white); }
-.btn--dark:hover { background: var(--color-slate-800); }
+.btn:disabled { background: var(--surface-strong); color: var(--color-ink-400); box-shadow: none; cursor: not-allowed; }
+.btn--outline { background: var(--color-white); border-color: var(--line); color: var(--color-ink-900); }
+.btn--outline:hover { background: var(--color-grey-50); }
+.btn--white { background: var(--color-white); color: var(--color-ink-900); }
+.btn--dark { background: var(--color-ink-900); color: var(--color-white); }
+.btn--dark:hover { background: var(--color-ink-800); }
 .btn--block { width: 100%; }
+/* Inline: a word inside a headline that is itself the button (the hero's «Սովորի՛ր»). It keeps the headline's type
+   and wears the colour as the brand's chat bubble: script.js cuts it to the shape (straight sides, small corners, a
+   bottom edge that falls to the bottom-left, an angled tail at the bottom-right). The extra bottom padding (.8em) is
+   the tail's room; it makes the line taller, so the next line moves down instead of being covered */
+.btn--inline {
+  position: relative;
+  display: inline-block;
+  padding: --spacing(4) --spacing(6) calc(--spacing(4) + .8em);
+  margin-bottom: --spacing(2);   /* air between the tail's tip and the next line */
+  border: 0;
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  font-size: inherit; font-weight: inherit; font-style: inherit; letter-spacing: inherit; line-height: inherit;
+}
 
 /* Three sizes: sm 40px · base 48px (the height and type of the floating buttons, .fab) · md 56px.
    The 1px border is part of the height. The ±.5px padding moves the text down half a pixel: the font's ascent
    is taller than its descent, so it sat slightly high. */
-.btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-sm); }
-.btn--base { padding: calc(--spacing(3) - 1px + .5px) calc(--spacing(6) - 1px) calc(--spacing(3) - 1px - .5px); font-size: var(--text-base); }
-.btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-lg); }
+.btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-aqb-caption); letter-spacing: var(--text-aqb-caption--letter-spacing); }
+.btn--base { padding: calc(--spacing(3) - 1px + .5px) calc(--spacing(6) - 1px) calc(--spacing(3) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
+.btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
 
 /* Dismiss: small round icon-only ✕ (holds .ic--x) that hides a banner. The hover tint is mixed from
    the text colour, so it reads on any background (e.g. the green .pkg-spot). */
@@ -168,10 +221,10 @@
   display: inline-flex; align-items: center; justify-content: center; flex: none;
   width: --spacing(7); height: --spacing(7);
   border-radius: var(--radius-full);
-  color: var(--color-slate-600);
+  color: var(--color-ink-600);
   transition: background-color var(--default-transition-duration), color var(--default-transition-duration);
 }
-.dismiss:hover { background: color-mix(in oklab, currentColor 12%, transparent); color: var(--color-slate-900); }
+.dismiss:hover { background: color-mix(in oklab, currentColor 12%, transparent); color: var(--color-ink-900); }
 .dismiss:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 /* ============================================================
@@ -200,7 +253,7 @@
 .is-scrolled .topbar { transform: translate(-50%, calc(100% + --spacing(15))); opacity: 0; }
 .topbar__item { display: flex; align-items: center; gap: --spacing(3); position: relative; z-index: 2; }
 /* regular weight + calendar icon, matching the date line in the webinar bar */
-.topbar__text { display: flex; align-items: center; gap: --spacing(1.5); font-weight: var(--font-weight-normal); font-size: var(--text-sm); color: var(--color-white); white-space: nowrap; }
+.topbar__text { display: flex; align-items: center; gap: --spacing(1.5); @apply text-aqb-caption; color: var(--color-black);   /* Orange under 24px: black text */ white-space: nowrap; }
 .topbar__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 
 /* ============================================================
@@ -240,8 +293,7 @@
   display: inline-flex; align-items: center; gap: --spacing(1.5);
   padding: --spacing(2) --spacing(2.5);
   border-radius: var(--radius-xl);
-  font-size: var(--text-base); line-height: var(--text-base--line-height);
-  font-weight: var(--font-weight-bold); color: var(--color-slate-900);
+  @apply text-aqb-label; color: var(--color-ink-900);
   white-space: nowrap;
   transition: color var(--default-transition-duration);
 }
@@ -256,7 +308,7 @@
   .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger { color: var(--color-primary); }
   .nav__item:is(:hover, :focus-within, .is-open) .nav__trigger .ic { rotate: 180deg; }
   .nav__item.is-closed .nav__trigger .ic { rotate: 0deg; }
-  .nav__item.is-closed .nav__trigger:not(:hover) { color: var(--color-slate-900); }
+  .nav__item.is-closed .nav__trigger:not(:hover) { color: var(--color-ink-900); }
 }
 
 .subnav {
@@ -278,17 +330,17 @@
   background: var(--color-white);
   border: 1px solid var(--line);
   border-radius: var(--radius-3xl);
-  box-shadow: 0 24px 48px -16px rgb(15 23 42 / .18);
+  box-shadow: 0 24px 48px -16px color-mix(in oklab, var(--color-ink-900) 18%, transparent);
 }
 .subnav__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: --spacing(6); padding: --spacing(6) --spacing(4) --spacing(4) --spacing(6); }
 .subnav__group { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(1); }
-.subnav__label { padding-bottom: --spacing(2); font-size: var(--text-sm); color: var(--color-slate-500); }
+.subnav__label { padding-bottom: --spacing(2); @apply text-aqb-caption; color: var(--color-ink-500); }
 /* Rows are hug-width pills: bold title, then the arrow (external) and any tag right after it */
 .subnav__link {
   display: inline-flex; align-items: center; gap: --spacing(2);
   min-height: --spacing(10); margin-left: calc(--spacing(3) * -1); padding: --spacing(1.5) --spacing(3);
   border-radius: var(--radius-xl);   /* keeps the focus ring rounded */
-  font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900);
+  @apply text-aqb-label; color: var(--color-ink-900);
   white-space: nowrap;
   transition: color var(--default-transition-duration);
 }
@@ -297,7 +349,7 @@
 .subnav__link .ic { width: --spacing(4); height: --spacing(4); margin-left: calc(--spacing(0.5) * -1); transition: translate .25s; }
 .subnav__link:hover .ic { translate: 2px -2px; }
 .subnav__link .pill { height: --spacing(6); padding: 0 --spacing(2.5); }
-.subnav__soon { margin-left: --spacing(1); background: var(--color-accent); color: var(--color-white); }
+.subnav__soon { margin-left: --spacing(1); background: var(--color-accent); color: var(--color-black); }
 
 /* Bundle promo — same blue wash, price tags and gift as the Bundle package card */
 .subnav-promo {
@@ -305,7 +357,7 @@
   display: flex; flex-direction: column; gap: --spacing(4);
   padding: --spacing(6);
   border-radius: var(--radius-2xl);
-  background: var(--color-blue-50);
+  background: var(--color-campaign-bundle-wash);
 }
 .subnav-promo__gift {
   position: absolute; top: --spacing(2); right: calc(--spacing(3) * -1); z-index: -1;
@@ -316,12 +368,12 @@
 }
 .subnav-promo:hover .subnav-promo__gift { rotate: 0deg; }
 .subnav-promo__head { display: flex; flex-direction: column; gap: --spacing(1.5); padding-right: --spacing(24); }
-.subnav-promo__name { font-weight: var(--font-weight-bold); font-size: var(--text-5xl); line-height: 1; letter-spacing: var(--tracking-tight); color: var(--color-slate-900); }
-.subnav-promo__tagline { font-weight: var(--font-weight-black); font-style: italic; font-size: var(--text-xl); color: var(--color-slate-800); white-space: nowrap; }
+.subnav-promo__name { @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); }
+.subnav-promo__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); white-space: nowrap; }
 .subnav-promo__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1.5) --spacing(2.5); margin-top: auto; }
-.subnav-promo__price .pkg__old { font-size: var(--text-2xl); }
-.subnav-promo__price .pill { height: --spacing(8); padding: 0 --spacing(3.5); font-size: var(--text-sm); }
-.subnav-promo__amount { flex-basis: 100%; font-weight: var(--font-weight-black); font-size: var(--text-5xl); line-height: 1.1; color: var(--color-slate-900); }
+.subnav-promo__price .pkg__old { @apply text-aqb-body-m; }
+.subnav-promo__price .pill { height: --spacing(8); padding: 0 --spacing(3.5); }
+.subnav-promo__amount { flex-basis: 100%; @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); }
 .subnav-promo:hover .btn--primary { background: var(--color-primary-hover); }
 
 /* Desktop: keep the dropdown short — tighter promo (mobile keeps the big version) */
@@ -331,12 +383,8 @@
   .subnav-promo { gap: --spacing(3); padding: --spacing(5) --spacing(6); }
   .subnav-promo__gift { width: --spacing(30); height: --spacing(30); }
   .subnav-promo__head { gap: --spacing(0.5); padding-right: --spacing(16); }
-  .subnav-promo__name { font-size: var(--text-4xl); }
-  .subnav-promo__tagline { font-size: var(--text-lg); }
   .subnav-promo__price { gap: --spacing(1) --spacing(2.5); }
-  .subnav-promo__price .pkg__old { font-size: var(--text-xl); }
   .subnav-promo__price .pill { height: --spacing(7); }
-  .subnav-promo__amount { font-size: var(--text-4xl); }
 }
 
 /* Right side of the pill: «Գրանցվել» + (mobile) the burger */
@@ -356,7 +404,7 @@
 .nav__burger span {
   display: block; width: --spacing(4.5); height: 2px;
   border-radius: var(--radius-full);
-  background: var(--color-slate-900);
+  background: var(--color-ink-900);
   transition: translate .3s var(--ease-smooth), rotate .3s var(--ease-smooth);
 }
 .nav-wrap.is-menu-open .nav__burger span:first-child { translate: 0 3.5px; rotate: 45deg; }
@@ -365,7 +413,7 @@
 /* Dim + blur the page behind the open mobile menu (tapping it closes the menu) */
 .nav-scrim {
   position: fixed; inset: 0; z-index: 54;   /* just under .nav-wrap */
-  background: color-mix(in oklab, var(--color-slate-900) 30%, transparent);
+  background: color-mix(in oklab, var(--color-ink-900) 30%, transparent);
   backdrop-filter: blur(var(--blur-xs));
   opacity: 0; visibility: hidden;
   transition: opacity .25s, visibility 0s .25s;
@@ -383,6 +431,7 @@ body.is-menu-open { overflow: hidden; }
   /* Full screen height; the fixed nav covers the top --header-h, so the content is
      centred in the space below them (visual middle), not in the raw viewport */
   --header-h: --spacing(20);
+  --hero-title-size: var(--text-aqb-headline-h1);   /* kept in step with .hero__title, so the walk can leave room for it */
   min-height: 100svh;
   padding: calc(var(--header-h) + --spacing(8)) var(--page-x) --spacing(8);
   display: flex;
@@ -393,17 +442,15 @@ body.is-menu-open { overflow: hidden; }
   text-align: center;
   color: var(--hero-fg);
 }
-/* Solid colour backdrop — each scene of the eyes' walk has its colour (script.js · 03).
-   The text on every colour is black (--hero-fg).
-   data-bg sits on .hero (text + buttons), .hero__bg (the colour itself) and .hero__reveal (the next colour). */
-.hero                           { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="cyan"]           { --hero-bg: var(--color-pop-cyan); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="mint"]           { --hero-bg: var(--color-pop-mint); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="yellow"]         { --hero-bg: var(--color-pop-yellow); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="orange"]         { --hero-bg: var(--color-pop-orange); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="orchid"]         { --hero-bg: var(--color-pop-orchid); --hero-fg: var(--color-black); }
-:is(.hero, .hero *)[data-bg="tan"]            { --hero-bg: var(--color-pop-tan); --hero-fg: var(--color-black); }
-.hero .btn--white { color: var(--hero-fg); }   /* the secondary button's label matches the black headline */
+/* Solid colour backdrop — each scene of the eyes' walk has a feed colour (script.js · 03), starting on calm Sky.
+   Lines and text are black (--hero-fg), as BRAND.md asks on every feed colour. data-bg sits on .hero (the
+   headline), .hero__bg (the colour itself) and .hero__reveal (the next colour). */
+.hero                                 { --hero-bg: var(--color-feed-sky); --hero-fg: var(--color-black); }
+:is(.hero, .hero *)[data-bg="sky"]    { --hero-bg: var(--color-feed-sky); }
+:is(.hero, .hero *)[data-bg="yellow"] { --hero-bg: var(--color-feed-yellow); }
+:is(.hero, .hero *)[data-bg="teal"]   { --hero-bg: var(--color-feed-teal); }
+:is(.hero, .hero *)[data-bg="pink"]   { --hero-bg: var(--color-feed-pink); }
+:is(.hero, .hero *)[data-bg="tan"]    { --hero-bg: var(--color-limited-tan); }
 .hero__bg,
 .hero__reveal {
   position: absolute;
@@ -421,8 +468,10 @@ body.is-menu-open { overflow: hidden; }
    behind. The SVG is the camera frame: script.js moves its viewBox, sets the line width and the eyes' size. */
 .hero__walk {
   position: relative; z-index: 1;
-  /* 1200px at most, and never taller than 55% of the screen (55svh × 12/5), so the buttons stay in view */
-  width: min(100%, --spacing(300), 132svh);
+  /* 1200px at most, and only as tall as the screen leaves after the nav, the paddings and the gap (8 + 8 + 4), the
+     two-line headline and its bubble button's padding and air (4 + 4 + 2 + .8em), so the call to action stays in
+     view; × 12/5 turns that height into the drawing's width */
+  width: min(100%, --spacing(300), calc((100svh - var(--header-h) - --spacing(30) - (2 * var(--leading-aqb-headline) + .8) * var(--hero-title-size)) * 12 / 5));
 }
 .walk {
   display: block;
@@ -441,8 +490,8 @@ body.is-menu-open { overflow: hidden; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* The eyes: white, with a thin outline in the line's colour so they read on every backdrop */
-.walk__white { fill: var(--color-white); stroke: var(--hero-fg); stroke-width: 2.5; }
+/* The eyes: the brand's — white, no outline (index.html) */
+.walk__white { fill: var(--color-white); }
 .walk__pupil { fill: var(--hero-fg); }
 /* The city (assets/hero/city.png + Matenadaran's path): black lines kept faint, so on every colour it's a
    quiet darker shade behind the line */
@@ -455,16 +504,11 @@ body.is-menu-open { overflow: hidden; }
   stroke-linejoin: round;
 }
 
-/* The headline under the walk: the promise, at the section titles' size (.section-title). Regular italic, set
-   tight (the old typed title's tracking), so it reads lighter and more hand-written, like the line drawing above */
+/* The headline under the walk: the one message — Headline H1 (BRAND.md) */
 .hero__title {
   position: relative; z-index: 1;
   max-width: --spacing(220);
-  font-size: var(--text-4xl);
-  line-height: 1.1;
-  letter-spacing: var(--tracking-tighter);
-  font-weight: var(--font-weight-normal);
-  font-style: italic;
+  @apply text-aqb-headline-h1 italic;
   text-wrap: balance;              /* two even lines when it wraps (phones) */
 }
 
@@ -472,11 +516,9 @@ body.is-menu-open { overflow: hidden; }
 .hero__sub {
   position: relative; z-index: 1;
   max-width: --spacing(86);
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  @apply text-aqb-body-s;
 }
-.hero__sub strong { font-weight: var(--font-weight-bold); }
-.hero__actions { position: relative; z-index: 1; display: flex; gap: --spacing(3); margin-top: --spacing(6); }
+.hero__sub strong { font-weight: var(--font-weight-detail); }
 
 
 /* ============================================================
@@ -498,17 +540,17 @@ body.is-menu-open { overflow: hidden; }
   gap: --spacing(10);
   padding: --spacing(3) --spacing(3) --spacing(3) --spacing(6);
   border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--color-green-600) 90%, transparent);
+  background: color-mix(in oklab, var(--color-campaign-green) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   color: var(--color-white);
 }
 .is-scrolled .promo { transform: translate(-50%, 0); opacity: 1; }
 /* title + date read as one unit: bold title, smaller softer date with the same calendar icon as the package cards */
 .promo__text { display: flex; flex-direction: column; z-index: 3; white-space: nowrap; }   /* title + date add up to exactly the button's 40px, so the bar's padding is the same on all sides of the button */
-.promo__text strong { font-weight: var(--font-weight-bold); font-size: var(--text-lg); line-height: var(--leading-tight); }
+.promo__text strong { @apply text-aqb-label; }
 .promo__date {
   display: flex; align-items: center; gap: --spacing(1.5);
-  font-size: var(--text-sm); line-height: var(--leading-tight);
+  @apply text-aqb-caption;
   color: color-mix(in oklab, var(--color-white) 85%, transparent);
 }
 .promo__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
@@ -519,12 +561,16 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
    ============================================================ */
+/* «Ի՞նչ սովորել» band: the brand's Black ground, full-bleed (same box-shadow trick as the packages band) */
 .courses {
   display: flex;
   flex-direction: column;
   gap: var(--card-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
 }
-.courses > .section-title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }
+.courses > .section-title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); color: var(--color-white); }   /* white on Black */
 
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
@@ -545,11 +591,11 @@ body.is-menu-open { overflow: hidden; }
 .pill-tabs__tab {
   padding: --spacing(3) --spacing(7);
   border-radius: var(--radius-full);
-  font-weight: var(--font-weight-semibold); font-size: var(--text-base); line-height: --spacing(5);
-  color: var(--color-slate-600);
+  @apply text-aqb-label; line-height: --spacing(5);   /* layout box: the tab height */
+  color: var(--color-ink-600);
   transition: background-color .2s, color .2s, box-shadow .2s;
 }
-.pill-tabs__tab:hover { color: var(--color-slate-900); }
+.pill-tabs__tab:hover { color: var(--color-ink-900); }
 .pill-tabs__tab[aria-selected="true"] { background: var(--color-primary); color: var(--color-white); box-shadow: var(--shadow-sm); }
 .pill-tabs__tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .pkg-panel { display: flex; flex-direction: column; gap: var(--card-gap); }
@@ -562,7 +608,7 @@ body.is-menu-open { overflow: hidden; }
   height: --spacing(110);
   overflow: hidden;
   border-radius: var(--radius-3xl);
-  background: var(--color-slate-900);
+  background: var(--color-ink-900);
   isolation: isolate;
 }
 .pro-card > img:first-child, .pro-card__media {
@@ -584,17 +630,15 @@ body.is-menu-open { overflow: hidden; }
   content: "";
   position: absolute; inset: 0; z-index: 1;
   background: linear-gradient(to top,
-    color-mix(in oklab, var(--color-slate-950) 88%, transparent) 0%,
-    color-mix(in oklab, var(--color-slate-950) 50%, transparent) 30%,
+    color-mix(in oklab, var(--color-ink-950) 88%, transparent) 0%,
+    color-mix(in oklab, var(--color-ink-950) 50%, transparent) 30%,
     transparent 58%);
 }
 .pro-card__title {
   position: absolute; left: --spacing(7); right: --spacing(7); bottom: --spacing(6.5); z-index: 2;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-3xl); line-height: var(--text-3xl--line-height);
-  letter-spacing: var(--tracking-tight);
+  @apply text-aqb-subhead;
   color: var(--color-white);
-  text-shadow: 0 2px 14px rgb(0 0 0 / .45);
+  text-shadow: 0 2px 14px color-mix(in oklab, var(--color-black) 45%, transparent);
   text-wrap: balance;
 }
 .pro-card__arrow {
@@ -602,7 +646,7 @@ body.is-menu-open { overflow: hidden; }
   display: grid; place-items: center;
   width: --spacing(12); height: --spacing(12);
   border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--color-slate-900) 45%, transparent);
+  background: color-mix(in oklab, var(--color-ink-900) 45%, transparent);
   backdrop-filter: blur(var(--blur-xs));
   transition: background-color var(--default-transition-duration), transform .25s;
 }
@@ -633,7 +677,7 @@ body.is-menu-open { overflow: hidden; }
   padding: --spacing(2) --spacing(4);
   border-radius: var(--radius-full);
   background: var(--color-accent);
-  font-weight: var(--font-weight-bold); font-size: var(--text-sm); color: var(--color-white);
+  @apply text-aqb-caption; color: var(--color-black);   /* Orange under 24px: black text */
 }
 
 /* 3 package cards; each spans 6 rows and uses subgrid so
@@ -657,7 +701,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .pkg--bundle {
   overflow: hidden; /* crops the gift at the card edge */
-  background: linear-gradient(180deg, var(--color-blue-50) 0%, color-mix(in oklab, var(--color-blue-50) 50%, var(--color-white)) 45%, var(--color-white) 100%);
+  background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, color-mix(in oklab, var(--color-campaign-bundle-wash) 50%, var(--color-white)) 45%, var(--color-white) 100%);   /* Bundle's own colours: a deliberate exception to "no gradients" (BRAND.md → Campaign colours) */
 }
 /* Ribbon border: a bright band travels around the card and the border thickens as it passes.
    Drawn by ::before so it stays on top of the cropped gift. */
@@ -671,11 +715,11 @@ body.is-menu-open { overflow: hidden; }
   background: conic-gradient(from var(--ribbon-angle),
     var(--color-primary) 0deg,
     var(--color-primary) 230deg,
-    var(--color-blue-400) 270deg,
+    var(--color-campaign-bundle-blue) 270deg,
     var(--color-accent) 305deg,
-    var(--color-violet-600) 330deg,
+    var(--color-campaign-bundle-violet) 330deg,
     var(--color-primary) 360deg);
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  mask: linear-gradient(var(--color-black) 0 0) content-box exclude, linear-gradient(var(--color-black) 0 0);
   pointer-events: none;
   animation: ribbon-spin 4s linear infinite, ribbon-weight 4s ease-in-out infinite;
 }
@@ -692,7 +736,7 @@ body.is-menu-open { overflow: hidden; }
   border-radius: var(--radius-full);
   background: var(--color-primary);
   color: var(--color-white);
-  font-weight: var(--font-weight-bold); font-style: italic; font-size: var(--text-xs);
+  @apply text-aqb-caption;
   white-space: nowrap;
 }
 /* Big static gift filling the empty right side of the header, cropped by the card */
@@ -725,15 +769,15 @@ body.is-menu-open { overflow: hidden; }
   display: flex; align-items: flex-start; gap: --spacing(2);
   margin: --spacing(1) 0;
   padding: --spacing(4) --spacing(4.5);   /* = .pkg__schedule box */
-  background: var(--color-green-100);
+  background: var(--color-feed-teal);
   border-radius: var(--radius-2xl);
-  font-size: var(--text-lg); line-height: var(--leading-snug); color: var(--color-slate-700);
+  @apply text-aqb-body-s; color: var(--color-black);   /* feed colour: black text */
   text-wrap: pretty;
   transition: opacity .5s;
 }
 @starting-style { .pkg-spot { opacity: 0; } }
 .pkg-spot[hidden] { display: none; }
-.pkg-spot strong { font-weight: var(--font-weight-bold); color: var(--color-slate-900); }
+.pkg-spot strong { font-weight: var(--font-weight-detail); }
 .pkg-spot > p { flex: 1; }
 .pkg-spot .dismiss { margin: calc(--spacing(0.5) * -1) calc(--spacing(2) * -1) 0 0; }   /* ✕ centred on the first line, tucked into the corner */
 @media (width >= theme(--breakpoint-lg)) {
@@ -754,26 +798,24 @@ body.is-menu-open { overflow: hidden; }
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2.5); }
 .pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; description fits on 2 lines */
 .pkg__name {
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-6xl); line-height: var(--text-6xl--line-height);
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-slate-900);
+  @apply text-aqb-headline-h1 italic;
+  color: var(--color-ink-900);
 }
-.pkg__tagline { font-weight: var(--font-weight-black); font-style: italic; font-size: var(--text-2xl); color: var(--color-slate-800); margin-top: calc(--spacing(1) * -1); }
-.pkg__desc { font-size: var(--text-xl); line-height: var(--leading-tight); color: var(--color-slate-600); }
+.pkg__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }
+.pkg__desc { @apply text-aqb-body-s; color: var(--color-ink-600); }
 
 .pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
   height: --spacing(7); padding: 0 --spacing(3);
   border-radius: var(--radius-full);
-  font-weight: var(--font-weight-bold); font-size: var(--text-xs);
+  @apply text-aqb-caption;
   white-space: nowrap;
 }
-.pill--zoom { background: var(--surface); color: var(--color-slate-900); }
+.pill--zoom { background: var(--surface); color: var(--color-ink-900); }
 .pill--zoom img { height: 11px; width: auto; }
-.pill--deal { background: color-mix(in oklab, var(--color-accent) 90%, transparent); color: var(--color-white); font-style: italic; }
-.pill--save { background: var(--color-green-100); color: var(--color-green-700); }
-.pill--gift { background: var(--color-violet-600); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
+.pill--deal { background: color-mix(in oklab, var(--color-accent) 90%, transparent); color: var(--color-white); }   /* Bundle's original colours: white under 24px on Orange is a deliberate exception (BRAND.md → Campaign colours) */
+.pill--save { background: var(--color-campaign-bundle-save); color: var(--color-campaign-bundle-save-text); }
+.pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
 
 /* Row 2 · schedule */
 .pkg__schedule {
@@ -783,16 +825,16 @@ body.is-menu-open { overflow: hidden; }
   border-radius: var(--radius-2xl);
 }
 .pkg__date, .pkg__meta { display: flex; align-items: center; gap: --spacing(2.5); }
-.pkg__date { font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: var(--color-slate-900); }
-.pkg__meta { font-size: var(--text-base); color: var(--color-slate-600); }
+.pkg__date { @apply text-aqb-label; color: var(--color-ink-900); }
+.pkg__meta { @apply text-aqb-label; color: var(--color-ink-600); }
 .pkg__date .ic, .pkg__meta .ic { color: var(--color-primary); }
 
 /* Row 3 · price */
 .pkg__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1) --spacing(2.5); align-self: end; }
 .pkg__price .pkg__old ~ .pkg__amount { flex-basis: 100%; }   /* discounted price drops below the old price + tags */
-.pkg__amount { font-weight: var(--font-weight-black); font-size: var(--text-5xl); line-height: 1.1; color: var(--color-slate-900); white-space: nowrap; }
+.pkg__amount { @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); white-space: nowrap; }
 .pkg__old {
-  font-weight: var(--font-weight-bold); font-size: var(--text-2xl); color: var(--color-slate-400);
+  @apply text-aqb-body-m; color: var(--color-ink-400);
   text-decoration: line-through; text-decoration-color: var(--color-accent); text-decoration-thickness: 3px;
   white-space: nowrap;
 }
@@ -815,46 +857,46 @@ body.is-menu-open { overflow: hidden; }
 .tool-stack > :first-child { margin-left: 0; }
 .tool-stack__logo img { width: --spacing(5.5); height: --spacing(5.5); border-radius: var(--radius-sm); }
 .tool-stack__logo:hover { transform: translateY(calc(--spacing(1) * -1)); position: relative; z-index: 1; }
-.tool-stack__more { background: var(--surface); font-weight: var(--font-weight-bold); font-size: var(--text-xs); color: var(--color-slate-700); cursor: default; }
-.pkg__label { display: flex; align-items: center; gap: --spacing(2); font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900); }
+.tool-stack__more { background: var(--surface); @apply text-aqb-caption; color: var(--color-ink-700); cursor: default; }
+.pkg__label { display: flex; align-items: center; gap: --spacing(2); @apply text-aqb-label; color: var(--color-ink-900); }
 .tool-pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
   height: --spacing(7.5); padding: 0 --spacing(2.5) 0 --spacing(1.5);
   background: var(--color-white);
   border: 1px solid var(--line);
   border-radius: var(--radius-full);
-  font-weight: var(--font-weight-semibold); font-size: var(--text-xs); color: var(--color-slate-900);
+  @apply text-aqb-caption; color: var(--color-ink-900);
   white-space: nowrap;
 }
 .tool-pill img { width: --spacing(5); height: --spacing(5); flex: none; border-radius: var(--radius-sm); } /* softens the square app-tile logos */
 /* bigger version for the 20+ stat card */
-.tool-pill--lg { height: --spacing(11); padding: 0 --spacing(4) 0 --spacing(2); gap: --spacing(2.5); font-size: var(--text-sm); }
+.tool-pill--lg { height: --spacing(11); padding: 0 --spacing(4) 0 --spacing(2); gap: --spacing(2.5); }
 .tool-pill--lg img { width: --spacing(7); height: --spacing(7); border-radius: var(--radius-md); }
 
 /* Row 6 · features */
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(3); }
-.pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); font-size: var(--text-base); line-height: var(--leading-snug); color: var(--color-slate-900); }
+.pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); @apply text-aqb-body-s; color: var(--color-ink-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
-.pkg__features li.is-off { color: var(--color-slate-400); }   /* muted, but still readable */
-.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-slate-400); }
-.pkg__features li.is-gift { font-weight: var(--font-weight-bold); }
+.pkg__features li.is-off { color: var(--color-ink-400); }   /* muted, but still readable */
+.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-ink-400); }
+.pkg__features li.is-gift { font-weight: var(--font-weight-detail); }
 
 /* Row 4 · CTA (right under the price) */
 .pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
-.pkg__guarantee { display: flex; align-items: center; justify-content: center; gap: --spacing(2); font-size: var(--text-sm); color: var(--color-slate-600); }
-.pkg__guarantee .ic { color: var(--color-green-600); }
-.pkg__guarantee strong { font-weight: var(--font-weight-bold); color: var(--color-slate-900); }
+.pkg__guarantee { display: flex; align-items: center; justify-content: center; gap: --spacing(2); @apply text-aqb-caption; color: var(--color-ink-600); }
+.pkg__guarantee .ic { color: var(--color-primary); }
+.pkg__guarantee strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
 
 /* Ministry endorsement (coat of arms + text) — above the package cards and in the footer */
 .endorse {
   display: flex; align-items: center; gap: --spacing(2.5);
-  font-size: var(--text-sm); line-height: var(--leading-snug); color: var(--color-slate-700);
+  @apply text-aqb-caption; color: var(--color-ink-700);
 }
 .endorse img { width: --spacing(8); height: auto; flex-shrink: 0; }
 .endorse--strip {
   justify-content: center;
   padding: --spacing(3.5) --spacing(6);
-  font-weight: var(--font-weight-semibold); color: var(--color-slate-900);
+  font-weight: var(--font-weight-detail); color: var(--color-ink-900);
   text-align: left;
 }
 .endorse--strip img { width: --spacing(10); }
@@ -870,54 +912,48 @@ body.is-menu-open { overflow: hidden; }
   height: var(--h, --spacing(70));
   overflow: hidden;
   border-radius: var(--radius-3xl);
-  background: var(--color-slate-900);
+  background: var(--color-ink-900);
   isolation: isolate;
   break-inside: avoid;
 }
-.learn-tile > img:not(.learn-tile__art) {
+.learn-tile > img {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform .6s var(--ease-smooth);
 }
-.learn-tile:hover > img:not(.learn-tile__art) { transform: scale(1.05); }
+.learn-tile:hover > img { transform: scale(1.05); }
 .learn-tile:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+/* Bubble-shaped tiles (BRAND.md → Bubble construction): script.js cuts each tile into the brand bubble for its size */
+/* Anything script.js cuts into a brand shape (clip-path: the learn tiles, the hero's bubble button) would lose its
+   focus outline with it, so keyboard focus shows as a ring along the shape: a 6px stroke, of which the inner 3px shows
+   (Ink on the Blue button, Blue on the photo tiles) */
+.is-shaped:focus-visible { outline: none; }
+.shape-ring { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; pointer-events: none; opacity: 0; }
+.is-shaped:focus-visible > .shape-ring { opacity: 1; }
+.shape-ring path { fill: none; stroke: var(--color-primary); stroke-width: 6; }
+.btn--inline .shape-ring path { stroke: var(--color-neutral-ink); }
 .learn-tile > img[src*="video-river"] { object-position: center 78%; }
+.learn-tile > img[src*="automation-car-factory"] { object-position: center 40%; }   /* keeps the worker's head in the short tile */
 /* dark scrim so the title is always readable */
 .learn-tile::after {
   content: "";
   position: absolute; inset: 0;
   z-index: 1;
   background: linear-gradient(to top,
-    color-mix(in oklab, var(--color-slate-950) 88%, transparent) 0%,
-    color-mix(in oklab, var(--color-slate-950) 55%, transparent) 32%,
+    color-mix(in oklab, var(--color-ink-950) 88%, transparent) 0%,
+    color-mix(in oklab, var(--color-ink-950) 55%, transparent) 32%,
     transparent 62%);
 }
 .learn-tile__title {
   position: absolute;
   left: --spacing(6); right: --spacing(6); bottom: --spacing(5.5);
   z-index: 2;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-3xl); line-height: var(--text-3xl--line-height);
-  letter-spacing: var(--tracking-tight);
+  @apply text-aqb-subhead;
   color: var(--color-white);
-  text-shadow: 0 2px 14px rgb(0 0 0 / .45);
+  text-shadow: 0 2px 14px color-mix(in oklab, var(--color-black) 45%, transparent);
   text-wrap: balance;
 }
-/* Text-only tile (no photo yet): brand gradient + glossy gear */
-.learn-tile--color { background: linear-gradient(135deg, var(--color-blue-100) 0%, var(--color-violet-100) 100%); }
-.learn-tile--color::after { background: none; }
-.learn-tile--color .learn-tile__title { right: --spacing(32.5); top: 50%; bottom: auto; transform: translateY(-50%); color: var(--color-slate-900); text-shadow: none; }
-.learn-tile__art {
-  position: absolute;
-  right: calc(--spacing(7) * -1); top: 50%;
-  width: --spacing(42.5); height: --spacing(42.5);
-  translate: 0 -50%;
-  rotate: -12deg;
-  opacity: .95;
-  transition: rotate .8s ease;
-}
-.learn-tile--color:hover .learn-tile__art { rotate: 20deg; }
 
 /* ============================================================
    ICONS (Lucide + Simple Icons brand logos, tinted with currentColor via mask)
@@ -965,7 +1001,7 @@ body.is-menu-open { overflow: hidden; }
   border-radius: var(--radius-full);
   background: var(--color-white);
   border: 1px solid var(--line);
-  color: var(--color-slate-900);
+  color: var(--color-ink-900);
   transition: background-color var(--default-transition-duration), opacity var(--default-transition-duration);
 }
 .teachers__arrow:hover { background: var(--surface); }
@@ -985,7 +1021,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .teachers__row::-webkit-scrollbar { display: none; }
 /* soft fade on the right while more cards follow; removed at the end of the row */
-.teachers__row:not(.is-end) { mask: linear-gradient(to right, #000 calc(100% - --spacing(35)), transparent); }
+.teachers__row:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - --spacing(35)), transparent); }
 
 .teacher {
   position: relative;
@@ -1008,7 +1044,7 @@ body.is-menu-open { overflow: hidden; }
 /* soft dark corner behind the arrow */
 .teacher__photo::after {
   content: ""; position: absolute; inset: 0;
-  background: linear-gradient(225deg, rgb(0 0 0 / .2) 5.5%, transparent 22%);
+  background: linear-gradient(225deg, color-mix(in oklab, var(--color-black) 20%, transparent) 5.5%, transparent 22%);
 }
 /* LinkedIn arrow: hidden until the card is hovered or focused */
 .teacher__link {
@@ -1016,7 +1052,7 @@ body.is-menu-open { overflow: hidden; }
   display: grid; place-items: center;
   width: --spacing(12); height: --spacing(12);
   border-radius: var(--radius-full);
-  background: color-mix(in oklab, var(--color-slate-900) 45%, transparent);
+  background: color-mix(in oklab, var(--color-ink-900) 45%, transparent);
   backdrop-filter: blur(var(--blur-xs));
   opacity: 0;
   transform: translate(calc(--spacing(1.5) * -1), --spacing(1.5)) scale(.9);
@@ -1030,9 +1066,9 @@ body.is-menu-open { overflow: hidden; }
 
 .teacher__body { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); padding: --spacing(6) --spacing(8) --spacing(8); }
 .teacher__head { display: flex; flex-direction: column; gap: --spacing(1); width: 100%; }
-.teacher__name { font-weight: var(--font-weight-bold); font-size: var(--text-2xl); letter-spacing: var(--tracking-tight); color: var(--color-slate-900); }
-.teacher__role { font-weight: var(--font-weight-semibold); font-size: var(--text-base); color: var(--color-slate-900); }
-.teacher__bio { font-size: var(--text-base); color: var(--color-slate-700); }
+.teacher__name { @apply text-aqb-subhead; color: var(--color-ink-900); }
+.teacher__role { @apply text-aqb-label; color: var(--color-ink-900); }
+.teacher__bio { @apply text-aqb-body-s; color: var(--color-ink-700); }
 
 .chips { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 .chip {
@@ -1042,8 +1078,8 @@ body.is-menu-open { overflow: hidden; }
   background: var(--color-white);
   border: 1px solid var(--line);
   border-radius: var(--radius-full);
-  font-weight: var(--font-weight-bold); font-size: var(--text-xs);
-  color: var(--color-slate-900); white-space: nowrap;
+  @apply text-aqb-caption;
+  color: var(--color-ink-900); white-space: nowrap;
 }
 
 /* ============================================================
@@ -1077,7 +1113,7 @@ body.is-menu-open { overflow: hidden; }
 .stars {
   display: block;
   aspect-ratio: 5.6;               /* 5 stars + 4 gaps of .15 star → stars scale with the width */
-  background: linear-gradient(90deg, var(--color-amber-400) calc(var(--rating) / 5 * 100%), var(--color-zinc-300) 0);
+  background: linear-gradient(90deg, var(--color-feed-yellow) calc(var(--rating) / 5 * 100%), var(--color-grey-300) 0);   /* a hard stop, not a fade: the filled share of the stars */
   mask: url("assets/icons/star.svg") 0 0 / auto 100% space no-repeat;
 }
 
@@ -1103,7 +1139,7 @@ body.is-menu-open { overflow: hidden; }
 .crowd {
   position: absolute; bottom: --spacing(4); left: 0; right: 0;
   overflow: hidden;
-  mask: linear-gradient(90deg, transparent 0, #000 --spacing(16), #000 calc(100% - --spacing(16)), transparent 100%);
+  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(16), var(--color-black) calc(100% - --spacing(16)), transparent 100%);
 }
 .crowd__track {
   display: flex; width: max-content;
@@ -1122,25 +1158,25 @@ body.is-menu-open { overflow: hidden; }
   overflow: hidden;
   transition: transform .2s ease;
 }
-/* Armenian letter on the coloured disc */
+/* Armenian letter on the coloured disc: white on Blue / Ink, black on the rest (--av-fg; BRAND.md text-on-colour) */
 .avatar--letter {
   display: grid; place-items: center;
-  font-weight: var(--font-weight-bold); font-size: var(--text-2xl); line-height: 1;
-  color: var(--color-white);
+  @apply text-aqb-subhead;
+  color: var(--av-fg, var(--color-white));
   user-select: none;
 }
-.ladder .avatar--letter { font-size: var(--text-xl); }
+.ladder .avatar--letter { @apply text-aqb-label; }
 .crowd .avatar { margin-right: calc(--spacing(2.5) * -1); }   /* slight overlap, like a facepile */
 .crowd .avatar:hover { transform: translateY(calc(--spacing(1) * -1)) scale(1.08); position: relative; z-index: 1; }
 /* Palette: brand blue / orange / violet + playful extras, cycled */
 .avatar:nth-child(8n+1) { --av: var(--color-primary); }
-.avatar:nth-child(8n+2) { --av: var(--color-accent-soft); }
-.avatar:nth-child(8n+3) { --av: var(--color-violet-600); }
-.avatar:nth-child(8n+4) { --av: var(--color-teal-500); }
-.avatar:nth-child(8n+5) { --av: var(--color-rose-500); }
-.avatar:nth-child(8n+6) { --av: var(--color-amber-500); }
-.avatar:nth-child(8n+7) { --av: var(--color-sky-500); }
-.avatar:nth-child(8n+8) { --av: var(--color-green-500); }
+.avatar:nth-child(8n+2) { --av: var(--color-accent);         --av-fg: var(--color-black); }
+.avatar:nth-child(8n+3) { --av: var(--color-limited-violet); --av-fg: var(--color-black); }
+.avatar:nth-child(8n+4) { --av: var(--color-feed-teal);      --av-fg: var(--color-black); }
+.avatar:nth-child(8n+5) { --av: var(--color-feed-pink);      --av-fg: var(--color-black); }
+.avatar:nth-child(8n+6) { --av: var(--color-feed-yellow);    --av-fg: var(--color-black); }
+.avatar:nth-child(8n+7) { --av: var(--color-feed-sky);       --av-fg: var(--color-black); }
+.avatar:nth-child(8n+8) { --av: var(--color-ink-900); }
 
 /* AI tools in the 20+ card: two rows of pills drifting in opposite directions.
    script.js duplicates each track so translateX(-50%) loops seamlessly. */
@@ -1148,7 +1184,7 @@ body.is-menu-open { overflow: hidden; }
   position: absolute; left: 0; right: 0; bottom: --spacing(5);
   display: flex; flex-direction: column; gap: --spacing(2.5);
   overflow: hidden;
-  mask: linear-gradient(90deg, transparent 0, #000 --spacing(16), #000 calc(100% - --spacing(16)), transparent 100%);
+  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(16), var(--color-black) calc(100% - --spacing(16)), transparent 100%);
 }
 .tool-rows__track {
   display: flex; gap: --spacing(2.5); width: max-content;
@@ -1162,14 +1198,12 @@ body.is-menu-open { overflow: hidden; }
 .stat { display: flex; align-items: center; gap: --spacing(4); white-space: nowrap; }
 .stat--stacked { flex-direction: column; align-items: flex-start; gap: --spacing(6.5); }
 .stat__num {
-  font-weight: var(--font-weight-black); font-style: italic;
-  font-size: var(--text-display); line-height: var(--text-display--line-height);
-  letter-spacing: var(--tracking-tight);
-  color: var(--color-slate-900);
+  @apply text-aqb-display-l italic;
+  color: var(--color-ink-900);
   text-box: trim-both cap alphabetic;
 }
-.stat__num--xl { font-size: var(--text-display-xl); }
-.stat__label { font-size: var(--text-2xl); color: var(--color-slate-700); white-space: normal; }
+.stat__num--xl { @apply text-aqb-display-xl; }
+.stat__label { @apply text-aqb-body-m; color: var(--color-ink-700); white-space: normal; }
 
 /* ============================================================
    08 · MISSION
@@ -1183,17 +1217,15 @@ body.is-menu-open { overflow: hidden; }
 .mission__row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: --spacing(12); position: relative; z-index: 1; }
 .mission__title { white-space: nowrap; }
 .mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); padding-top: var(--title-gap); }
-.mission__text { font-size: var(--text-xl); color: var(--color-slate-600); max-width: --spacing(86); }
+.mission__text { @apply text-aqb-body-s; color: var(--color-ink-600); max-width: --spacing(86); }
 
 .mission__right { width: --spacing(100); display: flex; flex-direction: column; gap: --spacing(2.5); }
 .mission__num {   /* same as the stat numbers */
-  font-weight: var(--font-weight-black); font-style: italic;
-  font-size: var(--text-display); line-height: var(--text-display--line-height);
-  letter-spacing: var(--tracking-tight); color: var(--color-slate-900);
+  @apply text-aqb-display-l italic; color: var(--color-ink-900);
   white-space: nowrap;
   text-box: trim-both cap alphabetic;
 }
-.mission__label { font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: var(--color-slate-600); white-space: nowrap; }
+.mission__label { @apply text-aqb-label; color: var(--color-ink-600); white-space: nowrap; }
 .progress { position: relative; width: --spacing(85.5); height: --spacing(2); background: var(--surface); border-radius: var(--radius-full); overflow: hidden; }
 .progress__fill { position: absolute; inset: 0 auto 0 0; overflow: hidden; background: var(--color-primary); border-radius: var(--radius-full) 0 0 var(--radius-full); }
 .progress__fill.is-filling { transition: width 1.8s cubic-bezier(.33, 1, .68, 1); }   /* ease-out, in step with the count-up in script.js */
@@ -1210,7 +1242,7 @@ body.is-menu-open { overflow: hidden; }
   will-change: transform;
 }
 @media (prefers-reduced-motion: reduce) { .progress__fill::after { animation: none; } }
-.mission__note { font-size: var(--text-base); color: var(--color-slate-700); max-width: --spacing(96); }
+.mission__note { @apply text-aqb-body-s; color: var(--color-ink-700); max-width: --spacing(96); }
 
 .mission__lighthouse {
   position: absolute;
@@ -1220,13 +1252,22 @@ body.is-menu-open { overflow: hidden; }
   transform: translate(-50%, -50%);
   pointer-events: none;
   /* the drawing's palette (script.js fills the SVG with var(--lh-…)) */
-  --lh-50: var(--color-emerald-50);   --lh-100: var(--color-emerald-100); --lh-200: var(--color-emerald-200);
-  --lh-300: var(--color-emerald-300); --lh-400: var(--color-emerald-400); --lh-500: var(--color-emerald-500);
-  --lh-600: var(--color-emerald-600); --lh-700: var(--color-emerald-700); --lh-800: var(--color-emerald-800);
-  --lh-900: var(--color-emerald-900);
-  /* the light: warm yellow */
-  --lh-glow-100: var(--color-amber-100); --lh-glow-200: var(--color-amber-200);
-  --lh-glow-300: var(--color-amber-300); --lh-glow-400: var(--color-amber-400);
+  /* Teal: 50–400 lightened toward white, 500 = Teal, 600–900 darkened toward black */
+  --lh-50:  color-mix(in oklab, var(--color-feed-teal) 10%, var(--color-white));
+  --lh-100: color-mix(in oklab, var(--color-feed-teal) 20%, var(--color-white));
+  --lh-200: color-mix(in oklab, var(--color-feed-teal) 40%, var(--color-white));
+  --lh-300: color-mix(in oklab, var(--color-feed-teal) 60%, var(--color-white));
+  --lh-400: color-mix(in oklab, var(--color-feed-teal) 80%, var(--color-white));
+  --lh-500: var(--color-feed-teal);
+  --lh-600: color-mix(in oklab, var(--color-feed-teal) 85%, var(--color-black));
+  --lh-700: color-mix(in oklab, var(--color-feed-teal) 70%, var(--color-black));
+  --lh-800: color-mix(in oklab, var(--color-feed-teal) 55%, var(--color-black));
+  --lh-900: color-mix(in oklab, var(--color-feed-teal) 40%, var(--color-black));
+  /* the light: Yellow */
+  --lh-glow-100: color-mix(in oklab, var(--color-feed-yellow) 25%, var(--color-white));
+  --lh-glow-200: color-mix(in oklab, var(--color-feed-yellow) 50%, var(--color-white));
+  --lh-glow-300: color-mix(in oklab, var(--color-feed-yellow) 75%, var(--color-white));
+  --lh-glow-400: var(--color-feed-yellow);
 }
 @media (width < theme(--breakpoint-xl)) { .mission__lighthouse { display: none; } }   /* no room between the two text blocks */
 
@@ -1244,7 +1285,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .referral__left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--title-gap); }
 .referral__head { display: flex; flex-direction: column; gap: --spacing(3); }
-.referral__sub { font-size: var(--text-base); color: var(--color-slate-600); }
+.referral__sub { @apply text-aqb-body-s; color: var(--color-ink-600); }
 .referral__panel .promo-form { align-self: center; }   /* card hugs its content instead of stretching to the left column */
 
 /* Friends ladder: 10 Armenian-letter avatars, #1 and #10 are the reward steps */
@@ -1255,7 +1296,7 @@ body.is-menu-open { overflow: hidden; }
 .ladder::before {            /* dashed line connecting the friends */
   content: "";
   position: absolute; left: --spacing(6.5); right: --spacing(6.5); top: --spacing(6.5);
-  border-top: 2px dashed var(--color-zinc-300);
+  border-top: 2px dashed var(--color-grey-300);
 }
 .ladder__step { position: relative; display: flex; flex-direction: column; align-items: center; gap: --spacing(2); }
 /* solid disc under each avatar (panel colour) so the dashed line stops at the circle
@@ -1272,22 +1313,22 @@ body.is-menu-open { overflow: hidden; }
   width: --spacing(13); height: --spacing(13);
   opacity: .45;
 }
-.ladder__num { font-weight: var(--font-weight-bold); font-size: var(--text-xs); color: var(--color-slate-400); }
+.ladder__num { @apply text-aqb-caption; color: var(--color-ink-400); }
 .ladder__step--first .avatar, .ladder__step--last .avatar { opacity: 1; }
 .ladder__step--first .avatar { box-shadow: 0 0 0 3px var(--color-accent); }
 .ladder__step--last  .avatar { box-shadow: 0 0 0 3px var(--color-primary); }
 .ladder__step--first .ladder__num { color: var(--color-accent); }
 .ladder__step--last  .ladder__num { color: var(--color-primary); }
-.ladder__step:nth-child(1)  .avatar { --av: var(--color-accent-soft); }
-.ladder__step:nth-child(2)  .avatar { --av: var(--color-violet-600); }
-.ladder__step:nth-child(3)  .avatar { --av: var(--color-teal-500); }
-.ladder__step:nth-child(4)  .avatar { --av: var(--color-rose-500); }
-.ladder__step:nth-child(5)  .avatar { --av: var(--color-amber-500); }
-.ladder__step:nth-child(6)  .avatar { --av: var(--color-sky-500); }
-.ladder__step:nth-child(7)  .avatar { --av: var(--color-green-500); }
-.ladder__step:nth-child(8)  .avatar { --av: var(--color-violet-600); }
-.ladder__step:nth-child(9)  .avatar { --av: var(--color-teal-500); }
-.ladder__step:nth-child(10) .avatar { --av: var(--color-primary); }
+.ladder__step:nth-child(1)  .avatar { --av: var(--color-accent);         --av-fg: var(--color-black); }
+.ladder__step:nth-child(2)  .avatar { --av: var(--color-limited-violet); --av-fg: var(--color-black); }
+.ladder__step:nth-child(3)  .avatar { --av: var(--color-feed-teal);      --av-fg: var(--color-black); }
+.ladder__step:nth-child(4)  .avatar { --av: var(--color-feed-pink);      --av-fg: var(--color-black); }
+.ladder__step:nth-child(5)  .avatar { --av: var(--color-feed-yellow);    --av-fg: var(--color-black); }
+.ladder__step:nth-child(6)  .avatar { --av: var(--color-feed-sky);       --av-fg: var(--color-black); }
+.ladder__step:nth-child(7)  .avatar { --av: var(--color-ink-900);        --av-fg: var(--color-white); }
+.ladder__step:nth-child(8)  .avatar { --av: var(--color-limited-violet); --av-fg: var(--color-black); }
+.ladder__step:nth-child(9)  .avatar { --av: var(--color-feed-teal);      --av-fg: var(--color-black); }
+.ladder__step:nth-child(10) .avatar { --av: var(--color-primary);        --av-fg: var(--color-white); }
 
 /* Reward cards: the prize is the headline */
 .rewards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--card-gap); }
@@ -1297,15 +1338,14 @@ body.is-menu-open { overflow: hidden; }
   background: var(--color-white);
   border-radius: var(--radius-3xl);
 }
-.reward__who { font-weight: var(--font-weight-semibold); font-size: var(--text-base); color: var(--color-slate-600); }
+.reward__who { @apply text-aqb-label; color: var(--color-ink-600); }
 .reward__prize {
-  font-weight: var(--font-weight-black); font-style: italic;
-  font-size: var(--text-6xl); line-height: var(--text-6xl--line-height); letter-spacing: var(--tracking-tight);
+  @apply text-aqb-headline-h1 italic;
   padding: --spacing(1) 0;
 }
 .reward--first .reward__prize { color: var(--color-accent); }
 .reward--last  .reward__prize { color: var(--color-primary); }
-.reward__desc { font-size: var(--text-base); color: var(--color-slate-700); }
+.reward__desc { @apply text-aqb-body-s; color: var(--color-ink-700); }
 
 /* Form card — the promo-code form and the doctor pre-registration form */
 .promo-form {
@@ -1318,25 +1358,24 @@ body.is-menu-open { overflow: hidden; }
 }
 .promo-form__title {
   width: 100%;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--text-2xl); line-height: var(--leading-tight); letter-spacing: var(--tracking-tight);
-  color: var(--color-slate-900);
+  @apply text-aqb-subhead;
+  color: var(--color-ink-900);
   text-wrap: balance;
 }
 .promo-form__fields { width: 100%; display: flex; flex-direction: column; gap: --spacing(6); }
 .field { display: flex; flex-direction: column; gap: --spacing(2.5); }
-.field__label { font-weight: var(--font-weight-normal); font-size: var(--text-base); color: var(--color-slate-600); }
+.field__label { @apply text-aqb-label; color: var(--color-ink-600); }
 .field__input {
   width: 100%;
   padding: --spacing(3.5);
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-xl);
-  font-size: var(--text-base);
-  color: var(--color-slate-900);
+  @apply text-aqb-body-s;
+  color: var(--color-ink-900);
   outline: none;
 }
-.field__input::placeholder { color: var(--color-slate-400); }
+.field__input::placeholder { color: var(--color-ink-400); }
 .field__input:focus { border-color: var(--color-primary); }
 .field__group { display: flex; border: 1px solid var(--line); border-radius: var(--radius-xl); overflow: hidden; }
 .field__group:focus-within { border-color: var(--color-primary); }
@@ -1344,7 +1383,7 @@ body.is-menu-open { overflow: hidden; }
   padding: --spacing(3.5) --spacing(4);
   background: var(--surface);
   border-right: 1px solid var(--line);
-  font-weight: var(--font-weight-bold); font-size: var(--text-base); color: var(--color-slate-900);
+  @apply text-aqb-body-s; color: var(--color-ink-900);
 }
 .field__input--grouped { border: 0; border-radius: 0; padding: --spacing(3.5) --spacing(4); flex: 1; min-width: 0; }
 
@@ -1366,7 +1405,7 @@ body.is-menu-open { overflow: hidden; }
 .faq__item summary {
   display: flex; align-items: center; justify-content: space-between; gap: --spacing(3);
   padding: --spacing(5);
-  font-size: var(--text-base); color: var(--color-slate-600);
+  @apply text-aqb-body-s; color: var(--color-ink-600);
   cursor: pointer;
   list-style: none;
 }
@@ -1379,13 +1418,13 @@ body.is-menu-open { overflow: hidden; }
   transition: transform .2s;
 }
 .faq__item[open] summary::after { transform: rotate(180deg); }
-.faq__item[open] summary { color: var(--color-slate-900); font-weight: var(--font-weight-semibold); }
+.faq__item[open] summary { color: var(--color-ink-900); font-weight: var(--font-weight-detail); }
 .faq__answer {
   display: flex; flex-direction: column; gap: --spacing(3);
   padding: 0 --spacing(5) --spacing(5.5);
-  font-size: var(--text-base); line-height: var(--leading-relaxed); color: var(--color-slate-700);
+  @apply text-aqb-body-s; color: var(--color-ink-700);
 }
-.faq__answer strong { font-weight: var(--font-weight-bold); color: var(--color-slate-900); }
+.faq__answer strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
 .faq__answer a { text-decoration: underline; text-underline-offset: 3px; }
 .faq__answer a .ic--external { width: --spacing(3.5); height: --spacing(3.5); margin-left: --spacing(0.5); vertical-align: -1px; }   /* opens in a new tab */
 .faq__pro { display: flex; flex-direction: column; gap: --spacing(2); }
@@ -1393,11 +1432,11 @@ body.is-menu-open { overflow: hidden; }
 /* «Ե՞րբ են դասերը» — two schedule blocks side by side */
 .schedules { display: grid; grid-template-columns: 1fr 1fr; gap: --spacing(3); }
 .schedule { padding: --spacing(4) --spacing(4.5); background: var(--surface); border-radius: var(--radius-2xl); }
-.schedule__name { font-weight: var(--font-weight-bold); font-size: var(--text-lg); color: var(--color-slate-900); margin-bottom: --spacing(2.5); }
+.schedule__name { @apply text-aqb-label; color: var(--color-ink-900); margin-bottom: --spacing(2.5); }
 .schedule__rows { display: flex; flex-direction: column; gap: --spacing(2); }
 .schedule__rows > div { display: grid; grid-template-columns: --spacing(24) 1fr; gap: --spacing(2.5); }
-.schedule__rows dt { font-size: var(--text-xs); line-height: var(--leading-loose); color: var(--color-slate-400); }
-.schedule__rows dd { font-size: var(--text-base); color: var(--color-slate-900); }
+.schedule__rows dt { @apply text-aqb-caption; color: var(--color-ink-400); }
+.schedule__rows dd { @apply text-aqb-label; color: var(--color-ink-900); }
 
 /* ============================================================
    09b · WEBINAR — black band: the «AI քեզ վեբինար» wordmark (every letter in a random
@@ -1413,17 +1452,18 @@ body.is-menu-open { overflow: hidden; }
   text-align: center;
   overflow: hidden;
 }
-.wordmark__type { font-size: clamp(1.75rem, 8vw, 7.5rem); }
+.wordmark__type { @apply text-aqb-display-xl; }
+@media (width < theme(--breakpoint-lg)) { .wordmark__type { @apply text-aqb-display-l; } }
 .wordmark__line {
-  height: 1.2em; line-height: 1.2em;   /* fixed line box: switching fonts never makes the box jump */
+  height: calc(var(--leading-aqb-headline) * 1em); line-height: var(--leading-aqb-headline);   /* a fixed box at the headline line height: switching styles never makes it jump */
   white-space: nowrap;
-  font-weight: var(--font-weight-bold);
+  font-style: italic;
 }
-.wordmark__lead { margin-top: --spacing(8); font-size: var(--text-2xl); line-height: var(--leading-tight); }
+.wordmark__lead { margin-top: --spacing(8); @apply text-aqb-body-m; }
 .wordmark__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(6); }
 /* date + time: plain white text with icons — no background, so only the button reads as clickable */
 .wordmark__when { display: flex; flex-wrap: wrap; justify-content: center; gap: --spacing(2) --spacing(6); }
-.wordmark__fact { display: inline-flex; align-items: center; gap: --spacing(2.5); font-weight: var(--font-weight-bold); font-size: var(--text-lg); white-space: nowrap; }
+.wordmark__fact { display: inline-flex; align-items: center; gap: --spacing(2.5); @apply text-aqb-label; white-space: nowrap; }
 
 /* LETTER SHUFFLE (wordmark, see script.js): each letter is a fixed-width slot
    (width = its widest style) inside a no-wrap word; the glyph is centred and may spill over,
@@ -1431,19 +1471,18 @@ body.is-menu-open { overflow: hidden; }
 .shuffle { position: relative; }
 .shuffle__word { display: inline-block; white-space: nowrap; }
 .shuffle__slot { display: inline-flex; justify-content: center; }
-.shuffle__slot > span { line-height: 0; }   /* tall styles (e.g. the scaled-up pixel font) never make a line taller; the glyph just draws over the leading */
+.shuffle__slot > span { line-height: 0; }   /* no style ever makes a line taller; the glyph just draws over the leading */
 .shuffle__probe { position: absolute; top: 0; left: 0; visibility: hidden; white-space: nowrap; pointer-events: none; }
-.shuffle [data-f] { font-style: normal; font-variation-settings: normal; }   /* upright only, never italic; Handjet (5, 6) runs small, so it is scaled up */
-.shuffle [data-f="0"] { font-family: var(--font-sans); font-weight: 900; }                              /* heavy humanist */
-.shuffle [data-f="1"] { font-family: "Noto Sans Armenian", var(--font-sans); font-weight: 900; }       /* heavy geometric */
-.shuffle [data-f="2"] { font-family: "Noto Sans Armenian", var(--font-sans); font-weight: 100; }       /* hairline */
-.shuffle [data-f="3"] { font-family: "Noto Serif Armenian", serif; font-weight: 400; }                  /* classic serif */
-.shuffle [data-f="4"] { font-family: "Noto Serif Armenian", serif; font-weight: 900; }                  /* black serif */
-.shuffle [data-f="5"] { font-family: "Handjet", monospace; font-weight: 900; font-size: 1.2em; font-variation-settings: "ELSH" 2, "ELGR" 1; }   /* solid pixel blocks */
-.shuffle [data-f="6"] { font-family: "Handjet", monospace; font-weight: 700; font-size: 1.2em; font-variation-settings: "ELSH" 10, "ELGR" 1; }  /* dotted LED grid (ELSH 0 renders nothing) */
-.shuffle [data-f="7"] { font-family: "Google Sans", var(--font-sans); font-weight: 700; }               /* clean sans */
-.shuffle [data-f="8"] { font-family: "Iosevka Charon", monospace; font-weight: 700; }                   /* boxy mono */
+/* Adelle Sans ARM only (BRAND.md): the brand's three weights, plus "play with type" — tilt it, shadow it, push the contrast */
+.shuffle [data-f] { font-style: normal; }
+.shuffle [data-f="0"] { font-weight: var(--font-weight-headline); font-style: italic; }   /* ExtraBold Italic */
+.shuffle [data-f="1"] { font-weight: var(--font-weight-text); }                           /* Regular */
+.shuffle [data-f="2"] { font-weight: var(--font-weight-detail); }                         /* SemiBold */
+.shuffle [data-f="3"] { font-weight: var(--font-weight-headline); font-style: italic; rotate: -8deg; }   /* tilted (the glyph is a flex item, so it turns; the width probe ignores it) */
+.shuffle [data-f="4"] { font-weight: var(--font-weight-detail); text-shadow: .06em .06em 0 var(--color-accent); }   /* shadowed in Orange */
+.shuffle [data-f="5"] { font-weight: var(--font-weight-text); color: transparent; -webkit-text-stroke: .02em var(--color-white); }   /* outline: hairline against the ExtraBold */
 @media (width < theme(--breakpoint-md)) {
+  .wordmark__type { @apply text-aqb-headline-h1; }
   .wordmark__box { padding: --spacing(10) var(--page-x); }
   .wordmark__actions { flex-direction: column; align-items: stretch; }   /* date + time above, button full width below, like the hero buttons */
 }
@@ -1473,19 +1512,16 @@ body.is-menu-open { overflow: hidden; }
 .footer__gerb { width: --spacing(10); height: auto; justify-self: end; }
 .footer__logo { display: block; justify-self: end; }
 .footer__logo img { display: block; height: --spacing(5.5); width: auto; }
-.footer__tagline { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-slate-600); }
+.footer__tagline { @apply text-aqb-caption; color: var(--color-ink-600); }
 
 .footer__links { display: flex; gap: --spacing(24); }
-.footer__col { display: flex; flex-direction: column; gap: --spacing(2.5); font-size: var(--text-sm); }
-.footer__heading {   /* column title: uppercase, regular weight, spaced out */
+.footer__col { display: flex; flex-direction: column; gap: --spacing(2.5); @apply text-aqb-caption; }
+.footer__heading {   /* column title: Caption, sentence case */
   margin-bottom: --spacing(1);
-  font-weight: var(--font-weight-normal); font-size: var(--text-sm);
-  text-transform: uppercase; letter-spacing: var(--tracking-wider);
-  color: var(--color-slate-400);   /* same grey as the copyright and legal links */
+  color: var(--color-ink-400);   /* same grey as the copyright and legal links */
 }
-.footer__col a { color: var(--color-slate-700); transition: color var(--default-transition-duration); }
+.footer__col a { color: var(--color-ink-700); transition: color var(--default-transition-duration); }
 .footer__col a:hover { color: var(--color-primary); }
-.footer__address { line-height: var(--leading-normal); }
 /* social icons under «Կապ»: plain icons, no background */
 .footer__social { display: flex; gap: --spacing(4); margin-top: --spacing(1.5); }
 .footer__social a { display: block; transition: opacity var(--default-transition-duration); }
@@ -1494,7 +1530,7 @@ body.is-menu-open { overflow: hidden; }
 .footer__line { width: 100%; border-top: 1px solid var(--line); }
 
 .footer__bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: --spacing(3) --spacing(6); }
-.footer__copy { font-size: var(--text-sm); line-height: var(--leading-normal); color: var(--color-slate-400); }
+.footer__copy { @apply text-aqb-caption; color: var(--color-ink-400); }
 .footer__end { display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3); }   /* payment cards above the legal links */
 .footer__pay { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 .pay-badge {
@@ -1505,8 +1541,8 @@ body.is-menu-open { overflow: hidden; }
   border-radius: var(--radius-md);
 }
 .pay-badge img { max-width: 100%; max-height: 100%; width: auto; height: auto; }
-.footer__legal { display: flex; gap: --spacing(6); font-size: var(--text-sm); }
-.footer__legal a { color: var(--color-slate-400); transition: color var(--default-transition-duration); }   /* same grey as the copyright */
+.footer__legal { display: flex; gap: --spacing(6); @apply text-aqb-caption; }
+.footer__legal a { color: var(--color-ink-400); transition: color var(--default-transition-duration); }   /* same grey as the copyright */
 .footer__legal a:hover { color: var(--color-primary); }
 
 /* ============================================================
@@ -1525,7 +1561,7 @@ body.is-menu-open { overflow: hidden; }
   display: flex; align-items: center; justify-content: center;
   width: --spacing(12); height: --spacing(12);
   color: var(--color-white);
-  background: var(--color-slate-900);
+  background: var(--color-ink-900);
   border-radius: var(--radius-full);
   transition: transform var(--default-transition-duration);
 }
@@ -1533,19 +1569,19 @@ body.is-menu-open { overflow: hidden; }
 /* icon + text (the phone number): same height, stretches into a pill; type matches .pill-tabs__tab */
 .fab--label {
   width: auto; gap: --spacing(2); padding-inline: --spacing(5);
-  font-weight: var(--font-weight-semibold); font-size: var(--text-base); line-height: --spacing(5);
+  @apply text-aqb-label; line-height: --spacing(5);   /* layout box: the pill height */
   white-space: nowrap;
 }
 /* contact: opens the group below; while it's open it turns dark with an ✕ and stays outside the group */
 .fab--contact,
 .fab-group {
-  background: color-mix(in oklab, var(--color-green-600) 90%, transparent);
+  background: color-mix(in oklab, var(--color-campaign-green) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
 }
 .fab__close-icon { display: none; }
 .is-contact-open .fab__open-icon { display: none; }
 .is-contact-open .fab__close-icon { display: block; }
-.is-contact-open .fab--contact { background: var(--color-slate-900); backdrop-filter: none; }
+.is-contact-open .fab--contact { background: var(--color-ink-900); backdrop-filter: none; }
 /* group: several .fab in one glass pill, as tall as a single .fab (4px inset around 40px items);
    shown while the contact is open (body.is-contact-open, script.js) */
 .fab-group {
@@ -1561,7 +1597,7 @@ body.is-menu-open { overflow: hidden; }
 /* back to top: dark so it doesn't read as a contact. Its slot in the row is kept (no jump);
    it fades in once the first screen is scrolled past (body.is-past-fold, script.js) */
 .fab--top {
-  background: var(--color-slate-900);
+  background: var(--color-ink-900);
   opacity: 0; visibility: hidden; translate: 0 --spacing(2);
   transition: transform var(--default-transition-duration), opacity .3s ease, translate .3s ease, visibility 0s .3s;
 }
@@ -1584,7 +1620,7 @@ body.is-menu-open { overflow: hidden; }
 .signup__done { display: none; text-align: center; }
 .signup .promo-form.is-done > :not(.signup__done) { display: none; }
 .signup .promo-form.is-done .signup__done { display: flex; flex-direction: column; gap: --spacing(3); }
-.signup__back { font-size: var(--text-sm); color: var(--color-slate-600); text-decoration: underline; text-underline-offset: 3px; }
+.signup__back { @apply text-aqb-caption; color: var(--color-ink-600); text-decoration: underline; text-underline-offset: 3px; }
 
 /* ============================================================
    RESPONSIVE
@@ -1620,7 +1656,7 @@ body.is-menu-open { overflow: hidden; }
     background: var(--color-white);
     border: 1px solid var(--line);
     border-radius: var(--radius-3xl);
-    box-shadow: 0 24px 48px -16px rgb(15 23 42 / .25);
+    box-shadow: 0 24px 48px -16px color-mix(in oklab, var(--color-ink-900) 25%, transparent);
     opacity: 0; visibility: hidden; translate: 0 calc(--spacing(2) * -1); scale: .98; transform-origin: top center;
     transition: opacity .2s, translate .3s var(--ease-smooth), scale .3s var(--ease-smooth), visibility 0s .3s;
   }
@@ -1628,7 +1664,7 @@ body.is-menu-open { overflow: hidden; }
     opacity: 1; visibility: visible; translate: 0 0; scale: 1;
     transition: opacity .2s, translate .3s var(--ease-smooth), scale .3s var(--ease-smooth), visibility 0s;
   }
-  .nav__link { justify-content: space-between; width: 100%; padding: --spacing(3.5) --spacing(4); border-radius: var(--radius-2xl); font-size: var(--text-lg); }
+  .nav__link { justify-content: space-between; width: 100%; padding: --spacing(3.5) --spacing(4); border-radius: var(--radius-2xl); }
   .nav__item.is-open .nav__trigger { color: var(--color-primary); }
 
   /* «Դասընթացներ» becomes an accordion inside the panel */
@@ -1662,17 +1698,15 @@ body.is-menu-open { overflow: hidden; }
 @media (width < theme(--breakpoint-md)) {
   .topbar { width: calc(100% - --spacing(8)); padding: --spacing(3) --spacing(3) --spacing(3) --spacing(5); bottom: --spacing(4); }
   .topbar__item { gap: --spacing(2.5); width: 100%; justify-content: space-between; }
-  .topbar__text { font-size: var(--text-xs); white-space: normal; line-height: var(--leading-tight); }
+  .topbar__text { white-space: normal; }
   .nav { padding: --spacing(2) --spacing(2.5) --spacing(2) --spacing(2); }
   .footer__brand { --footer-brand-media-w: --spacing(21.5); }
   .footer__logo img { height: --spacing(4); }
   .subnav__cols { grid-template-columns: 1fr; }
   .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
-  .hero { --header-h: --spacing(16); padding-left: --spacing(4); padding-right: --spacing(4); }
+  .hero { --header-h: --spacing(16); --hero-title-size: var(--text-aqb-headline-h2); padding-left: --spacing(4); padding-right: --spacing(4); }
   .walk { aspect-ratio: 4 / 3; }   /* a taller frame, so each scene fills the phone's width */
-  .hero__title { font-size: var(--text-2xl); }
-  .hero__actions { flex-direction: column; width: 100%; }
-  .hero__actions .btn { width: 100%; }
+  .hero__title { @apply text-aqb-headline-h2; }
   /* one row on the bottom line: [webinar bar][contact][↑], all 48px tall. The bar is anchored left
      (not centred) and leaves room for the closed row, so it can fold into the open one (see xl above) */
   .promo {
@@ -1684,8 +1718,6 @@ body.is-menu-open { overflow: hidden; }
     container-type: inline-size;   /* the copy below switches on the bar's own width */
   }
   .is-scrolled .promo { transform: none; }
-  .promo__text strong { font-size: var(--text-base); }
-  .promo__date { font-size: var(--text-xs); }
   @container (width < theme(--container-xs)) {   /* too narrow for the full copy (phones under ~460px) */
     .promo__long { display: none; }
     .promo__short { display: inline; }
@@ -1694,17 +1726,14 @@ body.is-menu-open { overflow: hidden; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
   .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
   .pkg { padding: --spacing(6); }
-  .pkg__name { font-size: var(--text-5xl); line-height: var(--text-5xl--line-height); }
-  .pkg__desc { font-size: var(--text-lg); }
-  .pkg__amount { font-size: var(--text-4xl); }
+  .pkg__name { @apply text-aqb-headline-h2; }
   .pkg__gift { width: --spacing(36); height: --spacing(36); top: --spacing(16); right: calc(--spacing(8) * -1); }
   .pkg--bundle .pkg__head { padding-right: --spacing(22); }
-  .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-sm); }
+  .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .learn-grid { columns: 1; }
   .learn-col:last-child .learn-tile:last-child { margin-bottom: 0; }
   .learn-tile { height: min(var(--h), --spacing(90)); }
-  .learn-tile__title { font-size: var(--text-2xl); line-height: var(--text-2xl--line-height); }
   .teachers__row { padding-right: --spacing(4); }
   .teachers__top { padding-right: --spacing(4); }
   .teacher { width: 78vw; }
@@ -1713,18 +1742,18 @@ body.is-menu-open { overflow: hidden; }
   .stats__grid { flex-direction: column; }
   .stats__col--left { width: 100%; }
   .stat-card--hero { height: --spacing(75); }
-  .stat__num--xl { font-size: var(--text-display); }
+  .stat__num, .mission__num { @apply text-aqb-headline-h1; }
+  .stat__num--xl { @apply text-aqb-display-l; }
   .stat-card--fill { min-height: --spacing(45); }
   .mission__title { white-space: normal; }
-  .section-title { font-size: var(--text-3xl); line-height: var(--text-3xl--line-height); }
   .mission__right, .progress, .mission__label { width: 100%; white-space: normal; }
   .referral__panel { padding: --spacing(6); }
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
-  .ladder .avatar--letter { font-size: var(--text-xs); }
+  .ladder .avatar--letter { @apply text-aqb-caption; }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }
   .ladder::before { left: --spacing(3.5); right: --spacing(3.5); top: --spacing(3.5); }
   .rewards { grid-template-columns: 1fr; }
-  .reward__prize { font-size: var(--text-5xl); line-height: var(--text-5xl--line-height); }
+  .reward__prize { @apply text-aqb-headline-h2; }
   .promo-form { padding: --spacing(6); }
   .schedules { grid-template-columns: 1fr; }
   .footer { padding: --spacing(12) var(--page-x) --spacing(27.5); }
@@ -1742,10 +1771,10 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 @keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes soon-shimmer { from { transform: translateX(0); } to { transform: translateX(50%); } }
-@keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
-@keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
 @keyframes progress-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
 @keyframes fab-group-in { from { opacity: 0; scale: .9; } }
+@keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
+@keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
 @keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
