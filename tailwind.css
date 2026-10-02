@@ -261,19 +261,26 @@
 /* ============================================================
    02 · MAIN NAV
    ============================================================ */
+/* The bar: the pill (it hugs the logo and links) centred, the course CTA right beside it once it comes in (the pair stays
+   centred), and the staging hero switch at the top right. The empty band around them lets clicks through to the page */
 .nav-wrap {
   position: fixed;
   top: --spacing(3);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0; right: 0;
   z-index: 55;
-  width: min(--spacing(245), calc(100% - --spacing(8)));
+  padding: 0 --spacing(4);
+  display: grid;
+  grid-template-columns: 1fr auto auto 1fr;
+  align-items: center;
+  pointer-events: none;
 }
+.nav-wrap > * { pointer-events: auto; }
 .nav {
+  grid-column: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: --spacing(3) --spacing(4) --spacing(3) --spacing(3);
+  gap: --spacing(3);
+  padding: --spacing(2);   /* 40px logo + 8px around: 58px tall with the outline, level with the 56px CTA */
   background: color-mix(in oklab, var(--color-white) 90%, transparent);
   backdrop-filter: blur(var(--blur-sm));
   border: 1px solid var(--line);   /* soft outline all around the pill */
@@ -389,10 +396,24 @@
   .subnav-promo__price .pill { height: --spacing(7); }
 }
 
-/* Right side of the pill: «Գրանցվել» + (mobile) the burger */
-.nav__actions { display: flex; align-items: center; gap: --spacing(2); }
-.nav__actions .btn { transition: opacity .25s ease; }
-.is-hero-cta .nav__actions .btn { opacity: 0; pointer-events: none; }   /* the hero asks first (script.js · 02) */
+/* The course CTA slides out from beside the pill once the hero's own button is scrolled past (body.is-past-hero-cta,
+   script.js · 02): its slot is 0 wide and hidden until then, so it never shows at load and the pill alone is centred.
+   It sits as far from the pill as the pill's own padding (8px) */
+.nav-cta-slot {
+  grid-column: 3;
+  max-width: 0;
+  overflow-x: clip; overflow-clip-margin: --spacing(1);   /* the button's focus ring still shows */
+  visibility: hidden;
+  transition: max-width .35s var(--ease-smooth), visibility 0s .35s;
+}
+.nav-cta-slot .nav-cta { margin-left: --spacing(2); }
+.is-past-hero-cta .nav-cta-slot { max-width: --spacing(60); visibility: visible; transition: max-width .35s var(--ease-smooth), visibility 0s; }
+/* Staging: the switch between the two heroes (index.html), at the top right, always there. Below xl the bar has no room
+   for it and the CTA side by side, so while it's on the page the CTA stays out there */
+.hero-switch { grid-column: 4; justify-self: end; margin-left: --spacing(4); white-space: nowrap; }   /* at least 16px from the pill or the CTA */
+@media (width < theme(--breakpoint-xl)) {
+  .nav-wrap:has(.hero-switch) .nav-cta-slot { display: none; }
+}
 .nav__burger {
   display: none;   /* shown below lg */
   place-items: center; align-content: center; gap: 5px;
@@ -532,13 +553,115 @@ body.is-menu-open { overflow: hidden; }
 }
 .hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 
-/* (used by the hero-yarn/hero.html example) */
+/* (used by the archive/hero-yarn/hero.html example) */
 .hero__sub {
   position: relative; z-index: 1;
   max-width: --spacing(86);
   @apply text-aqb-body-s;
 }
 .hero__sub strong { font-weight: var(--font-weight-detail); }
+
+/* ============================================================
+   03 · HERO B — the falling tools (A/B test with Hero A: the <head> script sets html[data-hero], index.html)
+   A Black panel with the copy (6 of the page's 12 columns), then the stage (.drop) out to the screen's edge, where the
+   AI tools fall in as balls and pile up (script.js · 03 B). Phones: the copy on top, the stage under it.
+   (.story-hero keeps the name of the first version, the storyboard.)
+   ============================================================ */
+html[data-hero="b"] .hero { display: none; }
+html:not([data-hero="b"]) .story-hero { display: none; }
+
+.story-hero {
+  --header-h: --spacing(20);
+  --gap: --spacing(8);
+  --bleed: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));   /* page column → screen edge */
+  max-width: var(--container-page);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 0 var(--page-x);
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);   /* Black out to both edges */
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.story-hero__copy {
+  grid-column: 1 / span 6;   /* 6 columns: room for the button and the endorsement side by side */
+  align-self: center;
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6);
+  padding: calc(var(--header-h) + --spacing(8)) 0 --spacing(12);
+}
+/* The one message, the biggest thing on the page. «գլխացավանքի» is a long word: Headline H1, and Headline H2 where the
+   6-column panel is narrowest (lg to xl) and on phones, so it always fits */
+.story-hero__title { @apply text-aqb-headline-h1 italic; }
+@media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
+  .story-hero__title { @apply text-aqb-headline-h2; }
+}
+/* Body M in the detail cut, as Hero A; one fact a line, with a little air between the facts (the text keeps its 112%, which
+   is tight for three stacked lines of Armenian) */
+.story-hero__detail { display: flex; flex-direction: column; gap: --spacing(1.5); @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }
+.story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(2); }   /* the button, the endorsement beside it (as Hero A) */
+.story-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
+.story-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
+
+/* The stage: columns 7–12 and on to the screen's right edge, top to bottom, on Black like the copy, so the hero is one
+   dark field. Each ball is a tool's logo on a White disc (like .tool-stack__logo, which is this ball in the cards); the
+   dark one is Ink with the brand's White eyes, the brand's eye logo (trademark.svg), so it still shows on Black. script.js
+   sizes each ball for the stage (--ball) and moves it with the physics (.is-live); if the physics library doesn't load,
+   the balls sit in rows at the bottom instead (.is-still) */
+.drop {
+  grid-column: 7 / -1;
+  margin-right: calc(var(--bleed) * -1);
+  position: relative;
+  display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-end; gap: --spacing(2);
+  padding: --spacing(6);
+  overflow: hidden;
+  background: var(--color-black);
+}
+.drop.is-live { display: block; padding: 0; }
+.drop__ball {
+  --ball: --spacing(24);
+  display: grid; place-items: center;
+  width: var(--ball); height: var(--ball);
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  cursor: grab;
+  touch-action: none;   /* a finger on a ball drags it; on the empty stage it still scrolls the page */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.drop__ball img { width: 50%; height: 50%; border-radius: var(--radius-md); pointer-events: none; }   /* softens the square app-tile logos */
+.drop__ball--eyes { background: var(--color-neutral-ink); }
+.drop__ball--eyes .eyes { width: 66%; }
+.drop.is-live .drop__ball { position: absolute; top: 0; left: 0; will-change: transform; }
+.drop.is-holding, .drop.is-holding .drop__ball { cursor: grabbing; }   /* while a ball is held (script.js), wherever the pointer is */
+.drop.is-still .drop__ball { cursor: default; }
+/* A ball with others on it jumps in front of them and lands back in its place, up slowing, down speeding (script.js);
+   --hop is how high, in the ball's radii (a radius is half its size) */
+.drop__ball.is-hop { z-index: 1; animation: drop-hop calc(.2s + var(--hop) * .12s) linear; }
+@keyframes drop-hop {
+  0%   { translate: 0 0; animation-timing-function: cubic-bezier(.3, .7, .5, 1); }
+  50%  { translate: 0 calc(var(--hop) * -50%); animation-timing-function: cubic-bezier(.5, 0, .7, .3); }
+  100% { translate: 0 0; }
+}
+/* Until script.js has placed the balls (.is-live) or given up on the physics (.is-still), they stay hidden, so they
+   never show in rows first */
+.drop:not(.is-live, .is-still) .drop__ball { visibility: hidden; }
+
+/* Tablets and phones: the copy on top, the stage under it, edge to edge */
+@media (width < theme(--breakpoint-lg)) {
+  .story-hero { display: flex; flex-direction: column; --header-h: --spacing(16); }
+  .story-hero__copy { align-self: stretch; padding: calc(var(--header-h) + --spacing(8)) 0 --spacing(6); gap: --spacing(4); }
+  .drop { flex: 1; min-height: --spacing(80); margin: 0 calc(var(--page-x) * -1); }
+}
+@media (width < theme(--breakpoint-md)) {
+  .story-hero__title { @apply text-aqb-headline-h2; }   /* phones: Headline H2, three lines */
+  .story-hero__detail { gap: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+  .story-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); }   /* the button full width, the endorsement under it (as the webinar's) */
+  .drop { min-height: --spacing(72); }
+  .drop__ball { --ball: --spacing(14); }
+}
 
 
 /* ============================================================
@@ -635,7 +758,10 @@ body.is-menu-open { overflow: hidden; }
   transition: background-color .2s, color .2s, box-shadow .2s;
 }
 .pill-tabs__tab:hover { color: var(--color-ink-900); }
-.pill-tabs__tab[aria-selected="true"] { background: var(--color-primary); color: var(--color-white); box-shadow: var(--shadow-sm); }
+/* the chosen tab; in the hero switch (links, not tabs) the hero on show, set before the page paints (html[data-hero]) */
+.pill-tabs__tab[aria-selected="true"],
+html[data-hero="a"] .pill-tabs__tab[data-hero-tab="a"],
+html[data-hero="b"] .pill-tabs__tab[data-hero-tab="b"] { background: var(--color-primary); color: var(--color-white); box-shadow: var(--shadow-sm); }
 .pill-tabs__tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 .pkg-panel { display: flex; flex-direction: column; gap: var(--card-gap); }
 .pkg-panel[hidden] { display: none; }
@@ -1011,6 +1137,9 @@ body.is-menu-open { overflow: hidden; }
 .eyes[data-look="up-right"]   { --look-x: 6.4;  --look-y: -7.45; }
 .eyes[data-look="down-left"]  { --look-x: -6.4; --look-y: 7.45; }
 .eyes[data-look="down-right"] { --look-x: 6.4;  --look-y: 7.45; }
+/* «At rest», looking at you (BRAND.md → Eyes): both pupils lean in by 3.78 */
+.eyes[data-look="you"] .eyes__pupil:nth-of-type(1) { --look-x: 3.78;  --look-y: 0; }
+.eyes[data-look="you"] .eyes__pupil:nth-of-type(2) { --look-x: -3.78; --look-y: 0; }
 .eyes { transition: scale .08s ease; }
 .eyes.is-blink { scale: 1 .1; }   /* a blink: the eyes close to a line through their middle (script.js) */
 @media (prefers-reduced-motion: reduce) { .eyes, .eyes__pupil { transition: none; } }
@@ -1632,10 +1761,17 @@ body.is-menu-open { overflow: hidden; }
 }
 
 @media (width < theme(--breakpoint-lg)) {
-  /* Mobile menu: .nav__links drops down under the pill as a white panel */
+  /* The pill (logo + burger) at the left edge, the CTA beside it, the hero switch at the right */
+  .nav-wrap { grid-template-columns: auto auto 1fr; container-type: inline-size; }
+  .nav { grid-column: 1; }
+  .nav-cta-slot { grid-column: 2; }
+  .hero-switch { grid-column: 3; }
+  /* Mobile menu: .nav__links drops down under the pill as a white panel, across the page column. The pill's blur makes
+     the pill its containing block, so the panel takes the bar's width (100cqw) from the pill's left edge (−1px: its
+     outline) */
   .nav__burger { display: grid; }
   .nav__links {
-    position: absolute; left: 0; right: 0; top: calc(100% + --spacing(2));
+    position: absolute; left: -1px; width: 100cqw; top: calc(100% + --spacing(2));
     flex-direction: column; align-items: stretch; gap: --spacing(1);
     max-height: calc(100dvh - --spacing(28)); overflow-y: auto; overscroll-behavior: contain;
     padding: --spacing(3);

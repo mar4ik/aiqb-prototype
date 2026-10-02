@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Gravity Simulation</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        #info-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 14px;
+            pointer-events: none;
+            user-select: none;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+
+    <div id="info-overlay">Click anywhere to drop more icons. Drag to toss them.</div>
+    <canvas id="physics-canvas"></canvas>
+
+    <script>
+        const AI_TOOLS = [
+            { name: 'Claude', color: '#D97706', textColor: '#000000', url: '' },
+            { name: 'Midjourney', color: '#4B5563', textColor: '#FFFFFF', url: '' },
+            { name: 'Runway', color: '#EF4444', textColor: '#FFFFFF', url: '' },
+            { name: 'Grok', color: '#1F2937', textColor: '#FFFFFF', url: '' },
+            { name: 'Gemini', color: '#3B82F6', textColor: '#FFFFFF', url: '' },
+            { name: 'Flow', color: '#10B981', textColor: '#FFFFFF', url: '' },
+            { name: 'ChatGPT', color: '#059669', textColor: '#FFFFFF', url: '' },
+            { name: 'v0', color: '#7C3AED', textColor: '#FFFFFF', url: '' }
+        ];
+
+        const { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint, Body } = Matter;
+
+        const canvas = document.getElementById('physics-canvas');
+        const engine = Engine.create({ gravity: { y: 1, x: 0 } });
+        const world = engine.world;
+
+        let width = window.innerWidth;
+        let height = window.innerHeight;
+
+        const ctx = canvas.getContext('2d');
+        canvas.width = width;
+        canvas.height = height;
+
+        const wallOptions = { isStatic: true, friction: 0.1, restitution: 0.5 };
+        let ground = Bodies.rectangle(width / 2, height + 30, width * 2, 60, wallOptions);
+        let leftWall = Bodies.rectangle(-30, height / 2, 60, height * 2, wallOptions);
+        let rightWall = Bodies.rectangle(width + 30, height / 2, 60, height * 2, wallOptions);
+
+        Composite.add(world, [ground, leftWall, rightWall]);
+
+        function spawnIcon(x, y) {
+            const toolData = AI_TOOLS[Math.floor(Math.random() * AI_TOOLS.length)];
+            const radius = Math.min(width, height) * 0.04 > 25 ? Math.min(width, height) * 0.04 : 30;
+
+            const iconBody = Bodies.circle(x, y, radius, {
+                restitution: 0.5,
+                friction: 0.05,
+                density: 0.001,
+                label: 'ai-icon'
+            });
+
+            iconBody.customData = {
+                name: toolData.name,
+                color: toolData.color,
+                textColor: toolData.textColor,
+                radius: radius
+            };
+
+            Composite.add(world, iconBody);
+        }
+
+        for (let i = 0; i < 35; i++) {
+            spawnIcon(Math.random() * width, Math.random() * -height);
+        }
+
+        setInterval(() => {
+            const bodies = Composite.allBodies(world);
+            const activeIcons = bodies.filter(b => b.label === 'ai-icon');
+            if (activeIcons.length < 60) {
+                spawnIcon(Math.random() * width, -50);
+            }
+        }, 1200);
+
+        const mouse = Mouse.create(canvas);
+        const mouseConstraint = MouseConstraint.create(engine, {
+            mouse: mouse,
+            constraint: { stiffness: 0.2, render: { visible: false } }
+        });
+
+        Composite.add(world, mouseConstraint);
+
+        canvas.addEventListener('mousedown', (e) => {
+            const query = Matter.Query.point(Composite.allBodies(world), { x: e.clientX, y: e.clientY });
+            if (query.length === 0) {
+                spawnIcon(e.clientX, e.clientY);
+            }
+        });
+
+        const runner = Runner.create();
+        Runner.run(runner, engine);
+
+        function draw() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+
+            const bodies = Composite.allBodies(world);
+
+            bodies.forEach(body => {
+                if (body.label !== 'ai-icon') return;
+
+                const { x, y } = body.position;
+                const angle = body.angle;
+                const { name, color, textColor, radius } = body.customData;
+
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = color;
+
+                ctx.beginPath();
+                ctx.arc(0, 0, radius, 0, Math.PI * 2);
+                ctx.fillStyle = color;
+                ctx.fill();
+
+                ctx.shadowBlur = 0;
+
+                ctx.fillStyle = textColor;
+                ctx.font = `bold ${radius * 0.4}px sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(name, 0, 0);
+
+                ctx.restore();
+
+                if (y > height + 200) {
+                    Composite.remove(world, body);
+                }
+            });
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+
+        window.addEventListener('resize', () => {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+
+            Body.setPosition(ground, { x: width / 2, y: height + 30 });
+            Body.setPosition(leftWall, { x: -30, y: height / 2 });
+            Body.setPosition(rightWall, { x: width + 30, y: height / 2 });
+        });
+    </script>
+</body>
+</html>

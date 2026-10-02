@@ -109,12 +109,12 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    Each scene has its colour: it opens from the eyes as a circle (.hero__reveal), then becomes the hero's
    (data-bg on .hero and .hero__bg; the colours live in tailwind.css). Behind it all, a line-art Yerevan drifts
    by slower than the line (.walk__city). Needs GSAP (loaded before this file); without it, or with reduced
-   motion, the whole drawing shows still. Prototyped in hero-eyes/.
+   motion, the whole drawing shows still. Prototyped in archive/hero-eyes/.
    ============================================================ */
 (function heroWalk() {
   const hero = document.querySelector('.hero');
   const svg = hero?.querySelector('.walk');
-  if (!svg) return;
+  if (!svg || document.documentElement.dataset.hero === 'b') return;   // the A/B test shows Hero B (03 B): no walk
 
 
   /* ------------------------------------------------------------------
@@ -548,6 +548,286 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
+   03 B · HERO B — the falling tools (A/B test with Hero A; prototyped in archive/hero-gravity/)
+   The AI tools fall into the dark stage as balls and pile up, the brand's eyes last, on top. Then the balls are a
+   toy: one hops when the pointer comes over it (the hint that they can be played with; touch screens have no hover,
+   so there a ball hops by itself now and then until the first touch), picks up and throws, and kicks when clicked.
+   The eyes stay upright as their ball rolls, blink now and then and watch the pointer (mouse screens). Physics by Matter.js, loaded for this hero only; the balls are the page's own elements,
+   moved every frame, and the loop sleeps once everything is at rest or off screen. With reduced motion the pile is
+   there from the start and nothing moves unless it's played with; without the library the balls sit in rows at the
+   bottom (.is-still, tailwind.css).
+   ============================================================ */
+(function dropHero() {
+  const stage = document.querySelector('.drop');
+  if (!stage || document.documentElement.dataset.hero !== 'b') return;
+  const lib = document.createElement('script');
+  lib.src = 'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js';
+  lib.onload = () => {
+    try { start(); } catch (err) { stage.classList.remove('is-live'); stage.classList.add('is-still'); throw err; }
+  };
+  lib.onerror = () => stage.classList.add('is-still');
+  document.head.append(lib);
+
+  function start() {
+    const { Engine, Composite, Bodies, Body, Constraint } = Matter;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const FILL = 0.3;                // how much of the stage the pile covers…
+    const RADIUS = { min: 26, max: 72 };   // …with every ball the same size, within these radii (px)
+    const HOP = 0.9, KICK = 3.2;     // how high a hover hop and a click kick go, in the ball's radii
+    const HOP_AGAIN = 600;           // ms before the same ball hops for the pointer again
+    const NUDGE = 3500;              // touch screens: ms between the hint hops
+    const WALL = 400;                // px: walls thick enough that a hard throw never gets through
+    const BALL = { restitution: 0.5, friction: 0.05, frictionAir: 0.012, density: 0.001 };
+    const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval (BRAND.md → Eyes)
+    const STEP = 1000 / 60;
+    const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+    const engine = Engine.create({ gravity: { x: 0, y: 1 } });
+    const fall = engine.gravity.y * engine.gravity.scale * STEP ** 2;   // what gravity adds to the speed each step (px)
+    const balls = [], byEl = new Map();
+    let W = 0, H = 0, unit = 0, walls = [];
+
+    // The balls' radius: together they cover FILL of the stage, whatever its shape
+    const count = stage.querySelectorAll('.drop__ball').length;
+    function measure() {
+      W = stage.clientWidth;
+      H = stage.clientHeight;
+      unit = clamp(Math.sqrt((FILL * W * H) / (Math.PI * count)), RADIUS.min, RADIUS.max);
+    }
+    // The floor is the stage's bottom edge; the side walls reach far above it, so a ball thrown up comes back down inside
+    function fence() {
+      Composite.remove(engine.world, walls);
+      const wall = (x, y, w, h) => Bodies.rectangle(x, y, w, h, { isStatic: true, friction: 0.1, restitution: 0.4 });
+      walls = [
+        wall(W / 2, H + WALL / 2, W + 2 * WALL, WALL),
+        wall(-WALL / 2, -2 * H, WALL, 6 * H),
+        wall(W + WALL / 2, -2 * H, WALL, 6 * H)
+      ];
+      Composite.add(engine.world, walls);
+    }
+    function addBall(el, x, y) {
+      el.addEventListener('animationend', (e) => { if (e.animationName === 'drop-hop') el.classList.remove('is-hop'); });
+      const body = Bodies.circle(x, y, unit, BALL);
+      const ball = { el, body, r: body.circleRadius, upright: el.classList.contains('drop__ball--eyes'), hopAt: 0, last: null };
+      el.style.setProperty('--ball', `${2 * ball.r}px`);
+      Composite.add(engine.world, body);
+      balls.push(ball);
+      byEl.set(el, ball);
+      return ball;
+    }
+
+    // The balls, in loose rows above the stage (each row in a shuffled order, each ball a little higher or lower), and
+    // already falling, so they rain in one after another; the eyes come last, near the middle, and land on top
+    measure();
+    fence();
+    stage.classList.add('is-live');
+    const perRow = Math.max(2, Math.floor(W / (2.4 * unit)));
+    const slots = [];
+    while (slots.length < count) slots.push(...[...Array(perRow).keys()].sort(() => Math.random() - 0.5));
+    const speed = Math.sqrt(2 * fall * unit * 1.5);   // as if they had already fallen a little way
+    stage.querySelectorAll('.drop__ball').forEach((el, i) => {
+      const eyes = el.classList.contains('drop__ball--eyes');
+      const row = Math.floor(i / perRow) + (eyes ? 1 : 0);
+      const x = eyes ? W * (0.4 + Math.random() * 0.2) : ((slots[i] + 0.5 + (Math.random() - 0.5) * 0.5) * W) / perRow;
+      const y = -unit * (1.2 + row * 2.6 + Math.random() * 1.2);
+      Body.setVelocity(addBall(el, x, y).body, { x: 0, y: speed });
+    });
+    if (reduced) for (let i = 0; i < 900; i++) Engine.update(engine, STEP);   // reduced motion: the pile, already settled
+
+    // Each frame: a step of the physics, then every ball moved to its body (the eyes never turn). A ball that got out
+    // somehow drops back in from the top. Once nothing has moved for half a second the loop sleeps until it's woken
+    let raf = 0, last = 0, rest = 0, onScreen = true, held = null, following = false;
+    function render() {
+      let moved = !!held;
+      for (const b of balls) {
+        const { x, y } = b.body.position, a = b.upright ? 0 : b.body.angle;
+        if (b.last && Math.abs(x - b.last.x) < 0.1 && Math.abs(y - b.last.y) < 0.1 && Math.abs(a - b.last.a) < 0.002) continue;
+        moved = true;
+        b.last = { x, y, a };
+        b.el.style.transform = `translate(${(x - b.r).toFixed(1)}px, ${(y - b.r).toFixed(1)}px)${a ? ` rotate(${a.toFixed(3)}rad)` : ''}`;
+      }
+      if (moved && following) look();
+      return moved;
+    }
+    function keepIn() {
+      for (const b of balls) {
+        const { x, y } = b.body.position;
+        if (x > -b.r && x < W + b.r && y < H + b.r && y > -5 * H) continue;
+        Body.setPosition(b.body, { x: clamp(x, b.r, W - b.r), y: -b.r });
+        Body.setVelocity(b.body, { x: 0, y: 0 });
+      }
+    }
+    function frame(now) {
+      raf = 0;
+      Engine.update(engine, last ? clamp(now - last, 1, 2 * STEP) : STEP);
+      last = now;
+      keepIn();
+      rest = render() ? 0 : rest + 1;
+      if (onScreen && rest < 30) raf = requestAnimationFrame(frame);
+      else last = 0;
+    }
+    function wake() {
+      rest = 0;
+      if (!raf && onScreen) raf = requestAnimationFrame(frame);
+    }
+    render();
+    wake();
+    new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen) wake();
+    }).observe(stage);
+
+    // A hop straight up, high enough to clear `height` of the ball's own radii, with a little sideways and spin
+    // A ball with others resting on it can't jump out from under them, so it jumps on its own, in front of them and
+    // back into its place (.is-hop, tailwind.css: --hop is the height in its radii); one in the open really jumps
+    const covered = (ball) => engine.pairs.list.some(({ isActive, bodyA, bodyB }) => {
+      const other = bodyA === ball.body ? bodyB : bodyB === ball.body ? bodyA : null;
+      return isActive && other && !other.isStatic && other.position.y < ball.body.position.y - ball.r / 2;
+    });
+    function hop(ball, height, spin) {
+      ball.hopAt = performance.now();
+      if (covered(ball)) {
+        ball.el.style.setProperty('--hop', height);
+        ball.el.classList.remove('is-hop');
+        void ball.el.offsetWidth;   // so the jump starts over if it's still going
+        ball.el.classList.add('is-hop');
+        return;
+      }
+      const v = Math.sqrt(2 * fall * height * ball.r);
+      Body.setVelocity(ball.body, { x: ball.body.velocity.x * 0.5 + (Math.random() - 0.5) * v * 0.3, y: -v });
+      Body.setAngularVelocity(ball.body, (Math.random() - 0.5) * spin);
+      wake();
+    }
+
+    // Playing. A press on a ball picks it up: a spring from the pointer to the spot it was taken by, so it swings,
+    // drags and flies off when let go. A press let go quickly where it started is a click: a kick. Fingers on the
+    // empty stage still scroll the page (tailwind.css: touch-action on the balls only).
+    let played = false, moveAt = 0, mx = 0, my = 0;
+    const at = (e) => {
+      const s = stage.getBoundingClientRect();
+      return { x: e.clientX - s.left, y: e.clientY - s.top };
+    };
+    stage.addEventListener('pointerdown', (e) => {
+      if (e.button > 0) return;
+      const p = at(e), ball = byEl.get(e.target.closest('.drop__ball'));
+      if (!ball) return;
+      e.preventDefault();
+      const { body } = ball;
+      const spring = Constraint.create({
+        pointA: p, bodyB: body, pointB: { x: p.x - body.position.x, y: p.y - body.position.y },
+        length: 0, stiffness: 0.2, damping: 0.1
+      });
+      Composite.add(engine.world, spring);
+      held = { ball, spring, id: e.pointerId, ...p, t: performance.now(), moved: false };
+      played = true;
+      stage.classList.add('is-holding');
+      stage.setPointerCapture(e.pointerId);
+      wake();
+    });
+    stage.addEventListener('pointermove', (e) => {
+      if (e.clientX !== mx || e.clientY !== my) { moveAt = performance.now(); mx = e.clientX; my = e.clientY; }
+      if (!held || e.pointerId !== held.id) return;
+      const p = at(e);
+      held.spring.pointA = p;
+      if (Math.hypot(p.x - held.x, p.y - held.y) > 6) held.moved = true;
+      wake();
+    });
+    function release(e) {
+      if (held?.id !== e.pointerId) return;
+      Composite.remove(engine.world, held.spring);
+      stage.classList.remove('is-holding');
+      if (e.type === 'pointerup' && !held.moved && performance.now() - held.t < 400) kick(held.ball);
+      held = null;
+      wake();
+    }
+    stage.addEventListener('pointerup', release);
+    stage.addEventListener('pointercancel', release);
+
+    function kick(ball) {
+      hop(ball, KICK, 0.4);
+      if (ball.upright) blink();
+    }
+
+    // The hint: a ball hops when the pointer comes over it (a mouse that's really moving, not a ball rolling under a
+    // resting one); with reduced motion, only playing moves them
+    stage.addEventListener('pointerover', (e) => {
+      if (reduced || held || e.pointerType !== 'mouse' || performance.now() - moveAt > 100) return;
+      const el = e.target.closest('.drop__ball');
+      const ball = byEl.get(el);
+      if (!ball || el.contains(e.relatedTarget) || performance.now() - ball.hopAt < HOP_AGAIN) return;
+      hop(ball, HOP, 0.12);
+    });
+    // Touch screens have no hover: a ball hops by itself now and then, while the stage is on screen, until it's played with
+    if (!reduced && !matchMedia('(hover: hover)').matches) {
+      (function nudge() {
+        setTimeout(() => {
+          if (played) return;
+          if (onScreen && !held) hop(balls[Math.floor(Math.random() * balls.length)], HOP, 0.12);
+          nudge();
+        }, NUDGE);
+      })();
+    }
+
+    // When the stage changes size: the walls move, every ball scales with it and keeps its place, the pile on the floor
+    new ResizeObserver(() => {
+      const w0 = W, h0 = H, u0 = unit;
+      measure();
+      if (W === w0 && H === h0) return;
+      fence();
+      const k = unit / u0;
+      for (const b of balls) {
+        const { x, y } = b.body.position;
+        if (k !== 1) Body.scale(b.body, k, k);
+        b.r = b.body.circleRadius;
+        b.el.style.setProperty('--ball', `${2 * b.r}px`);
+        Body.setPosition(b.body, { x: clamp((x * W) / w0, b.r, W - b.r), y: Math.min(H - (h0 - y) * k, H - b.r) });
+        b.last = null;
+      }
+      render();
+      wake();
+    }).observe(stage);
+
+    // The eyes: they blink now and then and, on mouse screens, watch the pointer while it's over the hero
+    const eyesBall = balls.find((b) => b.upright);
+    const eyes = eyesBall?.el.querySelector('.eyes');
+    function blink() {
+      eyes?.classList.add('is-blink');
+      setTimeout(() => eyes?.classList.remove('is-blink'), 140);
+    }
+    if (!eyes || reduced) return;
+    (function blinks() {
+      setTimeout(() => {
+        if (onScreen && !document.hidden) blink();
+        blinks();
+      }, 2000 + Math.random() * 3000);
+    })();
+    const hero = stage.closest('section');
+    if (!hero || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    let px = 0, py = 0, lookRaf = 0;
+    function look() {
+      lookRaf = 0;
+      const box = eyes.getBoundingClientRect();
+      const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
+      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;   // nearer than 160px: less far off-centre
+      eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
+      eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
+    }
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
+      if (!following) { following = true; delete eyes.dataset.look; }   // «at you» sets each pupil itself, so it goes while they follow
+      px = e.clientX; py = e.clientY;
+      lookRaf ||= requestAnimationFrame(look);
+    });
+    hero.addEventListener('pointerleave', () => {
+      following = false;
+      eyes.dataset.look = 'you';
+      eyes.style.removeProperty('--look-x');
+      eyes.style.removeProperty('--look-y');
+    });
+  }
+})();
+
+/* ============================================================
    02 · Sub nav («Դասընթացներ»)
    CSS opens it on hover / focus. Here: click pins it open (touch),
    and picking a link, Escape or an outside click closes it — .is-closed
@@ -649,17 +929,36 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   02 · Nav call to action — steps back while the hero's own «Ընտրել դասընթաց»
-   is on screen, so the first screen asks once (body.is-hero-cta)
+   02 · Nav call to action — comes in beside the pill once the hero's own «Ընտրել դասընթաց» is scrolled past, so the
+   first screen asks once (body.is-past-hero-cta). It starts hidden (tailwind.css), so it never shows at load. The
+   staging hero switch (.hero-switch) also says which hero is on show to screen readers
    ============================================================ */
 (function navCta() {
-  const heroCta = document.querySelector('.hero__actions .btn');
-  const navCta = document.querySelector('.nav__actions .btn');
-  if (!heroCta || !navCta || !('IntersectionObserver' in window)) return;
-  new IntersectionObserver(([entry]) => {
-    document.body.classList.toggle('is-hero-cta', entry.isIntersecting);
-    navCta.inert = entry.isIntersecting;   // hidden, so not tabbable
-  }).observe(heroCta);
+  const hero = document.documentElement.dataset.hero;
+  const heroCta = document.querySelector(hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');   // the hero on show (A/B test)
+  const navCta = document.querySelector('.nav-cta');
+  const heroSwitch = document.querySelector('.hero-switch');
+  heroSwitch?.querySelector(`[data-hero-tab="${hero}"]`)?.setAttribute('aria-current', 'page');
+  if (!navCta) return;
+  const past = (yes) => {
+    document.body.classList.toggle('is-past-hero-cta', yes);
+    navCta.inert = !yes;   // hidden, so not tabbable
+  };
+  if (!heroCta || !('IntersectionObserver' in window)) { past(true); return; }
+  // Past = above the screen; below it (a short screen at load) still counts as not reached
+  new IntersectionObserver(([entry]) => past(!entry.isIntersecting && entry.boundingClientRect.top < 0)).observe(heroCta);
+})();
+
+/* ============================================================
+   03c · Hero A/B test — a click on the hero's call to action goes to window.dataLayer with the hero the visitor saw
+   (the pick itself is pushed by the <head> script), so an analytics tool can compare them
+   ============================================================ */
+(function heroTest() {
+  const variant = document.documentElement.dataset.hero;
+  const cta = document.querySelector(variant === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');
+  cta?.addEventListener('click', () => {
+    (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant });
+  });
 })();
 
 /* ============================================================
