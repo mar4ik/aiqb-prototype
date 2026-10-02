@@ -116,14 +116,17 @@ Add one straight, angled tail.
 
 On the site the bubble shapes the containers themselves, never a pattern inside them: each «Ի՞նչ սովորել» tile
 is cut into a bubble for its size (`script.js` → learnShapes: corners 24 / 12, the same 2:1 ratio, a tail at a top
-corner, a stepped corner, a slit on the tall tiles), and nothing is cut where the title sits.
+corner, a stepped corner, a slit where there's room), and nothing is cut where the title sits. The cut is animated:
+it goes in as the row scrolls into view, one tile after another, and a little deeper on hover. On hover the eyes
+peek from just outside the tile, on the shoulder of its cut-out top corner, never on the shape ([Figma](https://www.figma.com/design/MYvaqFtPgZ9e6J28NM4Fk9/-Brand--AI-Qez-Ban-Brand-_-v3?node-id=1-2221), slide 41,
+«The eyes as a character»); the band is Black so the white eyes show.
 
 ### Chat bubble
 
 A speech bubble with straight sides and small corners (8 on a 240 × 302 drawing). At the bottom-right the side steps
 in a little and drops into one angled tail pointing down; from the tail the bottom edge falls away to the bottom-left
-corner. On the site it is the hero's «Սովորի՛ր» button (`.btn--inline`, shaped by `script.js` → heroBubble for the
-word's real size, the tail's proportions kept).
+corner. On the site it is the `.btn--inline` button shape (`script.js` → heroBubble, cut for the word's real size,
+the tail's proportions kept); not in use at the moment.
 
 ### Eyes
 

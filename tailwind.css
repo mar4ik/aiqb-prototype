@@ -209,15 +209,16 @@
   font-size: inherit; font-weight: inherit; font-style: inherit; letter-spacing: inherit; line-height: inherit;
 }
 
-/* Three sizes: sm 40px · base 48px (the height and type of the floating buttons, .fab) · md 56px.
+/* Four sizes: sm 40px · base 48px (the height and type of the floating buttons, .fab) · md 56px · lg 64px (hero only).
    The 1px border is part of the height. The ±.5px padding moves the text down half a pixel: the font's ascent
    is taller than its descent, so it sat slightly high. */
 .btn--sm { padding: calc(--spacing(2) - 1px + .5px) calc(--spacing(5) - 1px) calc(--spacing(2) - 1px - .5px); font-size: var(--text-aqb-caption); letter-spacing: var(--text-aqb-caption--letter-spacing); }
 .btn--base { padding: calc(--spacing(3) - 1px + .5px) calc(--spacing(6) - 1px) calc(--spacing(3) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
 .btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
+.btn--lg { padding: calc(--spacing(5) - 1px + .5px) calc(--spacing(9) - 1px) calc(--spacing(5) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
 
 /* Dismiss: small round icon-only ✕ (holds .ic--x) that hides a banner. The hover tint is mixed from
-   the text colour, so it reads on any background (e.g. the green .pkg-spot). */
+   the text colour, so it reads on any background (e.g. the grey .pkg-spot). */
 .dismiss {
   display: inline-flex; align-items: center; justify-content: center; flex: none;
   width: --spacing(7); height: --spacing(7);
@@ -390,6 +391,8 @@
 
 /* Right side of the pill: «Գրանցվել» + (mobile) the burger */
 .nav__actions { display: flex; align-items: center; gap: --spacing(2); }
+.nav__actions .btn { transition: opacity .25s ease; }
+.is-hero-cta .nav__actions .btn { opacity: 0; pointer-events: none; }   /* the hero asks first (script.js · 02) */
 .nav__burger {
   display: none;   /* shown below lg */
   place-items: center; align-content: center; gap: 5px;
@@ -429,16 +432,19 @@ body.is-menu-open { overflow: hidden; }
   position: relative;
   max-width: var(--container-page);
   margin: 0 auto;
-  /* Full screen height; the fixed nav covers the top --header-h, so the content is
-     centred in the space below them (visual middle), not in the raw viewport */
+  /* Full screen height; the fixed nav covers the top --header-h. The text block sits at the optical middle (its centre
+     a little above half the screen): --hero-top, the air under the nav, grows with the screen's height, and any room
+     left over goes above the text too (justify-content: flex-end), so the walk stays at the bottom */
   --header-h: --spacing(20);
+  --hero-top: clamp(--spacing(20), 16svh, --spacing(40));
   --hero-title-size: var(--text-aqb-headline-h1);   /* kept in step with .hero__title, so the walk can leave room for it */
+  --hero-rest: --spacing(36);   /* the detail line, the call-to-action row and their gaps, under the headline */
   min-height: 100svh;
-  padding: calc(var(--header-h) + --spacing(8)) var(--page-x) --spacing(8);
+  padding: calc(var(--header-h) + var(--hero-top)) var(--page-x) --spacing(6);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: --spacing(4);
   text-align: center;
   color: var(--hero-fg);
@@ -469,10 +475,11 @@ body.is-menu-open { overflow: hidden; }
    behind. The SVG is the camera frame: script.js moves its viewBox, sets the line width and the eyes' size. */
 .hero__walk {
   position: relative; z-index: 1;
-  /* 1200px at most, and only as tall as the screen leaves after the nav, the paddings and the gap (8 + 8 + 4), the
-     two-line headline and its bubble button's padding and air (4 + 4 + 2 + .8em), so the call to action stays in
-     view; × 12/5 turns that height into the drawing's width */
-  width: min(100%, --spacing(300), calc((100svh - var(--header-h) - --spacing(30) - (2 * var(--leading-aqb-headline) + .8) * var(--hero-title-size)) * 12 / 5));
+  margin-top: --spacing(2);   /* Yerevan right under the call to action */
+  /* 1200px at most, and only as tall as the screen leaves after the nav, the paddings and the gaps (--hero-top + 6 + 4 + 2), the
+     two-line headline and the rows under it, so the whole first screen stays in view; × 12/5 turns that height into
+     the drawing's width */
+  width: min(100%, --spacing(300), calc((100svh - var(--header-h) - var(--hero-top) - --spacing(12) - var(--hero-rest) - 2 * var(--leading-aqb-headline) * var(--hero-title-size)) * 12 / 5));
 }
 .walk {
   display: block;
@@ -505,13 +512,25 @@ body.is-menu-open { overflow: hidden; }
   stroke-linejoin: round;
 }
 
-/* The headline under the walk: the one message — Headline H1 (BRAND.md) */
+/* The headline at the top: the one message — Headline H1 (BRAND.md) */
 .hero__title {
   position: relative; z-index: 1;
   max-width: --spacing(220);
   @apply text-aqb-headline-h1 italic;
   text-wrap: balance;              /* two even lines when it wraps (phones) */
 }
+/* The detail line (BRAND.md → Hierarchy: date, place, format), then the call to action beside the ministry endorsement */
+.hero__detail { position: relative; z-index: 1; @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }   /* Body M in the detail cut (SemiBold) */
+.hero__actions {
+  position: relative; z-index: 1;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: --spacing(4) --spacing(8);
+  margin-top: --spacing(2);
+}
+.hero__endorse {
+  display: flex; align-items: center; gap: --spacing(3);
+  @apply text-aqb-caption; text-align: left;   /* black on the feed colour (--hero-fg) */
+}
+.hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 
 /* (used by the hero-yarn/hero.html example) */
 .hero__sub {
@@ -523,7 +542,7 @@ body.is-menu-open { overflow: hidden; }
 
 
 /* ============================================================
-   04 · WEBINAR BAR (fixed to the bottom, shown after scrolling)
+   04 · WEBINAR BAR (fixed to the bottom, shown after scrolling, with the floating buttons)
    ============================================================ */
 .promo {
   position: fixed;
@@ -562,7 +581,8 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
    ============================================================ */
-/* «Ի՞նչ սովորել» band: the brand's Black ground, full-bleed (same box-shadow trick as the packages band) */
+/* «Ի՞նչ սովորել» band: the brand's Black ground, full-bleed (same box-shadow trick as the packages band); the eyes
+   peeking from the tiles are white, so they need it (Figma slide 41) */
 .courses {
   --learn-edge: var(--page-x);
   display: flex;
@@ -719,11 +739,10 @@ body.is-menu-open { overflow: hidden; }
   border-radius: var(--radius-3xl);
 }
 .pkg--bundle {
-  overflow: hidden; /* crops the gift at the card edge */
   background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, color-mix(in oklab, var(--color-campaign-bundle-wash) 50%, var(--color-white)) 45%, var(--color-white) 100%);   /* Bundle's own colours: a deliberate exception to "no gradients" (BRAND.md → Campaign colours) */
 }
 /* Ribbon border: a bright band travels around the card and the border thickens as it passes.
-   Drawn by ::before so it stays on top of the cropped gift. */
+   Drawn by ::before so it stays on top of the card's content. */
 .pkg--bundle::before {
   content: "";
   position: absolute;
@@ -758,24 +777,12 @@ body.is-menu-open { overflow: hidden; }
   @apply text-aqb-caption;
   white-space: nowrap;
 }
-/* Big static gift filling the empty right side of the header, cropped by the card */
-.pkg__gift {
-  position: absolute;
-  top: --spacing(16);
-  right: calc(--spacing(8) * -1);
-  width: --spacing(40);
-  height: --spacing(40);
-  object-fit: contain;
-  rotate: -10deg;
-  z-index: 0;
-  pointer-events: none;
-}
-.pkg--bundle > :not(.pkg__gift) { position: relative; z-index: 1; }
+.pkg--bundle > * { position: relative; z-index: 1; }
 .pkg--bundle > .pkg__corner { position: absolute; z-index: 2; }
 
 /* Spotlight (script.js, wide screens only): a clicked «Ի՞նչ սովորել» tile sets .packages[data-spotlight]
    to the package that teaches it (start / levelup). That package and Bundle lift, the other one steps
-   back and the gift wiggles once to sell Bundle. Hovering the faded card brings it back — but only once
+   back. Hovering the faded card brings it back — but only once
    the mouse has moved (.is-hover-ready): after the scroll the cursor may have landed on it, and that
    alone shouldn't undo the fade.
    .pkg-spot is a soft grey banner in the picked card's head (under the name) naming the topic;
@@ -791,13 +798,13 @@ body.is-menu-open { overflow: hidden; }
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-2xl);
-  @apply text-aqb-label; color: var(--color-ink-900);
+  @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700);   /* 16px Regular: a quiet line… */
   text-wrap: pretty;
   transition: opacity .5s;
 }
 @starting-style { .pkg-spot { opacity: 0; } }
 .pkg-spot[hidden] { display: none; }
-.pkg-spot strong { font-weight: var(--font-weight-detail); }
+.pkg-spot strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }   /* …with the topic and package in SemiBold, darker */
 .pkg-spot > p { flex: 1; }
 .pkg-spot .dismiss { margin: calc(--spacing(0.5) * -1) calc(--spacing(2) * -1) 0 0; }   /* ✕ centred on the first line, tucked into the corner */
 @media (width >= theme(--breakpoint-lg)) {
@@ -807,18 +814,13 @@ body.is-menu-open { overflow: hidden; }
   .packages[data-spotlight="start"] .pkg--start,
   .packages[data-spotlight="levelup"] .pkg--levelup { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-xl); }
   .packages[data-spotlight] .pkg--bundle { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-2xl); }
-  .packages[data-spotlight] .pkg__gift { animation: gift-wiggle .9s var(--ease-smooth) .4s; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .pkg { transition: none; }
-  .packages[data-spotlight] .pkg__gift { animation: none; }
-}
+@media (prefers-reduced-motion: reduce) { .pkg { transition: none; } }
 
 /* Row 1 · head */
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2); }
-.pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; description fits on 2 lines */
-.pkg__name {
-  @apply text-aqb-headline-h1 italic;
+.pkg__name {   /* a card title: Subhead (BRAND.md → Typography), so the price is the card's headline */
+  @apply text-aqb-subhead;
   color: var(--color-ink-900);
 }
 .pkg__tagline { @apply text-aqb-body-s; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }
@@ -896,10 +898,9 @@ body.is-menu-open { overflow: hidden; }
 /* Row 6 · features */
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(2.5); }
 .pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-900); }
-.pkg__features .ic { margin-top: 2px; color: var(--color-primary); }
-.pkg__features li.is-off { color: var(--color-ink-400); }   /* muted, but still readable */
-.pkg__features li.is-off .ic { width: --spacing(3.5); height: --spacing(3.5); margin: 4px 2px 0; color: var(--color-ink-400); }
+.pkg__features .ic { margin-top: 2px; color: var(--color-primary); }   /* each card lists everything it includes */
 .pkg__features li.is-gift { font-weight: var(--font-weight-detail); }
+.pkg__features li.is-gift .pill--gift { margin-left: --spacing(1); vertical-align: 1px; }   /* at the end of the text (it wraps with it), not pushed to the edge */
 
 /* Row 4 · CTA (right under the price) */
 .pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
@@ -921,11 +922,14 @@ body.is-menu-open { overflow: hidden; }
 }
 .endorse--strip img { width: --spacing(10); }
 
-/* «What you'll learn» — one-row slider with mixed small / large image cards. */
+/* «What you'll learn» — a one-row slider of bubble tiles, four in view on desktop; every tile snaps and the arrows
+   step one view (script.js). The row runs on past the column's right edge. */
 .learn-grid {
+  --learn-h: --spacing(75);                                    /* the tiles' height: room for a five-line title under the cut */
+  --learn-col-w: calc((100% - 3 * var(--card-gap)) / 4);       /* four tiles in view */
   display: flex;
-  align-items: stretch;
   gap: var(--card-gap);
+  height: var(--learn-h);
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
@@ -935,27 +939,39 @@ body.is-menu-open { overflow: hidden; }
 }
 .learn-grid::-webkit-scrollbar { display: none; }
 /* soft fade on the right while more cards follow; removed at the end of the row */
-.learn-grid:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - --spacing(35)), transparent); }
-.learn-col { display: contents; }
+.learn-grid:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - var(--learn-edge)), transparent); }   /* only the margin fades: cards in the column stay whole */
+.learn-col { flex: 0 0 var(--learn-col-w); display: flex; flex-direction: column; scroll-snap-align: start; }
+/* Each tile is a post in its feed colour (data-bg; black text, BRAND.md) */
 .learn-tile {
   position: relative;
-  display: block;                    /* each tile is a slide and links to the packages */
-  flex: 0 0 clamp(--spacing(82), var(--w, --spacing(96)), --spacing(128));
-  height: clamp(--spacing(128), 62vh, --spacing(180));
+  display: flex; flex-direction: column; justify-content: flex-end; gap: --spacing(2);   /* each tile links to the package that teaches it; course + title at the bottom */
+  padding: --spacing(6) --spacing(7);
+  flex: 1 1 0; min-height: 0;        /* fills its column: the whole height, or half of it in a pair */
   overflow: hidden;
   border-radius: var(--radius-3xl);
-  background: var(--color-ink-900);
+  background: var(--tile-bg, var(--color-feed-sky));
+  color: var(--color-black);
   isolation: isolate;
-  break-inside: avoid;
-  scroll-snap-align: start;
 }
-.learn-tile > img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform .6s var(--ease-smooth);
+.learn-tile[data-bg="teal"]   { --tile-bg: var(--color-feed-teal); }
+.learn-tile[data-bg="yellow"] { --tile-bg: var(--color-feed-yellow); }
+.learn-tile[data-bg="sky"]    { --tile-bg: var(--color-feed-sky); }
+.learn-tile[data-bg="pink"]   { --tile-bg: var(--color-feed-pink); }
+/* The eyes peek from just outside each bubble (BRAND.md → Bubble construction: Peek; Figma slide 41): script.js sets
+   them on the shoulder of the tile's cut-out top corner, beside the raised part, never on the shape. They sit in the
+   column, outside the tile, because the tile's clip-path would cut them off.
+   They only come out on hover / keyboard focus (.is-up, script.js): rising from behind the shoulder — moved down by
+   --rise and cut off by as much at the bottom, so only what is above the shoulder ever shows. */
+.learn-col { position: relative; }
+.learn-col > .eyes {
+  position: absolute; z-index: 1; pointer-events: none;
+  translate: 0 var(--rise);
+  clip-path: inset(0 0 var(--rise) 0);
+  transition: translate .45s var(--ease-smooth), clip-path .45s var(--ease-smooth), scale .08s ease;
 }
-.learn-tile:hover > img { transform: scale(1.05); }
+.learn-col > .eyes:not(.is-up) { --rise: 100%; }
+.learn-col > .eyes.is-up { --rise: 0%; }
+@media (prefers-reduced-motion: reduce) { .learn-col > .eyes { transition: none; } }
 .learn-tile:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 /* Bubble-shaped tiles (BRAND.md → Bubble construction): script.js cuts each tile into the brand bubble for its size */
 /* Anything script.js cuts into a brand shape (clip-path: the learn tiles, the hero's bubble button) would lose its
@@ -966,29 +982,38 @@ body.is-menu-open { overflow: hidden; }
 .is-shaped:focus-visible > .shape-ring { opacity: 1; }
 .shape-ring path { fill: none; stroke: var(--color-primary); stroke-width: 6; }
 .btn--inline .shape-ring path { stroke: var(--color-neutral-ink); }
-.learn-tile > img[src*="video-river"] { object-position: center 78%; }
-.learn-tile > img[src*="automation-car-factory"] { object-position: center 40%; }   /* keeps the worker's head in the short tile */
-/* dark scrim so the title is always readable */
-.learn-tile::after {
-  content: "";
-  position: absolute; inset: 0;
-  z-index: 1;
-  background: linear-gradient(to top,
-    color-mix(in oklab, var(--color-ink-950) 88%, transparent) 0%,
-    color-mix(in oklab, var(--color-ink-950) 55%, transparent) 32%,
-    transparent 62%);
-}
+/* The course that teaches the topic (a detail: Label), then the card title (Subhead, BRAND.md → Typography: card
+   titles), black on the feed colour */
+.learn-tile__pkg { position: relative; z-index: 2; @apply text-aqb-label; }
 .learn-tile__title {
-  position: absolute;
-  inset-inline: --spacing(7);
-  bottom: --spacing(6);
+  position: relative;
   z-index: 2;
-  @apply text-aqb-body-m;
-  color: var(--color-white);
-  text-shadow: 0 2px 14px color-mix(in oklab, var(--color-black) 45%, transparent);
+  @apply text-aqb-subhead;
   text-wrap: balance;
   overflow-wrap: anywhere;
 }
+
+/* Eyes — the brand's eyes as a graphic (BRAND.md → Eyes): an inline 96 × 50 SVG, two white ovals with black pupils,
+   no outline. data-look turns the pupils on the brand's oval (9 sideways, 10.54 up or down, in the drawing's units);
+   no data-look = looking at you */
+.eyes { display: block; height: auto; aspect-ratio: 96 / 50; overflow: visible; }
+.eyes__white { fill: var(--color-white); }
+.eyes__pupil {
+  fill: var(--color-black);
+  translate: calc(var(--look-x, 0) * 1px) calc(var(--look-y, 0) * 1px);
+  transition: translate .35s var(--ease-smooth);
+}
+.eyes[data-look="left"]       { --look-x: -9;   --look-y: 0; }
+.eyes[data-look="right"]      { --look-x: 9;    --look-y: 0; }
+.eyes[data-look="up"]         { --look-x: 0;    --look-y: -10.54; }
+.eyes[data-look="down"]       { --look-x: 0;    --look-y: 10.54; }
+.eyes[data-look="up-left"]    { --look-x: -6.4; --look-y: -7.45; }
+.eyes[data-look="up-right"]   { --look-x: 6.4;  --look-y: -7.45; }
+.eyes[data-look="down-left"]  { --look-x: -6.4; --look-y: 7.45; }
+.eyes[data-look="down-right"] { --look-x: 6.4;  --look-y: 7.45; }
+.eyes { transition: scale .08s ease; }
+.eyes.is-blink { scale: 1 .1; }   /* a blink: the eyes close to a line through their middle (script.js) */
+@media (prefers-reduced-motion: reduce) { .eyes, .eyes__pupil { transition: none; } }
 
 /* ============================================================
    ICONS (Lucide + Simple Icons brand logos, tinted with currentColor via mask)
@@ -1056,7 +1081,7 @@ body.is-menu-open { overflow: hidden; }
 }
 .teachers__row::-webkit-scrollbar { display: none; }
 /* soft fade on the right while more cards follow; removed at the end of the row */
-.teachers__row:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - --spacing(35)), transparent); }
+.teachers__row:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - var(--edge)), transparent); }   /* only the margin fades */
 
 .teacher {
   position: relative;
@@ -1104,6 +1129,7 @@ body.is-menu-open { overflow: hidden; }
 .teacher__name { @apply text-aqb-subhead; color: var(--color-ink-900); }
 .teacher__role { @apply text-aqb-label; color: var(--color-ink-900); }
 .teacher__bio { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
+.teacher__meta { @apply text-aqb-label; color: var(--color-ink-600); }   /* hours · courses: a detail line (SemiBold), not tags that look tappable */
 
 .chips { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 .chip {
@@ -1121,43 +1147,31 @@ body.is-menu-open { overflow: hidden; }
    07 · STATS («Թվերով»)
    ============================================================ */
 .stats {
-  display: flex; flex-direction: column; gap: var(--title-gap);
-  background: var(--surface);
-  box-shadow: 0 0 0 100vmax var(--surface);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 100vmax var(--color-primary);
   clip-path: inset(0 -100vmax);
+  color: var(--color-white);
 }
-.stats__grid { display: flex; gap: var(--card-gap); }
-.stats__col { display: flex; flex-direction: column; gap: var(--card-gap); }
-.stats__col--left { width: --spacing(208.5); flex: none; }
-.stats__col--right { flex: 1; }
-
-.stat-card {
-  position: relative;
-  overflow: hidden;
-  background: var(--color-white);
-  border-radius: var(--radius-3xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: --spacing(4);
+.stats__row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--card-gap); }
+.stat { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); }   /* the number, its label under it */
+.stat__num {
+  @apply text-aqb-display-l italic;
+  white-space: nowrap;
+  text-box: trim-both cap alphabetic;
 }
-.stat-card--hero { height: --spacing(119); padding-bottom: --spacing(24); }   /* room for the letter crowd along the bottom */
-.stat-card--tools { height: --spacing(65); padding-bottom: --spacing(29.5); }
-.stat-card--fill { flex: 1; flex-direction: column; gap: --spacing(5); }
+.stat__label { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3); @apply text-aqb-body-m; }
 
-/* number + stars as one block; the stars stretch to the full width of the number + label */
-.stat-group { display: flex; flex-direction: column; align-items: stretch; gap: --spacing(4); }
-
-/* 4.9 card: five stars in one element — the star shape is a repeating mask; the gold part
+/* 4.9: five stars in one element — the star shape is a repeating mask; the gold part
    of the gradient covers --rating / 5 of the row, the rest stays grey */
 .stars {
   display: block;
+  width: --spacing(28);
   aspect-ratio: 5.6;               /* 5 stars + 4 gaps of .15 star → stars scale with the width */
   background: linear-gradient(90deg, var(--color-feed-yellow) calc(var(--rating) / 5 * 100%), var(--color-grey-300) 0);   /* a hard stop, not a fade: the filled share of the stars */
   mask: url("assets/icons/star.svg") 0 0 / auto 100% space no-repeat;
 }
 
-/* 6 card: the teachers' photos overlapping, like a facepile; links to the teachers section */
+/* Face pile: people's photos overlapping; links to where they're introduced */
 .face-pile { display: flex; }
 .face-pile img {
   width: --spacing(12); height: --spacing(12);
@@ -1175,25 +1189,11 @@ body.is-menu-open { overflow: hidden; }
 .face-pile img:nth-child(5) { transition-delay: 120ms; }
 .face-pile img:nth-child(6) { transition-delay: 150ms; }
 
-/* Crowd of Armenian-letter avatars along the bottom of the 10,000+ card */
-.crowd {
-  position: absolute; bottom: --spacing(4); left: 0; right: 0;
-  overflow: hidden;
-  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(16), var(--color-black) calc(100% - --spacing(16)), transparent 100%);
-}
-.crowd__track {
-  display: flex; width: max-content;
-  padding: --spacing(1) 0;
-  animation: marquee 60s linear infinite;
-}
-.crowd:hover .crowd__track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .crowd__track { animation: none; } }
-
 .avatar {
   flex: none;
   width: --spacing(16); height: --spacing(16);
   border-radius: var(--radius-full);
-  border: 3px solid var(--color-white);
+  border: 3px solid var(--av-ring, var(--color-white));   /* --av-ring: the ground's colour on a colour band, so the ring only separates overlaps */
   background: var(--av, var(--color-primary));
   overflow: hidden;
   transition: transform .2s ease;
@@ -1201,13 +1201,12 @@ body.is-menu-open { overflow: hidden; }
 /* Armenian letter on the coloured disc: white on Blue / Ink, black on the rest (--av-fg; BRAND.md text-on-colour) */
 .avatar--letter {
   display: grid; place-items: center;
+  padding-top: .2em;   /* Adelle Sans ARM sets its capitals .1em above the line's middle (ascent 88, descent 37, caps ≈73 per 100): this moves them to the circle's centre */
   @apply text-aqb-subhead;
   color: var(--av-fg, var(--color-white));
   user-select: none;
 }
 .ladder .avatar--letter { @apply text-aqb-label; }
-.crowd .avatar { margin-right: calc(--spacing(2.5) * -1); }   /* slight overlap, like a facepile */
-.crowd .avatar:hover { transform: translateY(calc(--spacing(1) * -1)) scale(1.08); position: relative; z-index: 1; }
 /* Palette: brand blue / orange / violet + playful extras, cycled */
 .avatar:nth-child(8n+1) { --av: var(--color-primary); }
 .avatar:nth-child(8n+2) { --av: var(--color-accent);         --av-fg: var(--color-black); }
@@ -1218,98 +1217,46 @@ body.is-menu-open { overflow: hidden; }
 .avatar:nth-child(8n+7) { --av: var(--color-feed-sky);       --av-fg: var(--color-black); }
 .avatar:nth-child(8n+8) { --av: var(--color-ink-900); }
 
-/* AI tools in the 20+ card: two rows of pills drifting in opposite directions.
-   script.js duplicates each track so translateX(-50%) loops seamlessly. */
-.tool-rows {
-  position: absolute; left: 0; right: 0; bottom: --spacing(5);
-  display: flex; flex-direction: column; gap: --spacing(2.5);
-  overflow: hidden;
-  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(16), var(--color-black) calc(100% - --spacing(16)), transparent 100%);
-}
-.tool-rows__track {
-  display: flex; gap: --spacing(2.5); width: max-content;
-  padding-right: --spacing(2.5);   /* = the gap, so -50% lands exactly on the copy */
-  animation: marquee 45s linear infinite;
-}
-.tool-rows__track--reverse { animation-direction: reverse; animation-duration: 50s; }
-.tool-rows:hover .tool-rows__track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) { .tool-rows__track { animation: none; } }
-
-.stat { display: flex; align-items: center; gap: --spacing(4); white-space: nowrap; }
-.stat--stacked { flex-direction: column; align-items: flex-start; gap: --spacing(6.5); }
-.stat__num {
-  @apply text-aqb-display-l italic;
-  color: var(--color-ink-900);
-  text-box: trim-both cap alphabetic;
-}
-.stat__num--xl { @apply text-aqb-display-xl; }
-.stat__label { @apply text-aqb-body-m; color: var(--color-ink-700); white-space: normal; }
-
 /* ============================================================
    08 · MISSION
    ============================================================ */
 .mission {
-  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--color-feed-teal);
+  box-shadow: 0 0 0 100vmax var(--color-feed-teal);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-black);
 }
-.mission__row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: --spacing(12); position: relative; z-index: 1; }
-.mission__title { white-space: nowrap; }
-.mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); padding-top: var(--title-gap); }
-.mission__text { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); max-width: --spacing(86); }
+/* One composition (BRAND.md → Hierarchy): the kicker sets the scene, the headline is the goal; the paragraph and
+   the button sit beside them on wide screens, under them on narrow ones */
+.mission__row { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: --spacing(12); }   /* the paragraph starts level with the kicker */
+.mission__head { display: flex; flex-direction: column; gap: --spacing(3); }
+.mission__kicker { @apply text-aqb-body-m; }
+.mission__title { @apply text-aqb-display-l italic; }
+.mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); max-width: --spacing(120); }
+.mission__text { @apply text-aqb-body-s; }
 
-.mission__right { width: --spacing(100); display: flex; flex-direction: column; gap: --spacing(2.5); }
-.mission__num {   /* same as the stat numbers */
-  @apply text-aqb-display-l italic; color: var(--color-ink-900);
-  white-space: nowrap;
-  text-box: trim-both cap alphabetic;
+/* The crowd: the brand's eyes (BRAND.md → Eyes), a row of "people" in three sizes standing on one line, drifting under
+   the headline in a seamless loop (script.js builds the row twice; the CSS moves it by half). As wide as the headline:
+   contain keeps the long track from widening the column. It pauses on hover and stands still for reduced motion. */
+.crowd {
+  width: 100%;
+  contain: inline-size;
+  margin-top: --spacing(6);
+  overflow: hidden;
+  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(8), var(--color-black) calc(100% - --spacing(8)), transparent 100%);   /* a short fade at each end */
 }
-.mission__label { @apply text-aqb-label; color: var(--color-ink-600); white-space: nowrap; }
-.progress { position: relative; width: --spacing(85.5); height: --spacing(2); background: var(--surface); border-radius: var(--radius-full); overflow: hidden; }
-.progress__fill { position: absolute; inset: 0 auto 0 0; overflow: hidden; background: var(--color-primary); border-radius: var(--radius-full) 0 0 var(--radius-full); }
-.progress__fill.is-filling { transition: width 1.8s cubic-bezier(.33, 1, .68, 1); }   /* ease-out, in step with the count-up in script.js */
-/* soft light gliding along the filled part in a seamless loop, so the bar feels "in progress".
-   The layer is 2× the bar wide with two identical bands; shifting it by exactly half its
-   width lands on the same frame, so there's no jump between loops. */
-.progress__fill::after {
-  content: ""; position: absolute; top: 0; bottom: 0; left: -100%;
-  width: 200%;
-  background: linear-gradient(90deg,
-    transparent 0%, color-mix(in oklab, var(--color-white) 50%, transparent) 25%, transparent 50%,
-    color-mix(in oklab, var(--color-white) 50%, transparent) 75%, transparent 100%);
-  animation: progress-sheen 2.4s linear infinite;
-  will-change: transform;
+.crowd__track {
+  display: flex; align-items: flex-end; gap: --spacing(5);
+  width: max-content;
+  padding: --spacing(1) --spacing(5) --spacing(1) 0;   /* right padding = the gap, so -50% lands exactly on the copy */
+  animation: marquee 70s linear infinite;
 }
-@media (prefers-reduced-motion: reduce) { .progress__fill::after { animation: none; } }
-.mission__note { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); max-width: --spacing(96); }
-
-.mission__lighthouse {
-  position: absolute;
-  left: 50%; top: 50%;
-  height: calc(100% - --spacing(6)); width: auto;   /* SVG drawn by script.js; almost the full height of the section */
-  overflow: visible;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  /* the drawing's palette (script.js fills the SVG with var(--lh-…)) */
-  /* Teal: 50–400 lightened toward white, 500 = Teal, 600–900 darkened toward black */
-  --lh-50:  color-mix(in oklab, var(--color-feed-teal) 10%, var(--color-white));
-  --lh-100: color-mix(in oklab, var(--color-feed-teal) 20%, var(--color-white));
-  --lh-200: color-mix(in oklab, var(--color-feed-teal) 40%, var(--color-white));
-  --lh-300: color-mix(in oklab, var(--color-feed-teal) 60%, var(--color-white));
-  --lh-400: color-mix(in oklab, var(--color-feed-teal) 80%, var(--color-white));
-  --lh-500: var(--color-feed-teal);
-  --lh-600: color-mix(in oklab, var(--color-feed-teal) 85%, var(--color-black));
-  --lh-700: color-mix(in oklab, var(--color-feed-teal) 70%, var(--color-black));
-  --lh-800: color-mix(in oklab, var(--color-feed-teal) 55%, var(--color-black));
-  --lh-900: color-mix(in oklab, var(--color-feed-teal) 40%, var(--color-black));
-  /* the light: Yellow */
-  --lh-glow-100: color-mix(in oklab, var(--color-feed-yellow) 25%, var(--color-white));
-  --lh-glow-200: color-mix(in oklab, var(--color-feed-yellow) 50%, var(--color-white));
-  --lh-glow-300: color-mix(in oklab, var(--color-feed-yellow) 75%, var(--color-white));
-  --lh-glow-400: var(--color-feed-yellow);
-}
-@media (width < theme(--breakpoint-xl)) { .mission__lighthouse { display: none; } }   /* no room between the two text blocks */
+.crowd:hover .crowd__track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .crowd__track { animation: none; } }
+.crowd .eyes { flex: none; width: --spacing(14); }
+.crowd .eyes:nth-child(3n+2) { width: --spacing(11); }
+.crowd .eyes:nth-child(5n+3) { width: --spacing(17); }
 
 /* ============================================================
    09 · REFERRAL
@@ -1332,6 +1279,7 @@ body.is-menu-open { overflow: hidden; }
 
 /* Friends ladder: 10 Armenian-letter avatars, #1 and #10 are the reward steps */
 .ladder {
+  --av-ring: var(--surface);   /* no white rings: the ring is the band's grey */
   position: relative;
   display: flex; justify-content: space-between;
 }
@@ -1433,22 +1381,17 @@ body.is-menu-open { overflow: hidden; }
 /* ============================================================
    10 · FAQ
    ============================================================ */
-.faq {
-  display: flex; flex-direction: column; align-items: center;   /* title on top, questions below, centred */
-  gap: var(--title-gap);
+.faq {   /* on the page grid like every section: the title on the left, the questions beside it (stacked below lg) */
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: start;
+  gap: var(--title-gap) var(--card-gap);
 }
-.faq__title { text-align: center; }
-.faq__list { width: 100%; max-width: --spacing(175); display: flex; flex-direction: column; gap: --spacing(2); }
-.faq__item {
-  background: var(--color-white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-xl);
-  overflow: hidden;
-}
+.faq__list { width: 100%; display: flex; flex-direction: column; }
+.faq__item { border-bottom: 1px solid var(--line); }   /* a list split by lines, not a stack of boxes */
+.faq__item:first-child { border-top: 1px solid var(--line); }
 .faq__item summary {
   display: flex; align-items: center; justify-content: space-between; gap: --spacing(3);
-  padding: --spacing(5);
-  @apply text-aqb-label; color: var(--color-ink-600);
+  padding: --spacing(5) 0;
+  @apply text-aqb-body-s; font-weight: var(--font-weight-detail); color: var(--color-ink-900);   /* the questions are what people scan: Body S in SemiBold */
   cursor: pointer;
   list-style: none;
 }
@@ -1461,10 +1404,10 @@ body.is-menu-open { overflow: hidden; }
   transition: transform .2s;
 }
 .faq__item[open] summary::after { transform: rotate(180deg); }
-.faq__item[open] summary { color: var(--color-ink-900); font-weight: var(--font-weight-detail); }
+
 .faq__answer {
   display: flex; flex-direction: column; gap: --spacing(3);
-  padding: 0 --spacing(5) --spacing(5.5);
+  padding: 0 0 --spacing(6);
   @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700);
 }
 .faq__answer strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
@@ -1535,6 +1478,7 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 .footer {
   background: var(--surface);
+  border-top: 1px solid var(--line);
   padding: --spacing(16) var(--page-x) --spacing(35);  /* extra bottom room: the webinar bar is fixed there */
   display: flex; flex-direction: column; gap: --spacing(8);
 }
@@ -1669,7 +1613,6 @@ body.is-menu-open { overflow: hidden; }
    RESPONSIVE
    ============================================================ */
 @media (width < theme(--breakpoint-xl)) {
-  .stats__col--left { width: 58%; }
   /* Webinar bar + floating buttons stay on one bottom line. The open contact row doesn't fit beside the
      bar here, so while it's open the bar folds into its CTA at the start of the row, styled like a .fab:
      48px circle, white icon on the bar's green. Closing the group brings the full bar back. */
@@ -1726,13 +1669,15 @@ body.is-menu-open { overflow: hidden; }
   .nav__item:not(.is-open) .subnav__panel { visibility: hidden; transition: visibility 0s .35s; }   /* collapsed links can't be tabbed to */
   .subnav__cols { padding: --spacing(3) --spacing(4) 0; gap: --spacing(4) --spacing(6); }
   .subnav-promo { margin: 0 0 --spacing(2); }
-  .packages { grid-template-columns: 1fr; row-gap: --spacing(8); max-width: --spacing(140); margin: 0 auto; width: 100%; }
+  .packages { grid-template-columns: minmax(0, 1fr); row-gap: --spacing(8); max-width: --spacing(140); margin: 0 auto; width: 100%; }   /* minmax: a long word never pushes a card past the screen */
+  .pkg--bundle { order: -1; }   /* stacked: the recommended plan comes first */
   .pkg-spot { display: none; }   /* stacked cards: the tiles just scroll to their package */
-  .pro-grid { grid-template-columns: 1fr; max-width: --spacing(140); margin: 0 auto; }
+  .pro-grid { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); margin: 0 auto; width: 100%; }   /* width: in the flex column it would shrink to nothing (the cards have no content width) */
   .pro-card { height: --spacing(80); }
-  .learn-tile { flex-basis: min(var(--w, --spacing(96)), calc(100vw - --spacing(20))); height: clamp(--spacing(112), 56vh, --spacing(152)); }
-  .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(12); }
+  .learn-grid { --learn-col-w: calc((100% - 2 * var(--card-gap)) / 3); --learn-h: --spacing(75); }   /* three tiles in view */
+  .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
   .referral__panel { flex-direction: column; }
+  .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
 }
 
@@ -1745,14 +1690,14 @@ body.is-menu-open { overflow: hidden; }
   .footer__logo img { height: --spacing(4); }
   .subnav__cols { grid-template-columns: 1fr; }
   .subnav__group + .subnav__group { padding-top: --spacing(4); border-top: 1px solid var(--line); }   /* stacked: split AI գրագիտություն / PRO */
-  .hero { --header-h: --spacing(16); --hero-title-size: var(--text-aqb-headline-h2); padding-left: --spacing(4); padding-right: --spacing(4); }
+  .hero { --header-h: --spacing(16); --hero-top: clamp(--spacing(16), calc(21svh - --spacing(14)), --spacing(32)); --hero-title-size: var(--text-aqb-headline-h2); padding-left: --spacing(4); padding-right: --spacing(4); }   /* the air under the nav grows with the phone's height; short phones (SE) keep their room for the drawing */
   .walk { aspect-ratio: 4 / 3; }   /* a taller frame, so each scene fills the phone's width */
   .hero__title { @apply text-aqb-headline-h2; }
   /* one row on the bottom line: [webinar bar][contact][↑], all 48px tall. The bar is anchored left
      (not centred) and leaves room for the closed row, so it can fold into the open one (see xl above) */
   .promo {
     left: --spacing(4); bottom: --spacing(4);
-    width: calc(100% - --spacing(36)); max-width: none;   /* both gutters (4 + 4) + the closed row (contact 12 + ↑ 12 + gap 2) + a gap (2) */
+    width: calc(100% - --spacing(22)); max-width: none;   /* both gutters (4 + 4) + the contact button (12) + a gap (2) */
     gap: --spacing(3); padding: --spacing(1) --spacing(1) --spacing(1) --spacing(4);   /* the 40px button with the 4px inset of .fab-group */
     overflow: hidden;
     transform: translateY(calc(100% + --spacing(15)));
@@ -1765,34 +1710,28 @@ body.is-menu-open { overflow: hidden; }
   }
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
-  .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
+  .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(46) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter; the open row is group 32 + ✕ 12 + a gap (no ↑ on phones) */
   .pkg { padding: --spacing(6); }
-  .pkg__name { @apply text-aqb-headline-h2; }
-  .pkg__gift { width: --spacing(36); height: --spacing(36); top: --spacing(16); right: calc(--spacing(8) * -1); }
-  .pkg--bundle .pkg__head { padding-right: --spacing(22); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .courses__top { align-items: flex-end; }
   .learn-grid { padding-right: --spacing(4); margin-right: calc(--spacing(4) * -1); }
-  .learn-tile {
-    flex-basis: min(var(--w, --spacing(92)), 86vw);
-    height: clamp(--spacing(96), 58vh, --spacing(128));
-  }
-  .learn-tile__title { inset-inline: --spacing(5); bottom: --spacing(5); @apply text-aqb-body-s; }
+  .learn-grid { --learn-col-w: 72%; --learn-h: --spacing(60); }    /* one tile in view, the next one peeking */
+  .learn-tile { padding: --spacing(5); }
+  .learn-tile__title { @apply text-aqb-body-m; overflow-wrap: normal; }   /* one step down on phones; long words wrap whole */
+
   .teachers__row { padding-right: --spacing(4); }
   .teachers__top { padding-right: --spacing(4); }
   .teacher { width: 78vw; }
-  .teacher__photo { height: --spacing(80); }
+  .teacher__photo { height: --spacing(64); }
   .teacher__body { padding: --spacing(5) --spacing(6) --spacing(6); gap: --spacing(4.5); }
-  .stats__grid { flex-direction: column; }
-  .stats__col--left { width: 100%; }
-  .stat-card--hero { height: --spacing(75); }
-  .stat__num, .mission__num { @apply text-aqb-headline-h1; }
-  .stat__num--xl { @apply text-aqb-display-l; }
-  .stat-card--fill { min-height: --spacing(45); }
-  .mission__title { white-space: normal; }
-  .mission__right, .progress, .mission__label { width: 100%; white-space: normal; }
-  .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
+  .stats__row { grid-template-columns: minmax(0, 1fr); gap: --spacing(8); }
+  .stat__num { @apply text-aqb-headline-h1; }
+  .mission__title { @apply text-aqb-headline-h1; }   /* phones: Display steps down to Headline H1 */
+  .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+  .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */
+  /* No back-to-top on phones: the bottom row is [webinar bar][contact] */
+  .fab--top { display: none; }  .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
   .ladder .avatar--letter { @apply text-aqb-caption; }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }
   .ladder::before { left: --spacing(3.5); right: --spacing(3.5); top: --spacing(3.5); }
@@ -1806,6 +1745,15 @@ body.is-menu-open { overflow: hidden; }
   .footer__bottom { flex-direction: column; align-items: flex-start; }
   .footer__end { align-items: flex-start; }
   .footer__legal { flex-direction: column; gap: --spacing(2); }
+  /* Tap targets: footer links get 36px rows instead of 16px lines 10px apart, the social icons a 40px area */
+  .footer__col { gap: 0; }
+  .footer__col a { padding-block: --spacing(2.5); }
+  .footer__social { gap: --spacing(1); margin-top: 0; }
+  .footer__social a { padding: --spacing(2.5); margin: 0 calc(--spacing(2.5) * -1); }
+  .footer__social a + a { margin-left: 0; }
+  .footer__legal a { padding-block: --spacing(1.5); }
+  /* On Black the edge fade read as a smudge on the peeking tile: phones crop it cleanly */
+  .learn-grid:not(.is-end) { mask: none; }
 }
 
 } /* end @layer components */
@@ -1815,11 +1763,9 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 @keyframes marquee { to { transform: translateX(-50%); } }
 @keyframes soon-shimmer { from { transform: translateX(0); } to { transform: translateX(50%); } }
-@keyframes progress-sheen { from { transform: translateX(0); } to { transform: translateX(50%); } }
 @keyframes fab-group-in { from { opacity: 0; scale: .9; } }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
-@keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
   25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }

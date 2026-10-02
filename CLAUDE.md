@@ -20,20 +20,21 @@ There's no component folder: the **atomic components are the shared classes in `
 
 | Atom | Classes | Use for |
 |---|---|---|
-| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons) · `--md` (56px) · `--lg` (64px, hero only); optional `--block`; `--inline`: a word inside a headline that is the button (keeps the headline's type, cut to the brand chat bubble by `script.js`; the hero's «Սովորի՛ր») | every clickable action (links styled as buttons too) |
+| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline`; one size: `--sm` (40px) · `--base` (48px, same as the floating buttons) · `--md` (56px) · `--lg` (64px, hero only); optional `--block`; `--inline`: a word inside a headline that is the button (keeps the headline's type, cut to the brand chat bubble by `script.js`; not on the page at the moment) | every clickable action (links styled as buttons too) |
 | Pill / tag | `.pill` + `--deal` (Orange, white −%) · `--save` (pale green) · `--gift` (violet, white text) — the Bundle's own colours · `--zoom` (grey) | discounts, labels, badges |
 | Icon | `.ic` + `.ic--calendar` · `--calendar-plus` (register) · `--clock` · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
-| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (webinar campaign green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
+| Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (webinar campaign green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it; no `--top` on phones | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
 | Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
-| Round arrow | `.pro-card__arrow` / `.teachers__arrow` | circular arrow buttons |
+| Round arrow | `.pro-card__arrow` / `.teachers__arrow` (`.courses__arrow` on Black) | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |
 | Chip | `.chip` (in `.chips`) | filter / topic chips |
 | Tool logo | `.tool-pill` (`--lg`), `.tool-stack` | AI-tool logos |
 | Form field | `.field`, `.field__label`, `.field__input` (`--grouped`), `.field__prefix` | every input |
 | Nav link | `.nav__link`, `.subnav__link` | navigation text links |
 | Section title | `.section-title` | every section heading |
-| Avatar | `.avatar` (`--letter`), `.face-pile` | people |
-| Bubble shape | elements cut into a brand shape by `script.js` (`shapeElement`): the learn tiles (learnShapes: tail / step / slit per tile, nothing cut over the title) and the hero's chat-bubble button (heroBubble); `.shape-ring` shows keyboard focus | shaping containers themselves, never patterns inside them (BRAND.md → Graphic elements) |
+| Avatar | `.avatar` (`--letter`), `.face-pile`. Letters: initials real Armenian names start with (no Ը, Ր, Ց…) | people |
+| Eyes | `.eyes` (inline 96 × 50 SVG: `.eyes__white`, `.eyes__pupil`) + `data-look` (left · right · up · down · up-left · up-right · down-left · down-right; none = looking at you); `.is-blink` closes them | the brand's eyes as a character: peeking from just outside a bubble's corner, never on the shape (BRAND.md → Bubble construction: Peek). On the learn tiles `script.js` (learnShapes) places them; they come out on hover and follow the pointer. `.crowd`: a row of eyes drifting under the mission headline (missionCrowd), blinking, glancing, looking at the pointer |
+| Bubble shape | elements cut into a brand shape by `script.js` (`shapeElement`): the learn tiles (learnShapes: tail / step / slit per tile, nothing cut over the course line and title; cut in as the row scrolls into view, a little deeper on hover) and the chat-bubble button `.btn--inline` (heroBubble); `.shape-ring` shows keyboard focus | shaping containers themselves, never patterns inside them (BRAND.md → Graphic elements) |
 
 Rules:
 - **Never restyle an atom locally.** Don't give one button a new padding, radius, colour or font size inside a section. If something is really needed, add a **variant** to the atom (e.g. `.btn--ghost`, `.pill--info`) next to its siblings in `tailwind.css`, so it's reusable.

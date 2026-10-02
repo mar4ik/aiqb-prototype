@@ -649,6 +649,20 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
+   02 · Nav call to action — steps back while the hero's own «Ընտրել դասընթաց»
+   is on screen, so the first screen asks once (body.is-hero-cta)
+   ============================================================ */
+(function navCta() {
+  const heroCta = document.querySelector('.hero__actions .btn');
+  const navCta = document.querySelector('.nav__actions .btn');
+  if (!heroCta || !navCta || !('IntersectionObserver' in window)) return;
+  new IntersectionObserver(([entry]) => {
+    document.body.classList.toggle('is-hero-cta', entry.isIntersecting);
+    navCta.inert = entry.isIntersecting;   // hidden, so not tabbable
+  }).observe(heroCta);
+})();
+
+/* ============================================================
    12 · Back to top
    The last floating button shows once the first screen is scrolled
    past (body.is-past-fold) and scrolls back up; focus goes to the logo
@@ -709,7 +723,6 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    ============================================================ */
 (function cardSliders() {
   const sliders = [
-    { row: '.learn-grid', arrows: '.courses__arrow', item: '.learn-tile' },
     { row: '.teachers__row', arrows: '.teachers__arrow', item: '.teacher' },
   ];
 
@@ -744,12 +757,99 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   07 · STATS — duplicate each [data-loop] track (letter crowd, tool logos)
-   so the CSS scroll (translateX 50%) loops seamlessly
+   05d · «Ի՞նչ սովորել» slider — the arrows step one view: forward to the first tile that isn't fully in view,
+   back by as much. Arrows switch off at the ends, and the right-edge fade goes once the last tile is in.
    ============================================================ */
-document.querySelectorAll('[data-loop]').forEach((track) => {
-  Array.from(track.children).forEach((li) => track.appendChild(li.cloneNode(true)));
-});
+(function learnSlider() {
+  const row = document.querySelector('.learn-grid');
+  const arrows = [...document.querySelectorAll('.courses__arrow')];
+  if (!row || !arrows.length) return;
+  const cols = [...row.querySelectorAll('.learn-col')];
+  const stops = () => cols.map((c) => row.scrollLeft + c.getBoundingClientRect().left - row.getBoundingClientRect().left);
+
+  function update() {
+    const max = row.scrollWidth - row.clientWidth - 2;
+    arrows[0].disabled = row.scrollLeft <= 2;
+    arrows[1].disabled = row.scrollLeft >= max;
+    row.classList.toggle('is-end', row.scrollLeft >= max);
+  }
+  arrows.forEach((btn) => btn.addEventListener('click', () => {
+    const dir = Number(btn.dataset.dir), x = row.scrollLeft, all = stops();
+    const colW = cols[0].getBoundingClientRect().width;
+    const view = Math.max(colW, row.getBoundingClientRect().width - parseFloat(getComputedStyle(row).paddingRight));   // the page column
+    const next = dir > 0
+      ? all.find((p) => p + colW > x + view + 4)                        // the first tile not fully in view
+      : [...all].reverse().find((p) => p <= Math.max(0, x - view) + 4) ?? 0;
+    row.scrollTo({ left: next ?? row.scrollWidth });
+  }));
+  row.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+
+/* ============================================================
+   08 · MISSION — the crowd: the brand's eyes drifting under «1,000,000 AI-գրագետ հայ», each pair someone who
+   learned. The row is built twice (the CSS drift moves it by half, so it loops seamlessly). Now and then a pair
+   blinks or glances somewhere new; while the pointer is over the band, they all look at it (mouse screens only).
+   It only works while the band is on screen, and stands still for reduced motion.
+   ============================================================ */
+(function missionCrowd() {
+  const track = document.querySelector('.crowd__track');
+  if (!track) return;
+  const COUNT = 16;
+  const LOOKS = ['left', 'right', 'up', 'down', 'up-left', 'up-right', 'down-left', 'down-right', null];   // null: at you
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval (BRAND.md → Eyes)
+  const pick = (list) => list[Math.floor(Math.random() * list.length)];
+  const look = (eyes, dir) => { if (dir) eyes.dataset.look = dir; else delete eyes.dataset.look; };
+
+  for (let i = 0; i < COUNT; i++) { const eyes = makeEyes(); look(eyes, pick(LOOKS)); track.append(eyes); }
+  [...track.children].forEach((eyes) => track.append(eyes.cloneNode(true)));
+  const crowd = [...track.children];
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let onScreen = false, following = false;
+  new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(track);
+
+  (function blink() {
+    setTimeout(() => {
+      if (onScreen) {
+        const eyes = pick(crowd);
+        eyes.classList.add('is-blink');
+        setTimeout(() => eyes.classList.remove('is-blink'), 140);
+      }
+      blink();
+    }, 300 + Math.random() * 700);
+  })();
+  (function glance() {
+    setTimeout(() => {
+      if (onScreen && !following) look(pick(crowd), pick(LOOKS));
+      glance();
+    }, 400 + Math.random() * 900);
+  })();
+
+  const band = track.closest('section');
+  if (!band || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  let px = 0, py = 0, raf = 0;
+  const follow = () => {
+    raf = 0;
+    crowd.forEach((eyes) => {
+      const box = eyes.getBoundingClientRect();
+      const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
+      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;
+      eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
+      eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
+    });
+  };
+  band.addEventListener('pointermove', (e) => {
+    if (e.pointerType === 'touch') return;
+    following = true; px = e.clientX; py = e.clientY;
+    raf ||= requestAnimationFrame(follow);
+  });
+  band.addEventListener('pointerleave', () => {
+    following = false;
+    crowd.forEach((eyes) => { eyes.style.removeProperty('--look-x'); eyes.style.removeProperty('--look-y'); });
+  });
+})();
 
 /* ============================================================
    09 · REFERRAL — «Ստեղծել պրոմոկոդ» stays disabled until
@@ -916,6 +1016,27 @@ function shapeElement(el, pts) {
 }
 const canClip = 'clipPath' in document.documentElement.style;
 
+// The brand's eyes as an inline 96 × 50 SVG (.eyes: white ovals, black pupils; data-look / --look-x, --look-y turn the
+// pupils) — the learn tiles' peeking eyes (05c) and the mission's crowd (08)
+function makeEyes() {
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'eyes');
+  svg.setAttribute('viewBox', '0 0 96 50');
+  svg.setAttribute('aria-hidden', 'true');
+  [23.05, 72.94].forEach((cx) => {              // the brand's eyes (index.html, the hero's walk), no ™ as a character
+    const white = document.createElementNS(NS, 'ellipse');
+    Object.entries({ class: 'eyes__white', cx, cy: 24.98, rx: 23.05, ry: 24.98 }).forEach(([k, v]) => white.setAttribute(k, v));
+    svg.append(white);
+  });
+  [23.05, 72.94].forEach((cx) => {
+    const pupil = document.createElementNS(NS, 'circle');
+    Object.entries({ class: 'eyes__pupil', cx, cy: 24.98, r: 10.93 }).forEach(([k, v]) => pupil.setAttribute(k, v));
+    svg.append(pupil);
+  });
+  return svg;
+}
+
 /* ============================================================
    03b · The hero's bubble button («Սովորի՛ր», .btn--inline)
    Cut to the brand's chat bubble at its real size: straight sides with small corners (8), the right side
@@ -952,211 +1073,181 @@ const canClip = 'clipPath' in document.documentElement.style;
    05c · Bubble-shaped tiles (BRAND.md → Bubble construction)
    Each «Ի՞նչ սովորել» tile is cut into the brand bubble: rounded rectangles merged (outer corners 24, inner
    12: the brand's 20 / 10 ratio, at the site's tile rounding), with one straight, angled tail at a top corner, a
-   stepped corner, and on some a slit in the right side. Every tile gets its own mix (SHAPES, in page order),
-   computed for its real size, and nothing is cut where the title sits. Without script the tiles stay rounded
+   stepped corner, and on some a slit in the right side where there's room. Every tile gets its own mix (SHAPES, in page order),
+   computed for its real size, and nothing is cut where the text sits. Without script the tiles stay rounded
    rectangles.
+   The eyes peek from just outside each bubble (BRAND.md → Bubble construction: Peek; Figma slide 41, «The eyes as a
+   character»: never on top of the shape): they sit on the shoulder of the cut-out top corner (the tail's if there is
+   one), beside the raised part. They only come out on hover (or keyboard focus): they rise from behind the shoulder,
+   follow the pointer and blink now and then, and sink back when the pointer leaves.
+   Shape and crop: when the row scrolls into view each tile starts as a plain rounded rectangle and its corner is cut
+   in, one tile after another. On hover the cut goes a little deeper as the eyes come up.
    ============================================================ */
 (function learnShapes() {
   const tiles = [...document.querySelectorAll('.learn-tile')];
   if (!tiles.length || !canClip) return;
-  const SHAPES = [
-    'tail-left slit',             // AI հիմունքներ — the bubble as drawn in the brandbook
-    'tail-right',                 // Պրեզենտացիաներ
-    'step-left',                  // Կայքեր
-    'step-right slit',            // Հետազոտություններ
-    'step-left tail-right slit',  // Նկարներ
-    'tail-left',                  // Վիդեոներ
-    'step-right',                 // Ավտոմատացում
-    'step-left tail-right',       // Ագենտներ
+  const SHAPES = [               // page order
+    'tail-left',                  // AI հիմունքներ
+    'step-right',                 // Նկարներ
+    'step-left tail-right slit',  // Հետազոտություն
+    'tail-right',                 // Կյանքի 10 իրավիճակ
+    'step-left',                  // Վիդեոներ
+    'tail-left slit',             // Կայքէջեր — the bubble as drawn in the brandbook
+    'step-right',                 // Առաջին նախագիծ
+    'step-left tail-right',       // Ավտոմատացում
+    'tail-right slit',            // Ագենտներ
   ];
   const R = 24, r = 12, TAIL = 22, SLIT = 12, INSET = 16;
+  const EYES_GAP = 4;                             // air between the eyes and the shape
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };        // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const eyesOf = new Map();                       // tile → its eyes (an <svg class="eyes"> in the tile's column)
+  const HOVER = 1.3;                              // how much deeper the cut goes on hover
+  const progress = new Map();                     // tile → its cut: 0 a plain rectangle · 1 the bubble · HOVER on hover
+  const animating = !reduced && 'IntersectionObserver' in window;
+
+
+  // On the shoulder of the cut-out corner (height t), clear of the raised part by EYES_GAP; outside the tile's clip
+  function placeEyes(tile, { left, right, a, t, tFull, W }) {
+    const side = left === 'tail' ? 'left' : right === 'tail' ? 'right' : left ? 'left' : right ? 'right' : null;
+    let eyes = eyesOf.get(tile);
+    if (!side) { eyes?.remove(); eyesOf.delete(tile); return; }
+    if (!eyes) {
+      eyes = makeEyes();   // hidden (below the shoulder) until the tile is hovered: .is-up
+      tile.before(eyes);
+      eyesOf.set(tile, eyes);
+    }
+    const kind = side === 'left' ? left : right;
+    const room = (kind === 'tail' ? a - TAIL : a) - 2 * EYES_GAP;   // the cut-out's width (a tail leans out at the top)
+    const w = Math.min(room, (tFull - 2 * EYES_GAP) * 96 / 50), h = w * 50 / 96;   // sized by the full cut: same size on hover
+    const x = side === 'left'
+      ? room + EYES_GAP - w                                 // left of the raised part
+      : W - room - EYES_GAP;                                // right of it
+    Object.assign(eyes.style, {
+      left: `${(tile.offsetLeft + x).toFixed(1)}px`,
+      top: `${(tile.offsetTop + t - EYES_GAP - h).toFixed(1)}px`,
+      width: `${w.toFixed(1)}px`,
+    });
+    eyes.dataset.look = side === 'left' ? 'down-right' : 'down-left';   // at rest: looking into their bubble
+  }
 
   function shape(tile, i) {
     const W = tile.clientWidth, H = tile.clientHeight;
     if (!W || !H) return;
     const has = (f) => (SHAPES[i % SHAPES.length] || '').split(' ').includes(f);
-    const title = tile.querySelector('.learn-tile__title');
-    const safe = title ? title.offsetTop - 12 : H;   // keep every cut above the title
+    const title = tile.querySelector('.learn-tile__pkg, .learn-tile__title');   // the course line sits above the title
+    const safe = title ? title.offsetTop - 12 : H;   // keep every cut above the text
+    const p = progress.get(tile) ?? 1;
     const a = clamp(W * 0.3, 56, 150);
-    const t = Math.min(clamp(H * 0.12, 28, 52), safe - 8);
+    const tFull = Math.min(clamp(H * 0.12, 28, 52), safe - 8);     // the cut's depth when the bubble is whole
+    const t = Math.max(2, Math.min(tFull * p, safe - 8));           // …and right now (crop-in, hover)
+    const tail = TAIL * Math.min(1, p);                             // the tail leans out as the cut goes in
     const s = Math.round(H * 0.38);
-    const left = t >= 20 && (has('tail-left') ? 'tail' : has('step-left') ? 'step' : null);
-    const right = t >= 20 && (has('tail-right') ? 'tail' : has('step-right') ? 'step' : null);
-    const slit = has('slit') && s >= t + 2 * R && s + SLIT + 2 * R < safe;
+    const left = tFull >= 20 && (has('tail-left') ? 'tail' : has('step-left') ? 'step' : null);
+    const right = tFull >= 20 && (has('tail-right') ? 'tail' : has('step-right') ? 'step' : null);
+    const slit = has('slit') && s >= tFull + 2 * R && s + SLIT + 2 * R < safe;
 
     const pts = [];
-    if (left) pts.push([0, t, R], [a, t, r], left === 'tail' ? [a - TAIL, 0, 0] : [a, 0, R]);
+    if (left) pts.push([0, t, R], [a, t, r], left === 'tail' ? [a - tail, 0, 0] : [a, 0, R]);
     else pts.push([0, 0, R]);
-    if (right) pts.push(right === 'tail' ? [W - a + TAIL, 0, 0] : [W - a, 0, R], [W - a, t, r], [W, t, R]);
+    if (right) pts.push(right === 'tail' ? [W - a + tail, 0, 0] : [W - a, 0, R], [W - a, t, r], [W, t, R]);
     else pts.push([W, 0, R]);
     if (slit) {
-      const d = Math.round(W * 0.38);
+      const d = Math.round(INSET + 2 + (W * 0.38 - INSET - 2) * Math.min(1, p));   // the slit opens with the cut
       pts.push([W, s, R], [W - d, s, SLIT / 2], [W - d, s + SLIT, SLIT / 2], [W - INSET, s + SLIT, R], [W - INSET, H, R]);
     } else pts.push([W, H, R]);
     pts.push([0, H, R]);
     shapeElement(tile, pts);
+    placeEyes(tile, { left, right, a, t, tFull, W });
   }
+
+  // Eases one tile's cut from where it is to `to` (ms long, after `delay`); `done` runs at the end
+  const tweens = new Map();
+  function cutTo(tile, to, ms, delay = 0, done) {
+    cancelAnimationFrame(tweens.get(tile));
+    const from = progress.get(tile) ?? 1, i = tiles.indexOf(tile);
+    const start = performance.now() + delay;
+    const ease = (x) => 1 - Math.pow(1 - x, 3);
+    (function frame(now) {
+      const k = Math.min(1, Math.max(0, (now - start) / ms));
+      progress.set(tile, from + (to - from) * ease(k));
+      shape(tile, i);
+      if (k < 1) tweens.set(tile, requestAnimationFrame(frame));
+      else done?.();
+    })(performance.now());
+  }
+
+  if (animating) tiles.forEach((tile) => progress.set(tile, 0));   // plain rectangles until the row comes into view
 
   const all = () => tiles.forEach(shape);
   all();
   const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target, tiles.indexOf(en.target))));
   tiles.forEach((tile) => resizer.observe(tile));   // reshape when a tile changes size (screen width, layout)
   document.fonts?.ready.then(all);   // titles settle once the font is in, which can move the safe line
-})();
 
-
-/* ============================================================
-   08 · MISSION — lighthouse, drawn as SVG and added to the mission section
-   Teal shading, checkered tower,
-   lantern room, railing, roof, hill; the light is warm yellow. The lantern turns: two opposite beams
-   stretch out and shrink as they sweep round (a beam pointing away passes
-   behind the tower); when one faces the viewer the windows flash and a
-   glow spreads. A thin ray shimmers above the roof. Pauses off screen.
-   ============================================================ */
-(function missionLighthouse() {
-  const mission = document.querySelector('.mission');
-  if (!mission) return;
-
-  const NS = 'http://www.w3.org/2000/svg';
-  const W = 587, H = 900, CX = 293, LY = 260;   // viewBox; lantern centre
-  const PERIOD = 7000;                           // ms per full turn of the lantern
-  const REACH = 285;                             // beam length when side-on
-  const c = (name) => `var(--lh-${name})`;   // palette lives in CSS (.mission__lighthouse): Teal 50–900, glow 100–400
-  const el = (tag, attrs = {}, parent) => {
-    const n = document.createElementNS(NS, tag);
-    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
-    parent?.append(n);
-    return n;
-  };
-  const gradient = (defs, id, stops, attrs = {}) => {
-    const g = el(attrs.r ? 'radialGradient' : 'linearGradient', { id, ...attrs }, defs);
-    for (const [offset, color, opacity = 1] of stops) {
-      el('stop', { offset, style: `stop-color:${color};stop-opacity:${opacity}` }, g);
-    }
-    return g;
-  };
-
-  const svg = el('svg', { class: 'mission__lighthouse', viewBox: `0 0 ${W} ${H}`, 'aria-hidden': 'true' });
-  const defs = el('defs', {}, svg);
-  gradient(defs, 'lh-hill', [[0, c('900')], [.45, c('600')], [1, c('200')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
-  gradient(defs, 'lh-dark', [[0, c('800')], [1, c('600')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
-  gradient(defs, 'lh-light', [[0, c('500')], [1, c('100')]], { x1: 0, y1: 0, x2: 1, y2: 1 });
-  gradient(defs, 'lh-lantern', [[0, c('700')], [1, c('400')]], { x1: 0, y1: 0, x2: 1, y2: 0 });
-  gradient(defs, 'lh-ray', [[0, c('glow-400')], [1, c('glow-300'), 0]], { x1: 0, y1: 1, x2: 0, y2: 0 });
-  gradient(defs, 'lh-halo', [[0, c('glow-200'), .95], [.5, c('glow-300'), .4], [1, c('glow-300'), 0]], { cx: .5, cy: .5, r: .5 });
-  const beamGrads = ['a', 'b'].map((k) => gradient(defs, `lh-beam-${k}`,
-    [[0, c('glow-400'), 1], [.6, c('glow-300'), .85], [1, c('glow-300'), 0]],   // rich enough to read on white
-    { gradientUnits: 'userSpaceOnUse', x1: CX, y1: LY, x2: CX + 1, y2: LY }));
-  const clip = el('clipPath', { id: 'lh-tower' }, defs);
-  el('polygon', { points: '195,772 228,345 358,345 391,772' }, clip);
-
-  // layers, back to front: beam behind · halo · lighthouse · beam in front
-  const back = el('g', {}, svg);
-  const halo = el('circle', { cx: CX, cy: LY, r: 60, fill: 'url(#lh-halo)' }, svg);
-  const house = el('g', {}, svg);
-  const front = el('g', {}, svg);
-
-  // thin ray above the roof
-  const ray = el('polygon', { points: `${CX - 6},150 ${CX + 6},150 ${CX + 2},0 ${CX - 2},0`, fill: 'url(#lh-ray)' }, house);
-  // hill
-  el('path', { d: `M0 ${H} L205 765 Q${CX} 748 381 765 L${W} ${H} Z`, fill: 'url(#lh-hill)' }, house);
-  // tower: checkered halves, clipped to the tapering shape
-  const tower = el('g', { 'clip-path': 'url(#lh-tower)' }, house);
-  [345, 450, 540, 645, 772].reduce((top, bottom, i) => {
-    el('rect', { x: 150, y: top, width: CX - 150, height: bottom - top, fill: `url(#lh-${i % 2 ? 'light' : 'dark'})` }, tower);
-    el('rect', { x: CX, y: top, width: 440 - CX, height: bottom - top, fill: `url(#lh-${i % 2 ? 'dark' : 'light'})` }, tower);
-    return bottom;
-  });
-  // gallery: deck, balusters, top rail
-  el('rect', { x: 203, y: 334, width: 182, height: 15, rx: 4, fill: 'url(#lh-dark)' }, house);
-  for (let x = 211; x <= 375; x += 12) el('rect', { x, y: 306, width: 4, height: 29, fill: c('700') }, house);
-  el('rect', { x: 203, y: 299, width: 182, height: 8, rx: 4, fill: 'url(#lh-dark)' }, house);
-  // lantern room + windows (the windows light up)
-  el('rect', { x: 242, y: 228, width: 104, height: 72, fill: 'url(#lh-lantern)' }, house);
-  const windows = el('g', { fill: c('glow-200') }, house);
-  el('rect', { x: 251, y: 238, width: 38, height: 46, rx: 2 }, windows);
-  el('rect', { x: 299, y: 238, width: 38, height: 46, rx: 2 }, windows);
-  // roof + finial
-  el('polygon', { points: `218,231 ${CX},176 368,231`, fill: 'url(#lh-dark)' }, house);
-  el('circle', { cx: CX, cy: 166, r: 16, fill: c('700') }, house);
-
-  // Each beam is drawn twice — once behind the tower, once in front — and the two cross-fade
-  // as it swings past the side. (Swapping one polygon between layers made it pop every half turn.)
-  const beams = beamGrads.map((g) => ({
-    g,
-    behind: el('polygon', { fill: `url(#${g.id})` }, back),
-    inFront: el('polygon', { fill: `url(#${g.id})` }, front),
-  }));
-  const smooth = (edge0, edge1, x) => { const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0))); return t * t * (3 - 2 * t); };
-
-  function render(angle) {
-    let glow = 0;
-    beams.forEach((beam, i) => {
-      const a = angle + i * Math.PI;                 // the two lenses face opposite ways
-      const side = Math.sin(a), facing = Math.cos(a);
-      const len = REACH * side;                     // signed: − left, + right
-      const spread = 18 + 62 * Math.abs(side);      // wider as it reaches out
-      const points = `${CX},${LY - 9} ${CX + len},${LY - spread} ${CX + len},${LY + spread} ${CX},${LY + 9}`;
-      beam.behind.setAttribute('points', points);
-      beam.inFront.setAttribute('points', points);
-      beam.g.setAttribute('x2', CX + len || CX + 1);
-      const f = smooth(-.3, .3, facing);             // 0 = pointing away (behind the tower) … 1 = towards us
-      beam.inFront.style.opacity = f;
-      beam.behind.style.opacity = .6 * (1 - f);
-      glow = Math.max(glow, Math.max(0, facing) ** 6);  // sharp flash when a beam faces us
-    });
-    halo.setAttribute('r', 55 + 150 * glow);
-    halo.style.opacity = .35 + .65 * glow;
-    windows.style.opacity = .55 + .45 * glow;
-    ray.style.opacity = .55 + .45 * Math.sin(angle * 2) ** 2;   // smooth shimmer (no sharp dip)
+  // Crop-in: once the row is in view, the corners are cut one tile after another
+  const ready = new Set(animating ? [] : tiles);   // tiles whose bubble is whole
+  if (animating) {
+    const io = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      io.disconnect();
+      tiles.forEach((tile, i) => cutTo(tile, 1, 650, i * 90, () => ready.add(tile)));
+    }, { threshold: 0.35 });
+    io.observe(tiles[0].closest('.learn-grid'));
   }
 
-  mission.append(svg);
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { render(Math.PI / 2); return; }
+  // Hover / keyboard focus: the eyes come up from behind the shoulder (and the cut goes a little deeper)
+  tiles.forEach((tile) => {
+    const show = () => {
+      if (!ready.has(tile)) return;
+      eyesOf.get(tile)?.classList.add('is-up');
+      if (animating) cutTo(tile, HOVER, 320);
+    };
+    const hide = () => {
+      eyesOf.get(tile)?.classList.remove('is-up');
+      if (animating && ready.has(tile)) cutTo(tile, 1, 420);
+    };
+    const mouse = (fn) => (e) => { if (e.pointerType !== 'touch') fn(); };   // a tap goes to the packages; no eyes left up behind
+    tile.addEventListener('pointerenter', mouse(show));
+    tile.addEventListener('pointerleave', mouse(hide));
+    tile.addEventListener('focus', () => { if (tile.matches(':focus-visible')) show(); });   // keyboard focus, not a tap
+    tile.addEventListener('blur', hide);
+  });
+  if (reduced) return;
 
-  let raf = 0, start = performance.now(), pausedAt = start;
-  const tick = (now) => { render(((now - start) / PERIOD) * Math.PI * 2 + Math.PI / 2); raf = requestAnimationFrame(tick); };
-  render(Math.PI / 2);
-  if (!('IntersectionObserver' in window)) { raf = requestAnimationFrame(tick); return; }
-  new IntersectionObserver(([entry]) => {   // only animate while visible; resume where it stopped
-    if (entry.isIntersecting && !raf) { start += performance.now() - pausedAt; raf = requestAnimationFrame(tick); }
-    else if (!entry.isIntersecting && raf) { cancelAnimationFrame(raf); raf = 0; pausedAt = performance.now(); }
-  }).observe(svg);
+  // The eyes follow the pointer while it's over the section (mouse screens only), within the brand's pupil oval
+  const section = tiles[0].closest('section');
+  if (section && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let px = 0, py = 0, raf = 0;
+    const follow = () => {
+      raf = 0;
+      eyesOf.forEach((eyes) => {
+        const box = eyes.getBoundingClientRect();
+        const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
+        const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;   // nearer than 160px: less far off-centre
+        eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
+        eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
+      });
+    };
+    section.addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; raf ||= requestAnimationFrame(follow); });
+    section.addEventListener('pointerleave', () => eyesOf.forEach((eyes) => {
+      eyes.style.removeProperty('--look-x');
+      eyes.style.removeProperty('--look-y');
+    }));
+  }
+
+  // Now and then the eyes that are out blink (.eyes.is-blink)
+  (function blink() {
+    setTimeout(() => {
+      const all = [...eyesOf.values()].filter((e) => e.classList.contains('is-up'));
+      const eyes = all[Math.floor(Math.random() * all.length)];
+      if (eyes) { eyes.classList.add('is-blink'); setTimeout(() => eyes.classList.remove('is-blink'), 140); }
+      blink();
+    }, 1200 + Math.random() * 2400);
+  })();
 })();
 
-/* ============================================================
-   08 · MISSION — when the block scrolls into view, the progress bar
-   fills from 0 to its target and 1,000,000 counts up alongside it
-   ============================================================ */
-(function missionProgress() {
-  const bar = document.querySelector('.mission .progress__fill');
-  const num = document.querySelector('.mission__num');
-  if (!bar || !num || !('IntersectionObserver' in window)) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  const target = bar.style.width;                       // e.g. "19.88%"
-  const total = parseInt(num.textContent.replace(/\D/g, ''), 10);
-  const fmt = new Intl.NumberFormat('en-US');
-  const DURATION = 1800;
-
-  bar.style.width = '0%';
-  num.textContent = '0';
-
-  const io = new IntersectionObserver((entries) => {
-    if (!entries[0].isIntersecting) return;
-    io.disconnect();
-    requestAnimationFrame(() => { bar.classList.add('is-filling'); bar.style.width = target; });
-    const start = performance.now();
-    (function tick(now) {
-      const t = Math.min((now - start) / DURATION, 1);
-      const eased = 1 - Math.pow(1 - t, 3);              // ease-out, matches the bar
-      num.textContent = fmt.format(Math.round(total * eased));
-      if (t < 1) requestAnimationFrame(tick);
-    })(start);
-  }, { threshold: 0.5 });
-  io.observe(bar.closest('.mission__right'));
-})();
 
 /* ============================================================
    09b · WEBINAR WORDMARK — «AI քեզ» + the role word from data-words
@@ -1164,7 +1255,8 @@ const canClip = 'clipPath' in document.documentElement.style;
    "վեբինար|բժիշկ", it rotates through them). Every few seconds every letter
    of both lines flips through random font styles and the role's letters
    scramble and settle left-to-right (LETTER SHUFFLE helpers, top of this
-   file). Pauses while off screen.
+   file), then all of them land in the headline cut (ExtraBold Italic) and
+   hold, so at rest the wordmark reads. Pauses while off screen.
    ============================================================ */
 (function wordmarkShuffle() {
   const box = document.querySelector('.wordmark__type');
@@ -1173,20 +1265,21 @@ const canClip = 'clipPath' in document.documentElement.style;
   if (!box || !fixed || !role) return;
 
   const WORDS = role.dataset.words.split('|');
-  const HOLD = 2400;   // ms a settled word stays still on screen
+  const HOLD = 6000;   // ms the settled wordmark stays still on screen
+  const calm = (glyphs) => glyphs.forEach((g) => { g.dataset.f = '0'; });   // at rest: data-f 0, ExtraBold Italic
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   document.fonts.ready.then(() => {   // slot widths need the real fonts
     const spell = makeSpeller(box);
     const fixedGlyphs = spell(fixed, fixed.textContent.trim()).map(({ glyph }) => glyph);
-    fixedGlyphs.forEach(restyle);
+    calm(fixedGlyphs);
     let index = WORDS.indexOf(role.textContent.trim());
-    spell(role, WORDS[index]).forEach(({ glyph }) => restyle(glyph));
+    calm(spell(role, WORDS[index]).map(({ glyph }) => glyph));
 
     if (reduced) {   // no flicker: just swap the role word
       setInterval(() => {
         index = (index + 1) % WORDS.length;
-        spell(role, WORDS[index]).forEach(({ glyph }) => restyle(glyph));
+        calm(spell(role, WORDS[index]).map(({ glyph }) => glyph));
       }, HOLD + 1000);
       return;
     }
@@ -1194,7 +1287,12 @@ const canClip = 'clipPath' in document.documentElement.style;
     let cancel = () => {}, timer = 0, running = false;
     function play() {
       index = (index + 1) % WORDS.length;
-      cancel = shuffleIn(spell(role, WORDS[index]), { also: fixedGlyphs, onDone: () => { timer = setTimeout(play, HOLD); } });
+      const letters = spell(role, WORDS[index]);
+      cancel = shuffleIn(letters, { also: fixedGlyphs, onDone: () => {
+        calm(fixedGlyphs);
+        calm(letters.map(({ glyph }) => glyph));
+        timer = setTimeout(play, HOLD);
+      } });
     }
     const stop = () => { cancel(); clearTimeout(timer); running = false; };
     const start = () => { running = true; timer = setTimeout(play, 600); };
