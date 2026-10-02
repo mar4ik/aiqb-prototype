@@ -1697,7 +1697,7 @@ body.is-menu-open { overflow: hidden; }
      (not centred) and leaves room for the closed row, so it can fold into the open one (see xl above) */
   .promo {
     left: --spacing(4); bottom: --spacing(4);
-    width: calc(100% - --spacing(22)); max-width: none;   /* both gutters (4 + 4) + the contact button (12) + a gap (2) */
+    width: calc(100% - --spacing(36)); max-width: none;   /* both gutters (4 + 4) + the closed row (contact 12 + ↑ 12 + gap 2) + a gap (2) */
     gap: --spacing(3); padding: --spacing(1) --spacing(1) --spacing(1) --spacing(4);   /* the 40px button with the 4px inset of .fab-group */
     overflow: hidden;
     transform: translateY(calc(100% + --spacing(15)));
@@ -1708,9 +1708,14 @@ body.is-menu-open { overflow: hidden; }
     .promo__long { display: none; }
     .promo__short { display: inline; }
   }
+  @container (width < 12.5rem) {   /* 320px phones: no room for the button's word — it shows its calendar icon (the aria-label names it) */
+    .promo__btn-label { display: none; }
+    .promo__btn .ic { display: block; }
+    .promo__btn { width: --spacing(10); padding: 0; }
+  }
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
-  .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(46) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter; the open row is group 32 + ✕ 12 + a gap (no ↑ on phones) */
+  .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
   .pkg { padding: --spacing(6); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
@@ -1730,8 +1735,7 @@ body.is-menu-open { overflow: hidden; }
   .mission__title { @apply text-aqb-headline-h1; }   /* phones: Display steps down to Headline H1 */
   .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */
-  /* No back-to-top on phones: the bottom row is [webinar bar][contact] */
-  .fab--top { display: none; }  .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
+  .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
   .ladder .avatar--letter { @apply text-aqb-caption; }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }
   .ladder::before { left: --spacing(3.5); right: --spacing(3.5); top: --spacing(3.5); }

@@ -4107,7 +4107,7 @@
     .promo {
       left: calc(var(--spacing) * 4);
       bottom: calc(var(--spacing) * 4);
-      width: calc(100% - calc(var(--spacing) * 22));
+      width: calc(100% - calc(var(--spacing) * 36));
       gap: calc(var(--spacing) * 3);
       max-width: none;
       padding: var(--spacing) var(--spacing) var(--spacing) calc(var(--spacing) * 4);
@@ -4130,6 +4130,21 @@
       }
     }
 
+    @container not (min-width: 12.5rem) {
+      .promo__btn-label {
+        display: none;
+      }
+
+      .promo__btn .ic {
+        display: block;
+      }
+
+      .promo__btn {
+        width: calc(var(--spacing) * 10);
+        padding: 0;
+      }
+    }
+
     .promo__btn {
       margin-left: auto;
     }
@@ -4140,7 +4155,7 @@
     }
 
     .is-contact-open .promo {
-      left: calc(100% - calc(var(--spacing) * 4) - calc(var(--spacing) * 46) - calc(var(--spacing) * 2) - calc(var(--spacing) * 12));
+      left: calc(100% - calc(var(--spacing) * 4) - calc(var(--spacing) * 60) - calc(var(--spacing) * 2) - calc(var(--spacing) * 12));
     }
 
     .pkg {
@@ -4216,7 +4231,7 @@
       font-weight: var(--font-weight-detail);
     }
 
-    .courses__nav, .teachers__nav, .fab--top {
+    .courses__nav, .teachers__nav {
       display: none;
     }
 
