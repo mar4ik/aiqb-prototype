@@ -2,8 +2,8 @@
 // Run via `npm run build`, after Tailwind has written styles.css.
 import { cpSync, rmSync, mkdirSync } from 'node:fs';
 
-const FILES = ['index.html', 'doctor-register.html', 'script.js', 'styles.css'];
-const DIRS = ['assets', 'fonts'];   // the hero prototypes stay in archive/, not published
+const FILES = ['index.html', 'doctor-register.html', 'join.html', 'script.js', 'join.js', 'styles.css'];
+const DIRS = ['assets', 'fonts', 'join'];   // join/: the role pages   // the hero prototypes stay in archive/, not published
 
 rmSync('dist', { recursive: true, force: true });
 mkdirSync('dist');

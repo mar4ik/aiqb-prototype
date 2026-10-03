@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Միացի՛ր AI քեզ բան-ին</title>
+  <meta name="description" content="Միացի՛ր AI քեզ բան-ի թիմին և օգնիր Հայաստանին դառնալ AI գրագետ։" />
+  <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
+  <!-- The link preview (Telegram, Facebook, LinkedIn…): the full photo, 1200 × 630. Crawlers need absolute URLs (the live prototype for now) —
+       TODO: check they match the address this page is published at -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="AI քեզ բան" />
+  <meta property="og:title" content="Միացի՛ր AI քեզ բան-ի թիմին" />
+  <meta property="og:description" content="Փնտրում ենք Community Owner. ընտրի՛ր քո առաքելությունը։" />
+  <meta property="og:image" content="https://aiqb-prototype.vercel.app/assets/join/share.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Language: Armenian by default, English with ?lang=en (the ՀԱՅ / EN switch), remembered for the other join pages.
+       Set before the page paints, so the other language never flashes; each piece of copy is written twice,
+       [data-lang="hy"] and [data-lang="en"] (tailwind.css → 14 · JOIN PAGES). Same snippet on join/*.html. -->
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search).get('lang'), lang = q;
+      try { if (q) localStorage.setItem('aiqb-join-lang', q); else lang = localStorage.getItem('aiqb-join-lang'); } catch (e) {}
+      lang = lang === 'en' ? 'en' : 'hy';
+      document.documentElement.lang = lang;
+      if (lang === 'en') document.title = 'Join AI քեզ բան';
+    })();
+  </script>
+</head>
+<body class="join">
+
+  <!-- =========================================================
+       01 · HEADER: the page logo at the top left — the eye logo in its circle with «join» beside it (→ the main site) —
+       and the language switch at the right
+       ========================================================= -->
+  <header class="join-head">
+    <div class="join-head__bar">
+      <a href="https://aiqezban.ai" class="join-logo" aria-label="AI քեզ բան — join (aiqezban.ai)">
+        <span class="nav__logo"><img src="assets/logos/trademark.svg" alt="" /></span>
+        <span class="join-logo__join" aria-hidden="true">join</span>
+      </a>
+      <nav class="pill-tabs" aria-label="Լեզու / Language">
+        <a href="?lang=hy" class="pill-tabs__tab" data-lang-tab="hy" lang="hy">ՀԱՅ</a>
+        <a href="?lang=en" class="pill-tabs__tab" data-lang-tab="en" lang="en">EN</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="join-main">
+
+    <!-- =========================================================
+         02 · HERO — on Sky, short on purpose: the Community Owner role must come right after
+         ========================================================= -->
+    <section class="join-hero">
+      <h1 class="join-hero__title">
+        <span data-lang="hy">Միացի՛ր մեր թիմին</span><span data-lang="en">Join our team!</span>
+      </h1>
+      <!-- The crowd: the brand's eyes drifting under the headline, as wide as the intro sentence, as in the main site's
+           «Մեր առաքելությունը»; join.js (4 · heroCrowd) fills the row, and the eyes blink, glance around and look at
+           the pointer -->
+      <div class="crowd" aria-hidden="true"><div class="crowd__track"></div></div>
+      <p class="join-hero__lead">
+        <span data-lang="hy">Եթե ուզում ես քո ներդրումն ունենալ <strong>Հայաստանի AI գրագիտության</strong> մեջ, ճիշտ տեղում ես։</span>
+        <span data-lang="en">Want to help make <strong>Armenia AI-literate</strong>? You’re in the right place.</span>
+      </p>
+    </section>
+
+    <!-- =========================================================
+         03 · CHOOSE YOUR MISSION — the open roles
+         ========================================================= -->
+    <section class="join-roles" aria-labelledby="roles-title">
+      <h2 class="section-title join-roles__title" id="roles-title">
+        <span data-lang="hy">Ընտրի՛ր քո առաքելու&shy;թյունը</span>
+        <span data-lang="en">Choose your mission</span>
+      </h2>
+
+      <!-- Each role is cut into a brand bubble, as the «Ի՞նչ սովորել» tiles on the main site: data-shape picks its
+           corners (script below); on hover the eyes rise from the cut corner. The priority role first, the page's
+           biggest message, in Blue -->
+      <div class="join-slot">
+        <a href="join/community-owner.html" class="join-feature" data-shape="tail-left step-right">
+          <span class="join-feature__kicker">
+            <span data-lang="hy">Ամենաշատը քեզ ենք փնտրում</span>
+            <span data-lang="en">The one we need most</span>
+          </span>
+          <span class="join-feature__title">Community Owner</span>
+          <span class="join-feature__text">
+            <span data-lang="hy">Ամբողջ համայնքը քոնն է՝ նրա առողջությունը, երջանկությունն ու աճը։</span>
+            <span data-lang="en">You own everything community. The health of it, the happiness of it, the growth of it — all of it is yours.</span>
+          </span>
+          <span class="join-apply">
+            <span class="btn btn--white btn--md join-feature__apply">
+              <span data-lang="hy">Դիմել</span>
+              <span data-lang="en">Apply</span>
+              <i class="ic ic--chev-right" aria-hidden="true"></i>
+            </span>
+            <span class="join-feature__meta">
+              <span data-lang="hy">Համայնք · Լրիվ դրույք · Երևան</span>
+              <span data-lang="en">Community · Full-time · Yerevan</span>
+            </span>
+          </span>
+        </a>
+        <!-- From 1280px: the Community Owner herself, leaping across the bubble under its cut-out corner (a cut-out photo,
+             outside the card so its clip doesn't crop her; the eyes peek from the shoulder above her) -->
+        <img class="join-feature__photo" src="assets/join/community-owner.webp" width="1000" height="801" alt="" />
+      </div>
+
+      <!-- The other open roles: an Ink bubble each, laid out like the first — «Դիմել» in the same place -->
+      <div class="join-slot">
+        <a href="join/learning-experience-coordinator.html" class="join-role" data-shape="step-right">
+          <span class="join-role__title">Learning Experience Coordinator (TA)</span>
+          <span class="join-role__text">
+            <span data-lang="hy">Յուրաքանչյուր դաս քոնն է՝ սկզբից մինչև վերջ։</span>
+            <span data-lang="en">You own the end-to-end experience of every “AI քեզ բան” online class.</span>
+          </span>
+          <span class="join-apply">
+            <span class="btn btn--white btn--md">
+              <span data-lang="hy">Դիմել</span>
+              <span data-lang="en">Apply</span>
+              <i class="ic ic--chev-right" aria-hidden="true"></i>
+            </span>
+            <span class="join-role__meta">
+              <span data-lang="hy">Կրթություն · Լրիվ դրույք</span>
+              <span data-lang="en">Education · Full-time</span>
+            </span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         04 · OPEN APPLICATION
+         ========================================================= -->
+    <section class="join-open">
+      <div class="join-open__copy">
+        <h2 class="section-title">
+          <span data-lang="hy">Չգտա՞ր քո դերը</span>
+          <span data-lang="en">Didn’t find your role?</span>
+        </h2>
+        <p class="join-open__text">
+          <span data-lang="hy">Եթե գիտես, որ կարող ես ուժեղացնել մեր թիմը, ուղարկի՛ր ընդհանուր դիմում։ Կկապվենք քեզ հետ, երբ համապատասխան հնարավորություն լինի։</span>
+          <span data-lang="en">If you know you’d make our team stronger, send us an open application. We’ll reach out when there’s a fit.</span>
+        </p>
+      </div>
+      <a href="mailto:join@reArmenia.com" class="btn btn--primary btn--md">
+        <span data-lang="hy">Ուղարկել դիմում</span>
+        <span data-lang="en">Send an open application</span>
+      </a>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       05 · FOOTER
+       ========================================================= -->
+  <footer class="join-foot">
+    <!-- The wordmark (→ the main site), the Instagram follow line, then the copyright -->
+    <a href="https://aiqezban.ai" class="join-foot__logo" aria-label="AI քեզ բան — aiqezban.ai"><span class="join-foot__mark" aria-hidden="true"></span></a>
+    <a href="https://www.instagram.com/ai_qez_ban_/" class="join-foot__social" target="_blank" rel="noopener"><i class="ic ic--lg ic--instagram" aria-hidden="true"></i>@ai_qez_ban_</a>
+    <p>© 2026 AI քեզ բան · <span data-lang="hy">Երևան</span><span data-lang="en">Yerevan</span></p>
+  </footer>
+
+  <!-- Back to top: the main site's floating button (join.js · 2) -->
+  <div class="fabs">
+    <button type="button" class="fab fab--top" aria-label="Վերև / Back to top"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
+  </div>
+
+  <script src="join.js"></script>
+</body>
+</html>
