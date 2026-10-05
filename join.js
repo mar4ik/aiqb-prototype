@@ -3,7 +3,6 @@
    1 · Bubble shapes and peeking eyes ([data-shape])
    2 · Back to top
    3 · Copy link ([data-copy-link])
-   4 · The crowd of eyes under the careers headline (.crowd)
    The language is set in each page's <head>, before it paints.
    ============================================================ */
 
@@ -269,66 +268,5 @@ function makeEyes() {
       clearTimeout(btn._t);
       btn._t = setTimeout(() => btn.classList.remove('is-copied'), 2000);
     });
-  });
-})();
-
-/* 4 · The crowd — as the main site's mission crowd (script.js · 08 missionCrowd): the brand's eyes drifting under
-   «Միացի՛ր մեր թիմին». The row is built twice (the CSS drift moves it by half, so it loops). Now and then a pair blinks
-   or glances somewhere new; while the pointer is over the band, they all look at it (mouse screens only). It only
-   works while it's on screen, and stands still for reduced motion. */
-(function heroCrowd() {
-  const track = document.querySelector('.crowd__track');
-  if (!track) return;
-  const COUNT = 16;
-  const LOOKS = ['left', 'right', 'up', 'down', 'up-left', 'up-right', 'down-left', 'down-right', null];   // null: at you
-  const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval (BRAND.md → Eyes)
-  const pick = (list) => list[Math.floor(Math.random() * list.length)];
-  const look = (eyes, dir) => { if (dir) eyes.dataset.look = dir; else delete eyes.dataset.look; };
-
-  for (let i = 0; i < COUNT; i++) { const eyes = makeEyes(); look(eyes, pick(LOOKS)); track.append(eyes); }
-  [...track.children].forEach((eyes) => track.append(eyes.cloneNode(true)));
-  const crowd = [...track.children];
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  let onScreen = false, following = false;
-  new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(track);
-  (function blink() {
-    setTimeout(() => {
-      if (onScreen) {
-        const eyes = pick(crowd);
-        eyes.classList.add('is-blink');
-        setTimeout(() => eyes.classList.remove('is-blink'), 140);
-      }
-      blink();
-    }, 300 + Math.random() * 700);
-  })();
-  (function glance() {
-    setTimeout(() => {
-      if (onScreen && !following) look(pick(crowd), pick(LOOKS));
-      glance();
-    }, 400 + Math.random() * 900);
-  })();
-
-  const band = track.closest('section');
-  if (!band || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-  let px = 0, py = 0, raf = 0;
-  const follow = () => {
-    raf = 0;
-    crowd.forEach((eyes) => {
-      const box = eyes.getBoundingClientRect();
-      const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
-      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;
-      eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
-      eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
-    });
-  };
-  band.addEventListener('pointermove', (e) => {
-    if (e.pointerType === 'touch') return;
-    following = true; px = e.clientX; py = e.clientY;
-    raf ||= requestAnimationFrame(follow);
-  });
-  band.addEventListener('pointerleave', () => {
-    following = false;
-    crowd.forEach((eyes) => { eyes.style.removeProperty('--look-x'); eyes.style.removeProperty('--look-y'); });
   });
 })();

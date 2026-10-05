@@ -1808,7 +1808,6 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 
 /* ============================================================
-.join-hero .crowd { max-width: --spacing(150); margin-top: 0; }   /* under the headline, as wide as the intro sentence */
    13 · PRE-REGISTRATION PAGE (doctor-register.html)
    ============================================================ */
 .signup {
@@ -1861,8 +1860,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   display: flex; flex-direction: column;   /* the bands meet; each brings its own spacing */
 }
 
-/* Hero: the main site's Sky, full-bleed from the very top of the page (under the floating header): the headline, the
-   crowd of the brand's eyes drifting under it as wide as the copy (as in «Մեր առաքելությունը»: .crowd, join.js · 4),
+/* Hero: the main site's Sky, full-bleed from the very top of the page (under the floating header): the headline and
    one line of copy.
    Black text on Sky (BRAND.md → Text on colour) */
 .join-hero {
@@ -1928,8 +1926,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 .join-feature:hover { --bubble: var(--color-primary-hover); }
 .join-feature .shape-ring path { stroke: var(--color-white); }   /* keyboard focus along the bubble: White on Blue */
 .join-feature:focus-visible:not(.is-shaped) { outline: 3px solid var(--color-white); outline-offset: 3px; }
-.join-feature__kicker { @apply text-aqb-body-m; }   /* kicker → Regular (BRAND.md → Hierarchy) */
-.join-feature__title { margin-top: calc(--spacing(2) * -1); @apply text-aqb-display-l italic; }
+.join-feature__title { @apply text-aqb-display-l italic; }
 .join-feature__text { max-width: --spacing(150); @apply text-aqb-body-m; }
 .join-feature__meta { @apply text-aqb-label; }
 /* The photo: a cut-out on the right, leaping across the bubble under its lowered corner; lifts a little on hover.
@@ -2037,8 +2034,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .join-hero__title { @apply text-aqb-headline-h2 italic; }   /* phones step down the scale */
   .join-hero { gap: --spacing(3); }
   .join-feature { padding: --spacing(14) --spacing(5) --spacing(6); gap: --spacing(4); }
-  .join-feature__kicker { @apply text-aqb-body-s; }
-  .join-feature__title { margin-top: 0; @apply text-aqb-headline-h2 italic; }   /* steps down: «Community» has to fit a phone's width */
+  .join-feature__title { @apply text-aqb-headline-h2 italic; }   /* steps down: «Community» has to fit a phone's width */
   .join-feature__photo { width: --spacing(36); top: calc(--spacing(17) * -1); right: calc(--spacing(2) * -1); }   /* leaping out of the cut-out corner, clear of the kicker */
   .join-feature__text { @apply text-aqb-body-s; }
   .join-apply { margin-top: --spacing(2); }
