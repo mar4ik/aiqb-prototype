@@ -930,15 +930,12 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    02 · Nav call to action — comes in beside the pill once the hero's own «Ընտրել դասընթաց» is scrolled past, so the
-   first screen asks once (body.is-past-hero-cta). It starts hidden (tailwind.css), so it never shows at load. The
-   staging hero switch (.hero-switch) also says which hero is on show to screen readers
+   first screen asks once (body.is-past-hero-cta). It starts hidden (tailwind.css), so it never shows at load
    ============================================================ */
 (function navCta() {
   const hero = document.documentElement.dataset.hero;
   const heroCta = document.querySelector(hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');   // the hero on show (A/B test)
   const navCta = document.querySelector('.nav-cta');
-  const heroSwitch = document.querySelector('.hero-switch');
-  heroSwitch?.querySelector(`[data-hero-tab="${hero}"]`)?.setAttribute('aria-current', 'page');
   if (!navCta) return;
   const past = (yes) => {
     document.body.classList.toggle('is-past-hero-cta', yes);
@@ -951,13 +948,15 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    03c · Hero A/B test — a click on the hero's call to action goes to window.dataLayer with the hero the visitor saw
-   (the pick itself is pushed by the <head> script), so an analytics tool can compare them
+   (the 50/50 pick itself is pushed by the <head> script), so an analytics tool can compare them; team previews
+   (?hero=a / ?hero=b) are marked hero_preview, to leave out of the results
    ============================================================ */
 (function heroTest() {
   const variant = document.documentElement.dataset.hero;
+  const preview = new URLSearchParams(location.search).has('hero');
   const cta = document.querySelector(variant === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');
   cta?.addEventListener('click', () => {
-    (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant });
+    (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant, hero_preview: preview });
   });
 })();
 

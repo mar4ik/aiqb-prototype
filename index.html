@@ -6,16 +6,27 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=hero-ab-2" />
-  <!-- Hero A/B: Hero A (the eyes' walk writing «AI քեզ բան», with the original words) or Hero B (the falling AI tools,
-       with the sales words). For the team's review the page always opens on Hero A; ?hero=b (the switch in the header)
-       shows Hero B. The visitor split comes later. Set before the page paints, so the other hero never flashes
-       (tailwind.css: html[data-hero]); the hero on show goes to window.dataLayer. -->
+  <link rel="stylesheet" href="styles.css?v=hero-ab-3" />
+  <!-- Hero A/B test: Hero A (the eyes' walk writing «AI քեզ բան», with the original words) or Hero B (the falling AI
+       tools, with the sales words). Each new visitor gets one at random, 50/50, and keeps it on later visits
+       (localStorage 'aiqb-hero'; without storage, a fresh pick each visit). ?hero=a / ?hero=b shows that hero for the
+       team, this visit only, without changing their own pick, and is marked hero_preview. Set before the page paints,
+       so the other hero never flashes (tailwind.css: html[data-hero]); the hero on show goes to window.dataLayer. -->
   <script>
     (function () {
-      var hero = new URLSearchParams(location.search).get('hero') === 'b' ? 'b' : 'a';
+      var KEY = 'aiqb-hero';
+      var forced = new URLSearchParams(location.search).get('hero');
+      var preview = forced === 'a' || forced === 'b';
+      var hero = preview ? forced : null;
+      if (!preview) {
+        try { hero = localStorage.getItem(KEY); } catch (e) {}
+        if (hero !== 'a' && hero !== 'b') {
+          hero = Math.random() < 0.5 ? 'a' : 'b';
+          try { localStorage.setItem(KEY, hero); } catch (e) {}
+        }
+      }
       document.documentElement.dataset.hero = hero;
-      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero });
+      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
     })();
   </script>
 </head>
@@ -98,13 +109,6 @@
     <div class="nav-cta-slot">
       <a href="#packages" class="btn btn--primary btn--md nav-cta" inert>Ընտրել դասընթաց</a>
     </div>
-    <!-- Staging: the switch between the two heroes under test, at the top right. Each link reloads the page with ?hero=a /
-         ?hero=b, which the <head> script reads. Remove it for production; the CTA then has the room it needs on narrow
-         screens again (tailwind.css) -->
-    <nav class="pill-tabs hero-switch" aria-label="Hero A/B">
-      <a href="?hero=a" class="pill-tabs__tab" data-hero-tab="a">Hero A</a>
-      <a href="?hero=b" class="pill-tabs__tab" data-hero-tab="b">Hero B</a>
-    </nav>
   </header>
   <div class="nav-scrim" aria-hidden="true"></div>
 
@@ -112,7 +116,7 @@
 
     <!-- =========================================================
          03 · HERO — A/B test: Hero A (the eyes' walk, below) or Hero B (the falling tools, after it), each with its own
-         words. The <head> script picks one per visitor (html[data-hero]); the other is display: none.
+         words. The <head> script picks one per visitor, 50/50 (html[data-hero]); the other is display: none.
          ========================================================= -->
     <section class="hero" data-bg="sky">
       <!-- Solid colour backdrop; each scene of the eyes' walk opens its colour from the eyes as a circle
@@ -886,6 +890,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=hero-ab-2"></script>
+  <script src="script.js?v=hero-ab-3"></script>
 </body>
 </html>

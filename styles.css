@@ -1045,19 +1045,6 @@
     transition: max-width .35s var(--ease-smooth), visibility 0s;
   }
 
-  .hero-switch {
-    margin-left: calc(var(--spacing) * 4);
-    white-space: nowrap;
-    grid-column: 4;
-    justify-self: end;
-  }
-
-  @media not all and (min-width: 80rem) {
-    .nav-wrap:has(.hero-switch) .nav-cta-slot {
-      display: none;
-    }
-  }
-
   .nav__burger {
     width: calc(var(--spacing) * 10);
     height: calc(var(--spacing) * 10);
@@ -1282,20 +1269,6 @@
     width: calc(var(--spacing) * 9);
     flex: none;
     height: auto;
-  }
-
-  .hero__sub {
-    z-index: 1;
-    max-width: calc(var(--spacing) * 86);
-    font-size: var(--text-aqb-body-s);
-    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
-    position: relative;
-  }
-
-  .hero__sub strong {
-    font-weight: var(--font-weight-detail);
   }
 
   html[data-hero="b"] .hero, html:not([data-hero="b"]) .story-hero {
@@ -1720,7 +1693,7 @@
     color: var(--color-ink-900);
   }
 
-  .pill-tabs__tab[aria-selected="true"], html[data-hero="a"] .pill-tabs__tab[data-hero-tab="a"], html[data-hero="b"] .pill-tabs__tab[data-hero-tab="b"], html[lang="hy"] .pill-tabs__tab[data-lang-tab="hy"], html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] {
+  .pill-tabs__tab[aria-selected="true"], html[lang="hy"] .pill-tabs__tab[data-lang-tab="hy"], html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] {
     background: var(--color-primary);
     color: var(--color-white);
     box-shadow: var(--shadow-sm);
@@ -4819,10 +4792,6 @@
 
     .nav-cta-slot {
       grid-column: 2;
-    }
-
-    .hero-switch {
-      grid-column: 3;
     }
 
     .nav__burger {

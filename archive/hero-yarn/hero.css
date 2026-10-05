@@ -36,3 +36,13 @@
 @media (width < 48rem) {
   .yarn { aspect-ratio: 4 / 3; }
 }
+
+/* The sub line under the yarn (moved here from the site's tailwind.css, which no longer uses it) */
+.hero__sub {
+  position: relative; z-index: 1;
+  max-width: calc(var(--spacing) * 86);
+  font-size: var(--text-aqb-body-s);
+  line-height: var(--text-aqb-body-s--line-height);
+  letter-spacing: var(--text-aqb-body-s--letter-spacing);
+}
+.hero__sub strong { font-weight: var(--font-weight-detail); }

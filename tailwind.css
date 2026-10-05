@@ -268,7 +268,7 @@
    02 · MAIN NAV
    ============================================================ */
 /* The bar: the pill (it hugs the logo and links) centred, the course CTA right beside it once it comes in (the pair stays
-   centred), and the staging hero switch at the top right. The empty band around them lets clicks through to the page */
+   centred). The empty band around them lets clicks through to the page */
 .nav-wrap {
   position: fixed;
   top: --spacing(3);
@@ -414,12 +414,6 @@
 }
 .nav-cta-slot .nav-cta { margin-left: --spacing(2); }
 .is-past-hero-cta .nav-cta-slot { max-width: --spacing(60); visibility: visible; transition: max-width .35s var(--ease-smooth), visibility 0s; }
-/* Staging: the switch between the two heroes (index.html), at the top right, always there. Below xl the bar has no room
-   for it and the CTA side by side, so while it's on the page the CTA stays out there */
-.hero-switch { grid-column: 4; justify-self: end; margin-left: --spacing(4); white-space: nowrap; }   /* at least 16px from the pill or the CTA */
-@media (width < theme(--breakpoint-xl)) {
-  .nav-wrap:has(.hero-switch) .nav-cta-slot { display: none; }
-}
 .nav__burger {
   display: none;   /* shown below lg */
   place-items: center; align-content: center; gap: 5px;
@@ -558,14 +552,6 @@ body.is-menu-open { overflow: hidden; }
   @apply text-aqb-caption; text-align: left;   /* black on the feed colour (--hero-fg) */
 }
 .hero__endorse img { width: --spacing(9); height: auto; flex: none; }
-
-/* (used by the archive/hero-yarn/hero.html example) */
-.hero__sub {
-  position: relative; z-index: 1;
-  max-width: --spacing(86);
-  @apply text-aqb-body-s;
-}
-.hero__sub strong { font-weight: var(--font-weight-detail); }
 
 /* ============================================================
    03 · HERO B — the falling tools (A/B test with Hero A: the <head> script sets html[data-hero], index.html)
@@ -764,10 +750,8 @@ html:not([data-hero="b"]) .story-hero { display: none; }
   transition: background-color .2s, color .2s, box-shadow .2s;
 }
 .pill-tabs__tab:hover { color: var(--color-ink-900); }
-/* the chosen tab; in the hero switch (links, not tabs) the hero on show, set before the page paints (html[data-hero]) */
+/* the chosen tab */
 .pill-tabs__tab[aria-selected="true"],
-html[data-hero="a"] .pill-tabs__tab[data-hero-tab="a"],
-html[data-hero="b"] .pill-tabs__tab[data-hero-tab="b"],
 html[lang="hy"] .pill-tabs__tab[data-lang-tab="hy"],   /* the join page's language switch (links, set before paint) */
 html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-primary); color: var(--color-white); box-shadow: var(--shadow-sm); }
 .pill-tabs__tab:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
@@ -1999,11 +1983,10 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 }
 
 @media (width < theme(--breakpoint-lg)) {
-  /* The pill (logo + burger) at the left edge, the CTA beside it, the hero switch at the right */
+  /* The pill (logo + burger) at the left edge, the CTA beside it */
   .nav-wrap { grid-template-columns: auto auto 1fr; container-type: inline-size; }
   .nav { grid-column: 1; }
   .nav-cta-slot { grid-column: 2; }
-  .hero-switch { grid-column: 3; }
   /* Mobile menu: .nav__links drops down under the pill as a white panel, across the page column. The pill's blur makes
      the pill its containing block, so the panel takes the bar's width (100cqw) from the pill's left edge (−1px: its
      outline) */
