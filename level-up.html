@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Level-Up դասընթաց · AI քեզ բան</title>
+  <meta name="description" content="Level-Up՝ նրանց համար, ովքեր ուզում են AI-ով 10 անգամ ավելի արդյունավետ դառնալ. 3 շաբաթ, 6 դաս, 12 ժամ, օնլայն՝ Zoom-ով։ Հետազոտություն, նկարներ, վիդեոներ, կայքէջ, ավտոմատացում և AI ագենտներ։" />
+  <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=levelup-1" />
+</head>
+<body>
+
+  <!-- =========================================================
+       Level-Up course page: everything about the course, from the Notion page «Level-Up դասընթաց» (the source of the
+       copy). Same design as start.html, with the Level-Up words; the teachers are a slider here (five of them).
+       The nav, the teacher cards, the FAQ, the footer and the floating buttons are the main page's (index.html), with
+       their links pointing back to it; script.js runs them. Styles: tailwind.css → 15 · COURSE PAGE.
+       ========================================================= -->
+
+  <!-- MAIN NAV (as index.html; the CTA beside the pill comes in once the hero's own button is scrolled past) -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">
+        <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
+      </a>
+      <div class="nav__links" id="nav-menu">
+        <a href="index.html#courses" class="nav__link">Ի՞նչ սովորել</a>
+        <a href="index.html#packages" class="nav__link">Դասընթացներ</a>
+        <a href="index.html#webinar" class="nav__link">Վեբինար</a>
+        <a href="index.html#mission" class="nav__link">Մեր առաքելությունը</a>
+        <a href="index.html#teachers" class="nav__link">Մեր ուսուցիչները</a>
+      </div>
+      <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
+        <span></span><span></span>
+      </button>
+    </nav>
+    <div class="nav-cta-slot">
+      <a href="#price" class="btn btn--primary btn--md nav-cta" inert>Գնել Level-Up</a>
+    </div>
+  </header>
+  <div class="nav-scrim" aria-hidden="true"></div>
+
+  <main>
+
+    <!-- =========================================================
+         01 · HERO — on Sky like the main page: the course name, the promise, the detail line and the two actions;
+         beside it the course at a glance (the length, the six lessons on their weeks and days, each in its lesson's colour,
+         then when a group starts and the format), with the brand's eyes peeking over its corner on hover
+         ========================================================= -->
+    <section class="course-hero">
+      <div class="course-hero__copy">
+        <p class="course-hero__kicker">Level-Up դասընթաց</p>
+        <h1 class="course-hero__title">AI-ով 10 անգամ ավելի արդյունավետ</h1>
+        <p class="course-hero__lead">Վեց դաս՝ հետազոտությունից ու նկարներից մինչև վիդեոներ, քո կայքէջը, ավտոմատացումներ և անձնական AI ագենտ։ Նրանց համար, ովքեր արդեն ծանոթ են AI-ի հիմունքներին ու ուզում են ավելի խորը գնալ։</p>
+        <p class="course-hero__detail">Օնլայն՝&nbsp;Zoom-ով · Սկիզբը՝&nbsp;հոկտեմբերի&nbsp;13 · ֏&nbsp;37,500</p>
+        <!-- The call to action, the tax refund + ministry endorsement beside it (as the main hero) -->
+        <div class="course-hero__actions">
+          <!-- TODO: the checkout link (the main page's «Գնել Level-Up» is # too) -->
+          <a href="#" class="btn btn--primary btn--lg">Գնել Level-Up</a>
+          <p class="course-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+      </div>
+
+      <div class="course-week">
+        <!-- The eyes rise from behind the card's top-right corner on hover, follow the pointer and blink
+             (script.js · 15, as the «Ի՞նչ սովորել» tiles on the main page) -->
+        <svg class="eyes course-week__eyes" viewBox="0 0 96 50" data-look="down-left" aria-hidden="true">
+          <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+          <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+          <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+          <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+        </svg>
+        <p class="course-week__title">Տևողությունը՝ 3 շաբաթ • 6 դաս • 12 ժամ</p>
+        <ol class="course-week__days">
+          <li><a href="#lesson-1" data-bg="pink"><span class="course-week__day">1-ին շաբաթ · Երեքշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 1 · Հետազոտություն ու աղբյուրահեն կոնտենտ</span></a></li>
+          <li><a href="#lesson-2" data-bg="sky"><span class="course-week__day">1-ին շաբաթ · Հինգշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 2 · 1000 բառի տեղ խոսող նկարներ</span></a></li>
+          <li><a href="#lesson-3" data-bg="yellow"><span class="course-week__day">2-րդ շաբաթ · Երեքշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 3 · AI վիդեոների գեներացիա</span></a></li>
+          <li><a href="#lesson-4" data-bg="sky"><span class="course-week__day">2-րդ շաբաթ · Հինգշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 4 · Կայքէջերի գեներացիա</span></a></li>
+          <li><a href="#lesson-5" data-bg="teal"><span class="course-week__day">3-րդ շաբաթ · Երեքշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 5 · Գործընթացների ավտոմատացում</span></a></li>
+          <li><a href="#lesson-6" data-bg="yellow"><span class="course-week__day">3-րդ շաբաթ · Հինգշաբթի · 19:00–21:00</span><span class="course-week__lesson">Դաս 6 · Ինքնավար ագենտներ</span></a></li>
+        </ol>
+        <ul class="course-week__facts">
+          <li><i class="ic ic--calendar" aria-hidden="true"></i>Ամեն ամսվա երկրորդ երեքշաբթի</li>
+          <li>Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         02 · PROGRAM — «Խնդրահեն կրթակարգ»: one panel a lesson, in the colours of the Level-Up tiles on the main page
+         (Pink, Sky, Yellow, Sky, Teal, Yellow; black text, BRAND.md); a lesson with several results lists them, on Black as the main page's tiles. Left: the big number, the day
+         and time, the title and what you leave with («Դասի վերջում»); right, the widest and largest reading text on the page: what we learn,
+         then the tools (they can change). Then a buy prompt, so the button is there once the lessons are read
+         ========================================================= -->
+    <section class="course-program" id="program">
+      <div class="course-program__top">
+        <p class="course-program__kicker">Խնդրահեն կրթակարգ</p>
+        <h2 class="section-title">Ի՞նչ ես սովորելու</h2>
+      </div>
+
+      <article class="lesson" id="lesson-1" data-bg="pink">
+        <header class="lesson__head">
+          <p class="lesson__num">01</p>
+          <p class="lesson__day">1-ին շաբաթ · Երեքշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">Հետազոտու&shy;թյուն ու աղբյուրահեն կոնտենտ</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <ul class="lesson__outcomes">
+              <li>Մեր նյութերի հիման վրա ստեղծված փոդքասթ, վիդեո, մտքի քարտեզ, հարցաշարեր, հաշվետվություններ և այլն</li>
+              <li>Մեզ հետաքրքրող թեմայի խորը հետազոտություն և ինֆոգրաֆիկա</li>
+            </ul>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Սեփական աղբյուրների հիման վրա նոր մուլտիմոդալ կոնտենտի ստեղծում (տեքստեր, պատկերներ, վիդեոներ, փոդքասթներ, ուղեցույցներ…)</li>
+              <li>Արագ և 100-ավոր աղբյուրներով խորքային հետազոտություն րոպեների ընթացքում</li>
+              <li>Հետազոտությունից ինֆոգրաֆիկայի և մուլտիմեդիա կոնտենտի գեներացիա</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+              <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+              <li class="tool-pill"><img src="assets/logos/notebooklm.svg" alt="" />NotebookLM</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-2" data-bg="sky">
+        <header class="lesson__head">
+          <p class="lesson__num">02</p>
+          <p class="lesson__day">1-ին շաբաթ · Հինգշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">1000 բառի տեղ խոսող նկարների գեներացիա</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <ul class="lesson__outcomes">
+              <li>Մեր դեմքով նոր նկարներ՝ տարբեր կերպարներով, ոճերով, տրամադրությամբ ու միջավայրերում</li>
+              <li>Լրիվ նոր պատկերների գեներացիա (վերակահավորված սենյակ, պատմական կերպարի վերականգնում և այլ օրինակներ)</li>
+            </ul>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Նկարների գեներացիա (տեքստից պատկեր, գոյություն ունեցող պատկերը՝ որպես օրինակ. օբյեկտ, ոճ, կոմպոզիցիա, ճեպանկար…)</li>
+              <li>Նկարներ գեներացնելու Prompt-երի խորացված կառուցում՝ ոճ, լուսավորություն, կոմպոզիցիա (լավ հրահանգի ճիշտ կառուցվածքը)</li>
+              <li>Նկարների խմբագրում և հարստացում (ոճ, հին նկարների վերականգնում, կերպարի դիրքի փոփոխում, նկարի պակասող հատվածի ավելացում, տեքստի ավելացում և այլն)</li>
+              <li>Գաղտնի հնարքներ և պրոֆեսիոնալ տեխնիկաներ (մաշկ և տեքստուրաներ, լուսավորություն, ռակուրս, դիտանկյուն, ոճեր, բանալի բառեր…)</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+              <li class="tool-pill"><img src="assets/logos/chatgpt.svg" alt="" />ChatGPT</li>
+              <li class="tool-pill"><img src="assets/logos/grok.svg" alt="" />Grok</li>
+              <li class="tool-pill"><img src="assets/logos/higgsfield.svg" alt="" />Higgsfield</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-3" data-bg="yellow">
+        <header class="lesson__head">
+          <p class="lesson__num">03</p>
+          <p class="lesson__day">2-րդ շաբաթ · Երեքշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <p class="lesson__outcome">Ամբողջական AI վիդեո կոնտենտ՝ իր պատմությամբ, կերպարներով ու ձայնով</p>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Տպավորիչ վիդեո ստեղծելու պարտադիր քայլերը (սցենար, կադրավորում, մոնտաժ)</li>
+              <li>Վիդեո գեներացիայի Prompt տեխնիկաներ (Ռեժիսորի բանաձև, JSON, ժամանականիշով և բացասական Prompting)</li>
+              <li>Տեքստային Prompt-ից կամ ռեֆեռալ պատկերներից վիդեոյի գեներացիա, սկզբնական և վերջնական կադրերի կառավարում</li>
+              <li>Սուպեր օգտակար նրբություններ (կադր և պլան, ռակուրս / դիտանկյուն, կամերայի շարժում)</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+              <li class="tool-pill"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+              <li class="tool-pill"><img src="assets/logos/veo.svg" alt="" />Veo 3.1</li>
+              <li class="tool-pill"><img src="assets/logos/google-flow.svg" alt="" />Google Flow</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-4" data-bg="sky">
+        <header class="lesson__head">
+          <p class="lesson__num">04</p>
+          <p class="lesson__day">2-րդ շաբաթ · Հինգշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <p class="lesson__outcome">Ֆունկցիոնալ CV կայքէջ, որը ներկայացնում է մեզ ու տալիս հնարավորություն, որ հետաքրքրվողները կայքով կապվեն մեզ հետ</p>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Կայքէջի էության ու տերմինների ծանոթացում</li>
+              <li>Մանրամասն Prompt-ով կայքէջի գեներացիա</li>
+              <li>AI-ով և ձեռքով խմբագրումներ (layout, դիզայն և կոնտենտ, ֆունկցիոնալություն)</li>
+              <li>Domain-ի ստեղծում, միացում և կայքի հրապարակում</li>
+              <li>Անալիտիկայի ակտիվացում (քանի՞ հոգի է այցելել կայք, ե՞րբ, որտեղի՞ց ու ո՞ր հատվածներում է մնացել)</li>
+              <li>Backend և տվյալների բազա (ստեղծում ենք Backend՝ բարդ ֆունկցիոնալներն ապահովելու համար)</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/lovable.svg" alt="" />Lovable</li>
+              <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-5" data-bg="teal">
+        <header class="lesson__head">
+          <p class="lesson__num">05</p>
+          <p class="lesson__day">3-րդ շաբաթ · Երեքշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">Գործընթացների ավտոմատացում AI-ով</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <p class="lesson__outcome">Ավտոմատացում, որը անհատականացված նամակներ է ուղարկում մեր ստեղծած կայքով մեզ հետ կապված մարդկանց</p>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Ավանդական ավտոմատացում VS AI ավտոմատացում</li>
+              <li>Մեր հիմնական գործիքին ծանոթացում՝ նամակագրության օգնականի ստեղծմամբ</li>
+              <li>Հիմնական ավտոմատացման քայլ առ քայլ ստեղծում, որը անհատականացված նամակներ է ուղարկում մեր ստեղծած կայքով մեզ հետ կապված մարդկանց</li>
+              <li>AI ավտոմատացումների top գործիքները</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/make.svg" alt="" />Make.com</li>
+              <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-6" data-bg="yellow">
+        <header class="lesson__head">
+          <p class="lesson__num">06</p>
+          <p class="lesson__day">3-րդ շաբաթ · Հինգշաբթի · 19:00–21:00</p>
+          <h3 class="lesson__title">Ինքնավար ագենտների ստեղծում</h3>
+          <div class="lesson__result">
+            <p class="lesson__label">Դասի վերջում</p>
+            <p class="lesson__outcome">Անձնական ագենտ, որը պլանավորում և ամրագրում է հանդիպումներ՝ մեր կայքի միջոցով մեզ հետ հանդիպել ցանկացող մարդկանց հետ</p>
+          </div>
+        </header>
+        <div class="lesson__body">
+          <div class="lesson__part">
+            <h4 class="lesson__label">Ի՞նչ ենք սովորում</h4>
+            <ul class="lesson__topics">
+              <li>Ի՞նչ է ագենտը, ինչպե՞ս է աշխատում ու ինչպե՞ս է տարբերվում AI ավտոմատացումից</li>
+              <li>Ստեղծում ենք մեր անձնական ագենտին, որը պլանավորում և ամրագրում է հանդիպումներ՝ մեր կայքի միջոցով մեզ հետ հանդիպել ցանկացող մարդկանց հետ</li>
+              <li>Ծանոթանում ենք Claude-ին արդեն որպես ավտոմատ ագենտներ ստեղծող օգնական, որ ագենտներին ձեռքով չստեղծենք</li>
+            </ul>
+          </div>
+          <div class="lesson__part">
+            <h4 class="lesson__label">Գործիքներ</h4>
+            <ul class="lesson__tools">
+              <li class="tool-pill"><img src="assets/logos/make.svg" alt="" />Make.com</li>
+              <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <div class="course-program__end">
+        <p class="course-program__note">Գործիքների ցանկը կարող է թարմացվել՝ AI-ի աշխարհի հետ միասին։</p>
+        <a href="#price" class="btn btn--white btn--md">Գնել Level-Up · ֏&nbsp;37,500</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         03 · INCLUDED — «Ի՞նչ ես ստանում»: what comes with the course, a list split by lines beside the title (as the FAQ)
+         ========================================================= -->
+    <section class="course-included">
+      <h2 class="section-title">Ի՞նչ ես ստանում</h2>
+      <ul class="course-included__list">
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Ռեսուրսներ</h3><p>Դասերի տեսաձայնագրություններ ու սահիկաշարեր՝ հասանելի 6 ամիս</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>AI-ների ցանկ</h3><p>Անընդհատ թարմացվող ցանկ՝ գործիքների նկարագրություններով</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Տնային առաջադրանքներ</h3><p>Սովորածն ամրապնդելու համար</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Հարցաշարեր</h3><p>Առաջընթացը տեսնելու համար</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Սերտիֆիկատ</h3><p>Նրանց, ովքեր կցանկանան</p></div></li>
+      </ul>
+    </section>
+
+    <!-- =========================================================
+         04 · TEACHERS — the five who teach Level-Up: the main page's teacher slider as it is (arrows, script.js)
+         ========================================================= -->
+    <section class="teachers" id="teachers">
+      <div class="teachers__top">
+        <h2 class="section-title">Ովքե՞ր են դասավանդում</h2>
+        <div class="teachers__nav">
+          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
+
+      <div class="teachers__row">
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/anahit.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanian/" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Անահիտ Վարդանյան</h3>
+              <p class="teacher__role">AI ստրատեգիստ</p>
+            </div>
+            <p class="teacher__bio">AI քեզ բան ծրագրի նախագծող, AI ստրատեգիստ՝ 5+ տարվա փորձով</p>
+            <p class="teacher__meta">110+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/nairi.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg/" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Նաիրի Արեգ Հացպանյան</h3>
+              <p class="teacher__role">Full-Stack AI Engineer</p>
+            </div>
+            <p class="teacher__bio">6+ տարվա փորձով Full-Stack Engineer՝ AI և cloud տեխնոլոգիաներում</p>
+            <p class="teacher__meta">90+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/artak.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/artakgrigoryan/" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
+              <p class="teacher__role">AI Automation Expert</p>
+            </div>
+            <p class="teacher__bio">Նախագծերի կառավարման 10+ տարվա փորձով AI ավտոմատացումների ուսուցիչ</p>
+            <p class="teacher__meta">120+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_kh.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lika13/" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
+              <p class="teacher__role">Senior Product Designer</p>
+            </div>
+            <p class="teacher__bio">Senior Product Designer՝ 15+ տարվա փորձով, AI և UX/UI մասնագետ</p>
+            <p class="teacher__meta">80+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_b.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan-96a2152aa/" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
+              <p class="teacher__role">AI Artist &amp; Director</p>
+            </div>
+            <p class="teacher__bio">AI արտիստ և սցենարիստ-ռեժիսոր՝ 10+ տարվա ստեղծագործ փորձով</p>
+            <p class="teacher__meta">75+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05 · PRICE + REFUND — a Blue band: the price, the buy button, the Bundle option and the tax refund on one side,
+         the 100% money-back promise in full on the other
+         ========================================================= -->
+    <section class="course-price" id="price">
+      <div class="course-price__inner">
+        <div class="course-price__buy">
+          <p class="course-price__kicker">Level-Up դասընթացի արժեքը</p>
+          <p class="course-price__amount">֏ 37,500</p>
+          <p class="course-price__detail">Start դասընթացի հետ՝ <a href="#bundle">Bundle-ով ֏ 45,700</a></p>
+          <!-- TODO: the checkout link (as the hero's button) -->
+          <div class="course-price__cta">
+            <a href="#" class="btn btn--white btn--lg btn--block">Գնել Level-Up</a>
+          </div>
+          <p class="course-price__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+        <div class="course-price__refund">
+          <i class="ic ic--shield ic--lg" aria-hidden="true"></i>
+          <h2 class="course-price__title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
+          <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Մասնակցիր <strong>բոլոր</strong> դասերին ու եթե վերջում սպասելիքներդ չարդարանան, մենք առանց որևէ հարցի կվերադարձնենք քո վճարած ողջ գումարը։</p>
+          <p>Միակ պայմանը՝ մասնակցություն <strong>բոլոր</strong> դասերին։ Քո վստահությունն ամենաթանկն է մեզ համար։</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         06 · FAQ — the Level-Up questions (the main page's FAQ atom), with the phone for anything else
+         ========================================================= -->
+    <section class="faq" id="faq">
+      <div class="course-faq__head">
+        <h2 class="section-title faq__title">Հաճախ տրվող հարցեր</h2>
+        <p class="course-faq__ask">Այլ հարցերի դեպքում զանգիր</p>
+        <a href="tel:+37444199199" class="btn btn--outline btn--md"><i class="ic ic--phone" aria-hidden="true"></i>+374 44 199 199</a>
+      </div>
+      <div class="faq__list">
+        <details class="faq__item" open>
+          <summary>Ո՞ւմ համար է Level-Up-ը</summary>
+          <div class="faq__answer">
+            <p>Level-Up-ը նրանց համար է, ովքեր արդեն ծանոթ են AI-ի հիմունքներին ու ուզում են ավելի խորը գնալ։ Եթե նոր ես սկսում, սկսիր <a href="start.html">Start</a>-ից կամ վերցրու երկուսը միասին՝ <a href="#bundle">Bundle</a>-ով։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ե՞րբ է հաջորդ խումբը</summary>
+          <div class="faq__answer">
+            <p>Level-Up-ը մեկնարկում է ամեն ամսվա երկրորդ երեքշաբթի։ Հաջորդ խումբը սկսում է <strong>հոկտեմբերի 13</strong>-ին։ Դասերը երեքշաբթի և հինգշաբթի օրերին են՝ 19:00 – 21:00, 3 շաբաթ։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Կստանա՞մ դասերի տեսագրությունները</summary>
+          <div class="faq__answer">
+            <p>Այո, թե բոլոր տեսաձայնագրությունները, թե բոլոր սահիկաշարերը հասանելի կլինեն բոլոր մասնակիցներին 6 ամիս։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ինչպե՞ս է աշխատում գումարի վերադարձը</summary>
+          <div class="faq__answer">
+            <p>Մասնակցիր բոլոր դասերին։ Եթե վերջում սպասելիքներդ չարդարանան, վերադարձնում ենք ամբողջ գումարը՝ առանց որևէ հարցի։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ո՞վ է նախագծել դասընթացը</summary>
+          <div class="faq__answer">
+            <p>Level-Up-ը նախագծված է «ռեԱրմենիա» ակադեմիայի «AI քեզ բան» ծրագրի կողմից։</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         07 · START + BUNDLE — the other ways in: the main page's Start and Bundle cards as they are
+         (the Bundle with its own campaign colours and ribbon border, BRAND.md → Campaign colours), side by side on grey
+         as the main page's packages
+         ========================================================= -->
+    <section class="course-bundle" id="bundle">
+      <div class="packages">
+        <article class="pkg pkg--start">
+          <header class="pkg__head">
+            <h3 class="pkg__name">Start</h3>
+            <p class="pkg__desc">AI-ի հետ առաջին ծանոթության համար</p>
+          </header>
+
+          <div class="pkg__schedule">
+            <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 6</p>
+            <p class="pkg__meta"><i class="ic ic--clock"></i>3 դաս · 6 ժամ · 1 շաբաթ</p>
+          </div>
+
+          <div class="pkg__price">
+            <p class="pkg__amount">֏ 19,500</p>
+          </div>
+
+          <div class="pkg__cta">
+            <!-- «Մանրամասն»: the course's own page (outline), above the buy button (primary) -->
+            <a href="start.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
+            <a href="#" class="btn btn--primary btn--block btn--md">Գնել Start</a>
+            <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
+          </div>
+
+          <div class="pkg__tools">
+            <p class="pkg__label">10 AI գործիք</p>
+            <ul class="tool-stack">
+              <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
+              <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+              <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
+              <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+              <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
+              <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma">+4<span class="sr-only">: Grok, Suno, Oboe, Gamma</span></li>
+            </ul>
+          </div>
+
+          <ul class="pkg__features">
+            <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
+            <li><i class="ic ic--check"></i>Առաջընթացի վերահսկում</li>
+            <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
+            <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
+          </ul>
+
+        </article>
+        <article class="pkg pkg--bundle">
+              <span class="pkg__corner">Ամենաշահավետ</span>
+              <header class="pkg__head">
+                <h3 class="pkg__name">Bundle</h3>
+                <p class="pkg__tagline">Start + Level-Up</p>
+                <p class="pkg__desc">Ամբողջական AI կրթություն մեկ ծրագրում</p>
+              </header>
+
+              <div class="pkg__schedule">
+                <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 6</p>
+                <p class="pkg__meta"><i class="ic ic--clock"></i>9 դաս · 18 ժամ · 4 շաբաթ</p>
+              </div>
+
+              <div class="pkg__price">
+                <s class="pkg__old">֏ 57,000</s>
+                <span class="pill pill--deal">−20%</span>
+                <p class="pkg__amount">֏ 45,700</p>
+              </div>
+
+              <div class="pkg__cta">
+                <a href="#" class="btn btn--primary btn--block btn--md">Գնել Bundle</a>
+                <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
+              </div>
+
+              <div class="pkg__tools">
+                <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
+                <ul class="tool-stack">
+                  <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
+                  <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+                  <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
+                  <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+                  <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
+                  <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+                  <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
+                </ul>
+              </div>
+
+              <ul class="pkg__features">
+                <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
+                <li><i class="ic ic--check"></i>Առաջընթացի վերահսկում</li>
+                <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
+                <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
+                <li><i class="ic ic--check"></i>AI գործիքների ցանկ</li>
+                <li><i class="ic ic--check"></i>Offline հանդիպումներ՝ 2 հոգու հրավիրատոմս</li>
+                <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
+              </ul>
+
+            </article>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER (as index.html, its section links back to the main page) -->
+  <footer class="footer">
+    <div class="footer__cols">
+      <div class="footer__brand">
+        <div class="footer__brand-row">
+          <a href="index.html" class="footer__logo">
+            <img src="assets/logos/logo_arm_dark.svg" alt="AI քեզ բան" />
+          </a>
+          <p class="footer__tagline">Հայաստանում AI կրթության<br />լավագույն ծրագիր</p>
+        </div>
+        <div class="footer__brand-row">
+          <img class="footer__gerb" src="assets/logos/armgerb.svg" alt="" />
+          <p class="footer__tagline">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        <nav class="footer__col" aria-label="Բաժիններ">
+          <p class="footer__heading">Բաժիններ</p>
+          <a href="index.html#courses">Ի՞նչ կսովորես</a>
+          <a href="index.html#packages">Դասընթացներ</a>
+          <a href="index.html#teachers">Ուսուցիչներ</a>
+          <a href="index.html#mission">Մեր առաքելությունը</a>
+          <a href="index.html#referral">Հրավիրիր ընկերոջդ</a>
+          <a href="index.html#faq">Հաճախ տրվող հարցեր</a>
+          <a href="https://aiqezban.ai/join">Միացիր մեր թիմին</a>
+        </nav>
+        <div class="footer__col">
+          <p class="footer__heading">Կապ</p>
+          <a href="tel:+37444199199">+374 44 199 199</a>
+          <a href="mailto:info@rearmenia.com">info@rearmenia.com</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Halabyan+65%2F5+Yerevan+Armenia" target="_blank" rel="noopener" class="footer__address">Երևան, Հալաբյան 65/5<br />Հայաստան 0078</a>
+          <div class="footer__social">
+            <a href="https://www.facebook.com/aiqezbanai/" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/social/facebook.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.instagram.com/ai_qez_ban_/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/social/instagram.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.linkedin.com/company/lumiverse-ecosystem/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/social/linkedin.svg" width="20" height="20" alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="footer__line" />
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 AI քեզ բան<br />Բոլոր իրավունքները պաշտպանված են</p>
+      <div class="footer__end">
+        <ul class="footer__pay" aria-label="Վճարման եղանակներ">
+          <li class="pay-badge"><img src="assets/payments/visa.svg" alt="Visa" /></li>
+          <li class="pay-badge"><img src="assets/payments/mastercard.svg" alt="Mastercard" /></li>
+          <li class="pay-badge"><img src="assets/payments/arca.png" alt="ArCa" /></li>
+          <li class="pay-badge"><img src="assets/payments/idram.svg" alt="Idram" /></li>
+        </ul>
+        <p class="footer__legal">
+          <a href="https://aiqezban.lumiverse.global/privacy-policy" target="_blank" rel="noopener">Գաղտնիության քաղաքականություն</a>
+          <a href="https://aiqezban.lumiverse.global/terms" target="_blank" rel="noopener">Պայմաններ և կանոններ</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING ACTION BUTTONS (as index.html: contact group + back to top, they appear on scroll) -->
+  <div class="fabs" inert>
+    <div class="fab-group" id="contact-actions">
+      <a href="tel:+37444199199" class="fab fab--label" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i><span class="fab__label">+374 44 199 199</span></a>
+      <a href="https://t.me/AI_qez_banakan_bot" class="fab" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic--lg ic--telegram" aria-hidden="true"></i></a>
+      <a href="https://wa.me/37441958510" class="fab" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><i class="ic ic--lg ic--whatsapp" aria-hidden="true"></i></a>
+    </div>
+    <button type="button" class="fab fab--contact" aria-label="Կապ" aria-expanded="false" aria-controls="contact-actions"><i class="ic ic--phone fab__open-icon" aria-hidden="true"></i><i class="ic ic--x fab__close-icon" aria-hidden="true"></i></button>
+    <button type="button" class="fab fab--top" aria-label="Վերև"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
+  </div>
+
+  <script src="script.js?v=levelup-1"></script>
+</body>
+</html>

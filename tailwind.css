@@ -1082,15 +1082,16 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
    --rise and cut off by as much at the bottom, so only what is above the shoulder ever shows. */
 .learn-col { position: relative; }
 .learn-col > .eyes,
-.join-slot > .eyes {   /* the join page's roles peek the same way (join.html) */
+.join-slot > .eyes,    /* the join page's roles peek the same way (join.html) */
+.course-week > .eyes {   /* and the course page's week (start.html) */
   position: absolute; z-index: 1; pointer-events: none;
   translate: 0 var(--rise);
   clip-path: inset(0 0 var(--rise) 0);
   transition: translate .45s var(--ease-smooth), clip-path .45s var(--ease-smooth), scale .08s ease;
 }
-.learn-col > .eyes:not(.is-up), .join-slot > .eyes:not(.is-up) { --rise: 100%; }
-.learn-col > .eyes.is-up, .join-slot > .eyes.is-up { --rise: 0%; }
-@media (prefers-reduced-motion: reduce) { .learn-col > .eyes, .join-slot > .eyes { transition: none; } }
+.learn-col > .eyes:not(.is-up), .join-slot > .eyes:not(.is-up), .course-week > .eyes:not(.is-up) { --rise: 100%; }
+.learn-col > .eyes.is-up, .join-slot > .eyes.is-up, .course-week > .eyes.is-up { --rise: 0%; }
+@media (prefers-reduced-motion: reduce) { .learn-col > .eyes, .join-slot > .eyes, .course-week > .eyes { transition: none; } }
 .learn-tile:focus-visible { outline: 3px solid var(--color-primary); outline-offset: 3px; }
 /* Bubble-shaped tiles (BRAND.md → Bubble construction): script.js cuts each tile into the brand bubble for its size */
 /* Anything script.js cuts into a brand shape (clip-path: the learn tiles, the hero's bubble button) would lose its
@@ -2115,6 +2116,168 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .footer__legal a { padding-block: --spacing(1.5); }
   /* On Black the edge fade read as a smudge on the peeking tile: phones crop it cleanly */
   .learn-grid:not(.is-end) { mask: none; }
+}
+
+/* ============================================================
+   15 · COURSE PAGES (start.html, level-up.html) — everything about one course, to read top to bottom: the hero with the week at a
+   glance (and the facts), the program (one panel a lesson), what's included, the teachers, the price and refund, the FAQ.
+   The nav, teacher cards, FAQ, footer and floating buttons are the main page's atoms, unchanged.
+   ============================================================ */
+/* Every band keeps the page column (1440px, --page-x) while its colour runs to the screen's edges */
+.course-hero, .course-program, .course-included, .course-teachers, .course-price, .course-bundle {
+  --edge: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));
+  padding: var(--section-y) var(--edge);
+}
+
+/* 01 · Hero: on Sky like the main page (black text, BRAND.md); the copy left, the week right */
+.course-hero {
+  --header-h: --spacing(20);
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center;   /* the copy and the week centred on each other */
+  gap: --spacing(12) var(--card-gap);
+  padding-top: calc(var(--header-h) + --spacing(16));
+  background: var(--color-feed-sky);
+  color: var(--color-black);
+}
+.course-hero__copy { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(5); }
+.course-hero__kicker { @apply text-aqb-body-m; }   /* kicker: Regular */
+.course-hero__title { @apply text-aqb-display-l italic; text-wrap: balance; }   /* the one message: Display L (Headline H1 below lg) */
+.course-hero__lead { max-width: --spacing(150); @apply text-aqb-body-s; }
+.course-hero__detail { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }   /* detail: SemiBold, as the main hero */
+.course-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(2); }   /* the button, the endorsement beside it (as the main hero) */
+.course-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
+.course-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
+
+/* The week at a glance: a white panel, one row a lesson in its lesson's colour, each a link to its panel below.
+   The brand's eyes peek over its top-right corner, from outside the shape (BRAND.md → Bubble construction: Peek): they
+   rise from behind the edge on hover (.is-up, script.js · 15), as the «Ի՞նչ սովորել» tiles' (the rule is theirs, 05) */
+.course-week {
+  position: relative;
+  display: flex; flex-direction: column; gap: --spacing(3);
+  padding: --spacing(6);
+  background: var(--color-white);
+  border-radius: var(--radius-4xl);
+}
+.course-week__eyes { bottom: 100%; right: --spacing(8); width: --spacing(16); margin-bottom: calc(--spacing(1) * -1); }
+.course-week__title { @apply text-aqb-label; color: var(--color-ink-600); }
+.course-week__days { display: flex; flex-direction: column; gap: --spacing(2); }
+.course-week__days a {
+  display: flex; flex-direction: column; gap: --spacing(1);
+  padding: --spacing(4) --spacing(5);
+  border-radius: var(--radius-2xl);
+  color: var(--color-black);
+  transition: transform var(--default-transition-duration) var(--ease-smooth);
+}
+.course-week__days a:hover { transform: translateX(--spacing(1)); }
+.course-week__days a:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.course-week__day { @apply text-aqb-caption; }
+.course-week__lesson { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+/* When a group starts and the format, under the days: one line each, the calendar icon first, the Zoom wordmark after «Օնլայն» */
+.course-week__facts { display: flex; flex-direction: column; gap: --spacing(2); padding: --spacing(2) --spacing(1) 0; }
+.course-week__facts li { display: flex; align-items: center; gap: --spacing(2); @apply text-aqb-label; }
+.course-week__facts li { color: var(--color-ink-900); }
+.course-week__facts img { height: --spacing(4); width: auto; flex: none; }   /* the Zoom wordmark after «Օնլայն», as tall as the text */
+
+/* Lesson colours (each course's tiles' on the main page): a row of the week, a lesson panel */
+:is(.course-week__days a, .lesson)[data-bg="yellow"] { background: var(--color-feed-yellow); }
+:is(.course-week__days a, .lesson)[data-bg="teal"]   { background: var(--color-feed-teal); }
+:is(.course-week__days a, .lesson)[data-bg="pink"]   { background: var(--color-feed-pink); }
+:is(.course-week__days a, .lesson)[data-bg="sky"]    { background: var(--color-feed-sky); }   /* Level-Up; on the Sky hero the week card's white keeps the row apart */
+
+/* 02 · Program: the kicker over the section title, then one panel a lesson (feed colour, black text) */
+/* On Black, as the main page's «Ի՞նչ սովորել» tiles: the feed colours stand out and the white eyes show (BRAND.md) */
+.course-program { display: flex; flex-direction: column; gap: var(--card-gap); background: var(--color-black); color: var(--color-white); }
+.course-program__top { display: flex; flex-direction: column; gap: --spacing(2); margin-bottom: calc(var(--title-gap) - var(--card-gap)); }
+.course-program__top .section-title { color: var(--color-white); }   /* white on Black */
+.course-program__kicker { @apply text-aqb-body-m; }
+.course-program__end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: --spacing(4) var(--card-gap); }
+.course-program__note { @apply text-aqb-caption; }
+
+.lesson {
+  display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+  gap: --spacing(8) --spacing(12);
+  padding: --spacing(10);
+  border-radius: var(--radius-4xl);
+  color: var(--color-black);
+  scroll-margin-top: --spacing(24);   /* the week's links land below the fixed nav */
+}
+.lesson__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3); }
+.lesson__num { @apply text-aqb-display-l italic; }   /* the big number: a display style */
+.lesson__day { @apply text-aqb-label; }
+.lesson__title { @apply text-aqb-subhead; text-wrap: balance; }   /* a card title: Subhead */
+.lesson__body { display: flex; flex-direction: column; gap: --spacing(7); }
+.lesson__part { display: flex; flex-direction: column; gap: --spacing(3); }
+.lesson__label { display: flex; align-items: center; gap: --spacing(2); @apply text-aqb-label; }
+.lesson__topics { display: flex; flex-direction: column; gap: --spacing(3); padding-left: --spacing(5); list-style: disc; }
+.lesson__topics li { @apply text-aqb-body-m; }   /* what the page is for: the largest reading text (Body M; Body S on phones) */
+.lesson__topics li::marker { color: var(--color-ink-700); }
+.lesson__tools { display: flex; flex-wrap: wrap; gap: --spacing(2); }
+/* The result: what you leave the lesson with, under the title */
+.lesson__result { display: flex; flex-direction: column; gap: --spacing(2); margin-top: --spacing(3); padding-top: --spacing(5); border-top: 1px solid color-mix(in oklab, var(--color-black) 20%, transparent); }
+.lesson__outcome { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+/* Several results (level-up.html): the same type, as a list */
+.lesson__outcomes { display: flex; flex-direction: column; gap: --spacing(2); padding-left: --spacing(5); list-style: disc; }
+.lesson__outcomes li { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+
+/* 03 · Included: the title on the left, the five items beside it as a list split by lines (as the FAQ) */
+.course-included { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: start; gap: var(--title-gap) var(--card-gap); background: var(--surface); }
+.course-included__list { display: flex; flex-direction: column; }
+.course-included__list li { display: flex; align-items: flex-start; gap: --spacing(3); padding: --spacing(5) 0; border-bottom: 1px solid var(--line); }
+.course-included__list li:first-child { border-top: 1px solid var(--line); }
+.course-included__list .ic { margin-top: --spacing(0.5); color: var(--color-primary); }
+.course-included__list h3 { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
+.course-included__list p { margin-top: --spacing(1); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
+
+/* 04 · Teachers: the main page's .teacher cards, two equal halves instead of the slider (the card fills its column) */
+.course-teachers { display: flex; flex-direction: column; gap: var(--title-gap); }
+.course-teachers__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }
+.course-teachers__row .teacher { width: auto; }   /* layout only: the column sets the width */
+
+/* 05 · Price + refund: a Blue band, white text (BRAND.md); the buy side and the promise side by side */
+.course-price { background: var(--color-primary); color: var(--color-white); }
+.course-price__inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: --spacing(12); align-items: start; }
+.course-price__buy { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); }
+.course-price__kicker { @apply text-aqb-body-m; }
+.course-price__amount { @apply text-aqb-display-l italic; }   /* the big number */
+.course-price__detail { @apply text-aqb-label; }
+.course-price__detail a { text-decoration: underline; text-underline-offset: 3px; }
+.course-price__cta { align-self: stretch; max-width: --spacing(100); margin-top: --spacing(2); }
+.course-price__endorse { display: flex; align-items: center; gap: --spacing(3); margin-top: --spacing(2); @apply text-aqb-caption; }
+.course-price__endorse img { width: --spacing(9); height: auto; flex: none; }
+.course-price__refund { display: flex; flex-direction: column; gap: --spacing(4); padding-left: --spacing(12); border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
+.course-price__title { @apply text-aqb-subhead; text-wrap: balance; }   /* a card title (Subhead): the price stays the one headline of the band */
+.course-price__refund p { max-width: --spacing(160); @apply text-aqb-body-s; }
+
+/* 07 · Level-Up + Bundle: the main page's two package cards (.packages, .pkg, unchanged), side by side on grey as the
+   main page's packages; two columns instead of its three (stacked below lg by .packages itself, Bundle first) */
+.course-bundle { background: var(--surface); }
+.course-bundle .packages { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: --spacing(260); margin: 0 auto; }
+
+/* 06 · FAQ: the main page's, with a call line under the title */
+.course-faq__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); }
+.course-faq__ask { @apply text-aqb-body-s; color: var(--color-ink-700); }
+
+@media (width < theme(--breakpoint-lg)) {
+  .course-hero { grid-template-columns: minmax(0, 1fr); align-items: start; gap: --spacing(16); }   /* room for the eyes over the week */
+  .course-hero__title { @apply text-aqb-headline-h1; }
+  .lesson { grid-template-columns: minmax(0, 1fr); }
+  .course-included { grid-template-columns: minmax(0, 1fr); }
+  .course-price__inner { grid-template-columns: minmax(0, 1fr); }
+  .course-bundle .packages { grid-template-columns: minmax(0, 1fr); }   /* stacked, as the main page's */
+  .course-price__refund { padding: --spacing(10) 0 0; border-left: 0; border-top: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
+}
+@media (width < theme(--breakpoint-md)) {
+  .course-hero { --header-h: --spacing(16); padding-top: calc(var(--header-h) + --spacing(10)); }
+  .course-hero__title { @apply text-aqb-headline-h2; }   /* phones step down the scale */
+  .course-hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+  .course-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); }   /* the button full width, the endorsement under it (as the main hero) */
+  .course-week { padding: --spacing(4); }
+  .lesson { padding: --spacing(6); gap: --spacing(6); border-radius: var(--radius-3xl); }
+  .lesson__num { @apply text-aqb-headline-h1; }   /* phones: Display L → Headline H1 */
+  .lesson__topics li { @apply text-aqb-body-s; }
+  .course-program__end .btn { flex: 1; }
+  .course-teachers__row { grid-template-columns: minmax(0, 1fr); }
+  .course-price__amount { @apply text-aqb-headline-h1; }
+  .course-price__cta { max-width: none; }
 }
 
 } /* end @layer components */

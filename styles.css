@@ -24,6 +24,7 @@
     --radius-xl: .75rem;
     --radius-2xl: 1rem;
     --radius-3xl: 1.5rem;
+    --radius-4xl: 2rem;
     --shadow-sm: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
     --shadow-xl: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
     --shadow-2xl: 0 25px 50px -12px #00000040;
@@ -2456,7 +2457,7 @@
     position: relative;
   }
 
-  .learn-col > .eyes, .join-slot > .eyes {
+  .learn-col > .eyes, .join-slot > .eyes, .course-week > .eyes {
     z-index: 1;
     pointer-events: none;
     translate: 0 var(--rise);
@@ -2465,16 +2466,16 @@
     position: absolute;
   }
 
-  .learn-col > .eyes:not(.is-up), .join-slot > .eyes:not(.is-up) {
+  .learn-col > .eyes:not(.is-up), .join-slot > .eyes:not(.is-up), .course-week > .eyes:not(.is-up) {
     --rise: 100%;
   }
 
-  .learn-col > .eyes.is-up, .join-slot > .eyes.is-up {
+  .learn-col > .eyes.is-up, .join-slot > .eyes.is-up, .course-week > .eyes.is-up {
     --rise: 0%;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .learn-col > .eyes, .join-slot > .eyes {
+    .learn-col > .eyes, .join-slot > .eyes, .course-week > .eyes {
       transition: none;
     }
   }
@@ -5230,6 +5231,649 @@
     .learn-grid:not(.is-end) {
       -webkit-mask: none;
       mask: none;
+    }
+  }
+
+  .course-hero, .course-program, .course-included, .course-teachers, .course-price, .course-bundle {
+    --edge: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));
+    padding: var(--section-y) var(--edge);
+  }
+
+  .course-hero {
+    --header-h: calc(var(--spacing) * 20);
+    align-items: center;
+    gap: calc(var(--spacing) * 12) var(--card-gap);
+    padding-top: calc(var(--header-h) + calc(var(--spacing) * 16));
+    background: var(--color-feed-sky);
+    color: var(--color-black);
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    display: grid;
+  }
+
+  .course-hero__copy {
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 5);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-hero__kicker {
+    font-size: var(--text-aqb-body-m);
+    line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
+  }
+
+  .course-hero__title {
+    font-size: var(--text-aqb-display-l);
+    line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-display-l--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-display-l--font-weight));
+    text-wrap: balance;
+    font-style: italic;
+  }
+
+  .course-hero__lead {
+    max-width: calc(var(--spacing) * 150);
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+  }
+
+  .course-hero__detail {
+    font-size: var(--text-aqb-body-m);
+    line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
+    font-weight: var(--font-weight-detail);
+  }
+
+  .course-hero__actions {
+    align-items: center;
+    gap: calc(var(--spacing) * 4) calc(var(--spacing) * 8);
+    margin-top: calc(var(--spacing) * 2);
+    flex-wrap: wrap;
+    display: flex;
+  }
+
+  .course-hero__endorse {
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    font-size: var(--text-aqb-caption);
+    line-height: var(--tw-leading, var(--text-aqb-caption--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-caption--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-caption--font-weight));
+    display: flex;
+  }
+
+  .course-hero__endorse img {
+    width: calc(var(--spacing) * 9);
+    flex: none;
+    height: auto;
+  }
+
+  .course-week {
+    gap: calc(var(--spacing) * 3);
+    padding: calc(var(--spacing) * 6);
+    background: var(--color-white);
+    border-radius: var(--radius-4xl);
+    flex-direction: column;
+    display: flex;
+    position: relative;
+  }
+
+  .course-week__eyes {
+    bottom: 100%;
+    right: calc(var(--spacing) * 8);
+    width: calc(var(--spacing) * 16);
+    margin-bottom: calc(var(--spacing) * -1);
+  }
+
+  .course-week__title {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    color: var(--color-ink-600);
+  }
+
+  .course-week__days {
+    gap: calc(var(--spacing) * 2);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-week__days a {
+    gap: var(--spacing);
+    padding: calc(var(--spacing) * 4) calc(var(--spacing) * 5);
+    border-radius: var(--radius-2xl);
+    color: var(--color-black);
+    transition: transform var(--default-transition-duration) var(--ease-smooth);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-week__days a:hover {
+    transform: translateX(var(--spacing));
+  }
+
+  .course-week__days a:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  .course-week__day {
+    font-size: var(--text-aqb-caption);
+    line-height: var(--tw-leading, var(--text-aqb-caption--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-caption--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-caption--font-weight));
+  }
+
+  .course-week__lesson {
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    font-weight: var(--font-weight-detail);
+  }
+
+  .course-week__facts {
+    gap: calc(var(--spacing) * 2);
+    padding: calc(var(--spacing) * 2) var(--spacing) 0;
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-week__facts li {
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    color: var(--color-ink-900);
+    display: flex;
+  }
+
+  .course-week__facts img {
+    height: calc(var(--spacing) * 4);
+    flex: none;
+    width: auto;
+  }
+
+  :is(.course-week__days a, .lesson)[data-bg="yellow"] {
+    background: var(--color-feed-yellow);
+  }
+
+  :is(.course-week__days a, .lesson)[data-bg="teal"] {
+    background: var(--color-feed-teal);
+  }
+
+  :is(.course-week__days a, .lesson)[data-bg="pink"] {
+    background: var(--color-feed-pink);
+  }
+
+  :is(.course-week__days a, .lesson)[data-bg="sky"] {
+    background: var(--color-feed-sky);
+  }
+
+  .course-program {
+    gap: var(--card-gap);
+    background: var(--color-black);
+    color: var(--color-white);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-program__top {
+    gap: calc(var(--spacing) * 2);
+    margin-bottom: calc(var(--title-gap) - var(--card-gap));
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-program__top .section-title {
+    color: var(--color-white);
+  }
+
+  .course-program__kicker {
+    font-size: var(--text-aqb-body-m);
+    line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
+  }
+
+  .course-program__end {
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--spacing) * 4) var(--card-gap);
+    flex-wrap: wrap;
+    display: flex;
+  }
+
+  .course-program__note {
+    font-size: var(--text-aqb-caption);
+    line-height: var(--tw-leading, var(--text-aqb-caption--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-caption--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-caption--font-weight));
+  }
+
+  .lesson {
+    gap: calc(var(--spacing) * 8) calc(var(--spacing) * 12);
+    padding: calc(var(--spacing) * 10);
+    border-radius: var(--radius-4xl);
+    color: var(--color-black);
+    scroll-margin-top: calc(var(--spacing) * 24);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    display: grid;
+  }
+
+  .lesson__head {
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 3);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .lesson__num {
+    font-size: var(--text-aqb-display-l);
+    line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-display-l--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-display-l--font-weight));
+    font-style: italic;
+  }
+
+  .lesson__day {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+  }
+
+  .lesson__title {
+    font-size: var(--text-aqb-subhead);
+    line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
+    text-wrap: balance;
+  }
+
+  .lesson__body {
+    gap: calc(var(--spacing) * 7);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .lesson__part {
+    gap: calc(var(--spacing) * 3);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .lesson__label {
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    display: flex;
+  }
+
+  .lesson__topics {
+    gap: calc(var(--spacing) * 3);
+    padding-left: calc(var(--spacing) * 5);
+    flex-direction: column;
+    list-style: outside;
+    display: flex;
+  }
+
+  .lesson__topics li {
+    font-size: var(--text-aqb-body-m);
+    line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
+  }
+
+  .lesson__topics li::marker {
+    color: var(--color-ink-700);
+  }
+
+  .lesson__tools {
+    gap: calc(var(--spacing) * 2);
+    flex-wrap: wrap;
+    display: flex;
+  }
+
+  .lesson__result {
+    gap: calc(var(--spacing) * 2);
+    margin-top: calc(var(--spacing) * 3);
+    padding-top: calc(var(--spacing) * 5);
+    border-top: 1px solid #0003;
+    flex-direction: column;
+    display: flex;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .lesson__result {
+      border-top: 1px solid color-mix(in oklab, var(--color-black) 20%, transparent);
+    }
+  }
+
+  .lesson__outcome {
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    font-weight: var(--font-weight-detail);
+  }
+
+  .lesson__outcomes {
+    gap: calc(var(--spacing) * 2);
+    padding-left: calc(var(--spacing) * 5);
+    flex-direction: column;
+    list-style: outside;
+    display: flex;
+  }
+
+  .lesson__outcomes li {
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    font-weight: var(--font-weight-detail);
+  }
+
+  .course-included {
+    align-items: start;
+    gap: var(--title-gap) var(--card-gap);
+    background: var(--surface);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    display: grid;
+  }
+
+  .course-included__list {
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-included__list li {
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 3);
+    padding: calc(var(--spacing) * 5) 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+  }
+
+  .course-included__list li:first-child {
+    border-top: 1px solid var(--line);
+  }
+
+  .course-included__list .ic {
+    margin-top: calc(var(--spacing) * .5);
+    color: var(--color-primary);
+  }
+
+  .course-included__list h3 {
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    font-weight: var(--font-weight-detail);
+    color: var(--color-ink-900);
+  }
+
+  .course-included__list p {
+    margin-top: var(--spacing);
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    font-weight: var(--font-weight-text);
+    color: var(--color-ink-700);
+  }
+
+  .course-teachers {
+    gap: var(--title-gap);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-teachers__row {
+    gap: var(--card-gap);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    display: grid;
+  }
+
+  .course-teachers__row .teacher {
+    width: auto;
+  }
+
+  .course-price {
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .course-price__inner {
+    gap: calc(var(--spacing) * 12);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+    display: grid;
+  }
+
+  .course-price__buy {
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 4);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-price__kicker {
+    font-size: var(--text-aqb-body-m);
+    line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
+  }
+
+  .course-price__amount {
+    font-size: var(--text-aqb-display-l);
+    line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-display-l--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-display-l--font-weight));
+    font-style: italic;
+  }
+
+  .course-price__detail {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+  }
+
+  .course-price__detail a {
+    text-underline-offset: 3px;
+    text-decoration: underline;
+  }
+
+  .course-price__cta {
+    max-width: calc(var(--spacing) * 100);
+    margin-top: calc(var(--spacing) * 2);
+    align-self: stretch;
+  }
+
+  .course-price__endorse {
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    margin-top: calc(var(--spacing) * 2);
+    font-size: var(--text-aqb-caption);
+    line-height: var(--tw-leading, var(--text-aqb-caption--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-caption--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-caption--font-weight));
+    display: flex;
+  }
+
+  .course-price__endorse img {
+    width: calc(var(--spacing) * 9);
+    flex: none;
+    height: auto;
+  }
+
+  .course-price__refund {
+    gap: calc(var(--spacing) * 4);
+    padding-left: calc(var(--spacing) * 12);
+    border-left: 1px solid #ffffff4d;
+    flex-direction: column;
+    display: flex;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .course-price__refund {
+      border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent);
+    }
+  }
+
+  .course-price__title {
+    font-size: var(--text-aqb-subhead);
+    line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
+    text-wrap: balance;
+  }
+
+  .course-price__refund p {
+    max-width: calc(var(--spacing) * 160);
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+  }
+
+  .course-bundle {
+    background: var(--surface);
+  }
+
+  .course-bundle .packages {
+    max-width: calc(var(--spacing) * 260);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0 auto;
+  }
+
+  .course-faq__head {
+    align-items: flex-start;
+    gap: calc(var(--spacing) * 4);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .course-faq__ask {
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    color: var(--color-ink-700);
+  }
+
+  @media not all and (min-width: 68.75rem) {
+    .course-hero {
+      align-items: start;
+      gap: calc(var(--spacing) * 16);
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .course-hero__title {
+      font-size: var(--text-aqb-headline-h1);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+    }
+
+    .lesson, .course-included, .course-price__inner, .course-bundle .packages {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .course-price__refund {
+      padding: calc(var(--spacing) * 10) 0 0;
+      border-top: 1px solid #ffffff4d;
+      border-left: 0;
+    }
+
+    @supports (color: color-mix(in lab, red, red)) {
+      .course-price__refund {
+        border-top: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent);
+      }
+    }
+  }
+
+  @media not all and (min-width: 48rem) {
+    .course-hero {
+      --header-h: calc(var(--spacing) * 16);
+      padding-top: calc(var(--header-h) + calc(var(--spacing) * 10));
+    }
+
+    .course-hero__title {
+      font-size: var(--text-aqb-headline-h2);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h2--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h2--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h2--font-weight));
+    }
+
+    .course-hero__detail {
+      font-size: var(--text-aqb-body-s);
+      line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+      font-weight: var(--font-weight-detail);
+    }
+
+    .course-hero__actions {
+      align-self: stretch;
+      align-items: stretch;
+      gap: calc(var(--spacing) * 4);
+      flex-direction: column;
+    }
+
+    .course-week {
+      padding: calc(var(--spacing) * 4);
+    }
+
+    .lesson {
+      padding: calc(var(--spacing) * 6);
+      gap: calc(var(--spacing) * 6);
+      border-radius: var(--radius-3xl);
+    }
+
+    .lesson__num {
+      font-size: var(--text-aqb-headline-h1);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+    }
+
+    .lesson__topics li {
+      font-size: var(--text-aqb-body-s);
+      line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
+    }
+
+    .course-program__end .btn {
+      flex: 1;
+    }
+
+    .course-teachers__row {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .course-price__amount {
+      font-size: var(--text-aqb-headline-h1);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+    }
+
+    .course-price__cta {
+      max-width: none;
     }
   }
 }

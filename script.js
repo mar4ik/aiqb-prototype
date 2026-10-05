@@ -934,7 +934,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    ============================================================ */
 (function navCta() {
   const hero = document.documentElement.dataset.hero;
-  const heroCta = document.querySelector(hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');   // the hero on show (A/B test)
+  const heroCta = document.querySelector(hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn, .course-hero__actions .btn');   // the hero on show (A/B test; a course page's own hero)
   const navCta = document.querySelector('.nav-cta');
   if (!navCta) return;
   const past = (yes) => {
@@ -1365,6 +1365,47 @@ function makeEyes() {
   const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target)));
   buttons.forEach((b) => resizer.observe(b));
   document.fonts?.ready.then(all);
+})();
+
+/* ============================================================
+   15 · Course page (start.html) — the week's eyes: they rise from behind the card's top-right corner while the pointer is
+   on the card (or a lesson link in it has keyboard focus), follow the pointer over the hero and blink now and then,
+   as the «Ի՞նչ սովորել» tiles' eyes (05c). The rise is in tailwind.css (.course-week > .eyes)
+   ============================================================ */
+(function courseWeekEyes() {
+  const card = document.querySelector('.course-week');
+  const eyes = card?.querySelector(':scope > .eyes');
+  if (!eyes) return;
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
+  const show = () => eyes.classList.add('is-up');
+  const hide = () => eyes.classList.remove('is-up');
+  card.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') show(); });
+  card.addEventListener('pointerleave', hide);
+  card.addEventListener('focusin', (e) => { if (e.target.matches(':focus-visible')) show(); });   // keyboard focus, not a tap
+  card.addEventListener('focusout', (e) => { if (!card.contains(e.relatedTarget)) hide(); });
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const hero = card.closest('section');
+  if (hero && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    let px = 0, py = 0, raf = 0;
+    const follow = () => {
+      raf = 0;
+      const box = eyes.getBoundingClientRect();
+      const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
+      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;   // nearer than 160px: less far off-centre
+      eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
+      eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
+    };
+    hero.addEventListener('pointermove', (e) => { px = e.clientX; py = e.clientY; raf ||= requestAnimationFrame(follow); });
+    hero.addEventListener('pointerleave', () => { eyes.style.removeProperty('--look-x'); eyes.style.removeProperty('--look-y'); });
+  }
+
+  (function blink() {
+    setTimeout(() => {
+      if (eyes.classList.contains('is-up')) { eyes.classList.add('is-blink'); setTimeout(() => eyes.classList.remove('is-blink'), 140); }
+      blink();
+    }, 1200 + Math.random() * 2400);
+  })();
 })();
 
 /* ============================================================
