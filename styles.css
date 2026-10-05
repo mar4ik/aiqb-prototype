@@ -1910,6 +1910,7 @@
 
   .pkg--bundle {
     background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, #f7faff 45%, var(--color-white) 100%);
+    overflow: hidden;
   }
 
   @supports (color: color-mix(in lab, red, red)) {
@@ -1958,7 +1959,19 @@
     position: absolute;
   }
 
-  .pkg--bundle > * {
+  .pkg__gift {
+    top: calc(var(--spacing) * 16);
+    right: calc(calc(var(--spacing) * 8) * -1);
+    width: calc(var(--spacing) * 40);
+    height: calc(var(--spacing) * 40);
+    object-fit: contain;
+    z-index: 2;
+    pointer-events: none;
+    position: absolute;
+    rotate: -10deg;
+  }
+
+  .pkg--bundle > :not(.pkg__gift) {
     z-index: 1;
     position: relative;
   }
@@ -2037,11 +2050,19 @@
       translate: 0 calc(calc(var(--spacing) * 3) * -1);
       box-shadow: var(--shadow-2xl);
     }
+
+    .packages[data-spotlight] .pkg__gift {
+      animation: gift-wiggle .9s var(--ease-smooth) .4s;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .pkg {
       transition: none;
+    }
+
+    .packages[data-spotlight] .pkg__gift {
+      animation: none;
     }
   }
 
@@ -2052,29 +2073,33 @@
     display: flex;
   }
 
+  .pkg--bundle .pkg__head {
+    padding-right: calc(var(--spacing) * 24);
+  }
+
   .pkg__name {
+    font-size: var(--text-aqb-headline-h1);
+    line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+    color: var(--color-ink-900);
+    font-style: italic;
+  }
+
+  .pkg__tagline {
     font-size: var(--text-aqb-subhead);
     line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
-    color: var(--color-ink-900);
-  }
-
-  .pkg__tagline {
-    font-size: var(--text-aqb-body-s);
-    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
     color: var(--color-ink-800);
     margin-top: calc(var(--spacing) * -1);
   }
 
   .pkg__desc {
-    font-size: var(--text-aqb-label);
-    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
-    font-weight: var(--font-weight-text);
+    font-size: var(--text-aqb-body-s);
+    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
     color: var(--color-ink-600);
   }
 
@@ -2338,6 +2363,23 @@
     gap: calc(var(--spacing) * 3);
     flex-direction: column;
     display: flex;
+  }
+
+  .pkg--bundle .pkg__cta {
+    justify-content: flex-end;
+  }
+
+  @media (min-width: 68.75rem) {
+    .pkg--bundle .pkg__price {
+      translate: 0 calc((calc(var(--spacing) * 14) + calc(var(--spacing) * 3)) / 2);
+    }
+
+    .pkg--bundle .pkg__amount {
+      font-size: var(--text-aqb-headline-h1);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+    }
   }
 
   .pkg__guarantee {
@@ -5058,6 +5100,22 @@
       padding: calc(var(--spacing) * 6);
     }
 
+    .pkg__name {
+      font-size: var(--text-aqb-headline-h2);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h2--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h2--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h2--font-weight));
+    }
+
+    .pkg__gift {
+      width: calc(var(--spacing) * 36);
+      height: calc(var(--spacing) * 36);
+    }
+
+    .pkg--bundle .pkg__head {
+      padding-right: calc(var(--spacing) * 22);
+    }
+
     .pill-tabs__tab {
       padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 4.5);
       font-size: var(--text-aqb-caption);
@@ -6003,6 +6061,20 @@
 
   50% {
     padding: 4px;
+  }
+}
+
+@keyframes gift-wiggle {
+  25% {
+    rotate: 4deg;
+  }
+
+  50% {
+    rotate: -18deg;
+  }
+
+  75% {
+    rotate: -4deg;
   }
 }
 

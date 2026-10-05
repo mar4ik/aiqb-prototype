@@ -857,6 +857,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   border-radius: var(--radius-3xl);
 }
 .pkg--bundle {
+  overflow: hidden;   /* the gift (.pkg__gift) is cropped by the card's edge, never sticks out */
   background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, color-mix(in oklab, var(--color-campaign-bundle-wash) 50%, var(--color-white)) 45%, var(--color-white) 100%);   /* Bundle's own colours: a deliberate exception to "no gradients" (BRAND.md → Campaign colours) */
 }
 /* Ribbon border: a bright band travels around the card and the border thickens as it passes.
@@ -895,7 +896,20 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   @apply text-aqb-caption;
   white-space: nowrap;
 }
-.pkg--bundle > * { position: relative; z-index: 1; }
+/* The gift: a big 3D gift over the right side of the Bundle's head, cropped by the card (overflow: hidden on
+   .pkg--bundle; back from the 1 Oct version) */
+.pkg__gift {
+  position: absolute;
+  top: --spacing(16);
+  right: calc(--spacing(8) * -1);
+  width: --spacing(40);
+  height: --spacing(40);
+  object-fit: contain;
+  rotate: -10deg;
+  z-index: 2;   /* in front of the head and the start-date box (the content is z-index 1), under the ribbon border (3) */
+  pointer-events: none;
+}
+.pkg--bundle > :not(.pkg__gift) { position: relative; z-index: 1; }
 .pkg--bundle > .pkg__corner { position: absolute; z-index: 2; }
 
 /* Spotlight (script.js, wide screens only): a clicked «Ի՞նչ սովորել» tile sets .packages[data-spotlight]
@@ -932,17 +946,19 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   .packages[data-spotlight="start"] .pkg--start,
   .packages[data-spotlight="levelup"] .pkg--levelup { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-xl); }
   .packages[data-spotlight] .pkg--bundle { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-2xl); }
+  .packages[data-spotlight] .pkg__gift { animation: gift-wiggle .9s var(--ease-smooth) .4s; }   /* the gift wiggles once to sell Bundle */
 }
-@media (prefers-reduced-motion: reduce) { .pkg { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .pkg { transition: none; } .packages[data-spotlight] .pkg__gift { animation: none; } }
 
 /* Row 1 · head */
 .pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2); }
-.pkg__name {   /* a card title: Subhead (BRAND.md → Typography), so the price is the card's headline */
-  @apply text-aqb-subhead;
+.pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; the description fits on 2 lines */
+.pkg__name {   /* the plan's name in the headline cut (Headline H1, ExtraBold Italic), as in the 1 Oct cards the team chose */
+  @apply text-aqb-headline-h1 italic;
   color: var(--color-ink-900);
 }
-.pkg__tagline { @apply text-aqb-body-s; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }
-.pkg__desc { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
+.pkg__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }   /* «Start + Level-Up»: Subhead */
+.pkg__desc { @apply text-aqb-body-s; color: var(--color-ink-600); }
 
 .pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
@@ -1022,6 +1038,14 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 
 /* Row 4 · CTA (right under the price) */
 .pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
+.pkg--bundle .pkg__cta { justify-content: flex-end; }   /* one button, not two (no «Մանրամասն»): it sits at the row's bottom, level with the other cards' buy buttons */
+/* Cards side by side: the room the missing «Մանրամասն» leaves (a --md button + the CTA gap) would all sit under the
+   Bundle's price, so the price moves down by half of it, centred between the start-date box and the button; the price
+   itself is a step bigger. (Its row is the tallest, so the offset stays half the missing button.) */
+@media (width >= theme(--breakpoint-lg)) {
+  .pkg--bundle .pkg__price { translate: 0 calc((--spacing(14) + --spacing(3)) / 2); }
+  .pkg--bundle .pkg__amount { @apply text-aqb-headline-h1; }   /* the recommended plan: its price one step up the scale (Headline H1; phones keep H2) */
+}
 .pkg__guarantee { display: flex; align-items: center; justify-content: center; gap: --spacing(2); @apply text-aqb-caption; color: var(--color-ink-600); }
 .pkg__guarantee .ic { color: var(--color-primary); }
 .pkg__guarantee strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
@@ -2075,6 +2099,9 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .fabs { right: --spacing(4); bottom: --spacing(4); }
   .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
   .pkg { padding: --spacing(6); }
+  .pkg__name { @apply text-aqb-headline-h2; }   /* phones step down the scale */
+  .pkg__gift { width: --spacing(36); height: --spacing(36); }
+  .pkg--bundle .pkg__head { padding-right: --spacing(22); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .courses__top { align-items: flex-end; }
@@ -2290,6 +2317,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 @keyframes fab-group-in { from { opacity: 0; scale: .9; } }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
+@keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
   25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }

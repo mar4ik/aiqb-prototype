@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=hero-ab-4" />
+  <link rel="stylesheet" href="styles.css?v=hero-ab-12" />
   <!-- Hero A/B test: Hero A (the eyes' walk writing «AI քեզ բան», with the original words) or Hero B (the falling AI
        tools, with the sales words). Each new visitor gets one at random, 50/50, and keeps it on later visits
        (localStorage 'aiqb-hero'; without storage, a fresh pick each visit). ?hero=a / ?hero=b shows that hero for the
@@ -331,6 +331,7 @@
         <!-- ───── Start ───── -->
         <article class="pkg pkg--start">
           <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Start</h3>
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
@@ -381,6 +382,7 @@
         <!-- ───── Level-Up ───── -->
         <article class="pkg pkg--levelup">
           <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Level-Up</h3>
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
@@ -433,9 +435,11 @@
         <!-- ───── Bundle ───── -->
         <article class="pkg pkg--bundle">
           <span class="pkg__corner">Ամենաշահավետ</span>
+          <img class="pkg__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
           <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Bundle</h3>
-            <p class="pkg__tagline">Start + Level-Up</p>
+            <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
             <p class="pkg__desc">Ամբողջական AI կրթություն մեկ ծրագրում</p>
           </header>
 
@@ -447,6 +451,7 @@
           <div class="pkg__price">
             <s class="pkg__old">֏ 57,000</s>
             <span class="pill pill--deal">−20%</span>
+            <span class="pill pill--save">Խնայիր ֏ 11,300</span>
             <p class="pkg__amount">֏ 45,700</p>
           </div>
 
@@ -894,6 +899,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=hero-ab-4"></script>
+  <script src="script.js?v=hero-ab-12"></script>
 </body>
 </html>
