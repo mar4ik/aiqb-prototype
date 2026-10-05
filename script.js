@@ -1343,7 +1343,8 @@ function makeEyes() {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  const buttons = [...document.querySelectorAll('.btn--inline')];
+  // also the reviews' bubbles (05f · .quote__bubble), whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1351,13 +1352,14 @@ function makeEyes() {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
+    const r = el.classList.contains('quote__bubble') ? 1.5 : 1;   // corner scale
     shapeElement(el, [
-      [0, 0, 8], [W, 0, 8],
-      [W, Hb, 4],                               // the right side ends…
-      [W - e, Hb + 0.13 * T, 6],                // …stepping in a little
-      [W - e, H, 3],                            // the tail's straight side, down to its tip
-      [W - e - 0.6 * T, Hb + 0.34 * T, 8],      // the tail's angled side, back up to the bottom edge
-      [0, H, 8],                                // the bottom edge falls away to the bottom-left corner
+      [0, 0, 8 * r], [W, 0, 8 * r],
+      [W, Hb, 4 * r],                           // the right side ends…
+      [W - e, Hb + 0.13 * T, 6 * r],            // …stepping in a little
+      [W - e, H, 3 * r],                        // the tail's straight side, down to its tip
+      [W - e - 0.6 * T, Hb + 0.34 * T, 8 * r],  // the tail's angled side, back up to the bottom edge
+      [0, H, 8 * r],                            // the bottom edge falls away to the bottom-left corner
     ]);
   }
   const all = () => buttons.forEach(shape);

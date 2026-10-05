@@ -444,8 +444,15 @@
           </header>
 
           <div class="pkg__schedule">
-            <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 6</p>
-            <p class="pkg__meta"><i class="ic ic--clock"></i>9 դաս · 18 ժամ · 4 շաբաթ</p>
+            <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+            <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
+              <ul class="pkg__days">
+                <li>Սկիզբը՝ հոկտեմբերի 6</li>
+                <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                <li>Շաբաթ 2–4՝ երք, հնգ</li>
+              </ul>
+            </div>
+            <p class="pkg__meta"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock -->
           </div>
 
           <div class="pkg__price">
@@ -510,6 +517,53 @@
         </div>
       </div>
 
+    </section>
+
+    <!-- =========================================================
+         05e · REFUND — the money-back promise as its own Orange band, straight after the prices it answers
+         (white headline, black text: BRAND.md → Text on colour); the same words as the course pages' refund
+         ========================================================= -->
+    <section class="refund" aria-labelledby="refund-title">
+      <h2 class="refund__title" id="refund-title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
+      <!-- the promise, its one condition (a detail line), then the same ask as the hero's -->
+      <div class="refund__body">
+        <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Եթե վերջում սպասելիքներդ չարդարանան, կվերադարձնենք քո վճարած ողջ գումարը։</p>
+        <p class="refund__condition">Միակ պայմանը՝ մասնակցություն բոլոր դասերին</p>
+        <a href="#packages" class="btn btn--dark btn--md">Ընտրել դասընթաց</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05f · FEEDBACK — «Ի՞նչ են ասում մասնակիցները»: each review in the brand's chat bubble (BRAND.md → Chat bubble,
+         cut by script.js · 03b) in a feed colour, the person under its tail.
+         PLACEHOLDER: the words, names and dates below are stand-ins. Replace them with real reviews only after each
+         person has agreed to be shown (first name + surname initial, course, group month); the letter is their initial.
+         ========================================================= -->
+    <section class="quotes" aria-labelledby="quotes-title" hidden>   <!-- hidden until the real reviews are approved: remove `hidden` to show it -->
+      <h2 class="section-title" id="quotes-title">Ի՞նչ են ասում մասնա&shy;կիցները</h2>   <!-- &shy;: phones break the long word at a syllable -->
+      <div class="quotes__grid">
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p class="quote__result">Կարճ արդյունք՝ մասնակցի բառերով</p><p>Այստեղ կլինի մասնակցի կարծիքը՝ իր բառերով։ Երկու-երեք նախադասություն այն մասին, թե ինչ սովորեց և ինչ է հիմա անում AI-ով, որ առաջ չէր անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="start.html">Start</a> · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p class="quote__result">Կարճ արդյունք</p><p>Կարճ կարծիք՝ մեկ նախադասություն։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="level-up.html">Level-Up</a> · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p class="quote__result">Կարճ արդյունք՝ մեկ տողով</p><p>Ավելի երկար կարծիք։ Լավագույնն այն է, որ նշի կոնկրետ արդյունք՝ ինչ նախագիծ արեց, որքան ժամանակ խնայեց կամ ինչ փոխվեց աշխատանքում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="#packages">Bundle</a> · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+      </div>
     </section>
 
     <!-- =========================================================
@@ -647,7 +701,7 @@
         </div>
         <div class="mission__body">
           <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։ Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
-          <a href="#packages" class="btn btn--primary btn--md">Սկսիր սովորել</a>
+          <a href="#packages" class="btn btn--primary btn--md">Ընտրել դասընթաց</a>   <!-- the same words as the hero's ask: a second wording would read as a second offer -->
         </div>
       </div>
     </section>
@@ -787,7 +841,7 @@
         </div>
 
         <form class="promo-form" novalidate>
-          <h3 class="promo-form__title">Ստացիր քո պրոմոկոդն ու տարածիր AI գրագիտությունը</h3>
+          <h3 class="promo-form__title">Ստացիր քո պրոմոկոդն ու տարածիր AI գրագի&shy;տությունը</h3>   <!-- &shy;: 320px phones -->
           <div class="promo-form__fields">
             <label class="field">
               <span class="field__label">Էլ. հասցե</span>

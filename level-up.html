@@ -310,6 +310,39 @@
     </section>
 
     <!-- =========================================================
+         03b · FEEDBACK — «Ի՞նչ են ասում մասնակիցները»: the main page's chat-bubble reviews (.quotes), as they are, Level-Up only
+         (the course is plain text here: a link to this same page would only jump to the top).
+         PLACEHOLDER: the words, names and dates below are stand-ins. Replace them with real reviews only after each
+         person has agreed to be shown (first name + surname initial, group month); the letter is their initial.
+         ========================================================= -->
+    <section class="quotes" aria-labelledby="quotes-title" hidden>   <!-- hidden until the real reviews are approved: remove `hidden` to show it -->
+      <h2 class="section-title" id="quotes-title">Ի՞նչ են ասում մասնա&shy;կիցները</h2>   <!-- &shy;: phones break the long word at a syllable -->
+      <div class="quotes__grid">
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p class="quote__result">Կարճ արդյունք՝ մասնակցի բառերով</p><p>Այստեղ կլինի մասնակցի կարծիքը՝ իր բառերով։ Երկու-երեք նախադասություն այն մասին, թե ինչ սովորեց և ինչ է հիմա անում AI-ով, որ առաջ չէր անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta">Level-Up · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p class="quote__result">Կարճ արդյունք</p><p>Կարճ կարծիք՝ մեկ նախադասություն։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta">Level-Up · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p class="quote__result">Կարճ արդյունք՝ մեկ տողով</p><p>Ավելի երկար կարծիք։ Լավագույնն այն է, որ նշի կոնկրետ արդյունք՝ ինչ նախագիծ արեց, որքան ժամանակ խնայեց կամ ինչ փոխվեց աշխատանքում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta">Level-Up · ամիս, տարի</span></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =========================================================
          04 · TEACHERS — the five who teach Level-Up: the main page's teacher slider as it is (arrows, script.js)
          ========================================================= -->
     <section class="teachers" id="teachers">
@@ -412,32 +445,7 @@
     </section>
 
     <!-- =========================================================
-         05 · PRICE + REFUND — a Blue band: the price, the buy button, the Bundle option and the tax refund on one side,
-         the 100% money-back promise in full on the other
-         ========================================================= -->
-    <section class="course-price" id="price">
-      <div class="course-price__inner">
-        <div class="course-price__buy">
-          <p class="course-price__kicker">Level-Up դասընթացի արժեքը</p>
-          <p class="course-price__amount">֏ 37,500</p>
-          <p class="course-price__detail">Start դասընթացի հետ՝ <a href="#bundle">Bundle-ով ֏ 45,700</a></p>
-          <!-- TODO: the checkout link (as the hero's button) -->
-          <div class="course-price__cta">
-            <a href="#" class="btn btn--white btn--lg btn--block">Գնել Level-Up</a>
-          </div>
-          <p class="course-price__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
-        </div>
-        <div class="course-price__refund">
-          <i class="ic ic--shield ic--lg" aria-hidden="true"></i>
-          <h2 class="course-price__title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
-          <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Մասնակցիր <strong>բոլոր</strong> դասերին ու եթե վերջում սպասելիքներդ չարդարանան, մենք առանց որևէ հարցի կվերադարձնենք քո վճարած ողջ գումարը։</p>
-          <p>Միակ պայմանը՝ մասնակցություն <strong>բոլոր</strong> դասերին։ Քո վստահությունն ամենաթանկն է մեզ համար։</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         06 · FAQ — the Level-Up questions (the main page's FAQ atom), with the phone for anything else
+         05 · FAQ — the Level-Up questions (the main page's FAQ atom), with the phone for anything else
          ========================================================= -->
     <section class="faq" id="faq">
       <div class="course-faq__head">
@@ -476,6 +484,30 @@
             <p>Level-Up-ը նախագծված է «ռեԱրմենիա» ակադեմիայի «AI քեզ բան» ծրագրի կողմից։</p>
           </div>
         </details>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         06 · PRICE + REFUND — a Blue band: the price, the buy button, the Bundle option and the tax refund on one side,
+         the 100% money-back promise in full on the other
+         ========================================================= -->
+    <section class="course-price" id="price">
+      <div class="course-price__inner">
+        <div class="course-price__buy">
+          <p class="course-price__kicker">Level-Up դասընթացի արժեքը</p>
+          <p class="course-price__amount">֏ 37,500</p>
+          <p class="course-price__detail">Start դասընթացի հետ՝ <a href="#bundle">Bundle-ով ֏ 45,700</a></p>
+          <!-- TODO: the checkout link (as the hero's button) -->
+          <div class="course-price__cta">
+            <a href="#" class="btn btn--white btn--lg btn--block">Գնել Level-Up</a>
+          </div>
+          <p class="course-price__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+        <div class="course-price__refund">
+          <h2 class="course-price__title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
+          <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Մասնակցիր <strong>բոլոր</strong> դասերին ու եթե վերջում սպասելիքներդ չարդարանան, մենք առանց որևէ հարցի կվերադարձնենք քո վճարած ողջ գումարը։</p>
+          <p>Միակ պայմանը՝ մասնակցություն <strong>բոլոր</strong> դասերին։ Քո վստահությունն ամենաթանկն է մեզ համար։</p>
+        </div>
       </div>
     </section>
 
@@ -541,8 +573,15 @@
               </header>
 
               <div class="pkg__schedule">
-                <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 6</p>
-                <p class="pkg__meta"><i class="ic ic--clock"></i>9 դաս · 18 ժամ · 4 շաբաթ</p>
+                <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+                <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
+                  <ul class="pkg__days">
+                    <li>Սկիզբը՝ հոկտեմբերի 6</li>
+                    <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                    <li>Շաբաթ 2–4՝ երք, հնգ</li>
+                  </ul>
+                </div>
+                <p class="pkg__meta"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock -->
               </div>
 
               <div class="pkg__price">

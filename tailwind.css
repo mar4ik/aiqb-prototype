@@ -167,7 +167,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .pricing, .stats, .mission, .referral, .faq {
+.courses, .pricing, .stats, .refund, .quotes, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -979,11 +979,19 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   padding: --spacing(4) --spacing(4.5);
   background: var(--surface);
   border-radius: var(--radius-2xl);
+  align-self: start;   /* each box as tall as its lines (Bundle has the week-by-week days); the prices below stay level */
 }
 .pkg__date, .pkg__meta { display: flex; align-items: center; gap: --spacing(2.5); }
 .pkg__date { @apply text-aqb-label; color: var(--color-ink-900); }
 .pkg__meta { @apply text-aqb-label; color: var(--color-ink-600); }
 .pkg__date .ic, .pkg__meta .ic { color: var(--color-primary); }
+/* Bundle: the format on top; beside the calendar the start (Ink 900, as .pkg__date) and the days week by week
+   (Ink 600, as .pkg__meta), the icon on the first line; the hours beside the clock */
+.pkg__format { display: flex; align-items: center; gap: --spacing(2.5); @apply text-aqb-label; color: var(--color-ink-900); }   /* the video icon, as .pkg__date */
+.pkg__format .ic { color: var(--color-primary); }
+.pkg__date:has(.pkg__days) { align-items: flex-start; }
+.pkg__days { display: flex; flex-direction: column; gap: --spacing(1.5); color: var(--color-ink-600); }
+.pkg__days li:first-child { color: var(--color-ink-900); }
 
 /* Row 3 · price */
 .pkg__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1) --spacing(2.5); align-self: end; }
@@ -1175,6 +1183,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--calendar   { --i: url("assets/icons/calendar.svg"); }
 .ic--calendar-plus { --i: url("assets/icons/calendar-plus.svg"); }   /* register (the webinar bar's compact button) */
 .ic--clock      { --i: url("assets/icons/clock.svg"); }
+.ic--video      { --i: url("assets/icons/video.svg"); }   /* a live class (the Bundle card's «Live ձևաչափ») */
 .ic--check      { --i: url("assets/icons/check.svg"); }
 .ic--x          { --i: url("assets/icons/x.svg"); }
 .ic--shield     { --i: url("assets/icons/shield-check.svg"); }
@@ -1367,6 +1376,55 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .avatar:nth-child(8n+8) { --av: var(--color-ink-900); }
 
 /* ============================================================
+   05e · REFUND — the money-back promise as an Orange band right after the prices (the loudest promise sits next to
+   the number it answers). White headline, black text: BRAND.md → Text on colour (white on Orange from 24px only)
+   ============================================================ */
+.refund {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start;
+  gap: --spacing(6) --spacing(12);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 100vmax var(--color-accent);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-black);
+}
+.refund__title { @apply text-aqb-headline-h1 italic; text-wrap: balance; color: var(--color-white); }
+.refund__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); @apply text-aqb-body-m; }
+.refund__condition { @apply text-aqb-label; }   /* the one condition: a detail (SemiBold), stated plainly, not ticked as a perk */
+.refund__body .btn { margin-top: --spacing(2); }
+
+/* ============================================================
+   05f · FEEDBACK («Ի՞նչ են ասում մասնակիցները») — every review in the brand's chat bubble (BRAND.md → Chat bubble), a
+   feed colour each with black text; script.js (03b) cuts the bubble, its tail pointing down at the person under it.
+   Bubbles keep their own height (a conversation, not a row of equal boxes). On the main page and the course pages.
+   ============================================================ */
+.quotes { display: flex; flex-direction: column; gap: var(--title-gap); }
+.quotes__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: var(--card-gap); }   /* each bubble as tall as its words */
+
+.quote { display: flex; flex-direction: column; gap: --spacing(2); }
+.quote__bubble {
+  position: relative;
+  display: flex; flex-direction: column; gap: --spacing(3);
+  padding: --spacing(7) --spacing(8) --spacing(19);   /* the extra bottom padding is the tail's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--quote-bg, var(--color-feed-yellow));
+  color: var(--color-black);
+  @apply text-aqb-body-s;   /* the review: reading text, under the result line */
+}
+.quote__bubble[data-bg="teal"]   { --quote-bg: var(--color-feed-teal); }
+.quote__bubble[data-bg="yellow"] { --quote-bg: var(--color-feed-yellow); }
+.quote__bubble[data-bg="sky"]    { --quote-bg: var(--color-feed-sky); }
+.quote__bubble[data-bg="pink"]   { --quote-bg: var(--color-feed-pink); }
+/* The person under the tail: name (a detail: Label), course · group month (Caption), their initial on the avatar */
+.quote__result { @apply text-aqb-subhead; }   /* the result in their words: the line people read first (a card title) */
+/* The person under the tail: name (a detail: Label), the course (a link to its page) · group month (Caption), their
+   initial on the avatar; row-reverse keeps the avatar first in the markup (the atom's first colour, Blue) and under the tail */
+.quote__who { display: flex; flex-direction: row-reverse; align-items: center; justify-content: flex-start; gap: --spacing(3); text-align: right; }
+.quote__name { display: flex; flex-direction: column; gap: --spacing(1); @apply text-aqb-label; color: var(--color-ink-900); }
+.quote__meta { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
+.quote__course { color: var(--color-ink-900); text-decoration: underline; text-underline-offset: 3px; transition: color var(--default-transition-duration); }
+.quote__course:hover { color: var(--color-primary); }   /* a text link: colour only */
+
+/* ============================================================
    08 · MISSION
    ============================================================ */
 .mission {
@@ -1425,6 +1483,13 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .referral__head { display: flex; flex-direction: column; gap: --spacing(3); }
 .referral__sub { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
 .referral__panel .promo-form { align-self: center; }   /* card hugs its content instead of stretching to the left column */
+/* The referral's two columns need the room of xl: below 1280px the ten friends (13 × 10 + gaps) no longer fit
+   beside the 430px form and slid under it (1100–1279px), so the form goes under the ladder there, full width */
+@media (width < theme(--breakpoint-xl)) {
+  .referral__panel { flex-direction: column; }
+  .referral__panel .promo-form { width: 100%; }
+}
+
 
 /* Friends ladder: 10 Armenian-letter avatars, #1 and #10 are the reward steps */
 .ladder {
@@ -1470,7 +1535,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ladder__step:nth-child(10) .avatar { --av: var(--color-primary);        --av-fg: var(--color-white); }
 
 /* Reward cards: the prize is the headline */
-.rewards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--card-gap); }
+.rewards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }   /* minmax: «Անվճար» never widens its card past the other */
 .reward {
   display: flex; flex-direction: column; gap: --spacing(2);
   padding: --spacing(7);
@@ -1743,6 +1808,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 
 /* ============================================================
+.join-hero .crowd { max-width: --spacing(150); margin-top: 0; }   /* under the headline, as wide as the intro sentence */
    13 · PRE-REGISTRATION PAGE (doctor-register.html)
    ============================================================ */
 .signup {
@@ -1808,7 +1874,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   clip-path: inset(-100vmax -100vmax 0);   /* sideways and up to the top of the page, not down */
 }
 .join-hero__title { @apply text-aqb-headline-h1 italic; }
-.join-hero .crowd { max-width: --spacing(150); margin-top: 0; }   /* under the headline, as wide as the intro sentence */
 .join-hero__lead { max-width: --spacing(150); @apply text-aqb-body-s; }
 .join-hero strong { color: var(--color-black); }
 /* The page logo: the eye logo in its circle (.nav__logo, as on the main site) with «join» beside it, tilted
@@ -2058,7 +2123,8 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .pro-card { height: --spacing(80); }
   .learn-grid { --learn-col-w: calc((100% - 2 * var(--card-gap)) / 3); --learn-h: --spacing(75); }   /* three tiles in view */
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
-  .referral__panel { flex-direction: column; }
+  .refund { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  .quotes__grid { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); }   /* one conversation, read top to bottom */
   .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
 }
@@ -2118,6 +2184,11 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .stats__row { grid-template-columns: minmax(0, 1fr); gap: --spacing(8); }
   .stat__num { @apply text-aqb-headline-h1; }
   .mission__title { @apply text-aqb-headline-h1; }   /* phones: Display steps down to Headline H1 */
+  .refund__title { @apply text-aqb-headline-h2; }    /* phones: Headline H1 → H2 */
+  .refund__body { @apply text-aqb-body-s; }
+  .refund__body .btn { align-self: stretch; }   /* full width, as the hero's on phones */
+  .quote__bubble { padding: --spacing(5) --spacing(6) --spacing(13); }   /* the tail keeps its room (bottom − top) */
+  .quotes__grid { row-gap: --spacing(10); }   /* stacked: each person stays with their own bubble */
   .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
@@ -2147,7 +2218,8 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 
 /* ============================================================
    15 · COURSE PAGES (start.html, level-up.html) — everything about one course, to read top to bottom: the hero with the week at a
-   glance (and the facts), the program (one panel a lesson), what's included, the teachers, the price and refund, the FAQ.
+   glance (and the facts), the program (one panel a lesson), what's included, the reviews, the teachers, the FAQ, then the price
+   and refund (the questions are answered before the last ask).
    The nav, teacher cards, FAQ, footer and floating buttons are the main page's atoms, unchanged.
    ============================================================ */
 /* Every band keeps the page column (1440px, --page-x) while its colour runs to the screen's edges */
