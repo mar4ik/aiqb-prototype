@@ -1215,7 +1215,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    05d · 3-FRIENDS FORM — «Գրանցվել ընկերներով» opens the popup
    (.modal, a native <dialog>: Escape closes it, focus stays inside).
    «Գրանցվել ընկերներով» stays disabled until every field is filled in:
-   valid emails and 8 digits after +374. Front end only: the submit is
+   valid emails and 8 digits after +374 (a leading 0 or +374 typed again is fine). Front end only: the submit is
    the developer's (TODO: send it, then payment).
    ============================================================ */
 (function friendsForm() {
@@ -1225,11 +1225,34 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   const submit = form.querySelector('button[type="submit"]');
   const phone = form.elements.phone1;
 
-  function update() {
-    const digits = phone.value.replace(/\D/g, '');
-    const ok = Array.from(form.querySelectorAll('input')).every((input) => input.value.trim() !== '' && input.checkValidity());
-    submit.disabled = !(ok && digits.length === 8);
+  // The 8 digits after +374, however people type them: «091 12 34 56» (the leading 0) and «+374 91 123456» count too
+  function phoneDigits() {
+    let digits = phone.value.replace(/\D/g, '');
+    if (digits.length === 11 && digits.startsWith('374')) digits = digits.slice(3);
+    if (digits.length === 9 && digits.startsWith('0')) digits = digits.slice(1);
+    return digits;
   }
+
+  function update() {
+    const ok = Array.from(form.querySelectorAll('input')).every((input) => input.value.trim() !== '' && input.checkValidity());
+    submit.disabled = !(ok && phoneDigits().length === 8);
+  }
+
+  const done = dialog.querySelector('[data-done]');
+
+  // Sent: the confirmation takes the form's place. Closed (✕, «Փակել», Escape, backdrop): the empty form comes back
+  function showDone(on) {
+    form.hidden = on;
+    done.hidden = !on;
+    dialog.setAttribute('aria-labelledby', on ? 'friends-done-title' : 'friends-form-title');
+    if (on) done.querySelector('.btn').focus();
+  }
+  dialog.addEventListener('close', () => {
+    if (done.hidden) return;
+    form.reset();
+    showDone(false);
+    update();
+  });
 
   document.querySelectorAll('[data-open="friends-form"]').forEach((btn) => btn.addEventListener('click', () => dialog.showModal()));
   dialog.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', () => dialog.close()));
@@ -1239,7 +1262,9 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   form.addEventListener('submit', (e) => {
     e.preventDefault();               // no backend yet
     if (submit.disabled) return;
-    // TODO (developer): send the three people (new FormData(form)), then go on to payment / the confirmation
+    // TODO (developer): send the three people (new FormData(form)) and their emails, and show the confirmation only once
+    // that worked. Until then it shows straight away: nothing is sent yet.
+    showDone(true);
   });
   update();
 })();

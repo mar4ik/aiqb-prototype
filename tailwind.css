@@ -1736,15 +1736,18 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
 }
 .modal__foot {
   bottom: 0;
+  display: flex; flex-direction: column; gap: --spacing(3);
   margin: 0 calc(var(--modal-pad) * -1) calc(var(--modal-pad) * -1);
   padding: --spacing(2) var(--modal-pad) var(--modal-pad);
 }
 .modal__title { @apply text-aqb-subhead; color: var(--color-ink-900); text-wrap: balance; }   /* a form title: Subhead */
-/* One person's fields: two side by side (a phone spans both), each person after a hairline */
-.modal__group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: --spacing(5) --spacing(4); min-width: 0; margin: 0; padding: 0; border: 0; }
+.modal__note { @apply text-aqb-caption; color: var(--color-ink-600); }   /* small print over the button (all fields required) */
+.modal__text { @apply text-aqb-body-s; color: var(--color-ink-700); }   /* the confirmation's words, under its title */
+.modal__panel[hidden] { display: none; }   /* the form or the confirmation, one at a time */
+/* One person's fields: one to a row, each person after a hairline */
+.modal__group { display: grid; grid-template-columns: minmax(0, 1fr); gap: --spacing(5); min-width: 0; margin: 0; padding: 0; border: 0; }
 .modal__group + .modal__group { padding-top: --spacing(8); border-top: 1px solid var(--line); }
 .modal__legend { float: left; grid-column: 1 / -1; padding: 0; @apply text-aqb-label; color: var(--color-ink-900); }   /* float: a plain grid item, not the fieldset's border legend */
-.modal__wide { grid-column: 1 / -1; }
 
 /* ============================================================
    10 · FAQ
@@ -2321,7 +2324,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .modal { width: 100%; max-height: calc(100dvh - --spacing(6)); margin: auto 0 0; border-radius: var(--radius-3xl) var(--radius-3xl) 0 0; translate: 0 100%; }
   .modal[open] { translate: 0 0; }
   @starting-style { .modal[open] { translate: 0 100%; } }
-  .modal__group { grid-template-columns: minmax(0, 1fr); gap: --spacing(4); }
+  .modal__group { gap: --spacing(4); }
   .modal__group + .modal__group { padding-top: --spacing(6); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }

@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=hero-b-25" />
+  <link rel="stylesheet" href="styles.css?v=hero-b-27" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words) for everyone. Hero A (the eyes' walk writing
        «AI քեզ բան», with the original words) stays in the page, hidden; ?hero=a shows it for the team, this visit only,
        marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]);
@@ -818,14 +818,14 @@
         <fieldset class="modal__group">
           <legend class="modal__legend">Մասնակից 1</legend>
           <label class="field">
-            <span class="field__label">Անուն</span>
+            <span class="field__label">Անուն, ազգանուն</span>
             <input class="field__input" type="text" name="name1" autocomplete="name" required autofocus />   <!-- autofocus: showModal() starts here, not on the ✕ -->
           </label>
           <label class="field">
             <span class="field__label">Էլ. փոստ</span>
             <input class="field__input" type="email" name="email1" autocomplete="email" required />
           </label>
-          <label class="field modal__wide">
+          <label class="field">
             <span class="field__label">Հեռախոս</span>
             <span class="field__group">
               <span class="field__prefix">+374</span>
@@ -837,7 +837,7 @@
         <fieldset class="modal__group">
           <legend class="modal__legend">Մասնակից 2</legend>
           <label class="field">
-            <span class="field__label">Անուն</span>
+            <span class="field__label">Անուն, ազգանուն</span>
             <input class="field__input" type="text" name="name2" autocomplete="off" required />
           </label>
           <label class="field">
@@ -849,7 +849,7 @@
         <fieldset class="modal__group">
           <legend class="modal__legend">Մասնակից 3</legend>
           <label class="field">
-            <span class="field__label">Անուն</span>
+            <span class="field__label">Անուն, ազգանուն</span>
             <input class="field__input" type="text" name="name3" autocomplete="off" required />
           </label>
           <label class="field">
@@ -859,9 +859,19 @@
         </fieldset>
 
         <footer class="modal__foot">
+          <p class="modal__note">Բոլոր դաշտերը պարտադիր են գրանցվելու համար։</p>
           <button type="submit" class="btn btn--primary btn--block btn--md" disabled>Գրանցվել ընկերներով</button>   <!-- enabled once every field is filled in -->
         </footer>
       </form>
+      <!-- After «Գրանցվել ընկերներով»: the form steps aside for this (script.js → friendsForm); closing brings the empty form back -->
+      <div class="modal__panel" data-done hidden>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-done-title">Դուք գրանցված եք</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+        <p class="modal__text">Երեքիդ էլ փոստին նամակ ենք ուղարկել՝ հաջորդ քայլերով։</p>
+        <button type="button" class="btn btn--primary btn--block btn--md" data-close>Փակել</button>
+      </div>
     </dialog>
 
     <!-- =========================================================
@@ -1254,6 +1264,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=hero-b-25"></script>
+  <script src="script.js?v=hero-b-27"></script>
 </body>
 </html>
