@@ -478,7 +478,7 @@
     font-style: italic;
   }
 
-  .courses, .pricing, .stats, .refund, .quotes, .mission, .referral, .faq {
+  .courses, .pricing, .stats, .refund, .mission, .referral, .faq {
     max-width: var(--container-page);
     padding: var(--section-y) var(--page-x);
     margin: 0 auto;
@@ -2789,12 +2789,6 @@
     display: none;
   }
 
-  .learn-grid:not(.is-end) {
-    -webkit-mask: linear-gradient(to right, var(--color-black) calc(100% - var(--learn-edge)), transparent);
-    -webkit-mask: linear-gradient(to right, var(--color-black) calc(100% - var(--learn-edge)), transparent);
-    mask: linear-gradient(to right, var(--color-black) calc(100% - var(--learn-edge)), transparent);
-  }
-
   .learn-col {
     flex: 0 0 var(--learn-col-w);
     scroll-snap-align: start;
@@ -3079,13 +3073,13 @@
     --i: url("assets/icons/arrow-up.svg");
   }
 
-  .teachers {
+  .teachers, .quotes {
     --edge: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));
     padding: var(--section-y) 0 var(--section-y) var(--edge);
     overflow: hidden;
   }
 
-  .teachers__top {
+  .teachers__top, .quotes__top {
     justify-content: space-between;
     align-items: center;
     gap: calc(var(--spacing) * 4);
@@ -3124,7 +3118,7 @@
     height: calc(var(--spacing) * 5);
   }
 
-  .teachers__row {
+  .teachers__row, .quotes__row {
     align-items: stretch;
     gap: var(--card-gap);
     scroll-snap-type: x mandatory;
@@ -3140,10 +3134,8 @@
     display: none;
   }
 
-  .teachers__row:not(.is-end) {
-    -webkit-mask: linear-gradient(to right, var(--color-black) calc(100% - var(--edge)), transparent);
-    -webkit-mask: linear-gradient(to right, var(--color-black) calc(100% - var(--edge)), transparent);
-    mask: linear-gradient(to right, var(--color-black) calc(100% - var(--edge)), transparent);
+  .quotes__row::-webkit-scrollbar {
+    display: none;
   }
 
   .teacher {
@@ -3515,22 +3507,16 @@
     margin-top: calc(var(--spacing) * 2);
   }
 
-  .quotes {
-    gap: var(--title-gap);
-    flex-direction: column;
-    display: flex;
-  }
-
-  .quotes__grid {
-    align-items: start;
-    gap: var(--card-gap);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    display: grid;
+  .quotes__row {
+    align-items: flex-start;
   }
 
   .quote {
     gap: calc(var(--spacing) * 2);
+    width: clamp(calc(var(--spacing) * 75), 30vw, calc(var(--spacing) * 110));
+    scroll-snap-align: start;
     flex-direction: column;
+    flex: none;
     display: flex;
   }
 
@@ -3610,6 +3596,38 @@
 
   .quote__course:hover {
     color: var(--color-primary);
+  }
+
+  .quote .avatar {
+    width: calc(var(--spacing) * 13);
+    height: calc(var(--spacing) * 13);
+  }
+
+  .quote .avatar--letter {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+  }
+
+  .quote:nth-child(4n+1) .avatar {
+    --av: var(--color-accent);
+    --av-fg: var(--color-black);
+  }
+
+  .quote:nth-child(4n+2) .avatar {
+    --av: var(--color-limited-violet);
+    --av-fg: var(--color-black);
+  }
+
+  .quote:nth-child(4n+3) .avatar {
+    --av: var(--color-primary);
+    --av-fg: var(--color-white);
+  }
+
+  .quote:nth-child(4n+4) .avatar {
+    --av: var(--color-ink-900);
+    --av-fg: var(--color-white);
   }
 
   .mission {
@@ -5573,11 +5591,6 @@
       align-items: start;
     }
 
-    .quotes__grid {
-      max-width: calc(var(--spacing) * 140);
-      grid-template-columns: minmax(0, 1fr);
-    }
-
     .faq {
       grid-template-columns: minmax(0, 1fr);
     }
@@ -5779,8 +5792,12 @@
       overflow-wrap: normal;
     }
 
-    .teachers__row, .teachers__top {
+    .teachers__row, .quotes__row, .teachers__top, .quotes__top {
       padding-right: calc(var(--spacing) * 4);
+    }
+
+    .quote {
+      width: 82vw;
     }
 
     .teacher {
@@ -5828,10 +5845,6 @@
 
     .quote__bubble {
       padding: calc(var(--spacing) * 5) calc(var(--spacing) * 6) calc(var(--spacing) * 13);
-    }
-
-    .quotes__grid {
-      row-gap: calc(var(--spacing) * 10);
     }
 
     .hero__detail {
@@ -5941,11 +5954,6 @@
 
     .footer__legal a {
       padding-block: calc(var(--spacing) * 1.5);
-    }
-
-    .learn-grid:not(.is-end) {
-      -webkit-mask: none;
-      mask: none;
     }
   }
 

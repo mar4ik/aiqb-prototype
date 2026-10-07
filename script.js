@@ -1058,7 +1058,8 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    ============================================================ */
 (function cardSliders() {
   const sliders = [
-    { row: '.teachers__row', arrows: '.teachers__arrow', item: '.teacher' },
+    { row: '.teachers__row', arrows: '.teachers .teachers__arrow', item: '.teacher' },
+    { row: '.quotes__row', arrows: '.quotes .teachers__arrow', item: '.quote' },   // the reviews (05f), same arrows
   ];
 
   sliders.forEach(({ row: rowSelector, arrows: arrowSelector, item }) => {
@@ -1077,7 +1078,6 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       const max = row.scrollWidth - row.clientWidth - 2;
       arrows[0].disabled = row.scrollLeft <= 2;
       arrows[1].disabled = row.scrollLeft >= max;
-      row.classList.toggle('is-end', row.scrollLeft >= max);   // drop the right-edge fade at the end
     }
 
     arrows.forEach((btn) => {
@@ -1093,7 +1093,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    05d · «Ի՞նչ սովորել» slider — the arrows step one view: forward to the first tile that isn't fully in view,
-   back by as much. Arrows switch off at the ends, and the right-edge fade goes once the last tile is in.
+   back by as much. Arrows switch off at the ends.
    ============================================================ */
 (function learnSlider() {
   const row = document.querySelector('.learn-grid');
@@ -1106,7 +1106,6 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     const max = row.scrollWidth - row.clientWidth - 2;
     arrows[0].disabled = row.scrollLeft <= 2;
     arrows[1].disabled = row.scrollLeft >= max;
-    row.classList.toggle('is-end', row.scrollLeft >= max);
   }
   arrows.forEach((btn) => btn.addEventListener('click', () => {
     const dir = Number(btn.dataset.dir), x = row.scrollLeft, all = stops();

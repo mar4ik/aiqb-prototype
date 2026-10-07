@@ -167,7 +167,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .pricing, .stats, .refund, .quotes, .mission, .referral, .faq {
+.courses, .pricing, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -1196,8 +1196,6 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   margin-right: calc(var(--learn-edge) * -1);
 }
 .learn-grid::-webkit-scrollbar { display: none; }
-/* soft fade on the right while more cards follow; removed at the end of the row */
-.learn-grid:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - var(--learn-edge)), transparent); }   /* only the margin fades: cards in the column stay whole */
 .learn-col { flex: 0 0 var(--learn-col-w); display: flex; flex-direction: column; scroll-snap-align: start; }
 /* Each tile is a post in its feed colour (data-bg; black text, BRAND.md) */
 .learn-tile {
@@ -1311,12 +1309,12 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
    ============================================================ */
 /* Full-bleed: the left edge lines up with the 1440px content column,
    but the card row runs all the way to the right edge of the screen. */
-.teachers {
+.teachers, .quotes {   /* the reviews (05f) scroll the same way */
   --edge: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));
   padding: var(--section-y) 0 var(--section-y) var(--edge);
   overflow: hidden;
 }
-.teachers__top {
+.teachers__top, .quotes__top {
   display: flex; align-items: center; justify-content: space-between; gap: --spacing(4);
   padding: 0 var(--edge) var(--title-gap) 0;
 }
@@ -1334,7 +1332,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .teachers__arrow:disabled { opacity: .35; cursor: default; }
 .teachers__arrow .ic { width: --spacing(5); height: --spacing(5); }
 
-.teachers__row {
+.teachers__row, .quotes__row {
   display: flex;
   align-items: stretch;
   gap: var(--card-gap);
@@ -1345,9 +1343,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   padding-right: var(--edge);
   scroll-padding-left: 0;
 }
-.teachers__row::-webkit-scrollbar { display: none; }
-/* soft fade on the right while more cards follow; removed at the end of the row */
-.teachers__row:not(.is-end) { mask: linear-gradient(to right, var(--color-black) calc(100% - var(--edge)), transparent); }   /* only the margin fades */
+.teachers__row::-webkit-scrollbar, .quotes__row::-webkit-scrollbar { display: none; }
 
 .teacher {
   position: relative;
@@ -1503,12 +1499,12 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 /* ============================================================
    05f · FEEDBACK («Ի՞նչ են ասում մասնակիցները») — every review in the brand's chat bubble (BRAND.md → Chat bubble), a
    feed colour each with black text; script.js (03b) cuts the bubble, its tail pointing down at the person under it.
-   Bubbles keep their own height (a conversation, not a row of equal boxes). On the main page and the course pages.
+   Bubbles keep their own height (a conversation, not a row of equal boxes). A full-bleed row that scrolls sideways,
+   as the teachers' (shared rules there: .quotes, __top, __row).
    ============================================================ */
-.quotes { display: flex; flex-direction: column; gap: var(--title-gap); }
-.quotes__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: var(--card-gap); }   /* each bubble as tall as its words */
+.quotes__row { align-items: flex-start; }   /* each bubble as tall as its words */
 
-.quote { display: flex; flex-direction: column; gap: --spacing(2); }
+.quote { display: flex; flex-direction: column; gap: --spacing(2); flex: none; width: clamp(--spacing(75), 30vw, --spacing(110)); scroll-snap-align: start; }   /* ≈3.3 in view, the next one peeks in */
 .quote__bubble {
   position: relative;
   display: flex; flex-direction: column; gap: --spacing(3);
@@ -1531,6 +1527,14 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .quote__meta { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
 .quote__course { color: var(--color-ink-900); text-decoration: underline; text-underline-offset: 3px; transition: color var(--default-transition-duration); }
 .quote__course:hover { color: var(--color-primary); }   /* a text link: colour only */
+/* The avatar as the referral ladder's: 52px, the letter in Label, a colour each person (never a feed colour, so it
+   never matches the bubble above it) */
+.quote .avatar { width: --spacing(13); height: --spacing(13); }
+.quote .avatar--letter { @apply text-aqb-label; }
+.quote:nth-child(4n+1) .avatar { --av: var(--color-accent);         --av-fg: var(--color-black); }
+.quote:nth-child(4n+2) .avatar { --av: var(--color-limited-violet); --av-fg: var(--color-black); }
+.quote:nth-child(4n+3) .avatar { --av: var(--color-primary);        --av-fg: var(--color-white); }
+.quote:nth-child(4n+4) .avatar { --av: var(--color-ink-900);        --av-fg: var(--color-white); }
 
 /* ============================================================
    08 · MISSION
@@ -2270,7 +2274,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .learn-grid { --learn-col-w: calc((100% - 2 * var(--card-gap)) / 3); --learn-h: --spacing(75); }   /* three tiles in view */
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
   .refund { grid-template-columns: minmax(0, 1fr); align-items: start; }
-  .quotes__grid { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); }   /* one conversation, read top to bottom */
   .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
 }
@@ -2328,8 +2331,9 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .learn-tile { padding: --spacing(5); }
   .learn-tile__title { @apply text-aqb-body-m; overflow-wrap: normal; }   /* one step down on phones; long words wrap whole */
 
-  .teachers__row { padding-right: --spacing(4); }
-  .teachers__top { padding-right: --spacing(4); }
+  .teachers__row, .quotes__row { padding-right: --spacing(4); }
+  .teachers__top, .quotes__top { padding-right: --spacing(4); }
+  .quote { width: 82vw; }
   .teacher { width: 78vw; }
   .teacher__photo { height: --spacing(64); }
   .teacher__body { padding: --spacing(5) --spacing(6) --spacing(6); gap: --spacing(4.5); }
@@ -2340,7 +2344,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .refund__body { @apply text-aqb-body-s; }
   .refund__body .btn { align-self: stretch; }   /* full width, as the hero's on phones */
   .quote__bubble { padding: --spacing(5) --spacing(6) --spacing(13); }   /* the tail keeps its room (bottom − top) */
-  .quotes__grid { row-gap: --spacing(10); }   /* stacked: each person stays with their own bubble */
   .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
@@ -2364,8 +2367,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .footer__social a { padding: --spacing(2.5); margin: 0 calc(--spacing(2.5) * -1); }
   .footer__social a + a { margin-left: 0; }
   .footer__legal a { padding-block: --spacing(1.5); }
-  /* On Black the edge fade read as a smudge on the peeking tile: phones crop it cleanly */
-  .learn-grid:not(.is-end) { mask: none; }
 }
 
 /* ============================================================
