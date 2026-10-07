@@ -200,6 +200,10 @@
    beside a filled button (the role pages' Copy link) */
 .btn--ghost { background: transparent; color: inherit; }
 .btn--ghost:hover { background: color-mix(in oklab, currentColor 12%, transparent); }
+/* Line: the ghost with a hairline in the text colour, so it reads as a button on its own on a colour band (Black, Blue):
+   a secondary action away from the filled one (the course page's «Գնել առաջին 3 դասը») */
+.btn--line { background: transparent; color: inherit; border-color: color-mix(in oklab, currentColor 50%, transparent); }
+.btn--line:hover { background: color-mix(in oklab, currentColor 12%, transparent); border-color: currentColor; }
 .btn--block { width: 100%; }
 /* Inline: a word inside a headline that is itself the button (the hero's «Սովորի՛ր»). It keeps the headline's type
    and wears the colour as the brand's chat bubble: script.js cuts it to the shape (straight sides, small corners, a
@@ -554,7 +558,7 @@ body.is-menu-open { overflow: hidden; }
 .hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 
 /* ============================================================
-   03 · HERO B — the falling tools (A/B test with Hero A: the <head> script sets html[data-hero], index.html)
+   03 · HERO B — the falling tools, the hero (Hero A is kept but hidden: the <head> script sets html[data-hero], index.html)
    A Black panel with the copy (6 of the page's 12 columns), then the stage (.drop) out to the screen's edge, where the
    AI tools fall in as balls and pile up (script.js · 03 B). Phones: the copy on top, the stage under it.
    (.story-hero keeps the name of the first version, the storyboard.)
@@ -580,9 +584,9 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 }
 .story-hero__copy {
   grid-column: 1 / span 6;   /* 6 columns: room for the button and the endorsement side by side */
-  align-self: center;
+  align-self: center;   /* centred, as the stage beside it: the two sides share one middle line */
   display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6);
-  padding: calc(var(--header-h) + --spacing(8)) 0 --spacing(12);
+  padding: calc(var(--header-h) + --spacing(8)) 0 --spacing(8);
 }
 /* The one message, the biggest thing on the page. «գլխացավանքի» is a long word: Headline H1, and Headline H2 where the
    6-column panel is narrowest (lg to xl) and on phones, so it always fits */
@@ -590,12 +594,53 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 @media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
   .story-hero__title { @apply text-aqb-headline-h2; }
 }
-/* Body M in the detail cut, as Hero A; one fact a line, with a little air between the facts (the text keeps its 112%, which
-   is tight for three stacked lines of Armenian) */
-.story-hero__detail { display: flex; flex-direction: column; gap: --spacing(1.5); @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }
-.story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(2); }   /* the button, the endorsement beside it (as Hero A) */
+.story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* the button, the endorsement beside it (as Hero A); air above it: the words, then the ask */
 .story-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
 .story-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
+
+/* The offer under the headline, the one line besides it: what you get (Body L in the detail cut; Body M on phones) */
+.story-hero__lead { max-width: --spacing(130); @apply text-aqb-body-l; font-weight: var(--font-weight-detail); text-wrap: balance; }
+
+/* The right side: the stage (.drop), and along its bottom the draw in the brand's chat bubble (BRAND.md → Chat bubble;
+   script.js cuts it, as the reviews' bubbles), Orange as the refund band: the prize White in the headline cut (Headline
+   H2, one step under the hero title; White on Orange from 24px up), led by a Black tag (.pill--black --lg), the rest
+   Black (BRAND.md → Text on colour): the detail (SemiBold), the terms. It is a shelf: script.js adds its body to the physics, so the balls land on
+   it. The bottom padding is the tail's room (script.js: padding-bottom − padding-top). */
+.story-hero__stage {
+  grid-column: 7 / -1;
+  align-self: center;   /* a stage of its own height, centred beside the copy (not the hero's full height: on a tall screen
+                           the pile filled only its lower half) */
+  height: clamp(--spacing(150), 78svh, --spacing(200));
+  margin-right: calc(var(--bleed) * -1);
+  position: relative;
+  display: flex; flex-direction: column;
+}
+.story-hero__bubble {
+  position: absolute; left: 0; right: var(--bleed); bottom: --spacing(8);
+  z-index: 1;
+  display: flex; flex-direction: column; gap: --spacing(1);
+  padding: --spacing(5) --spacing(6) --spacing(11);   /* 44 − 20: a 24px tail */
+  background: var(--color-accent); color: var(--color-black);
+  pointer-events: none;   /* the balls on it stay playable */
+}
+.story-hero__bubble .pill { align-self: flex-start; margin-bottom: --spacing(2); }   /* the tag leads, a little apart */
+.story-hero__bubble-title { @apply text-aqb-headline-h2 italic; color: var(--color-white); }
+.story-hero__bubble-detail { margin-top: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+.story-hero__bubble-text { @apply text-aqb-body-s; text-wrap: pretty; }
+.story-hero__bubble-text strong { font-weight: var(--font-weight-detail); }   /* the prize in the terms, in the detail cut */
+/* It falls in first, with a little bounce, and the balls land on it (script.js holds them until it's down); until the
+   physics starts it waits unseen, as the balls do */
+.story-hero__stage:has(.drop:not(.is-live, .is-still)) .story-hero__bubble { visibility: hidden; }
+.story-hero__stage.is-dropping .story-hero__bubble { animation: bubble-drop .9s both; }
+@keyframes bubble-drop {
+  0%   { translate: 0 -110svh; animation-timing-function: cubic-bezier(.5, 0, .9, .4); }   /* falling, faster and faster */
+  60%  { translate: 0 0;       animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
+  76%  { translate: 0 calc(--spacing(4) * -1); animation-timing-function: cubic-bezier(.6, 0, .8, .4); }   /* a bounce… */
+  90%  { translate: 0 0;       animation-timing-function: cubic-bezier(.2, .6, .4, 1); }
+  95%  { translate: 0 calc(--spacing(1) * -1); }                                                       /* …and a small one */
+  100% { translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) { .story-hero__stage.is-dropping .story-hero__bubble { animation: none; } }
 
 /* The stage: columns 7–12 and on to the screen's right edge, top to bottom, on Black like the copy, so the hero is one
    dark field. Each ball is a tool's logo on a White disc (like .tool-stack__logo, which is this ball in the cards); the
@@ -603,8 +648,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
    sizes each ball for the stage (--ball) and moves it with the physics (.is-live); if the physics library doesn't load,
    the balls sit in rows at the bottom instead (.is-still) */
 .drop {
-  grid-column: 7 / -1;
-  margin-right: calc(var(--bleed) * -1);
+  flex: 1;
   position: relative;
   display: flex; flex-wrap: wrap; justify-content: center; align-content: flex-end; gap: --spacing(2);
   padding: --spacing(6);
@@ -623,9 +667,19 @@ html:not([data-hero="b"]) .story-hero { display: none; }
   user-select: none;
   -webkit-user-select: none;
 }
-.drop__ball img { width: 50%; height: 50%; border-radius: var(--radius-md); pointer-events: none; }   /* softens the square app-tile logos */
-.drop__ball--eyes { background: var(--color-neutral-ink); }
+.drop__ball img { width: 62%; height: 62%; border-radius: var(--radius-md); pointer-events: none; }   /* the logo big in its ball; the radius softens the square app-tile logos */
+.drop__ball--eyes { --ball: --spacing(44); background: var(--color-neutral-ink); }   /* 1.8 tools (data-size, script.js) */
 .drop__ball--eyes .eyes { width: 66%; }
+/* The gifts: three huge bubbles (data-size: 3.2 times a tool ball, script.js), each with one of the three MacBook Neos
+   (assets/cards/hero_mac_01–03, trimmed to the laptop) the AI-Master cards give, in a feed colour (BRAND.md: the feed
+   colours rotate). The laptop fills the bubble edge to edge (its corners may cross the rim) and stays upright as it
+   rolls. Without the physics (.is-still) they sit in the rows at their size too. */
+.drop__ball--gift { --ball: --spacing(80); }
+.drop__ball--gift[data-bg="sky"]    { background: var(--color-feed-sky); }
+.drop__ball--gift[data-bg="pink"]   { background: var(--color-feed-pink); }
+.drop__ball--gift[data-bg="yellow"] { background: var(--color-feed-yellow); }
+.drop__ball--gift img { width: 100%; height: auto; border-radius: 0; }
+.drop__ball--turned img { scale: -1 1; }   /* faces the other way (two of the pictures lean alike) */
 .drop.is-live .drop__ball { position: absolute; top: 0; left: 0; will-change: transform; }
 .drop.is-holding, .drop.is-holding .drop__ball { cursor: grabbing; }   /* while a ball is held (script.js), wherever the pointer is */
 .drop.is-still .drop__ball { cursor: default; }
@@ -645,14 +699,20 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 @media (width < theme(--breakpoint-lg)) {
   .story-hero { display: flex; flex-direction: column; --header-h: --spacing(16); }
   .story-hero__copy { align-self: stretch; padding: calc(var(--header-h) + --spacing(8)) 0 --spacing(6); gap: --spacing(4); }
-  .drop { flex: 1; min-height: --spacing(80); margin: 0 calc(var(--page-x) * -1); }
+  .story-hero__stage { flex: 1; align-self: stretch; height: auto; margin: 0 calc(var(--page-x) * -1); }
+  .drop { min-height: --spacing(150); }   /* tablets, stacked: room for the draw's bubble and the pile over it */
+  .story-hero__bubble { left: var(--page-x); right: var(--page-x); }
 }
 @media (width < theme(--breakpoint-md)) {
   .story-hero__title { @apply text-aqb-headline-h2; }   /* phones: Headline H2, three lines */
-  .story-hero__detail { gap: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
-  .story-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); }   /* the button full width, the endorsement under it (as the webinar's) */
-  .drop { min-height: --spacing(72); }
+  .story-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); margin-top: --spacing(4); }   /* the button full width, the endorsement under it (as the webinar's) */
+  .drop { min-height: --spacing(170); }   /* phones: the draw's bubble takes ~300px; the pile over it keeps ~340px */
   .drop__ball { --ball: --spacing(14); }
+  .drop__ball--gift { --ball: --spacing(48); }
+  .story-hero__lead { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }
+  .story-hero__bubble { padding: --spacing(4) --spacing(5) --spacing(9); }
+  .story-hero__bubble-text { @apply text-aqb-label; font-weight: var(--font-weight-text); }
+  .drop__ball--eyes { --ball: --spacing(25); }
 }
 
 
@@ -848,21 +908,30 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg {
   position: relative;
   display: grid;
-  grid-row: span 6;
+  grid-row: span 5;   /* head (with the schedule) · price · buy · tools · features */
   grid-template-rows: subgrid;
   row-gap: --spacing(4.5);
-  padding: --spacing(7);
+  --pkg-pad: --spacing(7);
+  padding: var(--pkg-pad);
   background: var(--color-white);
   border: 1px solid transparent;
   border-radius: var(--radius-3xl);
 }
 .pkg--bundle {
   overflow: hidden;   /* the gift (.pkg__gift) is cropped by the card's edge, never sticks out */
+}
+/* Only the 3-friends card wears the Bundle's wash (with its ribbon border); AI-Master is White, as Start */
+.pkg--friends {
   background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, color-mix(in oklab, var(--color-campaign-bundle-wash) 50%, var(--color-white)) 45%, var(--color-white) 100%);   /* Bundle's own colours: a deliberate exception to "no gradients" (BRAND.md → Campaign colours) */
 }
+/* Start: its own column, not the shared rows, so its price and the rest follow its short head straight away (no gap
+   under it); stretched to the row's height, so the three cards stay the same height (the room is left at its bottom) */
+.pkg--start { display: flex; flex-direction: column; gap: --spacing(4.5); align-self: stretch; }   /* gap = the shared rows' gap */
+.pkg--start .pkg__price { align-self: flex-start; }   /* in the column, «end» would push it right */
 /* Ribbon border: a bright band travels around the card and the border thickens as it passes.
-   Drawn by ::before so it stays on top of the card's content. */
-.pkg--bundle::before {
+   Drawn by ::before so it stays on top of the card's content.
+   Only the 3-friends card wears it (the best value); AI-Master keeps the campaign wash without it. */
+.pkg--friends::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -880,7 +949,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   pointer-events: none;
   animation: ribbon-spin 4s linear infinite, ribbon-weight 4s ease-in-out infinite;
 }
-@media (prefers-reduced-motion: reduce) { .pkg--bundle::before { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .pkg--friends::before { animation: none; } }
 
 /* "Best value" tag in the top-right corner */
 .pkg__corner {
@@ -896,27 +965,52 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   @apply text-aqb-caption;
   white-space: nowrap;
 }
-/* The gift: a big 3D gift over the right side of the Bundle's head, cropped by the card (overflow: hidden on
-   .pkg--bundle; back from the 1 Oct version) */
+/* Sash: the tag as a band across the corner (the 3-friends card), in the campaign Green with White text (Label; the
+   webinar bar's pairing, a campaign exception to AA: BRAND.md → Campaign colours), 36px tall. Its centre sits 16 in
+   from the corner on both sides: room for the word on the band's short (outer) edge, clear of the name; the card's
+   overflow: hidden cuts its ends, over the ribbon border. */
+.pkg__corner--sash {
+  top: calc(--spacing(16) - --spacing(4.5)); right: calc(--spacing(16) - --spacing(28));   /* centre (top + half the height, right + half the width) = 16, 16 */
+  width: --spacing(56); height: --spacing(9); padding: 0;
+  justify-content: center;
+  border-radius: 0;
+  rotate: 45deg;
+  background: var(--color-campaign-green);
+  color: var(--color-white);
+  @apply text-aqb-label;
+}
+.pkg--bundle > .pkg__corner--sash { z-index: 3; }
+/* Narrow cards (side by side under xl, phones): no room for the band beside the name, nor for the tag beside the Zoom
+   pill, so it is a tab in the corner, above the Zoom pill's row (as tall as the card's padding) */
+@media (width < theme(--breakpoint-md)), (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
+  .pkg__corner--sash { top: 0; right: 0; width: auto; height: var(--pkg-pad); padding: 0 --spacing(5) 0 --spacing(4); border-radius: 0 0 0 var(--radius-xl); rotate: none; }
+}
+/* The gift: a MacBook Neo (assets/cards/hero_mac_02 / 03, trimmed to the laptop, ≈ 720 × 670; each AI-Master card its
+   own, both leaning the same way), at the bottom right of the head, behind the see-through schedule box and off the
+   card's words, running past the card's right edge (overflow: hidden on .pkg--bundle crops it). Size and offset are
+   checked against every line of the card's text. */
 .pkg__gift {
-  position: absolute;
-  top: --spacing(16);
-  right: calc(--spacing(8) * -1);
-  width: --spacing(40);
-  height: --spacing(40);
-  object-fit: contain;
-  rotate: -10deg;
-  z-index: 2;   /* in front of the head and the start-date box (the content is z-index 1), under the ribbon border (3) */
+  position: absolute; z-index: 0;
+  right: calc(--spacing(47.5) * -1); bottom: --spacing(5);   /* right: −190px (past the card's edge, cropped); 20px up */
+  width: --spacing(72);   /* 288px */
+  aspect-ratio: 720 / 670;
   pointer-events: none;
 }
-.pkg--bundle > :not(.pkg__gift) { position: relative; z-index: 1; }
+@media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {   /* the narrowest cards side by side (1100–1279) */
+  .pkg__gift { width: --spacing(60); }   /* 240px: off the words */
+}
+@media (width >= theme(--breakpoint-md)) and (width < theme(--breakpoint-lg)) {   /* tablets: the cards stacked, 560px wide */
+  .pkg__gift { width: --spacing(85); right: calc(--spacing(27.5) * -1); }   /* 340px, right −110px: most of it shows, clear of the words */
+}
+@media (width >= theme(--container-page)) {   /* the full-width cards (410px): room for a bigger one */
+  .pkg__gift { width: --spacing(65); }   /* 260px: the widest that stays off the 3-friends description at right −190px */
+}
+.pkg__gift img { display: block; width: 100%; height: 100%; }
+.pkg--bundle > * { position: relative; z-index: 1; }
 .pkg--bundle > .pkg__corner { position: absolute; z-index: 2; }
 
-/* Spotlight (script.js, wide screens only): a clicked «Ի՞նչ սովորել» tile sets .packages[data-spotlight]
-   to the package that teaches it (start / levelup). That package and Bundle lift, the other one steps
-   back. Hovering the faded card brings it back — but only once
-   the mouse has moved (.is-hover-ready): after the scroll the cursor may have landed on it, and that
-   alone shouldn't undo the fade.
+/* Spotlight (script.js, wide screens only): a clicked «Ի՞նչ սովորել» tile sets .packages[data-spotlight="master"];
+   the whole-course card (.pkg--master) lifts and its gift wiggles.
    .pkg-spot is a soft grey banner in the picked card's head (under the name) naming the topic;
    its .dismiss ✕ hides it and ends the spotlight.
    .packages gets a scroll margin so the lifted cards clear the nav when the page scrolls to them. */
@@ -940,25 +1034,23 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg-spot > p { flex: 1; }
 .pkg-spot .dismiss { margin: calc(--spacing(0.5) * -1) calc(--spacing(2) * -1) 0 0; }   /* ✕ centred on the first line, tucked into the corner */
 @media (width >= theme(--breakpoint-lg)) {
-  .packages[data-spotlight="levelup"] .pkg--start:not(:focus-within),
-  .packages[data-spotlight="start"] .pkg--levelup:not(:focus-within) { opacity: .5; }
-  .packages[data-spotlight].is-hover-ready :is(.pkg--start, .pkg--levelup):hover { opacity: 1; }
-  .packages[data-spotlight="start"] .pkg--start,
-  .packages[data-spotlight="levelup"] .pkg--levelup { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-xl); }
-  .packages[data-spotlight] .pkg--bundle { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-2xl); }
-  .packages[data-spotlight] .pkg__gift { animation: gift-wiggle .9s var(--ease-smooth) .4s; }   /* the gift wiggles once to sell Bundle */
+  .packages[data-spotlight="master"] .pkg--master { translate: 0 calc(--spacing(3) * -1); box-shadow: var(--shadow-2xl); }
+  .packages[data-spotlight="master"] .pkg--master .pkg__gift { animation: gift-wiggle .9s var(--ease-smooth) .4s; }   /* the gift wiggles once */
 }
 @media (prefers-reduced-motion: reduce) { .pkg { transition: none; } .packages[data-spotlight] .pkg__gift { animation: none; } }
 
 /* Row 1 · head */
-.pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2); }
-.pkg--bundle .pkg__head { padding-right: --spacing(24); }   /* room for the gift; the description fits on 2 lines */
+.pkg__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2); min-width: 0; }   /* never wider than its card */
 .pkg__name {   /* the plan's name in the headline cut (Headline H1, ExtraBold Italic), as in the 1 Oct cards the team chose */
   @apply text-aqb-headline-h1 italic;
   color: var(--color-ink-900);
 }
-.pkg__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); }   /* «Start + Level-Up»: Subhead */
+/* Cards side by side below the full page width (1440): one step down the scale, Headline H2, so «AI-Master» fits on
+   one line and clears the sash (phones step down too, below) */
+@media (width >= theme(--breakpoint-lg)) and (width < theme(--container-page)) { .pkg__name { @apply text-aqb-headline-h2; } }
+.pkg__tagline { @apply text-aqb-subhead italic; font-weight: var(--font-weight-headline); color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); white-space: nowrap; }   /* «Start + Level-Up», «3 ընկերներով»: part of the plan's name, so the name's cut (ExtraBold Italic) at Subhead size, on one line */
 .pkg__desc { @apply text-aqb-body-s; color: var(--color-ink-600); }
+.pkg__desc strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }   /* the 3-friends offer in a word */
 
 .pill {
   display: inline-flex; align-items: center; gap: --spacing(1.5);
@@ -972,14 +1064,21 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pill--deal { background: color-mix(in oklab, var(--color-accent) 90%, transparent); color: var(--color-white); }   /* Bundle's original colours: white under 24px on Orange is a deliberate exception (BRAND.md → Campaign colours) */
 .pill--save { background: var(--color-campaign-bundle-save); color: var(--color-campaign-bundle-save-text); }
 .pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
+.pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (Hero B's «Խաղարկություն» on Orange) */
+.pill--lg { height: --spacing(10); padding: 0 --spacing(4.5); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* size step: 40px, Body S SemiBold (a tag that leads a block) */
 
 /* Row 2 · schedule */
+/* The schedule, at the end of the head (right under the card's words): see-through glass, so the MacBook behind it
+   (.pkg__gift) shows; the blur keeps its lines readable */
 .pkg__schedule {
+  position: relative; z-index: 1;
+  align-self: stretch;
   display: flex; flex-direction: column; gap: --spacing(2.5);
+  margin-top: --spacing(2);
   padding: --spacing(4) --spacing(4.5);
-  background: var(--surface);
+  background: color-mix(in oklab, var(--surface) 40%, transparent);
+  backdrop-filter: blur(var(--blur-xs));   /* a light frost: the laptop shows through, the lines stay readable */
   border-radius: var(--radius-2xl);
-  align-self: start;   /* each box as tall as its lines (Bundle has the week-by-week days); the prices below stay level */
 }
 .pkg__date, .pkg__meta { display: flex; align-items: center; gap: --spacing(2.5); }
 .pkg__date { @apply text-aqb-label; color: var(--color-ink-900); }
@@ -989,6 +1088,16 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
    the days week by week (Ink 600, as .pkg__meta), the icon on the first line; the hours beside the clock (.pkg__date) */
 .pkg__format { display: flex; align-items: center; gap: --spacing(2.5); @apply text-aqb-label; color: var(--color-ink-900); }   /* the video icon, as .pkg__date */
 .pkg__format .ic { color: var(--color-primary); }
+/* The box's first line, the lessons the plan covers («Առաջին 3 դասը՝ 9-ից», «9 դաս»; .pkg__format), has the brand's
+   eyes in place of an icon: static, looking at you (data-look="you"), on an Ink disc the icon's size, as the eye mark
+   sits on Black (the white eyes would vanish on the grey box; BRAND.md → Eyes) */
+.pkg__eyes {
+  display: grid; place-items: center; flex: none;
+  width: --spacing(4.5); height: --spacing(4.5);   /* = .ic */
+  border-radius: var(--radius-full);
+  background: var(--color-neutral-ink);
+}
+.pkg__eyes .eyes { width: 76%; }
 .pkg__date:has(.pkg__days) { align-items: flex-start; }
 .pkg__days { display: flex; flex-direction: column; gap: --spacing(1.5); color: var(--color-ink-600); }
 .pkg__days li:first-child { color: var(--color-ink-900); }
@@ -997,6 +1106,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1) --spacing(2.5); align-self: end; }
 .pkg__price .pkg__old ~ .pkg__amount { flex-basis: 100%; }   /* discounted price drops below the old price + tags */
 .pkg__amount { @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); white-space: nowrap; }
+.pkg__unit { @apply text-aqb-label; color: var(--color-ink-600); white-space: nowrap; }   /* «1 անձը՝»: the price is a person's */
 .pkg__old {
   @apply text-aqb-body-s; color: var(--color-ink-400);
   text-decoration: line-through; text-decoration-color: var(--color-accent); text-decoration-thickness: 3px;
@@ -1046,14 +1156,11 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 
 /* Row 4 · CTA (right under the price) */
 .pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
-.pkg--bundle .pkg__cta { justify-content: flex-end; }   /* one button, not two (no «Մանրամասն»): it sits at the row's bottom, level with the other cards' buy buttons */
-/* Cards side by side: the room the missing «Մանրամասն» leaves (a --md button + the CTA gap) would all sit under the
-   Bundle's price, so the price moves down by half of it, centred between the start-date box and the button; the price
-   itself is a step bigger. (Its row is the tallest, so the offset stays half the missing button.) */
+/* Cards side by side: the two AI-Master prices a step bigger (Headline H1; phones keep H2) */
 @media (width >= theme(--breakpoint-lg)) {
-  .pkg--bundle .pkg__price { translate: 0 calc((--spacing(14) + --spacing(3)) / 2); }
-  .pkg--bundle .pkg__amount { @apply text-aqb-headline-h1; }   /* the recommended plan: its price one step up the scale (Headline H1; phones keep H2) */
+  .pkg--bundle .pkg__amount { @apply text-aqb-headline-h1; }
 }
+
 .pkg__guarantee { display: flex; align-items: center; justify-content: center; gap: --spacing(2); @apply text-aqb-caption; color: var(--color-ink-600); }
 .pkg__guarantee .ic { color: var(--color-primary); }
 .pkg__guarantee strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
@@ -1592,6 +1699,46 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 .field__input--grouped { border: 0; border-radius: 0; padding: --spacing(3.5) --spacing(4); flex: 1; min-width: 0; }
 
+/* Modal: a popup form on a dimmed page (a native <dialog>, opened with showModal(): Escape and focus come with it;
+   script.js → friendsForm opens it from [data-open], closes it from [data-close] and a click on the backdrop).
+   The white card of .promo-form; its own scroll when the screen is short. First in use: the 3-friends signup. */
+.modal {
+  width: min(--spacing(150), 100% - --spacing(8)); max-width: none;
+  max-height: calc(100dvh - --spacing(8));
+  margin: auto; padding: 0;
+  overflow: auto; overscroll-behavior: contain;
+  background: var(--color-white); color: var(--color-ink-900);
+  border: 0; border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-2xl);
+  opacity: 0; translate: 0 --spacing(4);
+  transition: opacity .3s var(--ease-smooth), translate .3s var(--ease-smooth), overlay .3s allow-discrete, display .3s allow-discrete;
+}
+.modal[open] { opacity: 1; translate: 0 0; }
+@starting-style { .modal[open] { opacity: 0; translate: 0 --spacing(4); } }
+.modal::backdrop { background: color-mix(in oklab, var(--color-black) 55%, transparent); }
+@media (prefers-reduced-motion: reduce) { .modal { transition: none; translate: none; } }
+html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it */
+.modal__panel { --modal-pad: --spacing(10); display: flex; flex-direction: column; gap: --spacing(8); padding: var(--modal-pad); }   /* = .promo-form */
+.modal__head { display: flex; align-items: center; justify-content: space-between; gap: --spacing(4); }   /* the title, the ✕ beside it */
+/* The title (and ✕) and the button stay in view while the fields scroll between them: sticky to the dialog's own
+   scroll, on White with the panel's padding as their backing */
+.modal__head {
+  position: sticky; top: 0; z-index: 1;
+  margin: calc(var(--modal-pad) * -1) calc(var(--modal-pad) * -1) 0;
+  padding: var(--modal-pad) var(--modal-pad) --spacing(2);
+  background: var(--color-white);
+}
+.modal__panel > [type="submit"] {
+  position: sticky; bottom: var(--modal-pad); z-index: 1;
+  box-shadow: 0 var(--modal-pad) 0 var(--modal-pad) var(--color-white), 0 calc(var(--modal-pad) * -1) 0 var(--modal-pad) var(--color-white);
+}
+.modal__title { @apply text-aqb-subhead; color: var(--color-ink-900); text-wrap: balance; }   /* a form title: Subhead */
+/* One person's fields: two side by side (a phone spans both), each person after a hairline */
+.modal__group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: --spacing(5) --spacing(4); min-width: 0; margin: 0; padding: 0; border: 0; }
+.modal__group + .modal__group { padding-top: --spacing(8); border-top: 1px solid var(--line); }
+.modal__legend { float: left; grid-column: 1 / -1; padding: 0; @apply text-aqb-label; color: var(--color-ink-900); }   /* float: a plain grid item, not the fieldset's border legend */
+.modal__wide { grid-column: 1 / -1; }
+
 /* ============================================================
    10 · FAQ
    ============================================================ */
@@ -1631,6 +1778,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 
 /* «Ե՞րբ են դասերը» — two schedule blocks side by side */
 .schedules { display: grid; grid-template-columns: 1fr 1fr; gap: --spacing(3); }
+.schedules--single { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); }   /* one course: one schedule */
 .schedule { padding: --spacing(4) --spacing(4.5); background: var(--surface); border-radius: var(--radius-2xl); }
 .schedule__name { @apply text-aqb-label; color: var(--color-ink-900); margin-bottom: --spacing(2.5); }
 .schedule__rows { display: flex; flex-direction: column; gap: --spacing(2); }
@@ -2113,7 +2261,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .subnav__cols { padding: --spacing(3) --spacing(4) 0; gap: --spacing(4) --spacing(6); }
   .subnav-promo { margin: 0 0 --spacing(2); }
   .packages { grid-template-columns: minmax(0, 1fr); row-gap: --spacing(8); max-width: --spacing(140); margin: 0 auto; width: 100%; }   /* minmax: a long word never pushes a card past the screen */
-  .pkg--bundle { order: -1; }   /* stacked: the recommended plan comes first */
   .pkg-spot { display: none; }   /* stacked cards: the tiles just scroll to their package */
   .pro-grid { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); margin: 0 auto; width: 100%; }   /* width: in the flex column it would shrink to nothing (the cards have no content width) */
   .pro-card { height: --spacing(80); }
@@ -2160,10 +2307,16 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
   .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
-  .pkg { padding: --spacing(6); }
+  .pkg { --pkg-pad: --spacing(6); }
   .pkg__name { @apply text-aqb-headline-h2; }   /* phones step down the scale */
-  .pkg__gift { width: --spacing(36); height: --spacing(36); }
-  .pkg--bundle .pkg__head { padding-right: --spacing(22); }
+  .pkg__gift { width: --spacing(55); right: calc(--spacing(17.5) * -1); bottom: 0; }   /* phones: 220px, right −70px, so most of the laptop shows (checked 320–414, clear of the words) */
+  .modal__panel { --modal-pad: --spacing(6); gap: --spacing(6); }
+  /* phones: a sheet up from the bottom, the whole width */
+  .modal { width: 100%; max-height: calc(100dvh - --spacing(6)); margin: auto 0 0; border-radius: var(--radius-3xl) var(--radius-3xl) 0 0; translate: 0 100%; }
+  .modal[open] { translate: 0 0; }
+  @starting-style { .modal[open] { translate: 0 100%; } }
+  .modal__group { grid-template-columns: minmax(0, 1fr); gap: --spacing(4); }
+  .modal__group + .modal__group { padding-top: --spacing(6); }
   .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .courses__top { align-items: flex-end; }
@@ -2213,13 +2366,13 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 }
 
 /* ============================================================
-   15 · COURSE PAGES (start.html, level-up.html) — everything about one course, to read top to bottom: the hero with the week at a
+   15 · COURSE PAGE (ai-grager.html) — everything about the course, to read top to bottom: the hero with the weeks at a
    glance (and the facts), the program (one panel a lesson), what's included, the reviews, the teachers, the FAQ, then the price
    and refund (the questions are answered before the last ask).
    The nav, teacher cards, FAQ, footer and floating buttons are the main page's atoms, unchanged.
    ============================================================ */
 /* Every band keeps the page column (1440px, --page-x) while its colour runs to the screen's edges */
-.course-hero, .course-program, .course-included, .course-teachers, .course-price, .course-bundle {
+.course-hero, .course-program, .course-included, .course-price {
   --edge: max(var(--page-x), calc((100vw - var(--container-page)) / 2 + var(--page-x)));
   padding: var(--section-y) var(--edge);
 }
@@ -2286,6 +2439,14 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 .course-program__kicker { @apply text-aqb-body-m; }
 .course-program__end { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: --spacing(4) var(--card-gap); }
 .course-program__note { @apply text-aqb-caption; }
+/* After lesson 3: the first 3 lessons can be bought on their own — a line between hairlines, the way to the price beside it */
+.course-program__split {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: --spacing(4) var(--card-gap);
+  padding: --spacing(6) 0;
+  border-block: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent);
+}
+.course-program__split p { max-width: --spacing(180); @apply text-aqb-body-s; }
+.course-program__split strong { font-weight: var(--font-weight-detail); }
 
 .lesson {
   display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
@@ -2322,11 +2483,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 .course-included__list h3 { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
 .course-included__list p { margin-top: --spacing(1); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
 
-/* 04 · Teachers: the main page's .teacher cards, two equal halves instead of the slider (the card fills its column) */
-.course-teachers { display: flex; flex-direction: column; gap: var(--title-gap); }
-.course-teachers__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }
-.course-teachers__row .teacher { width: auto; }   /* layout only: the column sets the width */
-
 /* 05 · Price + refund: a Blue band, white text (BRAND.md); the buy side and the promise side by side */
 .course-price { background: var(--color-primary); color: var(--color-white); }
 .course-price__inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: --spacing(12); align-items: start; }
@@ -2335,17 +2491,25 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 .course-price__amount { @apply text-aqb-display-l italic; }   /* the big number */
 .course-price__detail { @apply text-aqb-label; }
 .course-price__detail a { text-decoration: underline; text-underline-offset: 3px; }
+/* The course's discount over the price: the old price struck through in Orange (as .pkg__old), the −20% pill */
+.course-price__was { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-body-s; }
+.course-price__was s { text-decoration-color: var(--color-accent); text-decoration-thickness: 3px; }
+/* The second way in under «Գնել»: only the first 3 lessons, after a hairline, with a line button */
+.course-price__starter {
+  align-self: stretch; max-width: --spacing(100);
+  display: flex; flex-direction: column; gap: --spacing(3);
+  margin-top: --spacing(2); padding-top: --spacing(5);
+  border-top: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent);
+  @apply text-aqb-label; font-weight: var(--font-weight-text);
+}
+.course-price__starter strong { font-weight: var(--font-weight-detail); }
+.course-price__starter .btn { align-self: flex-start; }   /* as wide as its words: a second choice, not a rival to «Գնել» */
 .course-price__cta { align-self: stretch; max-width: --spacing(100); margin-top: --spacing(2); }
 .course-price__endorse { display: flex; align-items: center; gap: --spacing(3); margin-top: --spacing(2); @apply text-aqb-caption; }
 .course-price__endorse img { width: --spacing(9); height: auto; flex: none; }
 .course-price__refund { display: flex; flex-direction: column; gap: --spacing(4); padding-left: --spacing(12); border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
 .course-price__title { @apply text-aqb-subhead; text-wrap: balance; }   /* a card title (Subhead): the price stays the one headline of the band */
 .course-price__refund p { max-width: --spacing(160); @apply text-aqb-body-s; }
-
-/* 07 · Level-Up + Bundle: the main page's two package cards (.packages, .pkg, unchanged), side by side on grey as the
-   main page's packages; two columns instead of its three (stacked below lg by .packages itself, Bundle first) */
-.course-bundle { background: var(--surface); }
-.course-bundle .packages { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: --spacing(260); margin: 0 auto; }
 
 /* 06 · FAQ: the main page's, with a call line under the title */
 .course-faq__head { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); }
@@ -2357,7 +2521,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .lesson { grid-template-columns: minmax(0, 1fr); }
   .course-included { grid-template-columns: minmax(0, 1fr); }
   .course-price__inner { grid-template-columns: minmax(0, 1fr); }
-  .course-bundle .packages { grid-template-columns: minmax(0, 1fr); }   /* stacked, as the main page's */
   .course-price__refund { padding: --spacing(10) 0 0; border-left: 0; border-top: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
 }
 @media (width < theme(--breakpoint-md)) {
@@ -2370,9 +2533,9 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .lesson__num { @apply text-aqb-headline-h1; }   /* phones: Display L → Headline H1 */
   .lesson__topics li { @apply text-aqb-body-s; }
   .course-program__end .btn { flex: 1; }
-  .course-teachers__row { grid-template-columns: minmax(0, 1fr); }
   .course-price__amount { @apply text-aqb-headline-h1; }
   .course-price__cta { max-width: none; }
+  .course-price__starter { max-width: none; }
 }
 
 } /* end @layer components */
@@ -2385,7 +2548,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 @keyframes fab-group-in { from { opacity: 0; scale: .9; } }
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
-@keyframes gift-wiggle { 25% { rotate: 4deg; } 50% { rotate: -18deg; } 75% { rotate: -4deg; } }   /* from / to: the gift's own -10deg */
+@keyframes gift-wiggle { 25% { rotate: 6deg; } 50% { rotate: -6deg; } 75% { rotate: 3deg; } }   /* from / to: the picture upright */
 @keyframes blob-float {
   0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
   25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }

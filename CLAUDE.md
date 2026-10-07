@@ -1,6 +1,6 @@
 # AIQB landing site
 
-Static site: `index.html` + `doctor-register.html` + `join.html` (careers, own inline script), `script.js`, and Tailwind v4.
+Static site: `index.html` + `ai-grager.html` (the one course, «AI գրագեր»; the old `start.html` / `level-up.html` redirect to it in `vercel.json`) + `doctor-register.html` + `join.html` (careers, own inline script), `script.js`, and Tailwind v4.
 `tailwind.css` is the source stylesheet; `styles.css` is generated from it (`npm run build:css`) — never edit `styles.css` by hand.
 `npm run build` regenerates `styles.css` and copies the site into `dist/` (what Vercel deploys from `master`).
 
@@ -20,11 +20,12 @@ There's no component folder: the **atomic components are the shared classes in `
 
 | Atom | Classes | Use for |
 |---|---|---|
-| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline` · `--ghost` (no fill, inherits the text colour: a secondary action beside a filled one, e.g. Copy link); one size: `--sm` (40px) · `--base` (48px, same as the floating buttons) · `--md` (56px) · `--lg` (64px, hero only); optional `--block`; `--inline`: a word inside a headline that is the button (keeps the headline's type, cut to the brand chat bubble by `script.js`; not on the page at the moment) | every clickable action (links styled as buttons too) |
-| Pill / tag | `.pill` + `--deal` (Orange, white −%) · `--save` (pale green) · `--gift` (violet, white text) — the Bundle's own colours · `--zoom` (grey) | discounts, labels, badges |
+| Button | `.btn` + one colour: `--primary` · `--dark` · `--white` · `--outline` · `--ghost` (no fill, inherits the text colour: a secondary action beside a filled one, e.g. Copy link) · `--line` (the ghost with a hairline in the text colour: a secondary action on its own on a colour band, e.g. «Գնել առաջին 3 դասը» on the course page); one size: `--sm` (40px) · `--base` (48px, same as the floating buttons) · `--md` (56px) · `--lg` (64px, hero only); optional `--block`; `--inline`: a word inside a headline that is the button (keeps the headline's type, cut to the brand chat bubble by `script.js`; not on the page at the moment) | every clickable action (links styled as buttons too) |
+| Pill / tag | `.pill` + `--deal` (Orange, white −%) · `--save` (pale green) · `--gift` (violet, white text) — the Bundle's own colours · `--zoom` (grey) · `--black` (white text: a tag on a colour, e.g. «Խաղարկություն» on Hero B's Orange bubble); one size step: `--lg` (40px, Body S SemiBold) | discounts, labels, badges |
 | Icon | `.ic` + `.ic--calendar` · `--calendar-plus` (register) · `--clock` · `--video` (live format) · `--check` · `--x` · `--shield` · `--chev-left/right/down` · `--external` · `--link` (copy link) · `--phone` · `--arrow-up` · brand logos `--telegram` · `--whatsapp` · `--instagram`; one size step: `--lg` (24px) | every icon: masks tinted by `currentColor` |
 | Floating button | `.fab` (48px circle) + `--label` (icon + text pill) · `--contact` (webinar campaign green, opens the group; becomes the ✕) · `--top` (back to top); `.fab-group` = several `.fab` in one 48px glass pill (phone / Telegram / WhatsApp), its toggle stays outside it | the fixed buttons bottom right (the row appears on scroll, like the webinar bar) |
 | Dismiss | `.dismiss` (28px round, holds `.ic--x`) | the ✕ that hides a banner (e.g. `.pkg-spot`) |
+| Modal | `.modal` (a native `<dialog>`, `showModal()`) + `__panel` (a `<form>`), `__head` with `__title` and a `.dismiss` (✕), `__group` (a `<fieldset>`: one person's `.field`s two to a row, `__legend`, `__wide` spans both); opened by `[data-open="<id>"]`, closed by `[data-close]`, Escape or the backdrop (`script.js` → friendsForm) | popup forms (the 3-friends signup) |
 | Round arrow | `.pro-card__arrow` / `.teachers__arrow` (`.courses__arrow` on Black) | circular arrow buttons |
 | Tabs | `.pill-tabs` + `.pill-tabs__tab` | any segmented toggle |
 | Chip | `.chip` (in `.chips`) | filter / topic chips |

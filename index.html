@@ -6,25 +6,15 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=hero-ab-12" />
-  <!-- Hero A/B test: Hero A (the eyes' walk writing «AI քեզ բան», with the original words) or Hero B (the falling AI
-       tools, with the sales words). Each new visitor gets one at random, 50/50, and keeps it on later visits
-       (localStorage 'aiqb-hero'; without storage, a fresh pick each visit). ?hero=a / ?hero=b shows that hero for the
-       team, this visit only, without changing their own pick, and is marked hero_preview. Set before the page paints,
-       so the other hero never flashes (tailwind.css: html[data-hero]); the hero on show goes to window.dataLayer. -->
+  <link rel="stylesheet" href="styles.css?v=hero-b-23" />
+  <!-- The hero: Hero B (the falling AI tools, with the sales words) for everyone. Hero A (the eyes' walk writing
+       «AI քեզ բան», with the original words) stays in the page, hidden; ?hero=a shows it for the team, this visit only,
+       marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]);
+       the hero on show goes to window.dataLayer. (Until Oct 2026 this was a 50/50 A/B test.) -->
   <script>
     (function () {
-      var KEY = 'aiqb-hero';
-      var forced = new URLSearchParams(location.search).get('hero');
-      var preview = forced === 'a' || forced === 'b';
-      var hero = preview ? forced : null;
-      if (!preview) {
-        try { hero = localStorage.getItem(KEY); } catch (e) {}
-        if (hero !== 'a' && hero !== 'b') {
-          hero = Math.random() < 0.5 ? 'a' : 'b';
-          try { localStorage.setItem(KEY, hero); } catch (e) {}
-        }
-      }
+      var preview = new URLSearchParams(location.search).get('hero') === 'a';
+      var hero = preview ? 'a' : 'b';
       document.documentElement.dataset.hero = hero;
       (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
     })();
@@ -38,7 +28,7 @@
   <!-- Hidden for now — remove `hidden` to bring the bar back -->
   <div class="topbar" hidden>
     <div class="topbar__item">
-      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«Start»՝ հոկտեմբերի 6-ից, «Level-Up»՝ հոկտեմբերի 13-ից</span>
+      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI գրագեր»՝ նոյեմբերի 3-ից</span>
       <a href="#packages" class="btn btn--white btn--sm">Գրանցվել</a>
     </div>
   </div>
@@ -54,7 +44,7 @@
       <div class="nav__links" id="nav-menu">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="#packages" class="nav__link">Դասընթացներ</a>
-        <!-- «Դասընթացներ» sub nav: course links + Bundle promo (opens on hover / click, script.js).
+        <!-- «Դասընթացներ» sub nav: course links + the course promo (opens on hover / click, script.js).
              Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
         <div class="nav__item" hidden>
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
@@ -65,9 +55,8 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
-                  <a href="#packages" class="subnav__link">Start</a>
-                  <a href="#packages" class="subnav__link">Level-Up</a>
-                  <a href="#packages" class="subnav__link">Bundle <span class="pill pill--deal">−20%</span></a>
+                  <a href="ai-grager.html" class="subnav__link">AI գրագեր <span class="pill pill--deal">−20%</span></a>
+                  <a href="#packages" class="subnav__link">Առաջին 3 դասը</a>
                 </div>
                 <div class="subnav__group">
                   <p class="subnav__label">PRO</p>
@@ -78,12 +67,12 @@
                 </div>
               </div>
 
-              <!-- Bundle promo (replaces the wireframe's placeholder image) -->
+              <!-- The course promo, in the Bundle's look (replaces the wireframe's placeholder image) -->
               <a href="#packages" class="subnav-promo">
                 <img class="subnav-promo__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
                 <span class="subnav-promo__head">
-                  <strong class="subnav-promo__name">Bundle</strong>
-                  <span class="subnav-promo__tagline">Start + Level-Up</span>
+                  <strong class="subnav-promo__name">AI գրագեր</strong>
+                  <span class="subnav-promo__tagline">Զրոյից մինչև AI ագենտներ</span>
                 </span>
                 <span class="subnav-promo__price">
                   <s class="pkg__old">֏ 57,000</s>
@@ -115,8 +104,8 @@
   <main>
 
     <!-- =========================================================
-         03 · HERO — A/B test: Hero A (the eyes' walk, below) or Hero B (the falling tools, after it), each with its own
-         words. The <head> script picks one per visitor, 50/50 (html[data-hero]); the other is display: none.
+         03 · HERO — Hero B (the falling tools, after this one) is the hero. Hero A (the eyes' walk, below) is kept but not
+         shown: the <head> script sets html[data-hero="b"] (?hero=a previews A); the other is display: none.
          ========================================================= -->
     <section class="hero" data-bg="sky">
       <!-- Solid colour backdrop; each scene of the eyes' walk opens its colour from the eyes as a circle
@@ -126,7 +115,7 @@
       <!-- The promise -->
       <h1 class="hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
       <!-- The detail line (format and start), then the plain call to action and the tax refund + ministry endorsement -->
-      <p class="hero__detail">Օնլայն՝&nbsp;Zoom-ով · Սկիզբը՝&nbsp;հոկտեմբերի&nbsp;6 · ֏&nbsp;19,500-ից</p>   <!-- &nbsp;: each fact stays on one line; lines break at the dots -->
+      <p class="hero__detail">Օնլայն՝&nbsp;Zoom-ով · Սկիզբը՝&nbsp;նոյեմբերի&nbsp;3 · ֏&nbsp;19,500-ից</p>   <!-- &nbsp;: each fact stays on one line; lines break at the dots -->
       <div class="hero__actions">
         <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
         <p class="hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
@@ -170,17 +159,21 @@
          (.story-hero keeps the name of the first version, the storyboard.) -->
     <section class="story-hero">
       <div class="story-hero__copy">
-        <h1 class="story-hero__title">Սովորի՛ր AI առանց գլխացավանքի</h1>
-        <p class="story-hero__detail"><span>Օնլայն՝&nbsp;Zoom-ով</span> <span>Սկիզբը՝&nbsp;հոկտեմբերի&nbsp;6</span> <span>֏&nbsp;19,500-ից՝ 100%&nbsp;վերադարձով</span></p>   <!-- one fact a line -->
+        <h1 class="story-hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
+        <p class="story-hero__lead">Գրանցվիր հիմա, ստացիր այս ամսվա 3 MacBook-ներից մեկը</p>   <!-- the offer under the headline: the draw (its terms in the Orange bubble under the pile) -->
         <div class="story-hero__actions">
           <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
           <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
         </div>
       </div>
 
-      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow">
-        <!-- One ball a tool (its name in data-name); script.js sizes them for the stage and drops them in this order,
-           the eyes last, so they land on top of the pile -->
+      <!-- The stage, with the draw in an Orange chat bubble along its bottom: a shelf the balls land on (script.js · 03 B
+           adds it to the physics; it falls in first). Outside .drop, whose role="img" would hide it from screen readers -->
+      <div class="story-hero__stage">
+      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo">
+        <!-- One ball a tool (its name in data-name); script.js sizes them for the stage and drops them in this order:
+           the tools, then the three gifts (huge bubbles, data-size times a tool's size, each with one of the MacBook Neos
+           the AI-Master cards give, in a feed colour), the eyes last (bigger too), on top of the pile -->
         <span class="drop__ball" data-name="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="" /></span>
         <span class="drop__ball" data-name="Gemini"><img src="assets/logos/gemini.svg" alt="" /></span>
         <span class="drop__ball" data-name="Claude"><img src="assets/logos/claude.svg" alt="" /></span>
@@ -197,8 +190,11 @@
         <span class="drop__ball" data-name="Arena"><img src="assets/logos/arena.svg" alt="" /></span>
         <span class="drop__ball" data-name="Oboe"><img src="assets/logos/oboe.svg" alt="" /></span>
         <span class="drop__ball" data-name="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="sky"><img src="assets/cards/hero_mac_01.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="pink"><img src="assets/cards/hero_mac_02.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="3.2" data-bg="yellow"><img src="assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
         <!-- The brand's eyes (.eyes, 96 × 50, no outline) on an Ink ball: they stay upright as it rolls -->
-        <span class="drop__ball drop__ball--eyes">
+        <span class="drop__ball drop__ball--eyes" data-size="1.8">   <!-- data-size: bigger than a tool (script.js) -->
           <svg class="eyes" viewBox="0 0 96 50" data-look="you">
             <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
             <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
@@ -206,6 +202,13 @@
             <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
           </svg>
         </span>
+      </div>
+        <div class="story-hero__bubble">
+          <span class="pill pill--black pill--lg">Խաղարկություն</span>
+          <p class="story-hero__bubble-title">3 MacBook Neo</p>
+          <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
+          <p class="story-hero__bubble-text">Հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
+        </div>
       </div>
     </section>
 
@@ -226,60 +229,61 @@
       <!-- What you'll learn: one row of tiles, four in view on desktop (the arrows step one view, script.js).
            Each tile is a post in its feed colour (data-bg, BRAND.md: the feed colours rotate, black text), cut into the
            brand bubble by script.js, which also sets the brand's eyes peeking from its cut-out top corner (Figma slide 41).
-           Each tile links to the package that teaches it (data-pkg): clicking one spotlights that package + Bundle (script.js).
-           Start and Level-Up skills are mixed; data-topic is the wording for the package's banner sentence -->
+           The nine lessons of «AI գրագեր» in order, each tile labelled with its lesson; each links to the whole-course card
+           (data-pkg="master": AI-Master), which a click spotlights with the topic in its banner
+           (script.js); data-topic is the wording for the banner sentence -->
       <div class="learn-grid" aria-label="Ի՞նչ սովորել">
           <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="start">
-              <span class="learn-tile__pkg">Start</span>
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 1</span>
               <h4 class="learn-tile__title" data-topic="AI հիմունքներ և անվտանգություն">AI հիմունքներ և անվտանգու&shy;թյուն</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
-              <h4 class="learn-tile__title" data-topic="1000 բառի տեղ խոսող նկարների գեներացիա">1000 բառի տեղ խոսող նկարների գեներացիա</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
-              <h4 class="learn-tile__title" data-topic="Հետազոտություն ու աղբյուրահեն կոնտենտ">Հետազոտու&shy;թյուն ու աղբյուրահեն կոնտենտ</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="start">
-              <span class="learn-tile__pkg">Start</span>
+            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 2</span>
               <h4 class="learn-tile__title" data-topic="AI-ը կյանքի 10 իրավիճակներում">AI-ը կյանքի 10 իրավիճակ&shy;ներում</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
-              <h4 class="learn-tile__title" data-topic="AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
-              <h4 class="learn-tile__title" data-topic="Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="start">
-              <span class="learn-tile__pkg">Start</span>
+            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 3</span>
               <h4 class="learn-tile__title" data-topic="Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
+            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 4</span>
+              <h4 class="learn-tile__title" data-topic="Հետազոտություն ու աղբյուրահեն կոնտենտ">Հետազոտու&shy;թյուն ու աղբյուրահեն կոնտենտ</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 5</span>
+              <h4 class="learn-tile__title" data-topic="1000 բառի տեղ խոսող նկարների գեներացիա">1000 բառի տեղ խոսող նկարների գեներացիա</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 6</span>
+              <h4 class="learn-tile__title" data-topic="AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 7</span>
+              <h4 class="learn-tile__title" data-topic="Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 8</span>
               <h4 class="learn-tile__title" data-topic="Գործընթացների ավտոմատացում AI-ով">Գործընթացների ավտոմատացում AI-ով</h4>
             </a>
           </div>
           <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="levelup">
-              <span class="learn-tile__pkg">Level-Up</span>
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 9</span>
               <h4 class="learn-tile__title" data-topic="Ինքնավար ագենտների ստեղծում">Ինքնավար ագենտների ստեղծում</h4>
             </a>
           </div>
@@ -326,6 +330,10 @@
       <p class="endorse endorse--strip"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>
 
       <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
+      <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI-Master),
+           and the whole course for 3 friends together (one price a person). The two AI-Master cards wear the Bundle's
+           campaign look (.pkg--bundle: the wash, the ribbon border, the gift; BRAND.md → Campaign colours).
+           Stacked below lg, the two AI-Master cards come first. -->
       <div class="packages">
 
         <!-- ───── Start ───── -->
@@ -333,27 +341,26 @@
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Start</h3>
-            <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
-            <div class="pkg-spot" hidden>
-              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>Start</strong> դասընթացի ընթացքում</p>
-              <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
-            </div>
             <p class="pkg__desc">AI-ի հետ առաջին ծանոթության համար</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>Առաջին 3 դասը՝ 9-ից</p>   <!-- the lessons it covers, first: the brand eyes (static, at you) in place of an icon -->
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the start, then the days -->
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Երք, հնգ, շբթ՝ 19:00–21:00</li>
+                </ul>
+              </div>
+              <p class="pkg__meta"><i class="ic ic--clock"></i>3 դաս · 6 ժամ · 1 շաբաթ</p>
+            </div>
           </header>
-
-          <div class="pkg__schedule">
-            <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-            <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 6</p>
-            <p class="pkg__meta"><i class="ic ic--clock"></i>3 դաս · 6 ժամ · 1 շաբաթ</p>
-          </div>
 
           <div class="pkg__price">
             <p class="pkg__amount">֏ 19,500</p>
           </div>
 
           <div class="pkg__cta">
-            <!-- «Մանրամասն»: the course's own page (outline), above the buy button (primary) -->
-            <a href="start.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
+            <!-- TODO: the checkout link for Start -->
             <a href="#" class="btn btn--primary btn--block btn--md">Գնել Start</a>
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
@@ -380,46 +387,58 @@
 
         </article>
 
-        <!-- ───── Level-Up ───── -->
-        <article class="pkg pkg--levelup">
+        <!-- ───── AI-Master: the whole course ───── -->
+        <article class="pkg pkg--bundle pkg--master">
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">Level-Up</h3>
+            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
+                 way; the card crops what runs past its right edge) -->
+            <span class="pkg__gift pkg__gift--mac02"><img src="assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>
+            <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
-              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>Level-Up</strong> դասընթացի ընթացքում</p>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI-Master</strong> դասընթացի ընթացքում</p>
               <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
             </div>
-            <p class="pkg__desc">Նրանց համար, ովքեր ուզում են AI-ով 10 անգամ ավելի արդյունավետ դառնալ</p>
+            <p class="pkg__desc">Ամբողջական AI<br />կրթություն մեկ ծրագրում</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
+                </ul>
+              </div>
+              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock, dark as the start date -->
+            </div>
           </header>
 
-          <div class="pkg__schedule">
-            <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-            <p class="pkg__date"><i class="ic ic--calendar"></i>Սկիզբը՝ հոկտեմբերի 13</p>
-            <p class="pkg__meta"><i class="ic ic--clock"></i>6 դաս · 12 ժամ · 3 շաբաթ</p>
-          </div>
-
           <div class="pkg__price">
-            <p class="pkg__amount">֏ 37,500</p>
+            <s class="pkg__old">֏ 57,000</s>
+            <span class="pill pill--deal">−20%</span>
+            <span class="pill pill--save">Խնայիր ֏ 11,300</span>
+            <p class="pkg__amount">֏ 45,700</p>
           </div>
 
           <div class="pkg__cta">
-            <!-- «Մանրամասն»: the course's own page (outline), above the buy button (primary) -->
-            <a href="level-up.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
-            <a href="#" class="btn btn--primary btn--block btn--md">Գնել Level-Up</a>
+            <!-- TODO: the checkout link for AI-Master -->
+            <a href="#" class="btn btn--primary btn--block btn--md">Գնել AI-Master</a>
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
 
           <div class="pkg__tools">
-            <p class="pkg__label">11 AI գործիք</p>
+            <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
             <ul class="tool-stack">
               <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
               <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
               <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
               <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
-              <li class="tool-stack__logo" title="Veo"><img src="assets/logos/veo.svg" alt="Veo" /></li>
-              <li class="tool-stack__logo" title="NotebookLM"><img src="assets/logos/notebooklm.svg" alt="NotebookLM" /></li>
-              <li class="tool-stack__more" title="Lovable, Make.com, Grok, Higgsfield, Google Flow">+5<span class="sr-only">: Lovable, Make.com, Grok, Higgsfield, Google Flow</span></li>
+              <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
+              <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
             </ul>
           </div>
 
@@ -430,42 +449,46 @@
             <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
             <li><i class="ic ic--check"></i>AI գործիքների ցանկ</li>
             <li><i class="ic ic--check"></i>Offline հանդիպումներ՝ 2 հոգու հրավիրատոմս</li>
+            <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
           </ul>
 
         </article>
 
-        <!-- ───── Bundle ───── -->
-        <article class="pkg pkg--bundle">
-          <span class="pkg__corner">Ամենաշահավետ</span>
-          <img class="pkg__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
+        <!-- ───── AI-Master with 3 friends: the whole course, one price a person (−62% off AI-Master) ───── -->
+        <article class="pkg pkg--bundle pkg--friends">
+          <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">Bundle</h3>
-            <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
-            <p class="pkg__desc">Ամբողջական AI կրթություն մեկ ծրագրում</p>
+            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
+                 way; the card crops what runs past its right edge) -->
+            <span class="pkg__gift pkg__gift--mac03"><img src="assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>
+            <p class="pkg__tagline">3 ընկերներով</p>
+            <p class="pkg__desc"><strong>Մասնակցեք 3-ով՝<br />բացառիկ գնով,</strong> սովորեք<br />կիրառել AI-ը և փոխանակեք Ձեր նոր հմտությունները միասին։</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
+                </ul>
+              </div>
+              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>
+            </div>
           </header>
 
-          <div class="pkg__schedule">
-            <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-            <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
-              <ul class="pkg__days">
-                <li>Սկիզբը՝ հոկտեմբերի 6</li>
-                <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
-                <li>Շաբաթ 2–4՝ երք, հնգ</li>
-              </ul>
-            </div>
-            <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock, dark as the start date -->
-          </div>
-
           <div class="pkg__price">
-            <s class="pkg__old">֏ 57,000</s>
-            <span class="pill pill--deal">−20%</span>
-            <span class="pill pill--save">Խնայիր ֏ 11,300</span>
-            <p class="pkg__amount">֏ 45,700</p>
+            <span class="pkg__unit">1 անձը՝</span>   <!-- the price is a person's: three pay ֏ 52,098 together -->
+            <s class="pkg__old">֏ 45,700</s>
+            <span class="pill pill--deal">−62%</span>
+            <p class="pkg__amount">֏ 17,366</p>
           </div>
 
           <div class="pkg__cta">
-            <a href="#" class="btn btn--primary btn--block btn--md">Գնել Bundle</a>
+            <!-- opens the three-person form (#friends-form, script.js → friendsForm) -->
+            <button type="button" class="btn btn--primary btn--block btn--md" data-open="friends-form">Գրանցվել ընկերներով</button>
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
 
@@ -522,6 +545,66 @@
     </section>
 
     <!-- =========================================================
+         05d · 3-FRIENDS FORM — the popup behind «Գրանցվել ընկերներով» (script.js → friendsForm): the three people
+         who join together. Participant 1 also leaves a phone (the one we call); 2 and 3 a name and an email.
+         Front end only. TODO (developer): send the form, then go on to payment / the confirmation. The fields' names:
+         name1 email1 phone1 (8 digits after +374) · name2 email2 · name3 email3
+         ========================================================= -->
+    <dialog class="modal" id="friends-form" aria-labelledby="friends-form-title">
+      <form class="modal__panel" novalidate>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-form-title">Գրանցվել ընկերներով</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 1</legend>
+          <label class="field">
+            <span class="field__label">Անուն</span>
+            <input class="field__input" type="text" name="name1" autocomplete="name" required autofocus />   <!-- autofocus: showModal() starts here, not on the ✕ -->
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email1" autocomplete="email" required />
+          </label>
+          <label class="field modal__wide">
+            <span class="field__label">Հեռախոս</span>
+            <span class="field__group">
+              <span class="field__prefix">+374</span>
+              <input class="field__input field__input--grouped" type="tel" name="phone1" autocomplete="tel-national" inputmode="tel" required />
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 2</legend>
+          <label class="field">
+            <span class="field__label">Անուն</span>
+            <input class="field__input" type="text" name="name2" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email2" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 3</legend>
+          <label class="field">
+            <span class="field__label">Անուն</span>
+            <input class="field__input" type="text" name="name3" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email3" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <button type="submit" class="btn btn--primary btn--block btn--md" disabled>Գրանցվել ընկերներով</button>   <!-- enabled once every field is filled in -->
+      </form>
+    </dialog>
+
+    <!-- =========================================================
          05e · REFUND — the money-back promise as its own Orange band, straight after the prices it answers
          (white headline, black text: BRAND.md → Text on colour); the same words as the course pages' refund
          ========================================================= -->
@@ -548,21 +631,21 @@
           <blockquote class="quote__bubble" data-bg="yellow"><p class="quote__result">Կարճ արդյունք՝ մասնակցի բառերով</p><p>Այստեղ կլինի մասնակցի կարծիքը՝ իր բառերով։ Երկու-երեք նախադասություն այն մասին, թե ինչ սովորեց և ինչ է հիմա անում AI-ով, որ առաջ չէր անում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
-            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="start.html">Start</a> · ամիս, տարի</span></span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="ai-grager.html">Առաջին 3 դասը</a> · ամիս, տարի</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
           <blockquote class="quote__bubble" data-bg="teal"><p class="quote__result">Կարճ արդյունք</p><p>Կարճ կարծիք՝ մեկ նախադասություն։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
-            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="level-up.html">Level-Up</a> · ամիս, տարի</span></span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="ai-grager.html">AI գրագեր</a> · ամիս, տարի</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
           <blockquote class="quote__bubble" data-bg="pink"><p class="quote__result">Կարճ արդյունք՝ մեկ տողով</p><p>Ավելի երկար կարծիք։ Լավագույնն այն է, որ նշի կոնկրետ արդյունք՝ ինչ նախագիծ արեց, որքան ժամանակ խնայեց կամ ինչ փոխվեց աշխատանքում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">Մ</span>
-            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="#packages">Bundle</a> · ամիս, տարի</span></span>
+            <span class="quote__name">Մասնակցի անուն<span class="quote__meta"><a class="quote__course" href="ai-grager.html">AI գրագեր</a> · ամիս, տարի</span></span>
           </figcaption>
         </figure>
       </div>
@@ -595,7 +678,7 @@
               <p class="teacher__role">AI ստրատեգիստ</p>
             </div>
             <p class="teacher__bio">AI քեզ բան ծրագրի նախագծող, AI ստրատեգիստ՝ 5+ տարվա փորձով</p>
-            <p class="teacher__meta">110+ ժամ · Start · Level-Up · PRO · Webinar</p>
+            <p class="teacher__meta">110+ ժամ · AI գրագեր · PRO · Webinar</p>
           </div>
         </article>
 
@@ -612,7 +695,7 @@
               <p class="teacher__role">Full-Stack AI Engineer</p>
             </div>
             <p class="teacher__bio">6+ տարվա փորձով Full-Stack Engineer՝ AI և cloud տեխնոլոգիաներում</p>
-            <p class="teacher__meta">90+ ժամ · Start · Level-Up · PRO · Webinar</p>
+            <p class="teacher__meta">90+ ժամ · AI գրագեր · PRO · Webinar</p>
           </div>
         </article>
 
@@ -629,7 +712,7 @@
               <p class="teacher__role">AI Automation Expert</p>
             </div>
             <p class="teacher__bio">Նախագծերի կառավարման 10+ տարվա փորձով AI ավտոմատացումների ուսուցիչ</p>
-            <p class="teacher__meta">120+ ժամ · Level-Up</p>
+            <p class="teacher__meta">120+ ժամ · AI գրագեր</p>
           </div>
         </article>
 
@@ -646,7 +729,7 @@
               <p class="teacher__role">Senior Product Designer</p>
             </div>
             <p class="teacher__bio">Senior Product Designer՝ 15+ տարվա փորձով, AI և UX/UI մասնագետ</p>
-            <p class="teacher__meta">80+ ժամ · Level-Up</p>
+            <p class="teacher__meta">80+ ժամ · AI գրագեր</p>
           </div>
         </article>
 
@@ -663,7 +746,7 @@
               <p class="teacher__role">AI Artist &amp; Director</p>
             </div>
             <p class="teacher__bio">AI արտիստ և սցենարիստ-ռեժիսոր՝ 10+ տարվա ստեղծագործ փորձով</p>
-            <p class="teacher__meta">75+ ժամ · Level-Up</p>
+            <p class="teacher__meta">75+ ժամ · AI գրագեր</p>
           </div>
         </article>
 
@@ -740,14 +823,13 @@
         <details class="faq__item" open>
           <summary>Ի՞նչ մակարդակի համար է ծրագիրը</summary>
           <div class="faq__answer">
-            <p><strong>Start</strong>-ը նախատեսված է բացարձակ սկսնակների համար։ AI-ի հետ ոչ մի փորձ պետք չէ։</p>
-            <p><strong>Level-Up</strong>-ը նրանց համար է, ովքեր արդեն ծանոթ են հիմունքներին ու ուզում են ավելի խորը գնալ։</p>
+            <p><strong>AI գրագեր</strong>-ը սկսվում է զրոյից. AI-ի հետ ոչ մի փորձ պետք չէ։ Առաջին 3 դասը հիմունքներն են, հաջորդ 6-ը՝ հետազոտություն, նկարներ, վիդեոներ, կայքէջեր, ավտոմատացում և AI ագենտներ։</p>
           </div>
         </details>
         <details class="faq__item">
-          <summary>Ի՞նչ կստանամ Bundle-ով</summary>
+          <summary>Կարո՞ղ եմ գնել միայն առաջին 3 դասը</summary>
           <div class="faq__answer">
-            <p>Bundle-ով ստանում ես Start + Level-Up երկու կուրսերը + offline հանդիպումներ, 2 հոգու հրավիրատոմս, 1 ամիս ChatGPT անվճար, 500+ պրոմպտ գրադարան և սերտիֆիկատ։</p>
+            <p>Այո՝ <strong>֏ 19,500</strong>։ Եթե հետո որոշես շարունակել, կվճարես միայն տարբերությունը՝ <strong>֏ 26,200</strong>։</p>
           </div>
         </details>
         <details class="faq__item">
@@ -770,24 +852,14 @@
         <details class="faq__item">
           <summary>Ե՞րբ են դասերը</summary>
           <div class="faq__answer">
-            <div class="schedules">
+            <div class="schedules schedules--single">
               <div class="schedule">
-                <p class="schedule__name">Start</p>
+                <p class="schedule__name">AI գրագեր</p>
                 <dl class="schedule__rows">
                 <div><dt>Մեկնարկ</dt><dd>ամեն ամսվա առաջին երեքշաբթի</dd></div>
-                <div><dt>Տևողություն</dt><dd>1 շաբաթ · 3 դաս · 6 ժամ</dd></div>
+                <div><dt>Տևողություն</dt><dd>4 շաբաթ · 9 դաս · 18 ժամ</dd></div>
                 <div><dt>Ձևաչափ</dt><dd>օնլայն (Zoom)</dd></div>
-                <div><dt>Օրեր</dt><dd>երեքշաբթի, հինգշաբթի, շաբաթ</dd></div>
-                <div><dt>Ժամ</dt><dd>19:00 – 21:00</dd></div>
-                </dl>
-              </div>
-              <div class="schedule">
-                <p class="schedule__name">Level-Up</p>
-                <dl class="schedule__rows">
-                <div><dt>Մեկնարկ</dt><dd>ամեն ամսվա երկրորդ երեքշաբթի</dd></div>
-                <div><dt>Տևողություն</dt><dd>3 շաբաթ · 6 դաս · 12 ժամ</dd></div>
-                <div><dt>Ձևաչափ</dt><dd>օնլայն (Zoom)</dd></div>
-                <div><dt>Օրեր</dt><dd>երեքշաբթի և հինգշաբթի</dd></div>
+                <div><dt>Օրեր</dt><dd>1-ին շաբաթ՝ երեքշաբթի, հինգշաբթի, շաբաթ<br />2–4-րդ շաբաթ՝ երեքշաբթի և հինգշաբթի</dd></div>
                 <div><dt>Ժամ</dt><dd>19:00 – 21:00</dd></div>
                 </dl>
               </div>
@@ -955,6 +1027,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=hero-ab-12"></script>
+  <script src="script.js?v=hero-b-23"></script>
 </body>
 </html>

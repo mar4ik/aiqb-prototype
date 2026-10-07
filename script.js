@@ -571,8 +571,9 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   function start() {
     const { Engine, Composite, Bodies, Body, Constraint } = Matter;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const FILL = 0.3;                // how much of the stage the pile covers…
-    const RADIUS = { min: 26, max: 72 };   // …with every ball the same size, within these radii (px)
+    const FILL = 0.6;                // how much of the room above the draw's bubble the pile covers (the huge gifts take most)…
+    const RADIUS = { min: 14, max: 48 };   // …with every tool ball the same size, within these radii (px); a ball with
+                                     // data-size (the gifts) is that many times bigger
     const HOP = 0.9, KICK = 3.2;     // how high a hover hop and a click kick go, in the ball's radii
     const HOP_AGAIN = 600;           // ms before the same ball hops for the pointer again
     const NUDGE = 3500;              // touch screens: ms between the hint hops
@@ -585,14 +586,19 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     const engine = Engine.create({ gravity: { x: 0, y: 1 } });
     const fall = engine.gravity.y * engine.gravity.scale * STEP ** 2;   // what gravity adds to the speed each step (px)
     const balls = [], byEl = new Map();
+    const shelf = stage.parentElement.querySelector('.story-hero__bubble');
     let W = 0, H = 0, unit = 0, walls = [];
 
-    // The balls' radius: together they cover FILL of the stage, whatever its shape
-    const count = stage.querySelectorAll('.drop__ball').length;
+    // The balls' radius: together they cover FILL of the stage, whatever its shape (a ball of data-size s counts s² times)
+    const sizeOf = (el) => parseFloat(el.dataset.size) || 1;
+    const els = [...stage.querySelectorAll('.drop__ball')];
+    const area = els.reduce((sum, el) => sum + sizeOf(el) ** 2, 0);
     function measure() {
       W = stage.clientWidth;
       H = stage.clientHeight;
-      unit = clamp(Math.sqrt((FILL * W * H) / (Math.PI * count)), RADIUS.min, RADIUS.max);
+      // the room the pile has: above the draw's bubble (the shelf along the bottom), if it's there
+      const below = shelf?.offsetHeight ? H - (shelf.offsetTop - stage.offsetTop) : 0;
+      unit = clamp(Math.sqrt((FILL * W * (H - below)) / (Math.PI * area)), RADIUS.min, RADIUS.max);
     }
     // The floor is the stage's bottom edge; the side walls reach far above it, so a ball thrown up comes back down inside
     function fence() {
@@ -603,12 +609,22 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
         wall(-WALL / 2, -2 * H, WALL, 6 * H),
         wall(W + WALL / 2, -2 * H, WALL, 6 * H)
       ];
+      // The draw's bubble along the bottom is a shelf: its box, less the tail, is a wall the balls land on. Measured from
+      // the layout (offset*), not the screen: while it falls in (.is-dropping) it is still up above the stage
+      if (shelf?.offsetWidth) {
+        const cs = getComputedStyle(shelf);
+        const x = shelf.offsetLeft - stage.offsetLeft, y = shelf.offsetTop - stage.offsetTop;
+        const w = shelf.offsetWidth, h = shelf.offsetHeight - (parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop));
+        walls.push(wall(x + w / 2, y + h / 2, w, h));
+      }
       Composite.add(engine.world, walls);
     }
     function addBall(el, x, y) {
       el.addEventListener('animationend', (e) => { if (e.animationName === 'drop-hop') el.classList.remove('is-hop'); });
-      const body = Bodies.circle(x, y, unit, BALL);
-      const ball = { el, body, r: body.circleRadius, upright: el.classList.contains('drop__ball--eyes'), hopAt: 0, last: null };
+      const body = Bodies.circle(x, y, Math.min(unit * sizeOf(el), W * 0.21), BALL);   // no ball wider than 42% of the stage (the gifts on a phone)
+      const eyes = el.classList.contains('drop__ball--eyes');
+      // the eyes and the gifts never turn (the eyes stay level, the laptops stand)
+      const ball = { el, body, r: body.circleRadius, eyes, upright: eyes || el.classList.contains('drop__ball--gift'), hopAt: 0, last: null };
       el.style.setProperty('--ball', `${2 * ball.r}px`);
       Composite.add(engine.world, body);
       balls.push(ball);
@@ -617,19 +633,34 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     }
 
     // The balls, in loose rows above the stage (each row in a shuffled order, each ball a little higher or lower), and
-    // already falling, so they rain in one after another; the eyes come last, near the middle, and land on top
+    // already falling, so they rain in one after another. Then the gifts, side by side in a row of their own above the
+    // tools; the eyes come last, near the middle, and land on top
     measure();
     fence();
     stage.classList.add('is-live');
+    const gifts = els.filter((el) => el.classList.contains('drop__ball--gift'));   // the big ones, a row of their own
+    const tools = els.filter((el) => !gifts.includes(el) && !el.classList.contains('drop__ball--eyes'));
     const perRow = Math.max(2, Math.floor(W / (2.4 * unit)));
     const slots = [];
-    while (slots.length < count) slots.push(...[...Array(perRow).keys()].sort(() => Math.random() - 0.5));
+    while (slots.length < tools.length) slots.push(...[...Array(perRow).keys()].sort(() => Math.random() - 0.5));
     const speed = Math.sqrt(2 * fall * unit * 1.5);   // as if they had already fallen a little way
-    stage.querySelectorAll('.drop__ball').forEach((el, i) => {
-      const eyes = el.classList.contains('drop__ball--eyes');
-      const row = Math.floor(i / perRow) + (eyes ? 1 : 0);
-      const x = eyes ? W * (0.4 + Math.random() * 0.2) : ((slots[i] + 0.5 + (Math.random() - 0.5) * 0.5) * W) / perRow;
-      const y = -unit * (1.2 + row * 2.6 + Math.random() * 1.2);
+    const toolsTop = unit * (1.2 + Math.ceil(tools.length / perRow) * 2.6);   // how far above the stage the tools' rows reach
+    let giftsTop = toolsTop;
+    els.forEach((el) => {
+      let x, y;
+      if (el.classList.contains('drop__ball--eyes')) {
+        x = W * (0.4 + Math.random() * 0.2);
+        y = -(giftsTop + unit * sizeOf(el) * 2);
+      } else if (gifts.includes(el)) {
+        const k = gifts.indexOf(el), r = unit * sizeOf(el);
+        x = clamp(((k + 0.5) * W) / gifts.length + (Math.random() - 0.5) * r * 0.4, r, W - r);
+        y = -(toolsTop + r * (1.2 + k * 1.1));   // one above the other a little, so they never start overlapping
+        giftsTop = Math.max(giftsTop, -y + r);
+      } else {
+        const i = tools.indexOf(el);
+        x = ((slots[i] + 0.5 + (Math.random() - 0.5) * 0.5) * W) / perRow;
+        y = -unit * (1.2 + Math.floor(i / perRow) * 2.6 + Math.random() * 1.2);
+      }
       Body.setVelocity(addBall(el, x, y).body, { x: 0, y: speed });
     });
     if (reduced) for (let i = 0; i < 900; i++) Engine.update(engine, STEP);   // reduced motion: the pile, already settled
@@ -666,8 +697,13 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       if (onScreen && rest < 30) raf = requestAnimationFrame(frame);
       else last = 0;
     }
+    // The draw's bubble falls in first (.is-dropping, tailwind.css, 0.9s); the balls wait above the stage until it's down
+    const hold = shelf && !reduced ? performance.now() + 900 : 0;
+    if (hold) stage.parentElement.classList.add('is-dropping');
     function wake() {
       rest = 0;
+      const wait = hold - performance.now();
+      if (wait > 0) { setTimeout(wake, wait); return; }
       if (!raf && onScreen) raf = requestAnimationFrame(frame);
     }
     render();
@@ -745,7 +781,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
     function kick(ball) {
       hop(ball, KICK, 0.4);
-      if (ball.upright) blink();
+      if (ball.eyes) blink();
     }
 
     // The hint: a ball hops when the pointer comes over it (a mouse that's really moving, not a ball rolling under a
@@ -786,9 +822,10 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       render();
       wake();
     }).observe(stage);
+    if (shelf) new ResizeObserver(() => { fence(); wake(); }).observe(shelf);   // the words rewrap (fonts, width): the shelf follows
 
     // The eyes: they blink now and then and, on mouse screens, watch the pointer while it's over the hero
-    const eyesBall = balls.find((b) => b.upright);
+    const eyesBall = balls.find((b) => b.eyes);
     const eyes = eyesBall?.el.querySelector('.eyes');
     function blink() {
       eyes?.classList.add('is-blink');
@@ -947,9 +984,9 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   03c · Hero A/B test — a click on the hero's call to action goes to window.dataLayer with the hero the visitor saw
-   (the 50/50 pick itself is pushed by the <head> script), so an analytics tool can compare them; team previews
-   (?hero=a / ?hero=b) are marked hero_preview, to leave out of the results
+   03c · Hero CTA — a click on the hero's call to action goes to window.dataLayer with the hero the visitor saw (Hero B
+   for everyone since the A/B test ended; the <head> script pushes which); a team preview of Hero A (?hero=a) is
+   marked hero_preview, to leave out of the results
    ============================================================ */
 (function heroTest() {
   const variant = document.documentElement.dataset.hero;
@@ -1176,6 +1213,39 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
+   05d · 3-FRIENDS FORM — «Գրանցվել ընկերներով» opens the popup
+   (.modal, a native <dialog>: Escape closes it, focus stays inside).
+   «Գրանցվել ընկերներով» stays disabled until every field is filled in:
+   valid emails and 8 digits after +374. Front end only: the submit is
+   the developer's (TODO: send it, then payment).
+   ============================================================ */
+(function friendsForm() {
+  const dialog = document.getElementById('friends-form');
+  if (!dialog) return;
+  const form = dialog.querySelector('form');
+  const submit = form.querySelector('button[type="submit"]');
+  const phone = form.elements.phone1;
+
+  function update() {
+    const digits = phone.value.replace(/\D/g, '');
+    const ok = Array.from(form.querySelectorAll('input')).every((input) => input.value.trim() !== '' && input.checkValidity());
+    submit.disabled = !(ok && digits.length === 8);
+  }
+
+  document.querySelectorAll('[data-open="friends-form"]').forEach((btn) => btn.addEventListener('click', () => dialog.showModal()));
+  dialog.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', () => dialog.close()));
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });   // a click on the dimmed page around it
+
+  form.addEventListener('input', update);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();               // no backend yet
+    if (submit.disabled) return;
+    // TODO (developer): send the three people (new FormData(form)), then go on to payment / the confirmation
+  });
+  update();
+})();
+
+/* ============================================================
    05 · PACKAGES — «AI գրագիտություն / PRO դասընթացներ» pill tabs
    ============================================================ */
 (function packageTabs() {
@@ -1204,14 +1274,14 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   05 · «Ի՞նչ սովորել» tiles → packages
-   Each tile names the package that teaches it (data-pkg="start" / "levelup";
-   Bundle has both). Wide screens: scroll to the cards, name the topic in a
-   banner inside that package (.pkg-spot), and once the scroll lands spotlight
-   it (.packages[data-spotlight]): it lifts with Bundle and the other package
-   fades until hovered. The spotlight ends when the cards leave the screen,
-   or at once via the banner's ✕ (which also hides the banner).
-   Stacked cards (below lg): just scroll to the package.
+   05 · «Ի՞նչ սովորել» tiles → the course card
+   Each tile names the card that teaches it (data-pkg="master": the AI-Master
+   card, the whole course). Wide screens: scroll to the card, name the topic
+   in a banner inside it (.pkg-spot), and once the scroll lands spotlight it
+   (.packages[data-spotlight]): it lifts. The spotlight ends when the card
+   leaves the screen, or at once via the banner's ✕ (which also hides it).
+   Stacked (below lg): just scroll to the card. (The fade / hover-back below
+   is for a card that steps back; no card does at the moment.)
    ============================================================ */
 (function learnSpotlight() {
   const tiles = document.querySelectorAll('a.learn-tile[data-pkg]');
@@ -1343,8 +1413,8 @@ function makeEyes() {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  // also the reviews' bubbles (05f · .quote__bubble), whose corners scale up 1.5× for their size
-  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble')];
+  // also the reviews' bubbles (05f · .quote__bubble) and Hero B's draw bubble (03 B), whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1352,7 +1422,7 @@ function makeEyes() {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
-    const r = el.classList.contains('quote__bubble') ? 1.5 : 1;   // corner scale
+    const r = el.matches('.quote__bubble, .story-hero__bubble') ? 1.5 : 1;   // corner scale
     shapeElement(el, [
       [0, 0, 8 * r], [W, 0, 8 * r],
       [W, Hb, 4 * r],                           // the right side ends…
@@ -1370,7 +1440,7 @@ function makeEyes() {
 })();
 
 /* ============================================================
-   15 · Course page (start.html) — the week's eyes: they rise from behind the card's top-right corner while the pointer is
+   15 · Course page (ai-grager.html) — the week's eyes: they rise from behind the card's top-right corner while the pointer is
    on the card (or a lesson link in it has keyboard focus), follow the pointer over the hero and blink now and then,
    as the «Ի՞նչ սովորել» tiles' eyes (05c). The rise is in tailwind.css (.course-week > .eyes)
    ============================================================ */
