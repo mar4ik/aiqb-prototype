@@ -2457,29 +2457,18 @@
     border-radius: var(--radius-2xl);
   }
 
-  .pkg__date, .pkg__meta {
+  .pkg__date {
     align-items: center;
     gap: calc(var(--spacing) * 2.5);
-    display: flex;
-  }
-
-  .pkg__date {
     font-size: var(--text-aqb-label);
     line-height: var(--tw-leading, var(--text-aqb-label--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
     color: var(--color-ink-900);
+    display: flex;
   }
 
-  .pkg__meta {
-    font-size: var(--text-aqb-label);
-    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
-    color: var(--color-ink-600);
-  }
-
-  .pkg__date .ic, .pkg__meta .ic {
+  .pkg__date .ic {
     color: var(--color-primary);
   }
 
