@@ -2197,17 +2197,18 @@
 
   .pkg__gift {
     z-index: 0;
-    right: calc(calc(var(--spacing) * 47.5) * -1);
-    bottom: calc(var(--spacing) * 5);
-    width: calc(var(--spacing) * 72);
+    right: calc(calc(var(--spacing) * 12.5) * -1);
+    width: calc(var(--spacing) * 60);
     aspect-ratio: 720 / 670;
     pointer-events: none;
     position: absolute;
+    bottom: 0;
   }
 
   @media (min-width: 68.75rem) and (not (min-width: 80rem)) {
     .pkg__gift {
-      width: calc(var(--spacing) * 60);
+      width: calc(var(--spacing) * 55);
+      right: calc(calc(var(--spacing) * 7.5) * -1);
     }
   }
 
@@ -2215,12 +2216,14 @@
     .pkg__gift {
       width: calc(var(--spacing) * 85);
       right: calc(calc(var(--spacing) * 27.5) * -1);
+      bottom: calc(var(--spacing) * 5);
     }
   }
 
   @media (min-width: 90rem) {
     .pkg__gift {
-      width: calc(var(--spacing) * 65);
+      width: calc(var(--spacing) * 60);
+      right: calc(calc(var(--spacing) * 7.5) * -1);
     }
   }
 
@@ -2431,8 +2434,9 @@
 
   .pkg__schedule {
     z-index: 1;
-    align-self: stretch;
+    align-self: flex-start;
     gap: calc(var(--spacing) * 2.5);
+    max-width: 100%;
     margin-top: calc(var(--spacing) * 2);
     padding: calc(var(--spacing) * 4) calc(var(--spacing) * 4.5);
     background: var(--surface);
@@ -4084,20 +4088,25 @@
     justify-content: space-between;
     align-items: center;
     gap: calc(var(--spacing) * 4);
+    display: flex;
+  }
+
+  .modal__head, .modal__foot {
     z-index: 1;
+    background: var(--color-white);
+    position: sticky;
+  }
+
+  .modal__head {
     margin: calc(var(--modal-pad) * -1) calc(var(--modal-pad) * -1) 0;
     padding: var(--modal-pad) var(--modal-pad) calc(var(--spacing) * 2);
-    background: var(--color-white);
-    display: flex;
-    position: sticky;
     top: 0;
   }
 
-  .modal__panel > [type="submit"] {
-    bottom: var(--modal-pad);
-    z-index: 1;
-    box-shadow: 0 var(--modal-pad) 0 var(--modal-pad) var(--color-white), 0 calc(var(--modal-pad) * -1) 0 var(--modal-pad) var(--color-white);
-    position: sticky;
+  .modal__foot {
+    margin: 0 calc(var(--modal-pad) * -1) calc(var(--modal-pad) * -1);
+    padding: calc(var(--spacing) * 2) var(--modal-pad) var(--modal-pad);
+    bottom: 0;
   }
 
   .modal__title {
