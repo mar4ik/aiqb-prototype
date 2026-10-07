@@ -1152,7 +1152,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg__features { display: flex; flex-direction: column; gap: --spacing(2.5); }
 .pkg__features li { display: flex; align-items: flex-start; gap: --spacing(2.5); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-900); }
 .pkg__features .ic { margin-top: 2px; color: var(--color-primary); }   /* each card lists everything it includes */
-.pkg__features li.is-gift { font-weight: var(--font-weight-detail); }
+.pkg__features li.is-strong { font-weight: var(--font-weight-detail); }   /* a line that stands out by weight alone (the MacBook draw); the gift line has its pill instead */
 .pkg__features li.is-gift .pill--gift { margin-left: --spacing(1); vertical-align: 1px; }   /* at the end of the text (it wraps with it), not pushed to the edge */
 
 /* Row 4 · CTA (right under the price) */

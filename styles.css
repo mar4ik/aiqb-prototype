@@ -2697,7 +2697,7 @@
     margin-top: 2px;
   }
 
-  .pkg__features li.is-gift {
+  .pkg__features li.is-strong {
     font-weight: var(--font-weight-detail);
   }
 
