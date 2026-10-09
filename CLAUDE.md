@@ -58,6 +58,13 @@ Rules:
   - No raw hex / `rgb()` / named colours outside `@theme`, and no gradients on brand colours. New shades are derived from brand tokens with `color-mix()`. `npm run lint:colors` enforces all of this.
 - **Spacing:** use the existing rhythm (`--page-x`, `--section-y`, `--card-gap`, `--title-gap`) and `--spacing(n)` steps already used for similar elements. Similar things get identical spacing.
 
+### Design workflow
+- New pages and designs follow Agent Design Studio: brief → research → discover (10–15 one-line directions, then 2–3 quick mocks) → I pick one. No critic loop.
+- After I pick a mock, run `design-critic` once on it, show me the critique (score and top fixes), and wait for my OK before applying anything. Run it again only when I ask. Small edits skip the critic by default too.
+- When the critic runs, screenshot every breakpoint from 320 to 1920 (including 1100 and 1280), not just phone and desktop.
+- `BRAND.md` and this file beat any skill: if the critic suggests a new colour, font or one-off style, flag it as a conflict instead of applying it.
+- The checks under "Before saying you're done" still apply; they are a check, not a critique.
+
 ### Before saying you're done
 1. **Navbar and menu work on desktop and mobile.** Check in the browser at desktop width (≥1024px) and mobile width (375px):
    - Desktop: the «Դասընթացներ» sub nav opens on hover and on click, and closes on link click, Escape and outside click.

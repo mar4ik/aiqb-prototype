@@ -19,6 +19,9 @@
       (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
     })();
   </script>
+  <!-- Hone (the A/B tool, exp_aiqb_ab_1): picks Hero A or Hero B for each visitor by setting html[data-hero] after this page's own script above.
+       No async/defer, so both heroes stay hidden until its answer arrives (0.7 s at most). -->
+  <script src="https://hone-bandit.vercel.app/agent.js" data-experiment="exp_aiqb_ab_1" data-hide=".hero,.story-hero"></script>
 </head>
 <body>
 
@@ -1264,6 +1267,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=hero-b-27"></script>
+  <script src="script.js?v=hero-b-28"></script>
 </body>
 </html>

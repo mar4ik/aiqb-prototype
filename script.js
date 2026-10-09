@@ -114,7 +114,16 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 (function heroWalk() {
   const hero = document.querySelector('.hero');
   const svg = hero?.querySelector('.walk');
-  if (!svg || document.documentElement.dataset.hero === 'b') return;   // the A/B test shows Hero B (03 B): no walk
+  if (!svg) return;
+  const html = document.documentElement;
+  if (html.dataset.hero === 'b') {   // Hero B is on show (03 B): no walk. If the A/B tool switches to Hero A after the page has loaded, the walk starts then
+    const watch = new MutationObserver(() => { if (html.dataset.hero !== 'b') { watch.disconnect(); walk(); } });
+    watch.observe(html, { attributes: true, attributeFilter: ['data-hero'] });
+    return;
+  }
+  walk();
+
+  function walk() {
 
 
   /* ------------------------------------------------------------------
@@ -545,6 +554,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       }).observe(svg);
     }
   }
+  }   // walk()
 })();
 
 /* ============================================================
@@ -970,17 +980,24 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    first screen asks once (body.is-past-hero-cta). It starts hidden (tailwind.css), so it never shows at load
    ============================================================ */
 (function navCta() {
-  const hero = document.documentElement.dataset.hero;
-  const heroCta = document.querySelector(hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn, .course-hero__actions .btn');   // the hero on show (A/B test; a course page's own hero)
+  const html = document.documentElement;
   const navCta = document.querySelector('.nav-cta');
   if (!navCta) return;
   const past = (yes) => {
     document.body.classList.toggle('is-past-hero-cta', yes);
     navCta.inert = !yes;   // hidden, so not tabbable
   };
-  if (!heroCta || !('IntersectionObserver' in window)) { past(true); return; }
-  // Past = above the screen; below it (a short screen at load) still counts as not reached
-  new IntersectionObserver(([entry]) => past(!entry.isIntersecting && entry.boundingClientRect.top < 0)).observe(heroCta);
+  let watch = null;
+  const setup = () => {
+    watch?.disconnect();
+    const heroCta = document.querySelector(html.dataset.hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn, .course-hero__actions .btn');   // the hero on show (A/B test; a course page's own hero)
+    if (!heroCta || !('IntersectionObserver' in window)) { past(true); return; }
+    // Past = above the screen; below it (a short screen at load) still counts as not reached
+    watch = new IntersectionObserver(([entry]) => past(!entry.isIntersecting && entry.boundingClientRect.top < 0));
+    watch.observe(heroCta);
+  };
+  setup();
+  new MutationObserver(setup).observe(html, { attributes: true, attributeFilter: ['data-hero'] });   // the A/B tool may switch the hero after load
 })();
 
 /* ============================================================
@@ -989,11 +1006,12 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
    marked hero_preview, to leave out of the results
    ============================================================ */
 (function heroTest() {
-  const variant = document.documentElement.dataset.hero;
   const preview = new URLSearchParams(location.search).has('hero');
-  const cta = document.querySelector(variant === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn');
-  cta?.addEventListener('click', () => {
-    (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant, hero_preview: preview });
+  // Both heroes are listened to; only the one on show can be clicked (the A/B tool may switch the hero after load)
+  [['b', '.story-hero__actions .btn'], ['a', '.hero__actions .btn']].forEach(([variant, selector]) => {
+    document.querySelector(selector)?.addEventListener('click', () => {
+      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant, hero_preview: preview });
+    });
   });
 })();
 
