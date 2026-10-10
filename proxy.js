@@ -20,7 +20,11 @@ export default async function proxy(request) {
       api: process.env.HONE_API || 'https://hone-bandit.vercel.app',
       experiment: 'exp_aiqb_ab_1',
       timeoutMs: 400,
-      skip: (_request, url) => url.searchParams.has('hero'), // ?hero=a is the team's preview: Hone is not asked
+      skip: (request, url) =>
+        url.searchParams.has('hero') || // ?hero=a is the team's preview: Hone is not asked
+        // A browser that already has this page asks "has it changed?" and gets a bare "no" back, and a cookie set on that
+        // answer is thrown away (checked on Vercel). That visitor is a returning one: localStorage aiqb_hero has their hero.
+        request.headers.has('if-none-match') || request.headers.has('if-modified-since'),
     });
   } catch {
     // never let a problem here stop the page
