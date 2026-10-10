@@ -1427,12 +1427,14 @@ function shapeElement(el, pts) {
 const canClip = 'clipPath' in document.documentElement.style;
 
 // The brand's eyes as an inline 96 × 50 SVG (.eyes: white ovals, black pupils; data-look / --look-x, --look-y turn the
-// pupils) — the learn tiles' peeking eyes (05c) and the mission's crowd (08)
-function makeEyes() {
+// pupils) — the learn tiles' peeking eyes (05c) and the mission's crowd (08). { tm: true } adds the eye logo's ™
+// (trademark.svg's paths, scaled to these eyes) beside the right eye's top, and widens the drawing to 112.6 × 50 to hold it
+const EYES_TM_W = 112.6;
+function makeEyes({ tm = false } = {}) {
   const NS = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('class', 'eyes');
-  svg.setAttribute('viewBox', '0 0 96 50');
+  svg.setAttribute('class', tm ? 'eyes eyes--tm' : 'eyes');
+  svg.setAttribute('viewBox', `0 0 ${tm ? EYES_TM_W : 96} 50`);
   svg.setAttribute('aria-hidden', 'true');
   [23.05, 72.94].forEach((cx) => {              // the brand's eyes (index.html, the hero's walk), no ™ as a character
     const white = document.createElementNS(NS, 'ellipse');
@@ -1444,6 +1446,13 @@ function makeEyes() {
     Object.entries({ class: 'eyes__pupil', cx, cy: 24.98, r: 10.93 }).forEach(([k, v]) => pupil.setAttribute(k, v));
     svg.append(pupil);
   });
+  if (tm) {
+    const mark = document.createElementNS(NS, 'path');
+    mark.setAttribute('class', 'eyes__tm');
+    mark.setAttribute('transform', 'matrix(0.81531 0 0 0.81531 -49.837 -52.879)');
+    mark.setAttribute('d', 'M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z');
+    svg.append(mark);
+  }
   return svg;
 }
 
@@ -1567,13 +1576,14 @@ function makeEyes() {
     let eyes = eyesOf.get(tile);
     if (!side) { eyes?.remove(); eyesOf.delete(tile); return; }
     if (!eyes) {
-      eyes = makeEyes();   // hidden (below the shoulder) until the tile is hovered: .is-up
+      eyes = makeEyes({ tm: true });   // with the ™; hidden (below the shoulder) until the tile is hovered: .is-up
       tile.before(eyes);
       eyesOf.set(tile, eyes);
     }
     const kind = side === 'left' ? left : right;
     const room = (kind === 'tail' ? a - TAIL : a) - 2 * EYES_GAP;   // the cut-out's width (a tail leans out at the top)
-    const w = Math.min(room, (tFull - 2 * EYES_GAP) * 96 / 50), h = w * 50 / 96;   // sized by the full cut: same size on hover
+    const ar = EYES_TM_W / 50;                                       // the drawing holds the ™ too, so it fits the cut-out as well
+    const w = Math.min(room, (tFull - 2 * EYES_GAP) * ar), h = w / ar;   // sized by the full cut: same size on hover
     const x = side === 'left'
       ? room + EYES_GAP - w                                 // left of the raised part
       : W - room - EYES_GAP;                                // right of it

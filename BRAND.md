@@ -34,13 +34,15 @@ code use the same names (`bg-brand-blue`, `var(--color-feed-teal)`, …).
 | Background | Text |
 |---|---|
 | Blue, Black, Ink | White |
-| Orange | White for headlines of 24px and up; Black for anything smaller |
+| Orange | White, at every size (decided Oct 2026; see the note under Don'ts) |
 | Teal, Yellow, Sky, Pink, Violet, Tan | Black |
 
 ### Don'ts
 
 - No white text on Teal, Yellow, Sky, Pink or Grey.
-- No white text under 24px on Orange.
+- ~~No white text under 24px on Orange.~~ Replaced (Oct 2026): all text on Orange is White. White on Orange is
+  3.1:1, which meets WCAG AA for large text only, so it is a deliberate exception to the AA rule above for
+  smaller text. Keep small text on Orange short (a tag, one line), never long reading text.
 - No gradients on brand colours.
 
 ### Campaign colours in use
@@ -48,7 +50,7 @@ code use the same names (`bg-brand-blue`, `var(--color-feed-teal)`, …).
 A campaign can bring its own colours. They live in code as `--color-campaign-*` tokens:
 
 - **Green** — Tailwind's green-600, `oklch(62.7% 0.194 149.214)`, token `--color-campaign-green`: the webinar bar and the floating buttons.
-- **Bundle** — the Bundle card keeps its original colours (`--color-campaign-bundle-*`): a light-blue wash fading to white, the animated ribbon border (Blue, light blue, Orange, violet), the white-on-Orange «−20%» pill, the pale green «Խնայիր» pill and the violet «Նվեր» pill. Two deliberate exceptions to the rules above: the gradients, and white text under 24px on Orange.
+- **Bundle** — the Bundle card keeps its original colours (`--color-campaign-bundle-*`): a light-blue wash fading to white, the animated ribbon border (Blue, light blue, Orange, violet), the white-on-Orange «−20%» pill, the pale green «Խնայիր» pill and the violet «Նվեր» pill. A deliberate exception to the rules above: the gradients. (Its white «−20%» on Orange is now the rule for all Orange.)
 
 ## Typography
 
@@ -70,17 +72,22 @@ The utility `text-aqb-…` sets size, line height, tracking and weight together;
 | Display | 96 | ExtraBold Italic | 102% | −2.4% | `--text-aqb-display-l` | AQB/Display L |
 | Headline | 64 | ExtraBold Italic | 102% | −2.4% | `--text-aqb-headline-h1` | AQB/Headline H1 |
 | Headline | 48 | ExtraBold Italic | 102% | −2.4% | `--text-aqb-headline-h2` | AQB/Headline H2 |
-| Subhead | 32 | SemiBold | 112% | −2.4% | `--text-aqb-subhead` | AQB/Subhead |
-| Body | 28 | Regular | 112% | −2.4% | `--text-aqb-body-l` | AQB/Body L |
-| Body | 24 | Regular | 112% | −2.4% | `--text-aqb-body-m` | AQB/Body M |
-| Body | 20 | Regular | 112% | 0% | `--text-aqb-body-s` | AQB/Body S |
-| Label | 16 | SemiBold | 112% | 0% | `--text-aqb-label` | AQB/Label — **open:** the Figma style is Bold, the rules say SemiBold for details |
-| Caption | 14 | SemiBold | 112% | 0% | `--text-aqb-caption` | AQB/Caption |
+| Subhead | 32 | SemiBold | 120%* | −2.4% | `--text-aqb-subhead` | AQB/Subhead |
+| Body | 28 | Regular | 130%* | −2.4% | `--text-aqb-body-l` | AQB/Body L |
+| Body | 24 | Regular | 130%* | −2.4% | `--text-aqb-body-m` | AQB/Body M |
+| Body | 20 | Regular | 140%* | 0% | `--text-aqb-body-s` | AQB/Body S |
+| Label | 16 | SemiBold | 140%* | 0% | `--text-aqb-label` | AQB/Label — **open:** the Figma style is Bold, the rules say SemiBold for details |
+| Caption | 14 | SemiBold | 140%* | 0% | `--text-aqb-caption` | AQB/Caption |
 
 ### Tracking and line height
 
 Start from these: tracking −2.4% at 24px and up, 0% below; headlines at 102% line height, text at 112%.
 Break them on purpose when the idea needs it, never by accident.
+\* **Text line heights on the site (Oct 2026):** the brandbook sets all text at 112%, which is too tight for Armenian:
+its tall ascenders and long descenders nearly touch between lines. The site sets text looser by size: Subhead 120%
+(`--leading-aqb-subhead`), Body L and M 130% (`--leading-aqb-body`), Body S, Label and Caption 140%
+(`--leading-aqb-relaxed`). Headlines and display stay at 102%. Single-line text in a box (nav links, form fields, the
+referral ladder's numbers) keeps 112%, so the boxes keep their size. **To do:** update the Figma text styles to match.
 
 ### Hierarchy
 
@@ -130,7 +137,7 @@ the tail's proportions kept); not in use at the moment.
 
 ### Eyes
 
-Two white ovals with black pupils (96 × 50), no outline. As a character on the site (the hero walk) they never
-carry the ™. Their directions ([Figma](https://www.figma.com/design/MYvaqFtPgZ9e6J28NM4Fk9/-Brand--AI-Qez-Ban-Brand-_-v3?node-id=1-317)):
+Two white ovals with black pupils (96 × 50), no outline. As a character on the site (the hero walk, the mission's crowd) they never
+carry the ™; the eyes peeking from the «Ի՞նչ սովորել» tiles do carry it (decided Oct 2026), as the eye logo does. Their directions ([Figma](https://www.figma.com/design/MYvaqFtPgZ9e6J28NM4Fk9/-Brand--AI-Qez-Ban-Brand-_-v3?node-id=1-317)):
 the pupils move on an oval, 9 sideways and 10.54 up or down from the centre of each eye (in the 96 × 50 drawing's
 units); «at rest», looking at you, both lean in by 3.78.
