@@ -565,6 +565,9 @@ body.is-menu-open { overflow: hidden; }
    ============================================================ */
 html[data-hero="b"] .hero { display: none; }
 html:not([data-hero="b"]) .story-hero { display: none; }
+/* A visitor whose hero the server could not settle before sending the page: both heroes stay out of sight until Hone answers
+   (2 s at most). The <head> script sets and removes html[data-hone-wait], index.html. */
+html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 
 .story-hero {
   --header-h: --spacing(20);

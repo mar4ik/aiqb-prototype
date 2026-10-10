@@ -6,22 +6,84 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=hero-b-28" />
-  <!-- The hero: Hero B (the falling AI tools, with the sales words) for everyone. Hero A (the eyes' walk writing
-       «AI քեզ բան», with the original words) stays in the page, hidden; ?hero=a shows it for the team, this visit only,
-       marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]);
-       the hero on show goes to window.dataLayer. (Until Oct 2026 this was a 50/50 A/B test.) -->
+  <link rel="stylesheet" href="styles.css?v=hero-b-29" />
+  <!-- The hero: Hero B (the falling AI tools, with the sales words) by default, Hero A (the eyes' walk writing «AI քեզ բան»,
+       with the original words) for the visitors Hone (below) gives it; ?hero=a shows it for the team, this visit only,
+       marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
+       Where the hero comes from, first match wins:
+         1. the cookie hone_ans_exp_aiqb_ab_1: Hone's answer, asked for by proxy.mjs on the server before this page was sent
+            (a new visitor, or one whose answer is older than 6 h). Nothing to wait for.
+         2. localStorage aiqb_hero: the hero Hone gave this browser last time.
+         3. nothing yet (the server could not answer in time): Hero B, with both heroes hidden (html[data-hone-wait]) until
+            Hone's answer arrives, 2 s at most.
+       Hone's answer when it arrives (agent.js, event hone:answer) is final: it sets the hero and is kept for next time.
+       The hero on show goes to window.dataLayer. -->
   <script>
     (function () {
+      var html = document.documentElement;
       var preview = new URLSearchParams(location.search).get('hero') === 'a';
-      var hero = preview ? 'a' : 'b';
-      document.documentElement.dataset.hero = hero;
-      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
+      var optedOut = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' || window.doNotTrack === '1';
+
+      // Hone's changes → the hero they give: Hero A when they set html[data-hero="a"], Hero B (the page as it is) otherwise
+      function heroOf(changes) {
+        var hero = 'b';
+        (changes || []).forEach(function (c) {
+          if (c && c.selector === 'html' && c.kind === 'attr' && c.attr === 'data-hero' && (c.value === 'a' || c.value === 'b')) hero = c.value;
+        });
+        return hero;
+      }
+
+      var told = null;
+      function tell(hero) {
+        if (hero === told) return;
+        told = hero;
+        (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
+      }
+
+      // Preview, and visitors who asked not to be tracked (Hone does nothing for them): no answer to wait for or keep
+      if (preview || optedOut) {
+        html.dataset.hero = preview ? 'a' : 'b';
+        tell(html.dataset.hero);
+        return;
+      }
+
+      var hero = null;
+      try {
+        var m = document.cookie.match(/(?:^|; )hone_ans_exp_aiqb_ab_1=([^;]*)/);
+        var answer = m && JSON.parse(decodeURIComponent(m[1]));
+        if (answer && answer.v === 1 && answer.a && Array.isArray(answer.a.changes)) hero = heroOf(answer.a.changes);
+      } catch (e) {}
+      if (!hero) {
+        try { var saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
+        if (saved === 'a' || saved === 'b') hero = saved;
+      }
+
+      html.dataset.hero = hero || 'b';
+      var waiting = !hero;
+      function release() {
+        if (!waiting) return;
+        waiting = false;
+        html.removeAttribute('data-hone-wait');
+      }
+      if (waiting) {
+        html.setAttribute('data-hone-wait', '');
+        setTimeout(function () { release(); tell(html.dataset.hero); }, 2000);
+      } else {
+        tell(hero);
+      }
+
+      document.addEventListener('hone:answer', function (e) {
+        var chosen = heroOf(e.detail && e.detail.changes);
+        if (html.dataset.hero !== chosen) html.dataset.hero = chosen;
+        try { localStorage.setItem('aiqb_hero', chosen); } catch (err) {}
+        release();
+        tell(chosen);
+      });
     })();
   </script>
-  <!-- Hone (the A/B tool, exp_aiqb_ab_1): picks Hero A or Hero B for each visitor by setting html[data-hero] after this page's own script above.
-       No async/defer, so both heroes stay hidden until its answer arrives (0.7 s at most). -->
-  <script src="https://hone-bandit.vercel.app/agent.js" data-experiment="exp_aiqb_ab_1" data-hide=".hero,.story-hero"></script>
+  <!-- Hone (the A/B tool, exp_aiqb_ab_1): async, so the page never waits for it. The hero is already settled above (or hidden, in
+       the rare case it is not); this script confirms it with the server, reports the view and the click on the hero button. -->
+  <script src="https://hone-bandit.vercel.app/agent.js" data-experiment="exp_aiqb_ab_1" async></script>
 </head>
 <body>
 

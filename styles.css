@@ -1305,6 +1305,10 @@
     display: none;
   }
 
+  html[data-hone-wait] :is(.hero, .story-hero) {
+    visibility: hidden;
+  }
+
   .story-hero {
     --header-h: calc(var(--spacing) * 20);
     --gap: calc(var(--spacing) * 8);
