@@ -1,0 +1,1297 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI քեզ բան</title>
+  <link rel="icon" href="../../assets/logos/trademark.svg" type="image/svg+xml" />
+  <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
+  <link rel="stylesheet" href="../../styles.css?v=hero-b-28" />
+  <!-- The hero: Hero B (the falling AI tools, with the sales words) by default, Hero A (the eyes' walk writing «AI քեզ բան»,
+       with the original words) for the visitors Hone (below) gives it; ?hero=a shows it for the team, this visit only,
+       marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]);
+       the hero on show goes to window.dataLayer. -->
+  <script>
+    (function () {
+      var html = document.documentElement;
+      var preview = new URLSearchParams(location.search).get('hero') === 'a';
+      // A returning visitor gets the hero Hone gave them last time straight away, so a slow answer can't swap it in front of them
+      var saved = null;
+      try { saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
+      var hero = preview ? 'a' : saved === 'a' ? 'a' : 'b';
+      html.dataset.hero = hero;
+      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
+      if (preview) return;
+      // Hone's answer: its changes (html[data-hero]) land just before html[data-hone-variant], in the same batch.
+      // An answer that doesn't touch data-hero is the original page, Hero B, so a remembered Hero A is undone then
+      new MutationObserver(function (records, observer) {
+        var touched = false;
+        records.forEach(function (r) {
+          if (r.attributeName === 'data-hero') touched = true;
+          if (r.attributeName !== 'data-hone-variant') return;
+          if (!touched) html.dataset.hero = 'b';
+          try { localStorage.setItem('aiqb_hero', html.dataset.hero); } catch (e) {}
+          observer.disconnect();
+        });
+      }).observe(html, { attributes: true, attributeFilter: ['data-hero', 'data-hone-variant'] });
+    })();
+  </script>
+  <!-- Hone (the A/B tool, exp_aiqb_ab_1): picks Hero A or Hero B for each visitor by setting html[data-hero] after this page's own script above.
+       No async/defer, so both heroes stay hidden until its answer arrives: 2 s at most (data-timeout; its default 0.7 s was often too short,
+       and a late answer swapped Hero B for Hero A in front of the visitor). -->
+  <script src="https://hone-bandit.vercel.app/agent.js" data-experiment="exp_aiqb_ab_1" data-hide=".hero,.story-hero" data-timeout="2000"></script>
+  <link rel="stylesheet" href="faq-mocks.css" />
+</head>
+<body>
+
+  <!-- =========================================================
+       01 · ANNOUNCEMENT BAR (orange, floats at the bottom; swaps with the webinar bar on scroll)
+       ========================================================= -->
+  <!-- Hidden for now — remove `hidden` to bring the bar back -->
+  <div class="topbar" hidden>
+    <div class="topbar__item">
+      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI գրագեր»՝ նոյեմբերի 3-ից</span>
+      <a href="#packages" class="btn btn--white btn--sm">Գրանցվել</a>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       02 · MAIN NAV (a fixed pill that hugs its links, and the course CTA beside it)
+       ========================================================= -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <a href="#" class="nav__logo">
+        <img src="../../assets/logos/trademark.svg" alt="AI քեզ բան" />
+      </a>
+      <div class="nav__links" id="nav-menu">
+        <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
+        <a href="#packages" class="nav__link">Դասընթացներ</a>
+        <!-- «Դասընթացներ» sub nav: course links + the course promo (opens on hover / click, script.js).
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
+        <div class="nav__item" hidden>
+          <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
+            Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
+          </button>
+          <div class="subnav" id="subnav-courses">
+            <div class="subnav__panel">
+              <div class="subnav__cols">
+                <div class="subnav__group">
+                  <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="../../ai-grager.html" class="subnav__link">AI գրագեր <span class="pill pill--deal">−20%</span></a>
+                  <a href="#packages" class="subnav__link">Առաջին 3 դասը</a>
+                </div>
+                <div class="subnav__group">
+                  <p class="subnav__label">PRO</p>
+                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI քեզ ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- TODO: real external link for «AI քեզ project manager» (same as the PRO card) -->
+                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI քեզ project manager<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <a href="../../doctor-register.html" class="subnav__link" target="_blank" rel="noopener">AI քեզ բժիշկ<i class="ic ic--external" aria-hidden="true"></i><span class="pill subnav__soon">Շուտով</span></a>
+                </div>
+              </div>
+
+              <!-- The course promo, in the Bundle's look (replaces the wireframe's placeholder image) -->
+              <a href="#packages" class="subnav-promo">
+                <img class="subnav-promo__gift" src="../../assets/gift.webp" alt="" aria-hidden="true" />
+                <span class="subnav-promo__head">
+                  <strong class="subnav-promo__name">AI գրագեր</strong>
+                  <span class="subnav-promo__tagline">Զրոյից մինչև AI ագենտներ</span>
+                </span>
+                <span class="subnav-promo__price">
+                  <s class="pkg__old">֏ 57,000</s>
+                  <span class="pill pill--deal">−20%</span>
+                  <span class="subnav-promo__amount">֏ 45,700</span>
+                </span>
+                <span class="btn btn--primary btn--sm btn--block">Գնել</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="#webinar" class="nav__link">Վեբինար</a>
+        <a href="#mission" class="nav__link">Մեր առաքելությունը</a>
+        <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
+      </div>
+      <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
+      <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
+        <span></span><span></span>
+      </button>
+    </nav>
+    <!-- The course CTA, beside the pill; «Գրանցվել» is the webinar's. Its slot is 0 wide until the hero's own button is
+         scrolled past (script.js · 02), so the first screen asks once and the pill alone is centred -->
+    <div class="nav-cta-slot">
+      <a href="#packages" class="btn btn--primary btn--md nav-cta" inert>Ընտրել դասընթաց</a>
+    </div>
+  </header>
+  <div class="nav-scrim" aria-hidden="true"></div>
+
+  <main>
+
+    <!-- =========================================================
+         03 · HERO — Hero B (the falling tools, after this one) is the hero. Hero A (the eyes' walk, below) is kept but not
+         shown: the <head> script sets html[data-hero="b"] (?hero=a previews A); the other is display: none.
+         ========================================================= -->
+    <section class="hero" data-bg="sky">
+      <!-- Solid colour backdrop; each scene of the eyes' walk opens its colour from the eyes as a circle
+           (.hero__reveal), then it becomes the backdrop's (script.js · 03). -->
+      <div class="hero__bg" data-bg="sky" aria-hidden="true"></div>
+      <div class="hero__reveal" aria-hidden="true"></div>
+      <!-- The promise -->
+      <h1 class="hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
+      <!-- The detail line (format and start), then the plain call to action and the tax refund + ministry endorsement -->
+      <p class="hero__detail">Օնլայն՝&nbsp;Zoom-ով · Սկիզբը՝&nbsp;նոյեմբերի&nbsp;3 · ֏&nbsp;19,500-ից</p>   <!-- &nbsp;: each fact stays on one line; lines break at the dots -->
+      <div class="hero__actions">
+        <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
+        <p class="hero__endorse"><img src="../../assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
+      </div>
+      <!-- The eyes' walk, along the bottom of the screen: one line writes «AI քեզ բան» through little scenes (a developer, a photographer, a teacher)
+           with Yerevan behind. script.js builds the line and moves the viewBox like a camera following the eyes. -->
+      <div class="hero__walk">
+        <svg class="walk" viewBox="10 120 2020 410" role="img" aria-label="AI քեզ բան">
+          <defs>
+            <!-- One stretch of Yerevan, in the drawing's own pixels (ground at y 400, x 55 → 1740): three landmarks
+                 from the line-art skyline (city.png — lines on transparent), and Matenadaran drawn to match -->
+            <g id="walk-city-tile">
+              <image href="../../assets/hero/city.png" x="55" y="20" width="1229" height="400" />
+              <path class="walk__city-line" d="M1277.8 391.1 C1280.7 391.9 1287.9 394.6 1295.4 396.2 C1302.9 397.8 1318.1 400 1322.6 400.8 M1311.5 400.7 C1456.6 401.3 1601.7 401.1 1746.7 400.1 M1318.5 404.9 C1316.9 392.5 1316.5 380.1 1317.3 367.6 C1360.4 368.8 1403.5 369.1 1446.6 368.6 M1573.9 369.3 C1616.9 369.3 1659.9 368.5 1702.9 366.9 C1702.2 379.7 1701.8 392.4 1701.9 405.2 M1432.2 377.3 C1453.8 376 1475.5 375.4 1497.1 375.5 M1524.9 375.5 C1545.6 375.2 1566.3 375.1 1587 375.4 M1425.4 385.3 C1449 386.7 1472.6 386.5 1496.2 384.6 M1522.8 383.3 C1546.6 383.2 1570.4 383.5 1594.2 384.1 M1419.1 393.2 C1444.3 392 1469.5 391.4 1494.8 391.5 M1524.5 393.3 C1549.6 392.1 1574.8 391.3 1600 390.9 M1325.4 371.6 C1325.1 334.9 1325.2 298.2 1325.8 261.5 C1361.2 262.7 1396.6 263 1432.1 262.3 C1430.8 243.9 1430.5 225.5 1431.3 207.1 C1483.5 207.5 1535.7 207.4 1587.9 207 C1588.7 225.5 1588.8 243.9 1588.4 262.4 C1623.6 261.5 1658.8 261.4 1694 262 C1694.7 299.1 1694.9 336.2 1694.5 373.2 M1310.8 274.1 C1355.5 271.5 1400.2 270.7 1444.9 271.8 M1415.7 216 C1478.1 214.9 1540.5 215 1602.8 216.4 M1574.4 269.9 C1619.6 269.5 1664.8 270.6 1709.9 273.4 M1465.2 373.1 C1465.2 359.7 1464.7 308.8 1465.1 293.1 C1465.5 277.3 1466.2 283.4 1467.4 278.5 C1468.6 273.6 1469.7 267.7 1472.2 263.6 C1474.6 259.4 1478.6 256.1 1482.3 253.6 C1486 251.1 1489.9 249.7 1494.4 248.6 C1498.9 247.4 1504.3 246.6 1509.2 246.7 C1514.2 246.7 1519.7 247.2 1524.2 248.8 C1528.7 250.3 1532.6 253.2 1536.3 255.9 C1540 258.5 1543.4 261.1 1546.5 264.6 C1549.6 268.1 1553.3 272.4 1554.9 276.7 C1556.4 281 1555.6 274.7 1556 290.6 C1556.4 306.6 1557 358.8 1557.2 372.4 M1477.2 370.7 C1477.2 358.1 1476.8 309.3 1477.1 295.1 C1477.4 281 1478 289 1479 285.7 C1480 282.4 1481.3 278.4 1483 275.4 C1484.7 272.4 1486.5 269.8 1489.2 267.7 C1492 265.5 1496.1 263.3 1499.7 262.4 C1503.3 261.6 1507.2 262.4 1510.8 262.6 C1514.3 262.8 1518.1 262.9 1521.1 263.7 C1524.1 264.5 1525.7 265.5 1528.7 267.4 C1531.6 269.3 1536.3 271.8 1538.7 275 C1541 278.2 1542.2 282.9 1542.9 286.6 C1543.5 290.3 1542.3 282.6 1542.7 297.1 C1543.1 311.5 1544.7 360.7 1545.1 373.4 M1491.4 362.7 C1491.1 353.2 1489.7 315.6 1489.8 305.3 C1489.8 295 1491 302.9 1491.6 300.9 C1492.2 298.9 1492.5 295.2 1493.5 293.5 C1494.6 291.8 1496.2 292.1 1498 290.9 C1499.7 289.7 1501.9 287.3 1504 286.6 C1506 285.9 1508.4 286.5 1510.3 286.7 C1512.3 286.8 1513.9 287.2 1515.7 287.6 C1517.6 288 1519.9 287.6 1521.5 289 C1523.2 290.3 1524.2 293.7 1525.7 295.6 C1527.1 297.5 1529.5 298.3 1530.4 300.2 C1531.3 302.1 1531.3 296.8 1531 307.2 C1530.8 317.5 1529.4 353.2 1529 362.4 M1338.9 348 C1339.1 339.8 1339.6 307.8 1340.2 298.8 C1340.7 289.8 1341.8 295.3 1342.3 293.9 C1342.8 292.6 1342.3 291.5 1343.1 290.9 C1343.9 290.3 1345.6 290.4 1347.1 290.5 C1348.6 290.5 1350.7 290.5 1352.1 291.2 C1353.4 292 1354.4 293.5 1354.9 294.7 C1355.5 296 1355.7 290.6 1355.6 298.7 C1355.6 306.8 1353.4 335.2 1354.7 343.4 C1355.9 351.7 1360.5 348.2 1363.1 348.2 C1365.8 348.2 1369.6 351.7 1370.6 343.4 C1371.6 335.1 1369.2 306.9 1369.3 298.4 C1369.3 290 1370 293.9 1370.9 292.8 C1371.8 291.7 1373.4 292.3 1374.8 292 C1376.1 291.7 1377.9 291.1 1379.2 291.1 C1380.5 291.2 1381.8 291.8 1382.5 292.4 C1383.2 293 1383 293.7 1383.6 294.7 C1384.2 295.8 1385.7 290.6 1386.3 298.6 C1386.9 306.6 1386.2 334.5 1387.1 342.7 C1388.1 350.9 1390 347.8 1392 347.8 C1393.9 347.8 1397.8 351.1 1398.9 342.8 C1400 334.6 1398.1 306.6 1398.6 298.3 C1399.2 290 1401.6 294.5 1402.3 293.1 C1403 291.8 1401.9 290.9 1403 290.2 C1404 289.6 1407 288.9 1408.5 289.3 C1410 289.7 1410.8 291.6 1411.9 292.5 C1412.9 293.3 1413.9 293.6 1414.7 294.5 C1415.5 295.4 1416.6 289 1416.8 297.7 C1416.9 306.4 1415.9 338.6 1415.7 346.8 M1603.1 348.9 C1603.4 340.2 1604.8 306.2 1605.3 297 C1605.9 287.9 1606 295.2 1606.3 294 C1606.5 292.9 1605.9 291.1 1606.9 290.3 C1607.9 289.4 1611 289 1612.3 289.1 C1613.6 289.1 1613.6 289.6 1614.8 290.4 C1616 291.3 1618.5 292.7 1619.3 294.2 C1620.2 295.6 1620 291.1 1619.9 299.4 C1619.9 307.6 1617.7 335.7 1618.8 343.8 C1619.9 351.8 1624.2 347.6 1626.5 347.6 C1628.8 347.6 1631.6 352.2 1632.6 343.8 C1633.7 335.4 1632.2 305.4 1632.9 297.3 C1633.5 289.1 1635.3 295.8 1636.3 294.8 C1637.2 293.7 1637.6 291.5 1638.7 290.9 C1639.9 290.3 1641.6 291.2 1643 291.3 C1644.3 291.4 1645.8 291.1 1646.8 291.5 C1647.9 291.9 1648.6 292.5 1649.1 293.6 C1649.6 294.7 1649.6 289.6 1649.7 298 C1649.9 306.4 1648.7 335.6 1650 344.2 C1651.3 352.8 1655.2 349.4 1657.6 349.5 C1660 349.5 1663.1 353.1 1664.4 344.6 C1665.6 336.2 1664.7 307.4 1665.1 299 C1665.4 290.5 1666 294.9 1666.4 293.8 C1666.9 292.7 1666.8 293.1 1668 292.4 C1669.1 291.6 1672.2 289.9 1673.3 289.6 C1674.5 289.3 1673.7 289.8 1674.8 290.6 C1675.9 291.5 1679 293.1 1680 294.6 C1681 296 1680.5 290.5 1680.7 299.3 C1680.8 308 1680.8 339.2 1680.8 347.2 M1493.3 404.8 C1493 389.6 1492.8 374.4 1492.9 359.2 C1504.2 359.8 1515.5 359.6 1526.8 358.4 C1526.5 373.6 1526.4 388.9 1526.6 404.1 M1485 358.5 C1502.2 357.5 1519.3 356.9 1536.5 356.7 M1515.8 300.1 C1515.7 300.6 1515.5 302.4 1515 303.2 C1514.6 304.1 1514 304.6 1513.2 305.1 C1512.4 305.6 1511.2 306.2 1510.1 306.2 C1509 306.2 1507.6 305.7 1506.8 305.1 C1505.9 304.5 1505.6 303.6 1505.1 302.7 C1504.6 301.8 1503.9 300.9 1503.8 299.9 C1503.7 299 1503.9 298 1504.5 297.1 C1505.1 296.2 1506.4 295.1 1507.2 294.6 C1508.1 294.1 1508.8 294.3 1509.8 294.3 C1510.8 294.3 1512.3 294.1 1513.1 294.6 C1514 295.1 1514.5 296.1 1515 297.1 C1515.4 298 1515.6 299.7 1515.7 300.2 M1498.3 310 C1501.2 309.8 1512.2 305.7 1516 308.5 C1519.7 311.4 1519.3 318.5 1520.6 327.3 C1521.9 336.1 1523 355.6 1523.5 361.2 M1504.5 305.6 C1503.9 309.1 1502.2 317.3 1500.7 326.3 C1499.1 335.3 1496.1 354.1 1495.2 359.7 M1512.1 317.7 C1516.1 317 1520.1 316.7 1524.1 316.8 C1524.1 321.5 1524.3 326.3 1524.7 331.1 C1520.5 331.3 1516.3 331.3 1512.1 331.3 C1512.3 327 1512.1 322.7 1511.7 318.4 M1605.2 398.5 C1605.8 399 1607.6 401.1 1608.9 401.2 C1610.2 401.3 1610.9 399.7 1613 399.1 C1615.1 398.5 1617.8 398.1 1621.5 397.6 C1625.2 397.2 1630.6 396.4 1635.5 396.2 C1640.4 396 1646.3 396.2 1651.1 396.2 C1656 396.2 1660.1 396.3 1664.4 396.2 C1668.8 396.1 1673.4 395 1677.3 395.6 C1681.3 396.1 1686.3 398.9 1688.2 399.4 C1690.1 400 1689.1 398.2 1688.8 398.8 C1688.4 399.4 1687.9 402.1 1686.3 403.1 C1684.7 404 1682.9 404.6 1679.3 404.7 C1675.7 404.8 1669.8 403.6 1664.7 403.6 C1659.6 403.6 1653.7 404.7 1648.7 404.7 C1643.7 404.7 1639.4 403.7 1634.9 403.4 C1630.3 403.2 1625 403.8 1621.2 403.3 C1617.5 402.9 1615 401.6 1612.3 400.6 C1609.6 399.6 1606.3 397.7 1605.1 397.1" />
+            </g>
+          </defs>
+          <g class="walk__city"></g>
+          <path class="walk__thread" />
+          <!-- Eyes: the outer <g> follows the tip of the line, the inner <g> blinks, the pupils look around -->
+          <g class="walk__eyes">
+            <g class="walk__blink">
+              <!-- The brand's eyes (96 × 50, no outline, no ™), scaled to the walk's 42-unit eye height (42 / 49.96; script.js
+                   EYES_H) and centred on 0,0; script.js moves the pupils in these units -->
+              <g transform="scale(0.84067) translate(-47.995 -24.98)">
+                <ellipse class="walk__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+                <ellipse class="walk__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+                <circle class="walk__pupil" cx="23.05" cy="24.98" r="10.93" />
+                <circle class="walk__pupil" cx="72.94" cy="24.98" r="10.93" />
+              </g>
+            </g>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 03 · HERO B — the falling tools (prototyped in archive/hero-gravity/), with the sales words: learning without the
+         hassle, and the refund next to the price. The copy (6 of 12 columns), then the stage out to the screen's edge, all
+         on Black, where the AI tools the courses teach fall in as balls and pile up: each a tool's logo on a White disc,
+         and one Ink ball with the brand's eyes, which watch the pointer. The balls are a toy: one hops when the pointer
+         comes over it (the hint), picks up and throws, and kicks when clicked (script.js · 03 B, Matter.js).
+         (.story-hero keeps the name of the first version, the storyboard.) -->
+    <section class="story-hero">
+      <div class="story-hero__copy">
+        <h1 class="story-hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
+        <p class="story-hero__lead">Գրանցվիր հիմա, ստացիր այս ամսվա 3 MacBook-ներից մեկը</p>   <!-- the offer under the headline: the draw (its terms in the Orange bubble under the pile) -->
+        <div class="story-hero__actions">
+          <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
+          <p class="story-hero__endorse"><img src="../../assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+      </div>
+
+      <!-- The stage, with the draw in an Orange chat bubble along its bottom: a shelf the balls land on (script.js · 03 B
+           adds it to the physics; it falls in first). Outside .drop, whose role="img" would hide it from screen readers -->
+      <div class="story-hero__stage">
+      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo">
+        <!-- One ball a tool (its name in data-name); script.js sizes them for the stage and drops them in this order:
+           the tools, then the three gifts (huge bubbles, data-size times a tool's size, each with one of the MacBook Neos
+           the AI-Master cards give, in a feed colour), the eyes last (bigger too), on top of the pile -->
+        <span class="drop__ball" data-name="ChatGPT"><img src="../../assets/logos/chatgpt.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Gemini"><img src="../../assets/logos/gemini.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Claude"><img src="../../assets/logos/claude.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Grok"><img src="../../assets/logos/grok.svg" alt="" /></span>
+        <span class="drop__ball" data-name="NotebookLM"><img src="../../assets/logos/notebooklm.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Nano Banana"><img src="../../assets/logos/nano-banana.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Veo"><img src="../../assets/logos/veo.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Google Flow"><img src="../../assets/logos/google-flow.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Higgsfield"><img src="../../assets/logos/higgsfield.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Lovable"><img src="../../assets/logos/lovable.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Gamma"><img src="../../assets/logos/gamma.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Make.com"><img src="../../assets/logos/make.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Suno"><img src="../../assets/logos/suno.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Arena"><img src="../../assets/logos/arena.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Oboe"><img src="../../assets/logos/oboe.svg" alt="" /></span>
+        <span class="drop__ball" data-name="Wispr Flow"><img src="../../assets/logos/wispr-flow.svg" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="sky"><img src="../../assets/cards/hero_mac_01.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="pink"><img src="../../assets/cards/hero_mac_02.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="3.2" data-bg="yellow"><img src="../../assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
+        <!-- The brand's eyes (.eyes, 96 × 50, no outline) on an Ink ball: they stay upright as it rolls -->
+        <span class="drop__ball drop__ball--eyes" data-size="1.8">   <!-- data-size: bigger than a tool (script.js) -->
+          <svg class="eyes" viewBox="0 0 96 50" data-look="you">
+            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+          </svg>
+        </span>
+      </div>
+        <div class="story-hero__bubble">
+          <span class="pill pill--black pill--lg">Խաղարկություն</span>
+          <p class="story-hero__bubble-title">3 MacBook Neo</p>
+          <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
+          <p class="story-hero__bubble-text">հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         05 · COURSES / PACKAGES — «Ի՞նչ սովորել»
+         Rows inside the 3 cards line up via CSS subgrid.
+         ========================================================= -->
+    <section class="courses" id="courses">
+      <div class="courses__top">
+        <h2 class="section-title">Ի՞նչ սովորել</h2>
+        <div class="courses__nav">
+          <button type="button" class="courses__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="courses__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
+
+      <!-- What you'll learn: one row of tiles, four in view on desktop (the arrows step one view, script.js).
+           Each tile is a post in its feed colour (data-bg, BRAND.md: the feed colours rotate, black text), cut into the
+           brand bubble by script.js, which also sets the brand's eyes peeking from its cut-out top corner (Figma slide 41).
+           The nine lessons of «AI գրագեր» in order, each tile labelled with its lesson; each links to the whole-course card
+           (data-pkg="master": AI-Master), which a click spotlights with the topic in its banner
+           (script.js); data-topic is the wording for the banner sentence -->
+      <div class="learn-grid" aria-label="Ի՞նչ սովորել">
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 1</span>
+              <h4 class="learn-tile__title" data-topic="AI հիմունքներ և անվտանգություն">AI հիմունքներ և անվտանգու&shy;թյուն</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 2</span>
+              <h4 class="learn-tile__title" data-topic="AI-ը կյանքի 10 իրավիճակներում">AI-ը կյանքի 10 իրավիճակ&shy;ներում</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 3</span>
+              <h4 class="learn-tile__title" data-topic="Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 4</span>
+              <h4 class="learn-tile__title" data-topic="Հետազոտություն ու աղբյուրահեն կոնտենտ">Հետազոտու&shy;թյուն ու աղբյուրահեն կոնտենտ</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 5</span>
+              <h4 class="learn-tile__title" data-topic="1000 բառի տեղ խոսող նկարների գեներացիա">1000 բառի տեղ խոսող նկարների գեներացիա</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 6</span>
+              <h4 class="learn-tile__title" data-topic="AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 7</span>
+              <h4 class="learn-tile__title" data-topic="Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 8</span>
+              <h4 class="learn-tile__title" data-topic="Գործընթացների ավտոմատացում AI-ով">Գործընթացների ավտոմատացում AI-ով</h4>
+            </a>
+          </div>
+          <div class="learn-col">
+            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
+              <span class="learn-tile__pkg">Դաս 9</span>
+              <h4 class="learn-tile__title" data-topic="Ինքնավար ագենտների ստեղծում">Ինքնավար ագենտների ստեղծում</h4>
+            </a>
+          </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         07 · STATS — «Թվերով»: a Blue proof strip between the tiles and the packages
+         ========================================================= -->
+    <section class="stats" aria-labelledby="stats-title">
+      <h2 class="sr-only" id="stats-title">Թվերով</h2>
+      <div class="stats__row">
+        <div class="stat">
+          <p class="stat__num">10,000+</p>
+          <p class="stat__label">Դասերի մասնակից</p>
+        </div>
+        <div class="stat">
+          <p class="stat__num">20+</p>
+          <p class="stat__label">AI գործիք կուրսի ընթացքում</p>
+        </div>
+        <div class="stat">
+          <p class="stat__num">4.9</p>
+          <div class="stat__label">Միջին վարկանիշ
+            <!-- 5 stars, filled to the rating (4.9 → the 5th star is 90% gold) -->
+            <span class="stars" style="--rating: 4.9" role="img" aria-label="4.9 / 5"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05b · PACKAGES — grey full-bleed band with the tabs + cards
+         ========================================================= -->
+    <section class="pricing">
+      <!-- Package tabs: «AI գրագիտություն» (default) and «PRO դասընթացներ» -->
+      <div class="pkg-switch" id="packages">
+        <div class="pill-tabs" role="tablist" aria-label="Դասընթացներ">
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-basic" aria-controls="panel-basic" aria-selected="true">AI գրագիտություն</button>
+          <button type="button" class="pill-tabs__tab" role="tab" id="tab-pro" aria-controls="panel-pro" aria-selected="false" tabindex="-1">PRO դասընթացներ</button>
+        </div>
+      </div>
+
+      <!-- Ministry endorsement (coat of arms) + tax refund — above the cards, shown for both tabs -->
+      <p class="endorse endorse--strip"><img src="../../assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>
+
+      <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
+      <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI-Master),
+           and the whole course for 3 friends together (one price a person). The two AI-Master cards wear the Bundle's
+           campaign look (.pkg--bundle: the wash, the ribbon border, the gift; BRAND.md → Campaign colours).
+           Stacked below lg, the two AI-Master cards come first. -->
+      <div class="packages">
+
+        <!-- ───── Start ───── -->
+        <article class="pkg pkg--start">
+          <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="../../assets/logos/zoom.svg" alt="Zoom" /></span>
+            <h3 class="pkg__name">Start</h3>
+            <p class="pkg__desc">AI-ի հետ առաջին ծանոթության համար</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>Առաջին 3 դասը՝ 9-ից</p>   <!-- the lessons it covers, first: the brand eyes (static, at you) in place of an icon -->
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the start, then the days (as the AI-Master cards) -->
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                </ul>
+              </div>
+              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>
+            </div>
+          </header>
+
+          <div class="pkg__price">
+            <p class="pkg__amount">֏ 19,500</p>
+          </div>
+
+          <div class="pkg__cta">
+            <!-- TODO: the checkout link for Start -->
+            <a href="#" class="btn btn--primary btn--block btn--md">Գնել Start</a>
+            <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
+          </div>
+
+          <div class="pkg__tools">
+            <p class="pkg__label">10 AI գործիք</p>
+            <ul class="tool-stack">
+              <li class="tool-stack__logo" title="Gemini"><img src="../../assets/logos/gemini.svg" alt="Gemini" /></li>
+              <li class="tool-stack__logo" title="ChatGPT"><img src="../../assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+              <li class="tool-stack__logo" title="Claude"><img src="../../assets/logos/claude.svg" alt="Claude" /></li>
+              <li class="tool-stack__logo" title="Nano Banana"><img src="../../assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+              <li class="tool-stack__logo" title="Arena"><img src="../../assets/logos/arena.svg" alt="Arena" /></li>
+              <li class="tool-stack__logo" title="Wispr Flow"><img src="../../assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma">+4<span class="sr-only">: Grok, Suno, Oboe, Gamma</span></li>
+            </ul>
+          </div>
+
+          <ul class="pkg__features">
+            <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
+            <li><i class="ic ic--check"></i>Առաջընթացի վերահսկում</li>
+            <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
+            <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
+          </ul>
+
+        </article>
+
+        <!-- ───── AI-Master: the whole course ───── -->
+        <article class="pkg pkg--bundle pkg--master">
+          <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="../../assets/logos/zoom.svg" alt="Zoom" /></span>
+            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
+                 way; the card crops what runs past its right edge) -->
+            <span class="pkg__gift pkg__gift--mac02"><img src="../../assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>
+            <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
+            <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
+            <div class="pkg-spot" hidden>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI-Master</strong> դասընթացի ընթացքում</p>
+              <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+            </div>
+            <p class="pkg__desc">Ամբողջական AI<br />կրթություն մեկ ծրագրում</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
+                </ul>
+              </div>
+              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock, dark as the start date -->
+            </div>
+          </header>
+
+          <div class="pkg__price">
+            <s class="pkg__old">֏ 57,000</s>
+            <span class="pill pill--deal">−20%</span>
+            <span class="pill pill--save">Խնայիր ֏ 11,300</span>
+            <p class="pkg__amount">֏ 45,700</p>
+          </div>
+
+          <div class="pkg__cta">
+            <!-- TODO: the checkout link for AI-Master -->
+            <a href="#" class="btn btn--primary btn--block btn--md">Գնել AI-Master</a>
+            <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
+          </div>
+
+          <div class="pkg__tools">
+            <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
+            <ul class="tool-stack">
+              <li class="tool-stack__logo" title="Gemini"><img src="../../assets/logos/gemini.svg" alt="Gemini" /></li>
+              <li class="tool-stack__logo" title="ChatGPT"><img src="../../assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+              <li class="tool-stack__logo" title="Claude"><img src="../../assets/logos/claude.svg" alt="Claude" /></li>
+              <li class="tool-stack__logo" title="Nano Banana"><img src="../../assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+              <li class="tool-stack__logo" title="Arena"><img src="../../assets/logos/arena.svg" alt="Arena" /></li>
+              <li class="tool-stack__logo" title="Wispr Flow"><img src="../../assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
+            </ul>
+          </div>
+
+          <ul class="pkg__features">
+            <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
+            <li><i class="ic ic--check"></i>Առաջընթացի վերահսկում</li>
+            <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
+            <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
+            <li><i class="ic ic--check"></i>AI գործիքների ցանկ</li>
+            <li><i class="ic ic--check"></i>Offline հանդիպումներ՝ 2 հոգու հրավիրատոմս</li>
+            <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
+            <li class="is-strong"><i class="ic ic--check"></i><span>3 MacBook Neo-ի խաղարկություն ամեն ամսվա գրանցվողների շրջանում</span></li>
+          </ul>
+
+        </article>
+
+        <!-- ───── AI-Master with 3 friends: the whole course, one price a person (−62% off AI-Master) ───── -->
+        <article class="pkg pkg--bundle pkg--friends">
+          <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
+          <header class="pkg__head">
+            <span class="pill pill--zoom">Օնլայն <img src="../../assets/logos/zoom.svg" alt="Zoom" /></span>
+            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
+                 way; the card crops what runs past its right edge) -->
+            <span class="pkg__gift pkg__gift--mac03"><img src="../../assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>
+            <p class="pkg__tagline">3 ընկերներով</p>
+            <p class="pkg__desc"><strong>Մասնակցեք 3-ով՝<br />բացառիկ գնով,</strong> սովորեք<br />կիրառել AI-ը և փոխանակեք Ձեր նոր հմտությունները միասին։</p>
+            <div class="pkg__schedule">
+              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
+              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
+              <div class="pkg__date"><i class="ic ic--calendar"></i>
+                <ul class="pkg__days">
+                  <li>Սկիզբը՝ նոյեմբերի 3</li>
+                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
+                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
+                </ul>
+              </div>
+              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>
+            </div>
+          </header>
+
+          <div class="pkg__price">
+            <span class="pkg__unit">1 անձը՝</span>   <!-- the price is a person's: three pay ֏ 52,098 together -->
+            <s class="pkg__old">֏ 45,700</s>
+            <span class="pill pill--deal">−62%</span>
+            <p class="pkg__amount">֏ 17,366</p>
+          </div>
+
+          <div class="pkg__cta">
+            <!-- opens the three-person form (#friends-form, script.js → friendsForm) -->
+            <button type="button" class="btn btn--primary btn--block btn--md" data-open="friends-form">Գրանցվել ընկերներով</button>
+            <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
+          </div>
+
+          <div class="pkg__tools">
+            <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
+            <ul class="tool-stack">
+              <li class="tool-stack__logo" title="Gemini"><img src="../../assets/logos/gemini.svg" alt="Gemini" /></li>
+              <li class="tool-stack__logo" title="ChatGPT"><img src="../../assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+              <li class="tool-stack__logo" title="Claude"><img src="../../assets/logos/claude.svg" alt="Claude" /></li>
+              <li class="tool-stack__logo" title="Nano Banana"><img src="../../assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+              <li class="tool-stack__logo" title="Arena"><img src="../../assets/logos/arena.svg" alt="Arena" /></li>
+              <li class="tool-stack__logo" title="Wispr Flow"><img src="../../assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
+            </ul>
+          </div>
+
+          <ul class="pkg__features">
+            <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
+            <li><i class="ic ic--check"></i>Առաջընթացի վերահսկում</li>
+            <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
+            <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
+            <li><i class="ic ic--check"></i>AI գործիքների ցանկ</li>
+            <li><i class="ic ic--check"></i>Offline հանդիպումներ՝ 2 հոգու հրավիրատոմս</li>
+            <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
+            <li class="is-strong"><i class="ic ic--check"></i><span>3 MacBook Neo-ի խաղարկություն ամեն ամսվա գրանցվողների շրջանում</span></li>
+          </ul>
+
+        </article>
+      </div>
+      </div>
+
+      <div class="pkg-panel" role="tabpanel" id="panel-pro" aria-labelledby="tab-pro" hidden>
+        <div class="pro-grid">
+          <a class="pro-card" href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">
+            <video class="pro-card__media" src="../../assets/videos/teacher-level-1-hero.mp4" poster="assets/videos/teacher-level-1-hero.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            <span class="pro-card__arrow" aria-hidden="true"><img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+            <h3 class="pro-card__title">AI քեզ ուսուցիչ</h3>
+          </a>
+          <!-- TODO: real external link for «AI քեզ project manager» -->
+          <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
+            <img class="pro-card__blob" src="../../assets/videos/blob.webp" alt="" loading="lazy" />
+            <span class="pro-card__arrow" aria-hidden="true"><img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+            <h3 class="pro-card__title">AI քեզ project manager</h3>
+          </a>
+          <!-- Coming soon: links to the pre-registration page -->
+          <a class="pro-card is-soon" href="../../doctor-register.html" target="_blank" rel="noopener">
+            <img src="../../assets/learn/research-astronaut.webp" alt="" loading="lazy" />
+            <span class="pro-card__soon">Շուտով</span>
+            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
+            <span class="btn btn--white btn--sm pro-card__cta">Գրանցվել</span>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- =========================================================
+         05f · FEEDBACK — «Ի՞նչ են ասում մասնակիցները»: each review in the brand's chat bubble (BRAND.md → Chat bubble,
+         cut by script.js · 03b) in a feed colour, the person under its tail: their initials (first and last name) on a colour disc (the
+         referral ladder's avatars), name, job. A row that scrolls sideways, arrows as the teachers' (script.js → cardSliders).
+         The reviews' own words (emoji left out, AIQB pages use none).
+         ========================================================= -->
+    <section class="quotes" aria-labelledby="quotes-title">
+      <div class="quotes__top">
+        <h2 class="section-title" id="quotes-title">Ի՞նչ են ասում մասնա&shy;կիցները</h2>   <!-- &shy;: phones break the long word at a syllable -->
+        <div class="teachers__nav">
+          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
+      <div class="quotes__row">
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից առաջ էլ օգտագործում էի AI, բայց հիմնականում միայն տեքստեր գրելու համար։ Հիմա արդեն լրիվ ուրիշ մակարդակով եմ կիրառում աշխատանքի մեջ։ Շատ պրոցեսներ արագացրել եմ, սկսել եմ ավելի շատ պատվերներ վերցնել, ու դա բնականաբար ազդել է նաև եկամտիս վրա։ Ամենակարևորը՝ հիմա հստակ գիտեմ՝ որ գործիքը ինչի համար օգտագործեմ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱԱ</span>
+            <span class="quote__name">Արմինե Անտոնյան<span class="quote__meta">SMM մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Անկեղծ՝ չէի սպասում, որ էսքան կիրառելի կլինի։ Դասերից հետո մի քանի գործիք միանգամից մտցրեցի աշխատանքային պրոցեսիս մեջ։ Հիմա նույն ժամանակում ավելի շատ աշխատանք եմ հասցնում անել և նոր ծառայություններ եմ առաջարկում հաճախորդներիս։ Ինձ համար շատ լավ ներդրում էր։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍՂ</span>
+            <span class="quote__name">Սամսոն Ղազարյան<span class="quote__meta">Գրաֆիկ դիզայներ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ից օգտվում էի նաև մինչև դասընթացը, դրա համար սկզբում մտածում էի՝ արդյոք նոր բան կստանա՞մ։ Ու ստացա։ Հատկապես հավանեցի, որ ուղղակի գործիքներ չէին ցույց տալիս, այլ սովորեցնում էին՝ ինչպես մտածել ու ճիշտ առաջադրանք տալ AI-ին։ Աշխատանքիս արագության տարբերությունն արդեն շատ զգալի է։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍՀ</span>
+            <span class="quote__name">Սաթենիկ Հայրապետյան<span class="quote__meta">Մարքեթինգի մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ դեպքում ամենամեծ արդյունքը եկամտի աճն էր։ AI-ի շնորհիվ սկսեցի որոշ աշխատանքներ շատ ավելի արագ անել և կարողացա ամսվա ընթացքում ավելի շատ պատվեր վերցնել։ Դասընթացից ստացած գիտելիքներից մինչև հիմա գրեթե ամեն օր օգտվում եմ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
+            <span class="quote__name">Աննա Սարգսյան<span class="quote__meta">Freelancer</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Մինչև դասընթացը ամեն փոքր բանի համար տարբեր մասնագետների էի դիմում։ Հիմա շատ հարցեր ինքս եմ կարողանում լուծել AI-ի օգնությամբ՝ գաղափարներից ու տեքստերից մինչև վիզուալներ։ Ե՛վ ժամանակ եմ խնայում, և՛ ծախսերս են պակասել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՏՊ</span>
+            <span class="quote__name">Տիգրանուհի Պողոսյան<span class="quote__meta">Փոքր բիզնեսի սեփականատեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե մի բան առանձնացնեմ՝ արագությունն է։ Այն, ինչի վրա առաջ 2-3 ժամ էի ծախսում, հիմա երբեմն 30-40 րոպեում եմ անում։ Դրա շնորհիվ ավելի շատ նախագծերի հետ եմ հասցնում աշխատել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
+            <span class="quote__name">Անահիտ Կիրակոսյան<span class="quote__meta">Content creator</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Մտածում էի՝ AI-ը ավելի շատ մարքեթինգի կամ IT-ի մարդկանց համար է։ Դասընթացից հետո հասկացա, թե ինչքան բան կարող եմ կիրառել հենց իմ աշխատանքի մեջ։ Հիմա շատ առօրյա առաջադրանքներ զգալի արագ եմ անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՏՀ</span>
+            <span class="quote__name">Տաթև Հայրապետյան<span class="quote__meta">HR մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պրակտիկ դասընթաց էր։ Ոչ թե ուղղակի լսում ես ու մոռանում, այլ սովորածդ կարող ես նույն օրը փորձել աշխատանքի մեջ։ Ինձ մոտ AI-ն արդեն ամենօրյա աշխատանքային գործիք է դարձել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՏՄ</span>
+            <span class="quote__name">Տիգրան Մարտիրոսյան<span class="quote__meta">Վաճառքի մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Սկզբում մի քիչ վախ ունեի, որ AI-ը մեր աշխատանքը փոխարինելու է։ Հիմա հակառակ կերպ եմ նայում դրան։ Սովորեցի օգտագործել որպես օգնական, դրա շնորհիվ ավելի արագ եմ աշխատում, ավելի շատ ազատ ժամանակ եմ ունենում, ու եկամուտս էլ աճել է։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԿՏ</span>
+            <span class="quote__name">Կարինե Տոնոյան<span class="quote__meta">Copywriter</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո առաջին անգամ զգացի, որ AI-ը ոչ թե ուղղակի թրենդ է, այլ իրական գործիք, որը կարող է փող ու ժամանակ խնայել բիզնեսում։ Հիմա ամեն շաբաթ օգտագործում եմ տարբեր խնդիրներ լուծելու համար։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍՀ</span>
+            <span class="quote__name">Սամվել Հովհաննիսյան<span class="quote__meta">Ձեռնարկատեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ բացահայտումը այն էր, թե ինչքան առօրյա աշխատանք կարելի է հեշտացնել AI-ով։ Հիմա շատ առաջադրանքներ, որոնց վրա նախկինում ժամեր էի ծախսում, անում եմ անհամեմատ արագ։ Իրոք զգում եմ, որ աշխատանքային արդյունավետությունս լրիվ այլ մակարդակի է անցել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՆ</span>
+            <span class="quote__name">Արուս Նիկողոսյան<span class="quote__meta">Project Manager</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Ամենաշատը հավանեցի, որ ջուր չկար։ Ամեն ինչ կոնկրետ էր ու կիրառելի։ Սովորած գործիքներից մի քանիսը հենց հաջորդ օրը սկսեցի օգտագործել աշխատանքի մեջ։ Հիմա կոնտենտ ստեղծելու պրոցեսը շատ ավելի արագ է դարձել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
+            <span class="quote__name">Աննա Սիմոնյան<span class="quote__meta">SMM մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Ինձ համար շատ կարևոր էր, որ ամեն ինչ հասկանալի էր նույնիսկ առանց տեխնիկական գիտելիքների։ Դասընթացից հետո արդեն կարողանում եմ AI գործիքներով ինքնուրույն տարբեր նախագծեր անել։ Էլ չեմ խոսում, թե ինչքան է իմ համալսարանական կյանքը հեշտացել AI-ի շնորհիվ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՆՍ</span>
+            <span class="quote__name">Նելլի Սիմոնյան<span class="quote__meta">Ուսանող</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե առաջ AI-ն ինձ համար պարզապես ChatGPT-ն էր, հիմա այն դարձել է բիզնեսում ամենաշատ օգտագործվող գործիքներից մեկը։ Կոնտենտ, գաղափարներ, առաջարկներ, վերլուծություն՝ շատ բան արդեն շատ ավելի արագ եմ անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՄ</span>
+            <span class="quote__name">Արմեն Մեսրոպյան<span class="quote__meta">Բիզնեսի սեփականատեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ը չէր փոխարինել իմ մասնագիտությանը, հակառակը՝ ավելի շատ հնարավորություններ տվեց։ Հիմա հաճախորդներին կարողանում եմ ավելի շատ տարբերակներ առաջարկել և շատ ավելի արագ աշխատել։ Անձամբ ինձ համար սա ամենաօգտակար դասընթացներից էր վերջին շրջանում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍԿ</span>
+            <span class="quote__name">Սիմոն Կարապետյան<span class="quote__meta">Գրաֆիկ դիզայներ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Դասընթացից հետո աշխատանքային օրս իրականում փոխվել է։ Այն գործերը, որոնք անընդհատ հետաձգում էի, որովհետև շատ ժամանակ էին պահանջում, հիմա AI-ի օգնությամբ շատ արագ եմ անում։ Ու շատ հաճելի է, երբ հասկանում ես, որ տեխնոլոգիան ոչ թե բարդացնում, այլ հեշտացնում է աշխատանքդ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
+            <span class="quote__name">Անիտա Կարապետյան<span class="quote__meta">Content Manager</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Մի բան հաստատ կարող եմ ասել՝ դասընթացից հետո նույն ծավալի աշխատանքն ավելի քիչ ժամանակում եմ անում։ Դրա շնորհիվ կարողացել եմ լրացուցիչ պատվերներ վերցնել՝ առանց ամբողջ օրը համակարգչի առաջ անցկացնելու։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
+            <span class="quote__name">Անուշ Սահակյան<span class="quote__meta">Copywriter</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Չէի պատկերացնում, որ AI-ը կարող է այսքան օգտակար լինել վաճառքներում։ Հիմա օգտագործում եմ առաջարկներ կազմելիս, հաճախորդների հետ հաղորդակցության տարբերակներ մշակելիս ու նույնիսկ հանդիպումներին պատրաստվելիս։ Շատ գործնական գիտելիքներ ստացա։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԳՍ</span>
+            <span class="quote__name">Գևորգ Սաֆարյան<span class="quote__meta">Վաճառքի մենեջեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Դասընթացից առաջ էլ ակտիվ օգտագործում էի AI, դրա համար բավական բարձր սպասելիքներով էի եկել։ Բայց միևնույն է շատ նոր բաներ տարա ինձ հետ։ Հատկապես workflow-ներիս մեջ AI-ը ճիշտ ինտեգրելուց հետո աշխատանքի արագության տարբերությունը շատ զգալի դարձավ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՔՎ</span>
+            <span class="quote__name">Քրիստինե Վրացյան<span class="quote__meta">Digital Marketing Specialist</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պարզ՝ հիմա ավելի քիչ ժամանակում ավելի շատ բան եմ հասցնում։ Ինձ համար հենց սա էր դասընթացի ամենամեծ արդյունքը։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՀ</span>
+            <span class="quote__name">Արամ Հովհաննեսյան<span class="quote__meta">Ձեռնարկատեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացին մասնակցել եմ հիմնականում հետաքրքրությունից, բայց արդյունքում AI-ը դարձել է իմ աշխատանքային առօրյայի մի մասը։ Շատ գործեր, հատկապես տեքստային ու վերլուծական, հիմա անհամեմատ արագ եմ անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
+            <span class="quote__name">Արմենուհի Կարապետյան<span class="quote__meta">HR Manager</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ամենալավ մասը ինձ համար նոր գործիքների բացահայտումն էր։ Որոշ բաներ, որոնք նախկինում կամ չէի կարողանում անել, կամ շատ երկար էին տևում, հիմա AI-ով լուծում եմ մի քանի քայլով։ Սկսել եմ նաև AI-ի հետ կապված պատվերներ վերցնել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՀՆ</span>
+            <span class="quote__name">Հասմիկ Նալբանդյան<span class="quote__meta">Վիդեո մոնտաժող</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Վերջապես AI-ից սկսեցի օգտվել ոչ թե ուղղակի “մի caption գրի” մակարդակով։ Դասընթացից հետո լրիվ փոխվել է իմ մոտեցումը։ Հիմա research-ից մինչև կոնտենտի գաղափարներ ու վիզուալներ՝ տարբեր փուլերում օգտագործում եմ AI։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԱՀ</span>
+            <span class="quote__name">Անահիտ Հակոբյան<span class="quote__meta">Social Media Manager</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ ոլորտում արագությունը շատ կարևոր է։ AI-ի օգնությամբ հիմա ավելի արագ եմ պատրաստում հայտարարությունների տեքստերը, առաջարկները և հաճախորդների համար անհրաժեշտ նյութերը։ Սովորածը հենց աշխատանքիս մեջ եմ օգտագործում, դրա համար արդյունքն էլ շատ արագ զգացի։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՌԿ</span>
+            <span class="quote__name">Ռոբերտ Կիրակոսյան<span class="quote__meta">Անշարժ գույքի գործակալ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Սովորաբար դասընթացներից հետո նոթերը մնում են մի կողմում ու մոռացվում։ Այստեղ հակառակն էր։ Սովորածներից շատերը մինչև հիմա ամեն օր օգտագործում եմ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍԹ</span>
+            <span class="quote__name">Սիրարփի Թովմասյան<span class="quote__meta">Account Manager</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո կարողացա ընդլայնել ծառայություններիս ցանկը և սկսել այնպիսի պատվերներ վերցնել, որոնք առաջ չէի վերցնի։ Իմ դեպքում AI սովորելը շատ ուղիղ կապ ունեցավ եկամտի աճի հետ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՀԹ</span>
+            <span class="quote__name">Հայրապետ Թունյան<span class="quote__meta">Freelancer</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Փոքր բիզնես ունենալու դեպքում միշտ չէ, որ կարող ես ամեն աշխատանքի համար առանձին մասնագետ ունենալ։ AI-ի շնորհիվ հիմա շատ բաներ ինքնուրույն եմ անում։ Դա ինձ համար և՛ ժամանակի, և՛ գումարի խնայողություն է։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԿՄ</span>
+            <span class="quote__name">Կարապետ Մարտիրոսյան<span class="quote__meta">Փոքր բիզնեսի հիմնադիր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ էի վախենում, որ AI-ի պատճառով դիզայներների պահանջարկը կնվազի։ Դասընթացից հետո կարծիքս փոխվեց։ Եթե ճիշտ ես օգտագործում, AI-ը քեզ ավելի ուժեղ մասնագետ է դարձնում։ Իմ աշխատանքում արդեն զգում եմ դրա ազդեցությունը։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՆՏ</span>
+            <span class="quote__name">Նանե Տիտանյան<span class="quote__meta">Դիզայներ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Արդեն առաջին դասերից հետո սկսեցի փորձարկել սովորածս։ Ամենակարևոր արդյունքը՝ հիմա շատ ավելի արագ եմ գաղափարներ մշակում և կոնտենտ ստեղծում։ Կարողանում եմ ավելի շատ աշխատանք անել ու չծանրաբեռնվել այնպես, ինչպես առաջ։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԴՍ</span>
+            <span class="quote__name">Դիանա Սերոբյան<span class="quote__meta">Content Creator</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ես տեխնոլոգիաներից շատ հեռու մարդ եմ ու սկզբում մտածում էի՝ չեմ հասկանա։ Բայց ամեն ինչ շատ մատչելի էր։ Հիմա AI-ով ինքս կարողանում եմ ապրանքների նկարագրություններ, գովազդային գաղափարներ ու տարբեր նյութեր պատրաստել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՍՊ</span>
+            <span class="quote__name">Սաթենիկ Պողոսյան<span class="quote__meta">Օնլայն խանութի սեփականատեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ արժեքը ճիշտ prompt գրելը սովորելն էր։ Մինչև այդ հաճախ մտածում էի՝ AI-ը լավ արդյունք չի տալիս։ Պարզվեց՝ ես ճիշտ հարց չէի տալիս։ Հիմա ստացած արդյունքների որակը լրիվ ուրիշ է։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԿՄ</span>
+            <span class="quote__name">Կիմա Մինասյան<span class="quote__meta">PR մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="sky"><p>Research, գաղափարներ, ռազմավարության առաջին draft, տեքստեր, presentation-ի կառուցվածք... առաջ սրանք միասին ահավոր շատ ժամանակ էին խլում։ Հիմա AI-ը ճիշտ օգտագործելու շնորհիվ պրոցեսս շատ ավելի արագ է։ Դասընթացից ստացած գիտելիքը հաստատ մնացող գիտելիք է։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԿԳ</span>
+            <span class="quote__name">Կամիլա Գևորգյան<span class="quote__meta">Մարքեթինգի մենեջեր</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից հետո ավելի վստահ սկսեցի աշխատել հաճախորդների հետ։ Առաջ որոշ առաջադրանքներից վախենում էի, որովհետև շատ ժամանակ էին պահանջում։ Հիմա արդեն ունեմ գործիքներ, որոնք օգնում են արագ լուծումներ գտնել։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ՏՔ</span>
+            <span class="quote__name">Տոմա Քանքարանյան<span class="quote__meta">SMM մասնագետ</span></span>
+          </figcaption>
+        </figure>
+        <figure class="quote">
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ես եկել էի պարզապես AI-ից օգտվել սովորելու համար։ Բայց արդյունքում հասկացա, թե որքան կարող է այն հեշտացնել աշխատանքս։ Դասերի պլանավորումից մինչև նյութերի պատրաստում՝ հիմա շատ ավելի արագ եմ անում։</p></blockquote>
+          <figcaption class="quote__who">
+            <span class="avatar avatar--letter" aria-hidden="true">ԿՍ</span>
+            <span class="quote__name">Կարինե Ստեփանյան<span class="quote__meta">Ուսուցիչ</span></span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05d · 3-FRIENDS FORM — the popup behind «Գրանցվել ընկերներով» (script.js → friendsForm): the three people
+         who join together. Participant 1 also leaves a phone (the one we call); 2 and 3 a name and an email.
+         Front end only. TODO (developer): send the form, then go on to payment / the confirmation. The fields' names:
+         name1 email1 phone1 (8 digits after +374) · name2 email2 · name3 email3
+         ========================================================= -->
+    <dialog class="modal" id="friends-form" aria-labelledby="friends-form-title">
+      <form class="modal__panel" novalidate>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-form-title">Գրանցվել ընկերներով</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 1</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name1" autocomplete="name" required autofocus />   <!-- autofocus: showModal() starts here, not on the ✕ -->
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email1" autocomplete="email" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Հեռախոս</span>
+            <span class="field__group">
+              <span class="field__prefix">+374</span>
+              <input class="field__input field__input--grouped" type="tel" name="phone1" autocomplete="tel-national" inputmode="tel" required />
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 2</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name2" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email2" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Մասնակից 3</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name3" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email3" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <footer class="modal__foot">
+          <p class="modal__note">Բոլոր դաշտերը պարտադիր են գրանցվելու համար։</p>
+          <button type="submit" class="btn btn--primary btn--block btn--md" disabled>Գրանցվել ընկերներով</button>   <!-- enabled once every field is filled in -->
+        </footer>
+      </form>
+      <!-- After «Գրանցվել ընկերներով»: the form steps aside for this (script.js → friendsForm); closing brings the empty form back -->
+      <div class="modal__panel" data-done hidden>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-done-title">Դուք գրանցված եք</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+        <p class="modal__text">Երեքիդ էլ փոստին նամակ ենք ուղարկել՝ հաջորդ քայլերով։</p>
+        <button type="button" class="btn btn--primary btn--block btn--md" data-close>Փակել</button>
+      </div>
+    </dialog>
+
+    <!-- =========================================================
+         05e · REFUND — the money-back promise as its own Orange band, straight after the prices it answers
+         (white headline, black text: BRAND.md → Text on colour); the same words as the course pages' refund
+         ========================================================= -->
+    <section class="refund" aria-labelledby="refund-title">
+      <h2 class="refund__title" id="refund-title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
+      <!-- the promise, its one condition (a detail line), then the same ask as the hero's -->
+      <div class="refund__body">
+        <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Եթե վերջում սպասելիքներդ չարդարանան, կվերադարձնենք քո վճարած ողջ գումարը։</p>
+        <p class="refund__condition">Միակ պայմանը՝ մասնակցություն բոլոր դասերին</p>
+        <a href="#packages" class="btn btn--dark btn--md">Ընտրել դասընթաց</a>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         06 · TEACHERS — «Ովքե՞ր են սովորեցնում»
+         ========================================================= -->
+    <section class="teachers" id="teachers">
+      <div class="teachers__top">
+        <h2 class="section-title">Ովքե՞ր են սովորեցնում</h2>
+        <div class="teachers__nav">
+          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
+
+      <div class="teachers__row">
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/anahit.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanian/" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Անահիտ Վարդանյան</h3>
+              <p class="teacher__role">AI Strategist</p>
+            </div>
+            <p class="teacher__bio">5+ տարվա փորձ հաղորդակցության ոլորտում։ «AI քեզ բան» կրթական ծրագրի համակարգող։</p>
+            <p class="teacher__meta">110+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/nairi.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg/" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Նաիրի Արեգ Հացպանյան</h3>
+              <p class="teacher__role">Full-Stack AI Engineer</p>
+            </div>
+            <p class="teacher__bio">7+ տարվա փորձ Full-Stack Development և Vibe Coding։ Մասնագիտացած է custom AI agent ստեղծելու և AI ավտոմատացումների մեջ։</p>
+            <p class="teacher__meta">90+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/artak.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/artakgrigoryan/" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
+              <p class="teacher__role">AI Automation Expert</p>
+            </div>
+            <p class="teacher__bio">10+ տարվա փորձ նախագծերի կառավարման ոլորտում։ AI ավտոմատացումների դասընթացավար և փորձագետ։</p>
+            <p class="teacher__meta">120+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/lilit_kh.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lika13/" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
+              <p class="teacher__role">Senior Product Designer &amp; AI Artist</p>
+            </div>
+            <p class="teacher__bio">15+ տարվա փորձ Product Design և UX/UI ոլորտներում։ Մասնագիտացած է AI-ով վիզուալներ գեներացնելու և UX/UI-ի մեջ։</p>
+            <p class="teacher__meta">80+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/lilit_b.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan-96a2152aa/" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
+              <p class="teacher__role">AI Artist &amp; Director</p>
+            </div>
+            <p class="teacher__bio">10+ տարվա փորձ ֆիլմարտադրության ոլորտում՝ ռեժիսոր, սցենարիստ։ Մասնագիտացած է AI-ով վիդեո պատմություններ գեներացնելու մեջ։ 2025 թ. դեկտեմբերի առաջին մրցանակին է արժանացել RUNWAY AI ֆիլմերի համաշխարհային ֆեստիվալում։</p>
+            <p class="teacher__meta">75+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="../../assets/teachers/gevorg.webp" alt="Գևորգ Պողոսյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/gevorg-poghosyan-a6580a85/" target="_blank" rel="noopener" aria-label="Գևորգ Պողոսյան — LinkedIn">
+            <img src="../../assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Գևորգ Պողոսյան</h3>
+              <p class="teacher__role">AI First Mindset</p>
+            </div>
+            <p class="teacher__bio">30+ տարվա ձեռնարկատիրական փորձով։ «AI-ն առաջին հերթին» մտածելակերպի ուսուցիչ։</p>
+            <p class="teacher__meta">120+ ժամ · PRO · Webinar</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI-գրագետ հայ», a Teal band
+         ========================================================= -->
+    <section class="mission" id="mission">
+      <div class="mission__row">
+        <div class="mission__head">
+          <p class="mission__kicker">Մեր առաքելությունը</p>
+          <h2 class="mission__title">1,000,000<br />AI-գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
+          <!-- The million: a crowd of the brand's eyes drifting under the headline, each pair someone who learned;
+               script.js (08 · missionCrowd) fills the row, and the eyes blink and look around -->
+          <div class="crowd" aria-hidden="true"><div class="crowd__track"></div></div>
+        </div>
+        <div class="mission__body">
+          <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։ Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
+          <a href="#packages" class="btn btn--primary btn--md">Ընտրել դասընթաց</a>   <!-- the same words as the hero's ask: a second wording would read as a second offer -->
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =========================================================
+         09b · WEBINAR — the animated wordmark «AI քեզ վեբինար» (every letter
+         shuffles its font, script.js) + the webinar date, time and sign-up
+         ========================================================= -->
+    <section class="wordmark" id="webinar" aria-labelledby="webinar-title">
+      <div class="wordmark__box">
+        <h2 class="sr-only" id="webinar-title">AI քեզ վեբինար</h2>
+        <div class="wordmark__type shuffle" aria-hidden="true">
+          <p class="wordmark__line wordmark__fixed">AI քեզ</p>
+          <p class="wordmark__line wordmark__role" data-words="վեբինար">վեբինար</p>
+        </div>
+        <p class="wordmark__lead">Մասնակցի՛ր ընթացիկ<br />անվճար վեբինարին</p>
+        <div class="wordmark__actions">
+          <p class="wordmark__when">
+            <span class="wordmark__fact"><i class="ic ic--lg ic--calendar" aria-hidden="true"></i>Ընթացիկ ամսվա 19-ին</span>
+            <span class="wordmark__fact"><i class="ic ic--lg ic--clock" aria-hidden="true"></i>19:00-ին</span>
+          </p>
+          <a href="#" class="btn btn--primary btn--md">Գրանցվել</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         10 · FAQ — «Հաճախ տրվող հարցեր»
+         ========================================================= -->
+    
+    <section class="mB" id="faq">
+      <div class="mB__head">
+        <h2 class="section-title">Հաճախ տրվող հարցեր</h2>
+        <p class="mB__kicker">Կարճ պատասխաններ՝ մեկ թվով</p>
+      </div>
+      <div class="mB__list">
+        <details class="mB__row" data-bg="teal" open>
+          <summary class="mB__q"><span class="mB__num">01</span><span class="mB__qtext">Ի՞նչ մակարդակի համար է ծրագիրը</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">Զրոյից</p><p class="mB__note">AI-ի հետ փորձ պետք չէ</p></div>
+            <div class="mB__answer"><p><strong>AI գրագեր</strong>-ը սկսվում է զրոյից. AI-ի հետ ոչ մի փորձ պետք չէ։ Առաջին 3 դասը հիմունքներն են, հաջորդ 6-ը՝ հետազոտություն, նկարներ, վիդեոներ, կայքէջեր, ավտոմատացում և AI ագենտներ։</p></div>
+          </div>
+        </details>
+        <details class="mB__row" data-bg="yellow">
+          <summary class="mB__q"><span class="mB__num">02</span><span class="mB__qtext">Կարո՞ղ եմ գնել միայն առաջին 3 դասը</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">֏ 19,500</p><p class="mB__note">առաջին 3 դասը</p></div>
+            <div class="mB__answer"><p>Այո՝ <strong>֏ 19,500</strong>։ Եթե հետո որոշես շարունակել, կվճարես միայն տարբերությունը՝ <strong>֏ 26,200</strong>։</p></div>
+          </div>
+        </details>
+        <details class="mB__row" data-bg="sky">
+          <summary class="mB__q"><span class="mB__num">03</span><span class="mB__qtext">Ի՞նչ PRO դասընթացներ կան</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">3</p><p class="mB__note">PRO դասընթաց</p></div>
+            <div class="mB__answer"><ul class="fq-pro">
+  <li><strong>AI քեզ ուսուցիչ</strong> — Մանրամասներին ծանոթացիր <a href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+  <li><strong>AI քեզ project manager</strong> — Մանրամասներին ծանոթացիր <a href="https://example.com/ai-qez-project-manager" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
+  <li><strong>AI քեզ բժիշկ</strong> — Շուտով, <a href="../../doctor-register.html" target="_blank" rel="noopener">գրանցվել նախապես</a></li>
+</ul></div>
+          </div>
+        </details>
+        <details class="mB__row" data-bg="pink">
+          <summary class="mB__q"><span class="mB__num">04</span><span class="mB__qtext">Կա՞ գումարի վերադարձի երաշխիք</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">100%</p><p class="mB__note">վերադարձ, առանց հարցերի</p></div>
+            <div class="mB__answer"><p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p></div>
+          </div>
+        </details>
+        <details class="mB__row" data-bg="teal">
+          <summary class="mB__q"><span class="mB__num">05</span><span class="mB__qtext">Ե՞րբ են դասերը</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">19:00</p><p class="mB__note">երեքշաբթի և հինգշաբթի</p></div>
+            <div class="mB__answer"><div class="schedules schedules--single"><div class="schedule">
+  <p class="schedule__name">AI գրագեր</p>
+  <dl class="schedule__rows">
+    <div><dt>Մեկնարկ</dt><dd>ամեն ամսվա առաջին երեքշաբթի</dd></div>
+    <div><dt>Տևողություն</dt><dd>4 շաբաթ · 9 դաս · 18 ժամ</dd></div>
+    <div><dt>Ձևաչափ</dt><dd>օնլայն (Zoom)</dd></div>
+    <div><dt>Օրեր</dt><dd>1-ին շաբաթ՝ երեքշաբթի, հինգշաբթի, շաբաթ<br />2–4-րդ շաբաթ՝ երեքշաբթի և հինգշաբթի</dd></div>
+    <div><dt>Ժամ</dt><dd>19:00 – 21:00</dd></div>
+  </dl></div></div></div>
+          </div>
+        </details>
+        <details class="mB__row" data-bg="yellow">
+          <summary class="mB__q"><span class="mB__num">06</span><span class="mB__qtext">Կստանա՞մ դասերի տեսագրությունները</span><span class="mB__toggle" aria-hidden="true"><i class="ic ic--chev-down"></i></span></summary>
+          <div class="mB__panel">
+            <div class="mB__fact"><p class="mB__big">6 ամիս</p><p class="mB__note">տեսագրություններն ու սահիկները</p></div>
+            <div class="mB__answer"><p>Այո, թե բոլոր տեսաձայնագրությունները, թե բոլոր սահիկաշարերը հասանելի կլինեն բոլոր մասնակիցներին 6 ամիս։</p></div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         09 · REFERRAL — «Հրավիրիր ընկերոջդ»
+         ========================================================= -->
+    <section class="referral" id="referral">
+      <div class="referral__inner referral__panel">
+        <div class="referral__left">
+          <div class="referral__head">
+            <h2 class="section-title referral__title">Հրավիրիր ընկերոջդ</h2>
+            <p class="referral__sub">Երկուսդ էլ կստանաք բոնուս AI կուրսի համար</p>
+          </div>
+
+          <!-- Friends ladder: 10 friends; #1 unlocks −10%, #10 makes it free -->
+          <ol class="ladder" aria-label="1 ընկեր՝ −10%, 10 ընկեր՝ անվճար">
+              <li class="ladder__step ladder__step--first"><span class="avatar avatar--letter">Օ</span><span class="ladder__num">1</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Գ</span><span class="ladder__num">2</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Լ</span><span class="ladder__num">3</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Ս</span><span class="ladder__num">4</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Ն</span><span class="ladder__num">5</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Կ</span><span class="ladder__num">6</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Վ</span><span class="ladder__num">7</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Բ</span><span class="ladder__num">8</span></li>
+              <li class="ladder__step"><span class="avatar avatar--letter">Մ</span><span class="ladder__num">9</span></li>
+              <li class="ladder__step ladder__step--last"><span class="avatar avatar--letter">Տ</span><span class="ladder__num">10</span></li>
+          </ol>
+
+          <div class="rewards">
+            <div class="reward reward--first">
+              <p class="reward__who">1 ընկեր</p>
+              <p class="reward__prize">−10%</p>
+              <p class="reward__desc">Երկուսդ էլ կստանաք զեղչ</p>
+            </div>
+            <div class="reward reward--last">
+              <p class="reward__who">10 ընկեր</p>
+              <p class="reward__prize">Անվճար</p>
+              <p class="reward__desc">Դու մասնակցում ես անվճար</p>
+            </div>
+          </div>
+        </div>
+
+        <form class="promo-form" novalidate>
+          <h3 class="promo-form__title">Ստացիր քո պրոմոկոդն ու տարածիր AI գրագի&shy;տությունը</h3>   <!-- &shy;: 320px phones -->
+          <div class="promo-form__fields">
+            <label class="field">
+              <span class="field__label">Էլ. հասցե</span>
+              <input class="field__input" type="email" name="email" placeholder="example@email.com" autocomplete="email" required />
+            </label>
+            <label class="field">
+              <span class="field__label">Քո պրոմոկոդը</span>
+              <span class="field__group">
+                <span class="field__prefix">AI_qez_</span>
+                <input class="field__input field__input--grouped" type="text" name="code" placeholder="գրիր քո պրոմոկոդը" autocomplete="off" spellcheck="false" minlength="2" required />
+              </span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn--primary btn--block btn--md" disabled>Ստեղծել պրոմոկոդ</button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================
+       11 · FOOTER
+       ========================================================= -->
+  <footer class="footer">
+    <div class="footer__cols">
+      <div class="footer__brand">
+        <div class="footer__brand-row">
+          <a href="#" class="footer__logo">
+            <img src="../../assets/logos/logo_arm_dark.svg" alt="AI քեզ բան" />
+          </a>
+          <p class="footer__tagline">Հայաստանում AI կրթության<br />լավագույն ծրագիր</p>
+        </div>
+        <div class="footer__brand-row">
+          <img class="footer__gerb" src="../../assets/logos/armgerb.svg" alt="" />
+          <p class="footer__tagline">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+      </div>
+
+      <div class="footer__links">
+        <nav class="footer__col" aria-label="Բաժիններ">
+          <p class="footer__heading">Բաժիններ</p>
+          <a href="#courses">Ի՞նչ կսովորես</a>
+          <a href="#packages">Դասընթացներ</a>
+          <a href="#teachers">Ուսուցիչներ</a>
+          <a href="#mission">Մեր առաքելությունը</a>
+          <a href="#referral">Հրավիրիր ընկերոջդ</a>
+          <a href="#faq">Հաճախ տրվող հարցեր</a>
+          <a href="https://aiqezban.ai/join">Միացիր մեր թիմին</a>
+        </nav>
+        <div class="footer__col">
+          <p class="footer__heading">Կապ</p>
+          <a href="tel:+37444199199">+374 44 199 199</a>
+          <a href="mailto:info@rearmenia.com">info@rearmenia.com</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Halabyan+65%2F5+Yerevan+Armenia" target="_blank" rel="noopener" class="footer__address">Երևան, Հալաբյան 65/5<br />Հայաստան 0078</a>
+          <div class="footer__social">
+            <a href="https://www.facebook.com/aiqezbanai/" target="_blank" rel="noopener" aria-label="Facebook"><img src="../../assets/social/facebook.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.instagram.com/ai_qez_ban_/" target="_blank" rel="noopener" aria-label="Instagram"><img src="../../assets/social/instagram.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.linkedin.com/company/lumiverse-ecosystem/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="../../assets/social/linkedin.svg" width="20" height="20" alt="" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="footer__line" />
+
+    <div class="footer__bottom">
+      <p class="footer__copy">© 2026 AI քեզ բան<br />Բոլոր իրավունքները պաշտպանված են</p>
+
+      <div class="footer__end">
+        <!-- Accepted payments -->
+        <ul class="footer__pay" aria-label="Վճարման եղանակներ">
+          <li class="pay-badge"><img src="../../assets/payments/visa.svg" alt="Visa" /></li>
+          <li class="pay-badge"><img src="../../assets/payments/mastercard.svg" alt="Mastercard" /></li>
+          <li class="pay-badge"><img src="../../assets/payments/arca.png" alt="ArCa" /></li>
+          <li class="pay-badge"><img src="../../assets/payments/idram.svg" alt="Idram" /></li>
+        </ul>
+        <p class="footer__legal">
+          <a href="https://aiqezban.lumiverse.global/privacy-policy" target="_blank" rel="noopener">Գաղտնիության քաղաքականություն</a>
+          <a href="https://aiqezban.lumiverse.global/terms" target="_blank" rel="noopener">Պայմաններ և կանոններ</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================
+       04 · WEBINAR BAR (appears on scroll, fixed to the bottom)
+       ========================================================= -->
+  <div class="promo" inert>
+    <div class="promo__text">   <!-- short copy on mobile, where the bar shares the row with the floating buttons -->
+      <strong><span class="promo__long">Միացիր վեբինարին</span><span class="promo__short">Վեբինար</span></strong>
+      <span class="promo__date"><i class="ic ic--calendar" aria-hidden="true"></i><span class="promo__long">հոկտեմբերի 19-ին</span><span class="promo__short">հոկտ. 19</span></span>
+    </div>
+    <a href="#" class="btn btn--white btn--sm promo__btn" aria-label="Գրանցվել վեբինարին"><i class="ic ic--calendar-plus" aria-hidden="true"></i><span class="promo__btn-label">Գրանցվել</span></a>   <!-- icon only below 1280px while the contact group is open -->
+  </div>
+
+  <!-- =========================================================
+       12 · FLOATING ACTION BUTTONS (appear on scroll, like the webinar bar):
+       the contact button opens phone / Telegram / WhatsApp as one group and
+       stays outside it as the ✕; back to top last
+       ========================================================= -->
+  <div class="fabs" inert>
+    <div class="fab-group" id="contact-actions">
+      <a href="tel:+37444199199" class="fab fab--label" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i><span class="fab__label">+374 44 199 199</span></a>
+      <a href="https://t.me/AI_qez_banakan_bot" class="fab" target="_blank" rel="noopener" aria-label="Telegram"><i class="ic ic--lg ic--telegram" aria-hidden="true"></i></a>
+      <a href="https://wa.me/37441958510" class="fab" target="_blank" rel="noopener" aria-label="WhatsApp +374 41 958510"><i class="ic ic--lg ic--whatsapp" aria-hidden="true"></i></a>
+    </div>
+    <button type="button" class="fab fab--contact" aria-label="Կապ" aria-expanded="false" aria-controls="contact-actions"><i class="ic ic--phone fab__open-icon" aria-hidden="true"></i><i class="ic ic--x fab__close-icon" aria-hidden="true"></i></button>
+    <button type="button" class="fab fab--top" aria-label="Վերև"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
+  <script src="../../script.js?v=hero-b-28"></script>
+  <script src="faq-mocks.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+/* FAQ directions — quick mocks. Brand tokens only (BRAND.md); the bubble cuts come from faq-mocks.js. */
+
+/* Shared inner bits */
+.fq-pro { display: flex; flex-direction: column; gap: calc(var(--spacing) * 2); }
+[class^="m"] a:not(.btn) { text-decoration: underline; text-underline-offset: 3px; }
+[class^="m"] .ic--external { width: calc(var(--spacing) * 3.5); height: calc(var(--spacing) * 3.5); margin-left: calc(var(--spacing) * .5); vertical-align: -1px; }
+.mA summary, .mB summary { list-style: none; cursor: pointer; }
+.mA summary::-webkit-details-marker, .mB summary::-webkit-details-marker { display: none; }
+
+/* =========================================================================
+   A · ZRUYTS — the FAQ as a chat: your questions on the right (white), the
+   answers from us on the left (Black chat bubbles), the eyes peeking over each
+   answer. Sky band, so the page keeps its run of colour after the webinar.
+   ========================================================================= */
+.mA {
+  max-width: var(--container-page); margin: 0 auto;
+  padding: var(--section-y) var(--page-x);
+  background: var(--color-feed-sky); box-shadow: 0 0 0 100vmax var(--color-feed-sky); clip-path: inset(0 -100vmax);
+  color: var(--color-black);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: var(--title-gap) calc(var(--spacing) * 16); align-items: start;
+}
+.mA__head { position: sticky; top: calc(var(--spacing) * 28); display: flex; flex-direction: column; align-items: flex-start; gap: calc(var(--spacing) * 6); }
+.mA .section-title { color: var(--color-black); font-size: var(--text-aqb-headline-h1); }
+.mA__kicker { font-size: var(--text-aqb-body-s); line-height: var(--leading-aqb-text); max-width: calc(var(--spacing) * 96); }
+.mA__thread { display: flex; flex-direction: column; gap: calc(var(--spacing) * 4); }
+.mA__turn { display: flex; flex-direction: column; gap: calc(var(--spacing) * 4); }
+.mA__q { align-self: flex-end; max-width: 80%; display: flex; }
+.mA__qtext {
+  display: block; padding: calc(var(--spacing) * 4) calc(var(--spacing) * 6);
+  background: var(--color-white); border-radius: var(--radius-4xl) var(--radius-4xl) var(--radius-sm) var(--radius-4xl);
+  font-size: var(--text-aqb-body-m); line-height: var(--leading-aqb-text); letter-spacing: var(--tracking-aqb); font-weight: var(--font-weight-detail);
+  transition: background .2s, color .2s;
+}
+.mA__q:hover .mA__qtext { background: var(--color-black); color: var(--color-white); }
+.mA__turn[open] .mA__qtext { background: var(--color-primary); color: var(--color-white); }   /* asked: your message turns Blue */
+.mA__a { position: relative; align-self: flex-start; max-width: 88%; padding-top: calc(var(--spacing) * 6); margin-bottom: calc(var(--spacing) * 4); }
+.mA__a > .eyes { position: absolute; top: calc(var(--spacing) * -1); left: calc(var(--spacing) * 5); width: calc(var(--spacing) * 16); z-index: 0; }
+.mA__bubble {
+  position: relative; z-index: 1;
+  padding: calc(var(--spacing) * 6) calc(var(--spacing) * 7) calc(var(--spacing) * 11);   /* bottom: the tail's room */
+  background: var(--color-black); color: var(--color-white); border-radius: var(--radius-lg);
+  font-size: var(--text-aqb-body-s); line-height: var(--leading-aqb-text);
+}
+.mA__body { display: flex; flex-direction: column; gap: calc(var(--spacing) * 3); }
+.mA__body strong { color: var(--color-feed-yellow); }
+.mA__body .schedule { background: color-mix(in oklab, var(--color-white) 12%, var(--color-black)); }
+.mA__body .schedule__name, .mA__body dd { color: var(--color-white); }
+.mA__body dt { color: color-mix(in oklab, var(--color-white) 65%, var(--color-black)); }
+.mA__dots { display: none; gap: 6px; padding: calc(var(--spacing) * 1) 0; }
+.mA__dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--color-white); animation: mA-dot 1s infinite; }
+.mA__dots i:nth-child(2) { animation-delay: .15s; } .mA__dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes mA-dot { 0%, 60%, 100% { opacity: .25; translate: 0 0; } 30% { opacity: 1; translate: 0 -3px; } }
+.mA__turn.is-typing .mA__dots { display: flex; }
+.mA__turn.is-typing .mA__body { display: none; }
+.mA__turn[open] .mA__a > .eyes { animation: mA-peek .5s var(--ease-smooth) both; }
+@keyframes mA-peek { from { translate: 0 100%; } }
+@media (width < 68.75rem) {
+  .mA { grid-template-columns: minmax(0, 1fr); }
+  .mA__head { position: static; }
+}
+@media (width < 48rem) {
+  .mA .section-title { font-size: var(--text-aqb-headline-h2); }
+  .mA__q { max-width: 92%; }
+  .mA__qtext { font-size: var(--text-aqb-body-s); padding: calc(var(--spacing) * 3.5) calc(var(--spacing) * 5); }
+  .mA__a { max-width: 96%; }
+  .mA__bubble { padding: calc(var(--spacing) * 5) calc(var(--spacing) * 5) calc(var(--spacing) * 10); font-size: var(--text-aqb-label); font-weight: var(--font-weight-text); }
+}
+
+/* =========================================================================
+   B · PASTER — one big fact per answer. Full-width rows of questions in
+   Subhead; the open one floods with its Feed colour, cut with the brand's step,
+   the fact set in Display like the stats band (10,000+, 20+, 4.9).
+   ========================================================================= */
+.mB { max-width: var(--container-page); margin: 0 auto; padding: var(--section-y) var(--page-x); display: flex; flex-direction: column; gap: var(--title-gap); }
+.mB__head { display: flex; align-items: baseline; justify-content: space-between; gap: calc(var(--spacing) * 6); flex-wrap: wrap; }
+.mB .section-title { font-size: var(--text-aqb-headline-h1); }
+.mB__kicker { font-size: var(--text-aqb-body-s); color: var(--color-ink-600); }
+.mB__list { display: flex; flex-direction: column; }
+.mB__row { --bg: var(--color-feed-teal); position: relative; border-top: 1px solid var(--color-ink-900); }
+.mB__row:last-child { border-bottom: 1px solid var(--color-ink-900); }
+.mB__row[data-bg="yellow"] { --bg: var(--color-feed-yellow); }
+.mB__row[data-bg="sky"]    { --bg: var(--color-feed-sky); }
+.mB__row[data-bg="pink"]   { --bg: var(--color-feed-pink); }
+.mB__q {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: calc(var(--spacing) * 16) minmax(0, 1fr) calc(var(--spacing) * 14); align-items: center; gap: calc(var(--spacing) * 4);
+  padding: calc(var(--spacing) * 6) 0;
+}
+.mB__num { font-size: var(--text-aqb-body-m); font-weight: var(--font-weight-headline); font-style: italic; color: var(--color-ink-400); transition: color .2s; }
+.mB__qtext { font-size: var(--text-aqb-subhead); line-height: var(--leading-aqb-text); letter-spacing: var(--tracking-aqb); font-weight: var(--font-weight-detail); }
+.mB__toggle {
+  justify-self: end; display: grid; place-items: center;
+  width: calc(var(--spacing) * 12); height: calc(var(--spacing) * 12); border-radius: var(--radius-full);
+  border: 1px solid var(--color-ink-900); transition: background .2s, color .2s, rotate .3s var(--ease-smooth);
+}
+.mB__row:hover .mB__toggle { background: var(--color-ink-900); color: var(--color-white); }
+.mB__row:hover .mB__num { color: var(--color-ink-900); }
+.mB__row[open] { border-top-color: transparent; }
+.mB__row[open] + .mB__row { border-top-color: transparent; }
+.mB__row[open]::before {   /* the colour field, cut by faq-mocks.js (step at the top right, where the toggle sits) */
+  content: ""; position: absolute; inset: calc(var(--spacing) * 2) 0; background: var(--bg); border-radius: var(--radius-3xl);
+  clip-path: var(--cut, none); animation: mB-in .45s var(--ease-smooth) both;
+}
+@keyframes mB-in { from { opacity: 0; scale: 1 .9; } }
+.mB__row[open] .mB__q { padding: calc(var(--spacing) * 10) calc(var(--spacing) * 8) calc(var(--spacing) * 4); }
+.mB__row[open] .mB__num { color: var(--color-black); }
+.mB__row[open] .mB__toggle { rotate: 180deg; background: var(--color-black); color: var(--color-white); border-color: var(--color-black); translate: calc(var(--spacing) * 8) calc(var(--spacing) * -6); }
+.mB__panel {
+  position: relative; z-index: 1;
+  display: grid; grid-template-columns: calc(var(--spacing) * 16) minmax(0, 5fr) minmax(0, 7fr); gap: calc(var(--spacing) * 4);
+  padding: 0 calc(var(--spacing) * 8) calc(var(--spacing) * 12);
+  color: var(--color-black);
+}
+.mB__fact { grid-column: 2; display: flex; flex-direction: column; gap: calc(var(--spacing) * 2); }
+.mB__big { font-size: var(--text-aqb-display-l); line-height: var(--leading-aqb-headline); letter-spacing: var(--tracking-aqb); font-weight: var(--font-weight-headline); font-style: italic; }
+.mB__note { font-size: var(--text-aqb-label); font-weight: var(--font-weight-detail); }
+.mB__answer { grid-column: 3; display: flex; flex-direction: column; gap: calc(var(--spacing) * 3); font-size: var(--text-aqb-body-s); line-height: var(--leading-aqb-text); padding-top: calc(var(--spacing) * 3); }
+.mB__answer .schedule { background: color-mix(in oklab, var(--color-white) 55%, transparent); }
+@media (width < 68.75rem) {
+  .mB__panel { grid-template-columns: calc(var(--spacing) * 16) minmax(0, 1fr); }
+  .mB__answer { grid-column: 2; }
+}
+@media (width < 48rem) {
+  .mB .section-title { font-size: var(--text-aqb-headline-h2); }
+  .mB__q { grid-template-columns: calc(var(--spacing) * 9) minmax(0, 1fr) calc(var(--spacing) * 10); gap: calc(var(--spacing) * 2); padding: calc(var(--spacing) * 5) 0; }
+  .mB__num { font-size: var(--text-aqb-label); }
+  .mB__qtext { font-size: var(--text-aqb-body-s); }
+  .mB__toggle { width: calc(var(--spacing) * 10); height: calc(var(--spacing) * 10); }
+  .mB__row[open] .mB__q { padding: calc(var(--spacing) * 9) calc(var(--spacing) * 4) calc(var(--spacing) * 3); }
+  .mB__row[open] .mB__toggle { translate: calc(var(--spacing) * 4) calc(var(--spacing) * -5); }
+  .mB__panel { grid-template-columns: minmax(0, 1fr); padding: 0 calc(var(--spacing) * 4) calc(var(--spacing) * 9); }
+  .mB__fact, .mB__answer { grid-column: 1; }
+  .mB__big { font-size: var(--text-aqb-headline-h1); }
+  .mB__answer { font-size: var(--text-aqb-label); font-weight: var(--font-weight-text); }
+}
+
+/* =========================================================================
+   C · PATASKHANNERI PAT — every answer already open: a wall of Feed-colour
+   chat bubbles, the same family as the reviews («Ի՞նչ են ասում մասնակիցները»).
+   Nothing to click; people scan it like the reviews.
+   ========================================================================= */
+.mC { max-width: var(--container-page); margin: 0 auto; padding: var(--section-y) var(--page-x); display: flex; flex-direction: column; gap: var(--title-gap); }
+.mC__head { display: flex; align-items: flex-end; justify-content: space-between; gap: calc(var(--spacing) * 6); flex-wrap: wrap; }
+.mC .section-title { font-size: var(--text-aqb-headline-h1); }
+.mC__wall { columns: 3; column-gap: var(--card-gap); }
+.mC__tile {
+  --bg: var(--color-feed-teal);
+  break-inside: avoid; margin-bottom: var(--card-gap);
+  display: flex; flex-direction: column; gap: calc(var(--spacing) * 4);
+  padding: calc(var(--spacing) * 7) calc(var(--spacing) * 8) calc(var(--spacing) * 17);   /* bottom: the tail's room */
+  background: var(--bg); color: var(--color-black); border-radius: var(--radius-lg);
+}
+.mC__tile[data-bg="yellow"] { --bg: var(--color-feed-yellow); }
+.mC__tile[data-bg="sky"]    { --bg: var(--color-feed-sky); }
+.mC__tile[data-bg="pink"]   { --bg: var(--color-feed-pink); }
+.mC__q { font-size: var(--text-aqb-subhead); line-height: var(--leading-aqb-text); letter-spacing: var(--tracking-aqb); font-weight: var(--font-weight-detail); }
+.mC__a { display: flex; flex-direction: column; gap: calc(var(--spacing) * 3); font-size: var(--text-aqb-body-s); line-height: var(--leading-aqb-text); }
+.mC__a .schedule { background: color-mix(in oklab, var(--color-white) 55%, transparent); padding: calc(var(--spacing) * 4); }
+.mC__a .schedule__rows > div { grid-template-columns: calc(var(--spacing) * 22) 1fr; }
+@media (width < 68.75rem) { .mC__wall { columns: 2; } }
+@media (width < 48rem) {
+  .mC .section-title { font-size: var(--text-aqb-headline-h2); }
+  .mC__wall { columns: 1; }
+  .mC__tile { padding: calc(var(--spacing) * 6) calc(var(--spacing) * 6) calc(var(--spacing) * 14); }
+  .mC__tile[data-bubble="left"] { margin-left: calc(var(--spacing) * 6); }
+  .mC__tile[data-bubble="right"] { margin-right: calc(var(--spacing) * 6); }
+  .mC__q { font-size: var(--text-aqb-body-m); }
+  .mC__a { font-size: var(--text-aqb-label); font-weight: var(--font-weight-text); }
+}
