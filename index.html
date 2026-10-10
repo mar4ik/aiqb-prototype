@@ -11,7 +11,7 @@
        with the original words) for the visitors Hone (below) gives it; ?hero=a shows it for the team, this visit only,
        marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
        Where the hero comes from, first match wins:
-         1. the cookie hone_ans_exp_aiqb_ab_1: Hone's answer, asked for by proxy.mjs on the server before this page was sent
+         1. the cookie hone_ans_exp_aiqb_ab_1: Hone's answer, asked for by proxy.js on the server before this page was sent
             (a new visitor, or one whose answer is older than 6 h). Nothing to wait for.
          2. localStorage aiqb_hero: the hero Hone gave this browser last time.
          3. nothing yet (the server could not answer in time): Hero B, with both heroes hidden (html[data-hone-wait]) until

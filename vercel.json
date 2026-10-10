@@ -8,7 +8,7 @@
     "fra1"
   ],
   "proxy": {
-    "entrypoint": "proxy.mjs"
+    "entrypoint": "proxy.js"
   },
   "redirects": [
     {

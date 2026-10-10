@@ -1,6 +1,7 @@
 {
   "name": "aiqb-landing",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "npm run build:css && node scripts/dist.mjs",
     "build:css": "tailwindcss -i ./tailwind.css -o ./styles.css --optimize",
