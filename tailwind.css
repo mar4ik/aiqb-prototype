@@ -17,6 +17,7 @@
    ============================================================ */
 @import "tailwindcss" source(none);
 @source "./index.html";
+@source "./aigrager.html";
 @source "./doctor-register.html";
 @source "./join.html";
 @source "./join/*.html";
@@ -328,10 +329,10 @@
   pointer-events: none;
 }
 .is-scrolled .nav-wrap { top: calc(var(--bar-h) + --spacing(3)); }   /* under the raffle band (01b), which comes in on scroll */
-/* Desktop: scrolling down tucks the nav up under the band, scrolling up brings it back (body.is-nav-away, script.js · 04);
-   never while it has keyboard focus */
+/* Desktop, on a page with the raffle band (aigrager.html): scrolling down tucks the nav up under the band, scrolling up
+   brings it back (body.is-nav-away, script.js · 04); never while it has keyboard focus */
 @media (width >= theme(--breakpoint-lg)) {
-  .is-scrolled.is-nav-away .nav-wrap:not(:focus-within) { translate: 0 calc(-100% - --spacing(3)); }
+  .is-scrolled.is-nav-away:has(.raffle-bar) .nav-wrap:not(:focus-within) { translate: 0 calc(-100% - --spacing(3)); }
 }
 .nav-wrap > * { pointer-events: auto; }
 .nav {
@@ -649,15 +650,26 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .story-hero__title { @apply text-aqb-headline-h2; }
 }
 @media (width >= theme(--breakpoint-lg)) {
-  .story-hero { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px) shows on the first screen */
+  .story-hero:has(+ .facts) { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px, aigrager.html) shows on the first screen */
 }
 .story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
 .story-hero__actions .btn--primary { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
-/* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side */
-.story-hero__meta { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(3) --spacing(6); }
+/* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side with a hairline between them.
+   The line is the endorsement's left border; the row starts --cut left of the column and is clipped there, so when the
+   endorsement wraps under the dates its line falls in the clipped strip: it only shows while the two share a row */
+.story-hero__meta {
+  --cut: calc(--spacing(6) + 1px);   /* the line and the air after it */
+  display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(3) --spacing(6);
+  margin-left: calc(var(--cut) * -1);
+  clip-path: inset(0 0 0 var(--cut));
+}
+.story-hero__meta .pill { margin-left: var(--cut); }   /* back on the column's edge */
+.story-hero__meta .story-hero__endorse { padding-left: --spacing(6); border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
 .story-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
 .story-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 
+/* The home page's line under the headline: what you get (Body L in the detail cut; Body M on phones) */
+.story-hero__lead { max-width: --spacing(130); @apply text-aqb-body-l; font-weight: var(--font-weight-detail); text-wrap: balance; }
 .story-hero__nobr { white-space: nowrap; }   /* «AI-հմտություն»: not broken at the hyphen… */
 @media (width < 22.5rem) { .story-hero__nobr { white-space: normal; } }   /* …except under 360px, where «AI-հմտություն» is wider than the column (no breakpoint token this small) */
 
@@ -683,6 +695,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   background: var(--color-accent); color: var(--color-white);
   pointer-events: none;   /* the balls on it stay playable */
 }
+.story-hero__bubble .pill { align-self: flex-start; margin-bottom: --spacing(2); }   /* the home page's tag (.pill--black) leads, a little apart */
 .story-hero__bubble-kicker { margin-bottom: --spacing(3); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* «Խաղարկություն» over the prize: plain words (so it never reads as a button) in the detail cut, a little apart */
 .story-hero__bubble-title { @apply text-aqb-headline-h2 italic; color: var(--color-white); }
 .story-hero__bubble-detail { margin-top: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
@@ -766,6 +779,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 @media (width < theme(--breakpoint-md)) {
   .story-hero__title { @apply text-aqb-headline-h2; }   /* phones: Headline H2 */
+  .story-hero__lead { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }
   .story-hero__title-sub { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }   /* phones: one step down */
   .story-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); margin-top: --spacing(4); }   /* the button full width, the endorsement under it (as the webinar's) */
   .story-hero__actions { flex-wrap: nowrap; }   /* one column line, so the buttons take the column's width, not the longest label's (320px) */
@@ -834,6 +848,8 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   @apply text-aqb-label;
 }
 .facts__item img { display: inline-block; width: auto; height: --spacing(3.5); vertical-align: -1px; }   /* the Zoom wordmark in the line, «-ով» right after it */
+.facts__item { display: flex; align-items: flex-start; gap: --spacing(2); }   /* the check, then the words (a second line lines up under the first) */
+.facts__item .ic { margin-top: 2px; color: var(--color-campaign-green); }   /* a green check leads each fact (tinted as the package lists' checks) */
 @media (width < theme(--breakpoint-lg)) {
   .facts__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two by two, so no fact wraps alone */
 }
@@ -1153,7 +1169,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pill--save { background: var(--color-campaign-bundle-save); color: var(--color-campaign-bundle-save-text); }
 .pill--date { background: var(--color-campaign-green); color: var(--color-white); }   /* a date range, with .ic--calendar (Hero B's «Նոյեմբերի 8 – Դեկտեմբերի 31»): the campaign green, white text */
 .pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
-.pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (not on the page at the moment) */
+.pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (the home page's «Խաղարկություն» on Hero B's Orange bubble) */
 .pill--lg { height: --spacing(10); padding: 0 --spacing(4.5); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* size step: 40px, Body S SemiBold (a tag that leads a block) */
 
 /* Row 2 · schedule */

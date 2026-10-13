@@ -31,5 +31,11 @@
       "destination": "/ai-grager.html",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/aigrager",
+      "destination": "/aigrager.html"
+    }
   ]
 }

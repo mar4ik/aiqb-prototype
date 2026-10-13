@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=headroom-3" />
+  <link rel="stylesheet" href="styles.css?v=pages-1" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -96,15 +96,6 @@
   </div>
 
   <!-- =========================================================
-       01b · RAFFLE BAR (a full-width Yellow band fixed to the top, once the page is scrolled)
-       ========================================================= -->
-  <aside class="raffle-bar" aria-label="Խաղարկություն" inert>   <!-- comes in on scroll (script.js · 04 makes it inert until then) -->
-    <img class="raffle-bar__img" src="assets/cards/macbooks-bow.webp" width="800" height="410" alt="" />
-    <p class="raffle-bar__text">Գրանցվի՛ր Հոկտեմբեր, Նոյեմբեր, Դեկտեմբեր<br /> ամիսներին, մասնակցիր խաղարկությանը</p>
-    <a href="#packages" class="btn btn--primary btn--sm raffle-bar__btn">Թողնել հայտ</a>
-  </aside>
-
-  <!-- =========================================================
        02 · MAIN NAV (a fixed pill that hugs its links, and the course CTA beside it)
        ========================================================= -->
   <header class="nav-wrap">
@@ -166,8 +157,7 @@
     </nav>
     <!-- The course CTA, beside the pill; «Գրանցվել» is the webinar's. Its slot is 0 wide until the hero's own button is
          scrolled past (script.js · 02), so the first screen asks once and the pill alone is centred -->
-    <!-- Hidden for now (the raffle band's «Թողնել հայտ» is the header's one action) — remove `hidden` to bring it back -->
-    <div class="nav-cta-slot" hidden>
+    <div class="nav-cta-slot">
       <a href="#packages" class="btn btn--primary btn--md nav-cta" inert>Ընտրել դասընթաց</a>
     </div>
   </header>
@@ -231,15 +221,11 @@
          (.story-hero keeps the name of the first version, the storyboard.) -->
     <section class="story-hero">
       <div class="story-hero__copy">
-        <div class="story-hero__meta">   <!-- the dates, the ministry endorsement beside them -->
-          <p class="pill pill--date"><i class="ic ic--calendar" aria-hidden="true"></i>Նոյեմբերի 8 – Դեկտեմբերի 31</p>
-          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
-        </div>
-        <h1 class="story-hero__title">8 պարտադիր <span class="story-hero__nobr">AI-հմտություն</span> <span class="story-hero__title-sub">բոլորի համար՝ անկախ մասնագիտությունից</span></h1>
+        <h1 class="story-hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
+        <p class="story-hero__lead">Գրանցվիր հիմա, ստացիր այս ամսվա 3 MacBook-ներից մեկը</p>   <!-- the offer under the headline: the draw (its terms in the Orange bubble under the pile) -->
         <div class="story-hero__actions">
-          <a href="#packages" class="btn btn--primary btn--lg">Ավելին</a>
-          <!-- TODO: the real AI-literacy test link (a blank placeholder for now, opens in a new tab) -->
-          <a href="about:blank" class="btn btn--line btn--lg" target="_blank" rel="noopener">Ստուգի՛ր AI գրագիտությունդ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
+          <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
+          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
         </div>
       </div>
 
@@ -282,28 +268,14 @@
         </span>
       </div>
         <div class="story-hero__bubble">
-          <p class="story-hero__bubble-kicker">Խաղարկություն</p>
+          <span class="pill pill--black pill--lg">Խաղարկություն</span>
           <p class="story-hero__bubble-title">3 MacBook Neo</p>
           <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
           <p class="story-hero__bubble-text">հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
-          <a href="#packages" class="btn btn--primary btn--base story-hero__bubble-btn">Թողնել հայտ</a>
         </div>
       </div>
     </section>
 
-
-    <!-- =========================================================
-         03c · COURSE FACTS — a strip under the hero: the format (the Zoom logo stands for the word), the length, the
-         certificate, the tax refund
-         ========================================================= -->
-    <div class="facts">
-      <ul class="facts__row">
-        <li class="facts__item">Օնլայն՝ <img src="assets/logos/zoom.svg" alt="Zoom" />-ով</li>
-        <li class="facts__item">4 շաբաթ, 9 դաս, 18 ժամ</li>
-        <li class="facts__item">Տրվում է հավաստագիր</li>
-        <li class="facts__item">100% գումարի վերադարձ եկամտահարկից</li>
-      </ul>
-    </div>
 
     <!-- =========================================================
          05 · COURSES / PACKAGES — «Ի՞նչ սովորել»
@@ -1357,6 +1329,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=headroom-1"></script>
+  <script src="script.js?v=pages-1"></script>
 </body>
 </html>
