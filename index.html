@@ -6,22 +6,21 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=leading-1" />
-  <!-- The hero: Hero B (the falling AI tools, with the sales words) by default, Hero A (the eyes' walk writing «AI քեզ բան»,
-       with the original words) for the visitors Hone (below) gives it; ?hero=a shows it for the team, this visit only,
-       marked hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
-       Where the hero comes from, first match wins:
-         1. the cookie hone_ans_exp_aiqb_ab_1: Hone's answer, asked for by proxy.js on the server before this page was sent
-            (a new visitor, or one whose answer is older than 6 h). Nothing to wait for.
-         2. localStorage aiqb_hero: the hero Hone gave this browser last time.
-         3. nothing yet (the server could not answer in time): Hero B, with both heroes hidden (html[data-hone-wait]) until
-            Hone's answer arrives, 2 s at most.
+  <link rel="stylesheet" href="styles.css?v=headroom-3" />
+  <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
+       walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
+       hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
+       Hone (the A/B tool, exp_aiqb_ab_1) runs on localhost only, for local tests; it never runs on the live site (proxy.js
+       does not ask it either). Locally, first match wins:
+         1. localStorage aiqb_hero: the hero Hone gave this browser last time.
+         2. nothing yet: Hero B, with both heroes hidden (html[data-hone-wait]) until Hone's answer arrives, 2 s at most.
        Hone's answer when it arrives (agent.js, event hone:answer) is final: it sets the hero and is kept for next time.
        The hero on show goes to window.dataLayer. -->
   <script>
     (function () {
       var html = document.documentElement;
       var preview = new URLSearchParams(location.search).get('hero') === 'a';
+      var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
       var optedOut = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' || window.doNotTrack === '1';
 
       // Hone's changes → the hero they give: Hero A when they set html[data-hero="a"], Hero B (the page as it is) otherwise
@@ -40,23 +39,16 @@
         (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
       }
 
-      // Preview, and visitors who asked not to be tracked (Hone does nothing for them): no answer to wait for or keep
-      if (preview || optedOut) {
+      // The live site, the preview, and visitors who asked not to be tracked: no Hone, nothing to wait for or keep
+      if (!local || preview || optedOut) {
         html.dataset.hero = preview ? 'a' : 'b';
         tell(html.dataset.hero);
         return;
       }
 
       var hero = null;
-      try {
-        var m = document.cookie.match(/(?:^|; )hone_ans_exp_aiqb_ab_1=([^;]*)/);
-        var answer = m && JSON.parse(decodeURIComponent(m[1]));
-        if (answer && answer.v === 1 && answer.a && Array.isArray(answer.a.changes)) hero = heroOf(answer.a.changes);
-      } catch (e) {}
-      if (!hero) {
-        try { var saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
-        if (saved === 'a' || saved === 'b') hero = saved;
-      }
+      try { var saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
+      if (saved === 'a' || saved === 'b') hero = saved;
 
       html.dataset.hero = hero || 'b';
       var waiting = !hero;
@@ -79,11 +71,16 @@
         release();
         tell(chosen);
       });
+
+      // Hone's agent: async, so the page never waits for it; it confirms the hero with Hone and reports the view and the
+      // click on the hero button
+      var agent = document.createElement('script');
+      agent.src = 'https://hone-bandit.vercel.app/agent.js';
+      agent.async = true;
+      agent.dataset.experiment = 'exp_aiqb_ab_1';
+      document.head.appendChild(agent);
     })();
   </script>
-  <!-- Hone (the A/B tool, exp_aiqb_ab_1): async, so the page never waits for it. The hero is already settled above (or hidden, in
-       the rare case it is not); this script confirms it with the server, reports the view and the click on the hero button. -->
-  <script src="https://hone-bandit.vercel.app/agent.js" data-experiment="exp_aiqb_ab_1" async></script>
 </head>
 <body>
 
@@ -97,6 +94,15 @@
       <a href="#packages" class="btn btn--white btn--sm">Գրանցվել</a>
     </div>
   </div>
+
+  <!-- =========================================================
+       01b · RAFFLE BAR (a full-width Yellow band fixed to the top, once the page is scrolled)
+       ========================================================= -->
+  <aside class="raffle-bar" aria-label="Խաղարկություն" inert>   <!-- comes in on scroll (script.js · 04 makes it inert until then) -->
+    <img class="raffle-bar__img" src="assets/cards/macbooks-bow.webp" width="800" height="410" alt="" />
+    <p class="raffle-bar__text">Գրանցվի՛ր Հոկտեմբեր, Նոյեմբեր, Դեկտեմբեր<br /> ամիսներին, մասնակցիր խաղարկությանը</p>
+    <a href="#packages" class="btn btn--primary btn--sm raffle-bar__btn">Թողնել հայտ</a>
+  </aside>
 
   <!-- =========================================================
        02 · MAIN NAV (a fixed pill that hugs its links, and the course CTA beside it)
@@ -160,7 +166,8 @@
     </nav>
     <!-- The course CTA, beside the pill; «Գրանցվել» is the webinar's. Its slot is 0 wide until the hero's own button is
          scrolled past (script.js · 02), so the first screen asks once and the pill alone is centred -->
-    <div class="nav-cta-slot">
+    <!-- Hidden for now (the raffle band's «Թողնել հայտ» is the header's one action) — remove `hidden` to bring it back -->
+    <div class="nav-cta-slot" hidden>
       <a href="#packages" class="btn btn--primary btn--md nav-cta" inert>Ընտրել դասընթաց</a>
     </div>
   </header>
@@ -224,11 +231,15 @@
          (.story-hero keeps the name of the first version, the storyboard.) -->
     <section class="story-hero">
       <div class="story-hero__copy">
-        <h1 class="story-hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
-        <p class="story-hero__lead">Գրանցվիր հիմա, ստացիր այս ամսվա 3 MacBook-ներից մեկը</p>   <!-- the offer under the headline: the draw (its terms in the Orange bubble under the pile) -->
+        <div class="story-hero__meta">   <!-- the dates, the ministry endorsement beside them -->
+          <p class="pill pill--date"><i class="ic ic--calendar" aria-hidden="true"></i>Նոյեմբերի 8 – Դեկտեմբերի 31</p>
+          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
+        </div>
+        <h1 class="story-hero__title">8 պարտադիր <span class="story-hero__nobr">AI-հմտություն</span> <span class="story-hero__title-sub">բոլորի համար՝ անկախ մասնագիտությունից</span></h1>
         <div class="story-hero__actions">
-          <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
-          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
+          <a href="#packages" class="btn btn--primary btn--lg">Ավելին</a>
+          <!-- TODO: the real AI-literacy test link (a blank placeholder for now, opens in a new tab) -->
+          <a href="about:blank" class="btn btn--line btn--lg" target="_blank" rel="noopener">Ստուգի՛ր AI գրագիտությունդ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
 
@@ -271,14 +282,28 @@
         </span>
       </div>
         <div class="story-hero__bubble">
-          <span class="pill pill--black pill--lg">Խաղարկություն</span>
+          <p class="story-hero__bubble-kicker">Խաղարկություն</p>
           <p class="story-hero__bubble-title">3 MacBook Neo</p>
           <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
           <p class="story-hero__bubble-text">հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
+          <a href="#packages" class="btn btn--primary btn--base story-hero__bubble-btn">Թողնել հայտ</a>
         </div>
       </div>
     </section>
 
+
+    <!-- =========================================================
+         03c · COURSE FACTS — a strip under the hero: the format (the Zoom logo stands for the word), the length, the
+         certificate, the tax refund
+         ========================================================= -->
+    <div class="facts">
+      <ul class="facts__row">
+        <li class="facts__item">Օնլայն՝ <img src="assets/logos/zoom.svg" alt="Zoom" />-ով</li>
+        <li class="facts__item">4 շաբաթ, 9 դաս, 18 ժամ</li>
+        <li class="facts__item">Տրվում է հավաստագիր</li>
+        <li class="facts__item">100% գումարի վերադարձ եկամտահարկից</li>
+      </ul>
+    </div>
 
     <!-- =========================================================
          05 · COURSES / PACKAGES — «Ի՞նչ սովորել»
@@ -1332,6 +1357,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=learn-tm-1"></script>
+  <script src="script.js?v=headroom-1"></script>
 </body>
 </html>

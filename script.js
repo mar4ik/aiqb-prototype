@@ -949,6 +949,18 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
+   01b · RAFFLE BAR — --bar-h follows the band's height, so the page, the
+   nav and anchor jumps sit under it
+   ============================================================ */
+(function raffleBar() {
+  const bar = document.querySelector('.raffle-bar');
+  if (!bar) return;
+  const measure = () => document.documentElement.style.setProperty('--bar-h', `${Math.ceil(bar.getBoundingClientRect().height)}px`);
+  new ResizeObserver(measure).observe(bar);
+  measure();
+})();
+
+/* ============================================================
    01 / 04 · Scroll state
    After the page is scrolled: the orange announcement bar slides down out
    of view and the webinar bar appears in its place at the bottom, and the
@@ -957,16 +969,25 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 (function scrollState() {
   const promo = document.querySelector('.promo');
   const topbar = document.querySelector('.topbar');
+  const raffle = document.querySelector('.raffle-bar');
   const fabs = document.querySelector('.fabs');
   const THRESHOLD = 80;
-  let scrolled = null;
+  const NUDGE = 6;   // px of scroll in one direction before the nav goes or comes back (no flicker on a wobble)
+  let scrolled = null, lastY = window.scrollY;
 
   function update() {
-    const next = window.scrollY > THRESHOLD;
+    const y = window.scrollY;
+    // Desktop nav (tailwind.css · 02): away while scrolling down, back when scrolling up
+    if (y <= THRESHOLD || y < lastY - NUDGE) document.body.classList.remove('is-nav-away');
+    else if (y > lastY + NUDGE) document.body.classList.add('is-nav-away');
+    if (Math.abs(y - lastY) > NUDGE || y <= THRESHOLD) lastY = y;
+
+    const next = y > THRESHOLD;
     if (next === scrolled) return;
     scrolled = next;
     document.body.classList.toggle('is-scrolled', scrolled);
     if (promo) promo.inert = !scrolled;
+    if (raffle) raffle.inert = !scrolled;
     if (fabs) fabs.inert = !scrolled;
     if (topbar) topbar.inert = scrolled;   // hidden bars can't be tabbed to
   }

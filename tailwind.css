@@ -144,7 +144,7 @@
    BASE (on top of Tailwind's preflight)
    ============================================================ */
 @layer base {
-  html { scroll-behavior: smooth; scroll-padding-top: 96px; overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip so phones never pan sideways */
+  html { scroll-behavior: smooth; scroll-padding-top: calc(96px + var(--bar-h)); overflow-x: clip; }   /* full-bleed backgrounds use 100vw; clip so phones never pan sideways */
   body {
     background: var(--color-white);
     color: var(--color-ink-900);
@@ -272,6 +272,45 @@
 .topbar__text .ic { width: --spacing(3.5); height: --spacing(3.5); }
 
 /* ============================================================
+   01b · RAFFLE BAR (a full-width Yellow band fixed to the top of the screen, always there; the nav sits under it)
+   ============================================================ */
+/* Yellow edge to edge (Feed/Yellow), black words, the Blue button. One row in the middle: the laptops, the words (centred)
+   and the button. The words take one line from xl up, two (the break after «Դեկտեմբեր») below it; on phones the laptops sit beside the words and the button. It comes in once the page
+   is scrolled; --bar-h is its height (script.js · 01b), so the nav and anchor jumps move down by it then */
+:root { --bar-h: 0px; }
+.raffle-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 56;   /* over the nav (55) */
+  display: flex; align-items: center; justify-content: center; gap: --spacing(4);
+  padding: --spacing(2) var(--page-x);
+  background: var(--color-feed-yellow);
+  color: var(--color-black);   /* black on Yellow (BRAND.md → Text on colour) */
+  /* Out of sight above the screen until the page is scrolled (body.is-scrolled, script.js · 04), then it slides down */
+  translate: 0 -100%; visibility: hidden;
+  transition: translate .4s var(--ease-smooth), visibility 0s .4s;
+}
+.is-scrolled .raffle-bar { translate: none; visibility: visible; transition: translate .4s var(--ease-smooth), visibility 0s; }
+.raffle-bar__img {
+  flex: none;
+  width: auto; height: --spacing(14);   /* the one-line band's full height: inside it, edge to edge */
+  margin: calc(--spacing(2) * -1) 0;
+  pointer-events: none;
+}
+.raffle-bar__text { @apply text-aqb-label; text-align: center; }
+.raffle-bar__btn { flex: none; }
+
+@media (width >= theme(--breakpoint-xl)) {
+  .raffle-bar__text br { display: none; }   /* one line fits (from 1280; at 1100 it would break before the last word) */
+}
+/* Phones: the laptops at the left, the words over the button beside them */
+@media (width < theme(--breakpoint-md)) {
+  .raffle-bar { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: --spacing(3); row-gap: --spacing(2); justify-items: start; }
+  .raffle-bar__img { grid-row: span 2; align-self: center; height: --spacing(12); margin: 0; }   /* a little smaller, so the words keep to three lines */
+  .raffle-bar__text { @apply text-aqb-caption; text-align: left; }
+  .raffle-bar__text br { display: none; }
+}
+
+/* ============================================================
    02 · MAIN NAV
    ============================================================ */
 /* The bar: the pill (it hugs the logo and links) centred, the course CTA right beside it once it comes in (the pair stays
@@ -279,6 +318,7 @@
 .nav-wrap {
   position: fixed;
   top: --spacing(3);
+  transition: top .4s var(--ease-smooth), translate .3s var(--ease-smooth);
   left: 0; right: 0;
   z-index: 55;
   padding: 0 --spacing(4);
@@ -286,6 +326,12 @@
   grid-template-columns: 1fr auto auto 1fr;
   align-items: center;
   pointer-events: none;
+}
+.is-scrolled .nav-wrap { top: calc(var(--bar-h) + --spacing(3)); }   /* under the raffle band (01b), which comes in on scroll */
+/* Desktop: scrolling down tucks the nav up under the band, scrolling up brings it back (body.is-nav-away, script.js · 04);
+   never while it has keyboard focus */
+@media (width >= theme(--breakpoint-lg)) {
+  .is-scrolled.is-nav-away .nav-wrap:not(:focus-within) { translate: 0 calc(-100% - --spacing(3)); }
 }
 .nav-wrap > * { pointer-events: auto; }
 .nav {
@@ -597,19 +643,27 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 /* The one message, the biggest thing on the page. «գլխացավանքի» is a long word: Headline H1, and Headline H2 where the
    6-column panel is narrowest (lg to xl) and on phones, so it always fits */
 .story-hero__title { @apply text-aqb-headline-h1 italic; }
+/* Its second line, smaller: who it is for (Body L SemiBold, upright; Body M on phones), still part of the one headline */
+.story-hero__title-sub { display: block; margin-top: --spacing(3); @apply text-aqb-body-l; font-style: normal; font-weight: var(--font-weight-detail); text-wrap: balance; }
 @media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
   .story-hero__title { @apply text-aqb-headline-h2; }
 }
-.story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* the button, the endorsement beside it (as Hero A); air above it: the words, then the ask */
+@media (width >= theme(--breakpoint-lg)) {
+  .story-hero { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px) shows on the first screen */
+}
+.story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
+.story-hero__actions .btn--primary { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
+/* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side */
+.story-hero__meta { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(3) --spacing(6); }
 .story-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
 .story-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 
-/* The offer under the headline, the one line besides it: what you get (Body L in the detail cut; Body M on phones) */
-.story-hero__lead { max-width: --spacing(130); @apply text-aqb-body-l; font-weight: var(--font-weight-detail); text-wrap: balance; }
+.story-hero__nobr { white-space: nowrap; }   /* «AI-հմտություն»: not broken at the hyphen… */
+@media (width < 22.5rem) { .story-hero__nobr { white-space: normal; } }   /* …except under 360px, where «AI-հմտություն» is wider than the column (no breakpoint token this small) */
 
 /* The right side: the stage (.drop), and along its bottom the draw in the brand's chat bubble (BRAND.md → Chat bubble;
    script.js cuts it, as the reviews' bubbles), Orange as the refund band: the prize White in the headline cut (Headline
-   H2, one step under the hero title), led by a Black tag (.pill--black --lg), the rest
+   H2, one step under the hero title), led by its kicker «Խաղարկություն» (plain words), the rest
    White too (BRAND.md → Text on colour: white on Orange at every size): the detail (SemiBold), the terms. It is a shelf: script.js adds its body to the physics, so the balls land on
    it. The bottom padding is the tail's room (script.js: padding-bottom − padding-top). */
 .story-hero__stage {
@@ -629,11 +683,12 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   background: var(--color-accent); color: var(--color-white);
   pointer-events: none;   /* the balls on it stay playable */
 }
-.story-hero__bubble .pill { align-self: flex-start; margin-bottom: --spacing(2); }   /* the tag leads, a little apart */
+.story-hero__bubble-kicker { margin-bottom: --spacing(3); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* «Խաղարկություն» over the prize: plain words (so it never reads as a button) in the detail cut, a little apart */
 .story-hero__bubble-title { @apply text-aqb-headline-h2 italic; color: var(--color-white); }
 .story-hero__bubble-detail { margin-top: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
 .story-hero__bubble-text { @apply text-aqb-body-s; text-wrap: pretty; }
 .story-hero__bubble-text strong { font-weight: var(--font-weight-detail); }   /* the prize in the terms, in the detail cut */
+.story-hero__bubble-btn { align-self: flex-start; margin-top: --spacing(3); pointer-events: auto; }   /* «Թողնել հայտ» under the terms; clickable, though the bubble lets clicks through to the balls */
 /* It falls in first, with a little bounce, and the balls land on it (script.js holds them until it's down); until the
    physics starts it waits unseen, as the balls do */
 .story-hero__stage:has(.drop:not(.is-live, .is-still)) .story-hero__bubble { visibility: hidden; }
@@ -710,12 +765,13 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .story-hero__bubble { left: var(--page-x); right: var(--page-x); }
 }
 @media (width < theme(--breakpoint-md)) {
-  .story-hero__title { @apply text-aqb-headline-h2; }   /* phones: Headline H2, three lines */
+  .story-hero__title { @apply text-aqb-headline-h2; }   /* phones: Headline H2 */
+  .story-hero__title-sub { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }   /* phones: one step down */
   .story-hero__actions { align-self: stretch; flex-direction: column; align-items: stretch; gap: --spacing(4); margin-top: --spacing(4); }   /* the button full width, the endorsement under it (as the webinar's) */
+  .story-hero__actions { flex-wrap: nowrap; }   /* one column line, so the buttons take the column's width, not the longest label's (320px) */
   .drop { min-height: --spacing(170); }   /* phones: the draw's bubble takes ~300px; the pile over it keeps ~340px */
   .drop__ball { --ball: --spacing(14); }
   .drop__ball--gift { --ball: --spacing(48); }
-  .story-hero__lead { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }
   .story-hero__bubble { padding: --spacing(4) --spacing(5) --spacing(9); }
   .story-hero__bubble-text { @apply text-aqb-label; font-weight: var(--font-weight-text); }
   .drop__ball--eyes { --ball: --spacing(25); }
@@ -758,6 +814,32 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .promo__btn { z-index: 2; }
 .promo__btn .ic { display: none; }   /* the register icon: only in the compact bar (below xl, contact group open) */
 .promo__short { display: none; }   /* short title / date for the mobile row (full copy everywhere else) */
+
+/* ============================================================
+   03c · COURSE FACTS (a strip under the hero)
+   ============================================================ */
+/* Four facts in one row on the Black ground (full-bleed, as the bands around it), in the page column; Label, as formats
+   and times are (BRAND.md → Typography). On desktop it shows at the bottom of the first screen (Hero B leaves it 72px). Below lg two by two; phones one under another */
+.facts {
+  max-width: var(--container-page);
+  margin: 0 auto;
+  padding: --spacing(6) var(--page-x);   /* 24 + the line + 24 = 72px: the room Hero B leaves for it (03 B) */
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.facts__row {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: --spacing(3) --spacing(8);
+  @apply text-aqb-label;
+}
+.facts__item img { display: inline-block; width: auto; height: --spacing(3.5); vertical-align: -1px; }   /* the Zoom wordmark in the line, «-ով» right after it */
+@media (width < theme(--breakpoint-lg)) {
+  .facts__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* two by two, so no fact wraps alone */
+}
+@media (width < theme(--breakpoint-md)) {
+  .facts__row { grid-template-columns: minmax(0, 1fr); }
+}
 
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
@@ -1069,8 +1151,9 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pill--zoom img { height: 11px; width: auto; }
 .pill--deal { background: color-mix(in oklab, var(--color-accent) 90%, transparent); color: var(--color-white); }   /* white on Orange, as all text on Orange (BRAND.md → Text on colour) */
 .pill--save { background: var(--color-campaign-bundle-save); color: var(--color-campaign-bundle-save-text); }
+.pill--date { background: var(--color-campaign-green); color: var(--color-white); }   /* a date range, with .ic--calendar (Hero B's «Նոյեմբերի 8 – Դեկտեմբերի 31»): the campaign green, white text */
 .pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
-.pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (Hero B's «Խաղարկություն» on Orange) */
+.pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (not on the page at the moment) */
 .pill--lg { height: --spacing(10); padding: 0 --spacing(4.5); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* size step: 40px, Body S SemiBold (a tag that leads a block) */
 
 /* Row 2 · schedule */
@@ -1312,6 +1395,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--whatsapp   { --i: url("assets/icons/whatsapp.svg"); }
 .ic--instagram  { --i: url("assets/social/instagram.svg"); }   /* the join pages' footer */
 .ic--arrow-up   { --i: url("assets/icons/arrow-up.svg"); }
+.ic--arrow-right { --i: url("assets/icons/arrow-right.svg"); }   /* a secondary action that leads on (Hero B's «Ստուգի՛ր AI գրագիտությունդ») */
 
 /* ============================================================
    06 · TEACHERS
@@ -2264,7 +2348,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .nav__links {
     position: absolute; left: -1px; width: 100cqw; top: calc(100% + --spacing(2));
     flex-direction: column; align-items: stretch; gap: --spacing(1);
-    max-height: calc(100dvh - --spacing(28)); overflow-y: auto; overscroll-behavior: contain;
+    max-height: calc(100dvh - --spacing(28) - var(--bar-h)); overflow-y: auto;   /* --bar-h: the raffle bar (01b) over the nav */ overscroll-behavior: contain;
     padding: --spacing(3);
     background: var(--color-white);
     border: 1px solid var(--line);

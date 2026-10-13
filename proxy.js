@@ -6,6 +6,9 @@
 // If Hone is slow (400 ms) or down, the page goes out as it is and the old way takes over (the heroes stay hidden
 // until Hone answers, 2 s at most). The page itself is the same file for everyone, so the CDN still caches it.
 //
+// Switched off (Oct 2026): the live site always shows Hero B, and Hone runs on localhost only (index.html). Set
+// HONE_ON_LIVE_SITE to true to bring the server-side answer back; index.html must then read the cookie again.
+//
 // The logic lives in edge/hone-edge.mjs (copied from the Hone repo, edge/): no cookie and no call for visitors who
 // send Global Privacy Control / Do Not Track, for crawlers, or for a visitor whose answer is still fresh.
 import { next } from '@vercel/functions';
@@ -13,7 +16,10 @@ import { decideAtEdge } from './edge/hone-edge.mjs';
 
 export const config = { matcher: '/' };
 
+const HONE_ON_LIVE_SITE = false;
+
 export default async function proxy(request) {
+  if (!HONE_ON_LIVE_SITE) return next();
   let r = null;
   try {
     r = await decideAtEdge(request, {
