@@ -306,79 +306,77 @@
     </div>
 
     <!-- =========================================================
-         05 · COURSES / PACKAGES — «Ի՞նչ սովորել»
-         Rows inside the 3 cards line up via CSS subgrid.
+         05 · WHY — the two ways people feel about AI, then the one answer to both: three blocks in the brand's chat
+         bubble (a feed colour each, black text; script.js · 03b cuts the bubble), the first two side by side (the second
+         mirrored, its tail pointing down to the answer), the answer centred under them, its words left-aligned, its tail pointing down at the brand's eyes: they say it. The eyes sit outside the bubble
+         (BRAND.md → Bubble construction: Peek), blink and follow the pointer (script.js · 05 peekEyes).
+         Keeps id="courses", the nav's and the footer's «Ի՞նչ սովորել» anchor.
          ========================================================= -->
-    <section class="courses" id="courses">
-      <div class="courses__top">
-        <h2 class="section-title">Ի՞նչ սովորել</h2>
-        <div class="courses__nav">
-          <button type="button" class="courses__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
-          <button type="button" class="courses__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
-        </div>
+    <section class="why" id="courses">
+      <div class="why__bubble" data-bg="sky">
+        <h2 class="why__title">AI-ի զարգացումը քեզ անհանգստաց&shy;նո՞ւմ է</h2>
+        <p class="why__text">Հետևում ես զարգացման արագությանը ու մտածում՝ ի՞նչ կլինի վաղը։ Ինչպե՞ս կփոխվի աշխատանքդ, ի՞նչն է իրական, ինչի՞ն կարելի է վստահել։</p>
       </div>
+      <div class="why__bubble why__bubble--tail-left" data-bg="pink">   <!-- its tail at the bottom-left, pointing down to the answer -->
+        <h2 class="why__title">AI-ի հնարավորու&shy;թյունները քեզ ոգևորո՞ւմ են</h2>
+        <p class="why__text">Տեսնում ես նոր հնարավորություններ ու մտածում՝ ինչքա՜ն բան կարող ես անել։ Ուզում ես օգտվել դրանցից ու հետ չմնալ։</p>
+      </div>
+      <div class="why__answer">
+        <div class="why__bubble" data-bg="yellow">
+          <h2 class="why__title">Երկու դեպքում էլ անելիքը մեկն է՝ սովորել աշխատել AI-ով։</h2>
+          <p class="why__text">Հասկանալ հնարավորությունները, ճանաչել սահմանափակումներն ու օգտագործել այն քո օգտին։</p>
+        </div>
+        <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you" aria-hidden="true">   <!-- under the tail, outside the bubble; with the logo's ™ (as script.js → makeEyes({ tm: true })) -->
+          <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+          <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+          <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+          <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+          <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+        </svg>
+      </div>
+    </section>
 
-      <!-- What you'll learn: one row of tiles, four in view on desktop (the arrows step one view, script.js).
-           Each tile is a post in its feed colour (data-bg, BRAND.md: the feed colours rotate, black text), cut into the
-           brand bubble by script.js, which also sets the brand's eyes peeking from its cut-out top corner (Figma slide 41).
-           The nine lessons of «AI գրագեր» in order, each tile labelled with its lesson; each links to the whole-course card
-           (data-pkg="master": AI-Master), which a click spotlights with the topic in its banner
-           (script.js); data-topic is the wording for the banner sentence -->
-      <div class="learn-grid" aria-label="Ի՞նչ սովորել">
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 1</span>
-              <h4 class="learn-tile__title" data-topic="AI հիմունքներ և անվտանգություն">AI հիմունքներ և անվտանգու&shy;թյուն</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 2</span>
-              <h4 class="learn-tile__title" data-topic="AI-ը կյանքի 10 իրավիճակներում">AI-ը կյանքի 10 իրավիճակ&shy;ներում</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 3</span>
-              <h4 class="learn-tile__title" data-topic="Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 4</span>
-              <h4 class="learn-tile__title" data-topic="Հետազոտություն ու աղբյուրահեն կոնտենտ">Հետազոտու&shy;թյուն ու աղբյուրահեն կոնտենտ</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 5</span>
-              <h4 class="learn-tile__title" data-topic="1000 բառի տեղ խոսող նկարների գեներացիա">1000 բառի տեղ խոսող նկարների գեներացիա</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="sky" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 6</span>
-              <h4 class="learn-tile__title" data-topic="AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="pink" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 7</span>
-              <h4 class="learn-tile__title" data-topic="Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="teal" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 8</span>
-              <h4 class="learn-tile__title" data-topic="Գործընթացների ավտոմատացում AI-ով">Գործընթացների ավտոմատացում AI-ով</h4>
-            </a>
-          </div>
-          <div class="learn-col">
-            <a class="learn-tile" data-bg="yellow" href="#packages" data-pkg="master">
-              <span class="learn-tile__pkg">Դաս 9</span>
-              <h4 class="learn-tile__title" data-topic="Ինքնավար ագենտների ստեղծում">Ինքնավար ագենտների ստեղծում</h4>
-            </a>
-          </div>
+    <!-- =========================================================
+         05b · ABOUT — «ԾՐԱԳՐԻ ՄԱՍԻՆ»: a timeline of what everyone had to learn (electricity → the computer → the internet
+         → AI), one White line through a round marker a year (a Blue icon each on White; AI's the biggest, on Ink,
+         the end of the line), on the Blue ground, the steps closing in as the years do (141, 50, 31 years); a vertical line below lg.
+         Under it, on the timeline's columns: the lead in a chat bubble, the brand's eyes on a circle under its tail
+         saying it (they blink: script.js · 05 peekEyes), and beside it the rest, the course's three proofs as a list.
+         «AI քեզ բան» and «AIգրագետ» in the detail cut. The timeline comes in once, as it scrolls into view (script.js ·
+         05b aboutTimeline); AI's sparkle shakes now and then
+         ========================================================= -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 class="section-title" id="about-title">ԾՐԱԳՐԻ ՄԱՍԻՆ</h2>
+      <ol class="timeline">
+        <li class="timeline__item"><span class="timeline__year">1800</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--zap"></i></span></span><span class="timeline__what">էլեկտրաէներգիա</span></li>
+        <li class="timeline__item"><span class="timeline__year">1941</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--monitor"></i></span></span><span class="timeline__what">համակարգիչ</span></li>
+        <li class="timeline__item"><span class="timeline__year">1991</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--globe"></i></span></span><span class="timeline__what">համացանց</span></li>
+        <li class="timeline__item"><span class="timeline__year">2022</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot timeline__dot--ai"><i class="ic ic--lg ic--sparkles"></i></span></span><span class="timeline__what">AI</span></li>
+      </ol>
+      <div class="about__text">
+        <div class="about__say">
+          <p class="about__lead">   <!-- in the brand chat bubble (script.js · 03b) -->
+            Ինչպես ժամանակին սովորել ենք կարդալ, գրել, այնուհետև՝ օգտվել ինտերնետից, այսօր պարտադիր է սովորելը աշխատել <span class="about__nobr">AI-ով։</span></p>
+          <span class="about__eyes" aria-hidden="true">   <!-- under the tail, outside the bubble: the brand's eyes with the ™ on an Ink circle (as Hero B's eyes ball) -->
+          <svg class="eyes" viewBox="0 0 96 50" data-look="you">
+            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+          </svg>
+          </span>
+        </div>
+        <div class="about__body">
+          <p>Մի բան հաստատ է՝ եթե դու չսովորես կառավարել AI-ը, AI օգտագործողներն են քեզ կառավարելու։</p>
+          <p><strong>«AI քեզ բան»</strong>-ի հետևում կանգնած է մեծ թիմ՝ միավորված մեկ առաքելության շուրջ․ օգնել 1 միլիոն հայի դառնալ AI-գրագետ։ Այդ նպատակով մենք ստեղծել ենք մեկ <strong>«AIգրագետ»</strong> դասընթացը, որը միավորում է AI-ից օգտվելու 8 պարտադիր հմտությունները՝ անկախ մասնագիտությունից ու նախնական գիտելիքներից։</p>
+          <!-- The course's proofs, pulled out of the last paragraph (its own words) -->
+          <ul class="about__proof">
+            <li><img src="assets/logos/armgerb.svg" alt="" />Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից</li>   <!-- the coat of arms, as the hero's endorsement -->
+            <li><i class="ic ic--check" aria-hidden="true"></i>Մասնակցության արդյունքում տրվում է հավաստագիր</li>
+            <li><i class="ic ic--check" aria-hidden="true"></i>Ողջ գումարը ենթակա է վերադարձի եկամտահարկի միջոցով</li>
+          </ul>
+        </div>
       </div>
     </section>
 

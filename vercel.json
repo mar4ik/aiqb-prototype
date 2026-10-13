@@ -34,8 +34,8 @@
   ],
   "rewrites": [
     {
-      "source": "/aigrager",
-      "destination": "/aigrager.html"
+      "source": "/aigraget",
+      "destination": "/aigraget.html"
     }
   ]
 }

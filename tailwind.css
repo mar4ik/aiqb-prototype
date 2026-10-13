@@ -17,7 +17,7 @@
    ============================================================ */
 @import "tailwindcss" source(none);
 @source "./index.html";
-@source "./aigrager.html";
+@source "./aigraget.html";
 @source "./doctor-register.html";
 @source "./join.html";
 @source "./join/*.html";
@@ -171,7 +171,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .pricing, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .pricing, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -329,7 +329,7 @@
   pointer-events: none;
 }
 .is-scrolled .nav-wrap { top: calc(var(--bar-h) + --spacing(3)); }   /* under the raffle band (01b), which comes in on scroll */
-/* Desktop, on a page with the raffle band (aigrager.html): scrolling down tucks the nav up under the band, scrolling up
+/* Desktop, on a page with the raffle band (aigraget.html): scrolling down tucks the nav up under the band, scrolling up
    brings it back (body.is-nav-away, script.js · 04); never while it has keyboard focus */
 @media (width >= theme(--breakpoint-lg)) {
   .is-scrolled.is-nav-away:has(.raffle-bar) .nav-wrap:not(:focus-within) { translate: 0 calc(-100% - --spacing(3)); }
@@ -650,7 +650,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .story-hero__title { @apply text-aqb-headline-h2; }
 }
 @media (width >= theme(--breakpoint-lg)) {
-  .story-hero:has(+ .facts) { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px, aigrager.html) shows on the first screen */
+  .story-hero:has(+ .facts) { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px, aigraget.html) shows on the first screen */
 }
 .story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
 .story-hero__actions .btn--primary { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
@@ -889,6 +889,195 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .courses__arrow:hover { background: color-mix(in oklab, var(--color-white) 22%, transparent); }
 .courses__arrow:disabled { opacity: .35; cursor: default; }
 .courses__arrow .ic { width: --spacing(5); height: --spacing(5); }
+
+/* ============================================================
+   05 · WHY (aigraget.html, in the «Ի՞նչ սովորել» band's place)
+   ============================================================ */
+/* The brand's Black ground, full-bleed (as the band it replaces): the eyes under the answer are white, so they need it.
+   The two feelings side by side, the answer centred under them at one column's width; phones one under another */
+.why {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+}
+/* Each block in the brand's chat bubble (BRAND.md → Chat bubble), a feed colour each with black text, as the reviews'
+   (05f); script.js (03b) cuts it. Title: Subhead (a card title), then reading text */
+.why__bubble {
+  display: flex; flex-direction: column; gap: --spacing(3);
+  padding: --spacing(8) --spacing(8) --spacing(20);   /* the extra bottom padding is the tail's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--why-bg, var(--color-feed-sky));
+  color: var(--color-black);
+}
+.why__bubble[data-bg="sky"]    { --why-bg: var(--color-feed-sky); }
+.why__bubble[data-bg="pink"]   { --why-bg: var(--color-feed-pink); }
+.why__bubble[data-bg="yellow"] { --why-bg: var(--color-feed-yellow); }
+.why__title { @apply text-aqb-subhead; text-wrap: balance; overflow-wrap: anywhere; }   /* long words break at their &shy; (aigraget.html) */
+.why__text { @apply text-aqb-body-s; }
+/* The answer: centred under the two, its words left-aligned; the eyes under its tail (bottom right), outside the bubble
+   (BRAND.md → Bubble construction: Peek), so they say it; script.js (05 · peekEyes) blinks them and turns them to the
+   pointer. (.why__bubble--tail-left, the second block, is mirrored by script.js · 03b: no CSS of its own) */
+.why__answer {
+  grid-column: 1 / -1; justify-self: center;
+  width: calc((100% - var(--card-gap)) / 2);   /* one column */
+  display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3);
+}
+.why__answer .why__bubble { align-self: stretch; }
+.why__answer .eyes { width: --spacing(19); }   /* 112.6 wide with the ™: the eyes themselves stay 64px, as the drawing's 96 of 112.6 */
+/* The entrance (script.js · revealOnce; without script, or for reduced motion, all of it simply shows): the bubbles pop
+   in one after another like messages, each growing out of its tail (--d: when), then the eyes under the answer come up */
+.why__bubble { transform-origin: 100% 100%; }   /* the tail's corner */
+.why__bubble--tail-left { transform-origin: 0 100%; }
+.why > .why__bubble:nth-child(1) { --d: 0s; }
+.why > .why__bubble:nth-child(2) { --d: .35s; }
+.why__answer > .why__bubble { --d: .8s; }
+.why__answer > .eyes { --d: 1.3s; }
+.why.is-armed .why__bubble { opacity: 0; scale: .6; }
+.why.is-in .why__bubble { opacity: 1; scale: 1; transition: opacity .3s var(--d), scale .55s cubic-bezier(.34, 1.56, .64, 1) var(--d); }
+.why.is-armed .why__answer > .eyes { opacity: 0; translate: 0 --spacing(4); }
+.why.is-in .why__answer > .eyes {   /* they rise; scale stays the blink's (.eyes) */
+  opacity: 1; translate: 0 0;
+  transition: opacity .3s var(--d), translate .55s cubic-bezier(.34, 1.56, .64, 1) var(--d), scale .08s ease;
+}
+@media (width < theme(--breakpoint-md)) {
+  .why { grid-template-columns: minmax(0, 1fr); }
+  .why__answer { width: 100%; }
+  .why__bubble { padding-inline: --spacing(6); }   /* room for the long words at 320 */
+}
+
+/* ============================================================
+   05b · ABOUT («ԾՐԱԳՐԻ ՄԱՍԻՆ», aigraget.html)
+   ============================================================ */
+/* The Blue ground (white text, BRAND.md → Text on colour), full-bleed, after the Black why band: the title, the
+   timeline, then the words, the last two on one set of columns (--about-cols) */
+.about {
+  --about-cols: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 2fr) auto;   /* the steps close in as the years do: 141, 50, 31 */
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 100vmax var(--color-primary);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.about .section-title { color: var(--color-white); }
+/* The timeline: one White line through four round markers, the year over each (Headline H2, a big number, white on
+   Blue) and what came that year under it (Body M), close together so each step reads as one. The markers are White
+   discs with a Blue icon; AI's, the end of the line, is the biggest, Ink with a white sparkle. From lg up; under it the line runs down (below) */
+.timeline { display: grid; grid-template-columns: var(--about-cols); gap: var(--card-gap); }
+.timeline__item { display: flex; flex-direction: column; gap: --spacing(2); }
+.timeline__year { @apply text-aqb-headline-h2 italic; translate: var(--x, 0) 0; }   /* --x: centred on its marker (lg up, below) */
+.timeline__mark { position: relative; display: flex; align-items: center; height: --spacing(18); }   /* as tall as AI's disc: the line runs through every marker's middle */
+.timeline__mark::before {   /* the line, on to the next marker (across the gap) */
+  content: ""; position: absolute; left: 0; right: calc(var(--card-gap) * -1); top: 50%;
+  height: --spacing(0.5); translate: 0 -50%;
+  background: var(--color-white);   /* White on Blue, one with the discs it joins */
+}
+.timeline__item:last-child .timeline__mark::before { display: none; }   /* the line ends at AI */
+.timeline__dot {
+  position: relative;   /* over the line */
+  display: grid; place-items: center; flex: none;
+  width: --spacing(14); height: --spacing(14); border-radius: var(--radius-full);
+  background: var(--color-white); color: var(--color-primary);
+}
+.timeline__dot--ai { width: --spacing(18); height: --spacing(18); background: var(--color-neutral-ink); color: var(--color-white); }
+.timeline__dot--ai .ic { width: --spacing(8); height: --spacing(8); }   /* the sparkle, grown with its disc */
+.timeline__what { @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); }   /* in the headline cut (ExtraBold Italic, the brand's only italic), as the lead */
+/* From lg up (the line runs across): the middle steps' year and word sit centred on their marker (half the disc in:
+   28px; --x shifts the year, which the entrance also moves, tailwind below); the last step, AI, is flush right: its
+   disc at the line's end, 2022 right over it, «AI» centred under it, the line running on to it.
+   «1800 · էլեկտրաէներգիա» starts the line, flush left */
+@media (width >= theme(--breakpoint-lg)) {
+  .timeline__item:not(:first-child, :last-child) :is(.timeline__year, .timeline__what) { align-self: flex-start; }
+  .timeline__item:not(:first-child, :last-child) .timeline__year { --x: calc(-50% + --spacing(7)); }
+  .timeline__item:not(:first-child, :last-child) .timeline__what { translate: calc(-50% + --spacing(7)) 0; }
+  .timeline__item:last-child { align-items: flex-end; }
+  .timeline__item:last-child .timeline__mark { align-self: stretch; justify-content: flex-end; }
+  .timeline__item:last-child .timeline__mark::before { display: block; right: --spacing(9); }   /* on to the disc's middle */
+  .timeline__item:last-child .timeline__what { translate: calc(50% - --spacing(9)) 0; }   /* centred under the 72px disc */
+}
+/* AI's sparkle shakes now and then (a quick wiggle, then still): AI is the one step still happening */
+.timeline__dot--ai .ic { animation: shake 3.5s ease-in-out infinite; }
+@keyframes shake {
+  0%, 76%, 100% { rotate: 0deg; }
+  80% { rotate: -14deg; }
+  84% { rotate: 12deg; }
+  88% { rotate: -8deg; }
+  92% { rotate: 5deg; }
+  96% { rotate: 0deg; }
+}
+@media (prefers-reduced-motion: reduce) { .timeline__dot--ai .ic { animation: none; } }
+/* The entrance (script.js · 05b aboutTimeline; without script, or for reduced motion, all of it simply shows): the
+   line draws from marker to marker, each marker pops up as the line reaches it and its year rises in with a little
+   bounce, its word after it. The steps come faster as the years close in (--d: when a step lands, --run: how long the
+   line takes on to the next) */
+.timeline__item:nth-child(1) { --d: 0s;    --run: .6s; }
+.timeline__item:nth-child(2) { --d: .6s;   --run: .4s; }
+.timeline__item:nth-child(3) { --d: 1s;    --run: .25s; }
+.timeline__item:nth-child(4) { --d: 1.25s; }
+.timeline.is-armed .timeline__year { opacity: 0; translate: var(--x, 0) --spacing(6); }
+.timeline.is-armed .timeline__what { opacity: 0; }
+.timeline.is-armed .timeline__dot { scale: 0; }
+.timeline.is-armed .timeline__mark::before { scale: 0 1; transform-origin: left; }
+.timeline.is-in .timeline__year { opacity: 1; translate: var(--x, 0) 0; transition: opacity .3s var(--d), translate .55s cubic-bezier(.34, 1.56, .64, 1) var(--d); }
+.timeline.is-in .timeline__dot { scale: 1; transition: scale .45s cubic-bezier(.34, 1.56, .64, 1) var(--d); }
+.timeline.is-in .timeline__what { opacity: 1; transition: opacity .4s calc(var(--d) + .15s); }
+.timeline.is-in .timeline__mark::before { scale: 1 1; transition: scale var(--run, 0s) linear var(--d); }
+/* Below lg (four columns would break «էլեկտրաէներգիա»): the line goes down the left, each marker level with its year,
+   the steps closing in as on wide screens (--after: the room under each) */
+@media (width < theme(--breakpoint-lg)) {
+  .timeline { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .timeline__item { display: grid; grid-template-columns: --spacing(16) minmax(0, 1fr); column-gap: --spacing(4); align-content: start; padding-bottom: var(--after, 0); }
+  .timeline__item:nth-child(1) { --after: --spacing(10); }
+  .timeline__item:nth-child(2) { --after: --spacing(6); }
+  .timeline__item:nth-child(3) { --after: --spacing(3); }
+  .timeline__year { grid-area: 1 / 2; }
+  .timeline__what { grid-area: 2 / 2; }
+  .timeline__mark { grid-area: 1 / 1 / 3 / 2; height: auto; align-items: flex-start; justify-content: center; }
+  .timeline__dot { width: --spacing(12); height: --spacing(12); }
+  .timeline__dot--ai { width: --spacing(16); height: --spacing(16); }
+  .timeline__mark::before {
+    left: 50%; right: auto; top: --spacing(6); bottom: calc(-1 * var(--after) - --spacing(6));   /* this disc's middle to the next one's */
+    width: --spacing(0.5); height: auto; translate: -50% 0;
+  }
+  .timeline.is-armed .timeline__mark::before { scale: 1 0; transform-origin: top; }   /* the line draws down */
+  .timeline.is-in .timeline__mark::before { scale: 1 1; }
+}
+/* The words, on the timeline's columns from lg up: the lead in the brand's chat bubble under the first step (Yellow,
+   black text, as the why blocks; script.js · 03b cuts it), in the headline cut (ExtraBold Italic, the brand's only
+   italic): the section's one statement. The brand's eyes say it, from under its tail (BRAND.md → Bubble construction:
+   Peek; they blink, script.js · 05 peekEyes). The rest, from the 1941 step on: reading text, then the proofs */
+.about__text { display: grid; grid-template-columns: var(--about-cols); align-items: start; gap: --spacing(6) var(--card-gap); margin-top: --spacing(8); }
+.about__say { display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3); }
+.about__lead {
+  align-self: stretch;
+  padding: --spacing(8) --spacing(8) --spacing(18);   /* the extra bottom padding is the tail's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--color-feed-yellow);
+  color: var(--color-black);
+  @apply text-aqb-subhead italic; font-weight: var(--font-weight-headline); text-wrap: balance;
+}
+.about__eyes {   /* the eyes on an Ink circle, as Hero B's eyes ball and the package cards' (the white eyes need a dark ground) */
+  display: grid; place-items: center;
+  width: --spacing(24); height: --spacing(24); border-radius: var(--radius-full);   /* 96px: big enough to read as the one speaking */
+  background: var(--color-neutral-ink);
+}
+.about__eyes .eyes { width: 66%; }   /* the ™ stands out beside the right eye, inside the circle */
+.about__nobr { white-space: nowrap; }   /* «AI-ով։» stays whole (it broke at its hyphen on phones) */
+.about__body { grid-column: 2 / -1; display: flex; flex-direction: column; gap: --spacing(4); @apply text-aqb-body-s; }   /* white on Blue */
+/* The proofs: one to a line, each led by a mark in one 32px column (the Ministry's endorsement the coat of arms, as the
+   hero's endorsement; the rest white checks, centred in it), in the detail cut as the package lists' perks */
+.about__proof { display: flex; flex-direction: column; gap: --spacing(3); margin-top: --spacing(2); font-weight: var(--font-weight-detail); }
+.about__proof li { display: grid; grid-template-columns: --spacing(8) minmax(0, 1fr); align-items: center; column-gap: --spacing(3); }
+.about__proof img { width: --spacing(8); height: auto; }
+.about__proof .ic { justify-self: center; color: var(--color-white); }
+@media (width < theme(--breakpoint-lg)) {
+  .about__text { grid-template-columns: minmax(0, 1fr); margin-top: --spacing(4); }
+  .about__body { grid-column: auto; }
+  .about__lead { @apply text-aqb-body-l; }
+}
+@media (width < theme(--breakpoint-md)) {
+  .about__lead { padding-inline: --spacing(6); @apply text-aqb-body-m; }   /* one step down on phones, as the why blocks' padding */
+}
 
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
@@ -1412,6 +1601,10 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--instagram  { --i: url("assets/social/instagram.svg"); }   /* the join pages' footer */
 .ic--arrow-up   { --i: url("assets/icons/arrow-up.svg"); }
 .ic--arrow-right { --i: url("assets/icons/arrow-right.svg"); }   /* a secondary action that leads on (Hero B's «Ստուգի՛ր AI գրագիտությունդ») */
+.ic--zap        { --i: url("assets/icons/zap.svg"); }       /* electricity (the about timeline, aigraget.html) */
+.ic--monitor    { --i: url("assets/icons/monitor.svg"); }   /* the computer (same) */
+.ic--globe      { --i: url("assets/icons/globe.svg"); }     /* the internet (same) */
+.ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
 
 /* ============================================================
    06 · TEACHERS

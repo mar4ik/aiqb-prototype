@@ -1485,8 +1485,8 @@ function makeEyes({ tm = false } = {}) {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  // also the reviews' bubbles (05f · .quote__bubble) and Hero B's draw bubble (03 B), whose corners scale up 1.5× for their size
-  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble')];
+  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble) and the about lead (05b · .about__lead), whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1494,21 +1494,128 @@ function makeEyes({ tm = false } = {}) {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
-    const r = el.matches('.quote__bubble, .story-hero__bubble') ? 1.5 : 1;   // corner scale
-    shapeElement(el, [
+    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead') ? 1.5 : 1;   // corner scale
+    // The tip: the brand's, a little in from the right side; when the bubble speaks for the eyes on a circle under
+    // it (05b · .about__eyes), right over their middle, so it points at them
+    const who = el.nextElementSibling?.matches('.about__eyes') ? el.nextElementSibling.getBoundingClientRect() : null;
+    const tip = who ? Math.min(W - e, who.left + who.width / 2 - el.getBoundingClientRect().left) : W - e;
+    const pts = [
       [0, 0, 8 * r], [W, 0, 8 * r],
       [W, Hb, 4 * r],                           // the right side ends…
-      [W - e, Hb + 0.13 * T, 6 * r],            // …stepping in a little
-      [W - e, H, 3 * r],                        // the tail's straight side, down to its tip
-      [W - e - 0.6 * T, Hb + 0.34 * T, 8 * r],  // the tail's angled side, back up to the bottom edge
+      [tip, Hb + 0.13 * T, 6 * r],              // …stepping in (a little, or to the eyes)
+      [tip, H, 3 * r],                          // the tail's straight side, down to its tip
+      [tip - 0.6 * T, Hb + 0.34 * T, 8 * r],    // the tail's angled side, back up to the bottom edge
       [0, H, 8 * r],                            // the bottom edge falls away to the bottom-left corner
-    ]);
+    ];
+    // .why__bubble--tail-left: the same bubble mirrored, its tail at the bottom-left (the second why block's points
+    // down to the answer between them); the points run backwards so the outline keeps its direction
+    shapeElement(el, el.matches('.why__bubble--tail-left') ? pts.map(([x, y, rad]) => [W - x, y, rad]).reverse() : pts);
   }
   const all = () => buttons.forEach(shape);
   all();
   const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target)));
   buttons.forEach((b) => resizer.observe(b));
   document.fonts?.ready.then(all);
+})();
+
+/* ============================================================
+   05 / 05b · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail and under the about lead's: each
+   pair blinks now and then and glances around while on screen, and while the pointer is over its section it looks
+   at it (mouse screens only), within the brand's pupil oval; at rest, at you
+   ============================================================ */
+(function peekEyes() {
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes')];
+  if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
+  const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
+  const mouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  all.forEach((eyes) => {
+    let onScreen = false, following = false;
+    new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(eyes);
+
+    (function blink() {
+      setTimeout(() => {
+        if (onScreen) { eyes.classList.add('is-blink'); setTimeout(() => eyes.classList.remove('is-blink'), 140); }
+        blink();
+      }, 1200 + Math.random() * 2400);
+    })();
+    (function glance() {
+      setTimeout(() => {
+        if (onScreen && !following) eyes.dataset.look = LOOKS[Math.floor(Math.random() * LOOKS.length)];
+        glance();
+      }, 1500 + Math.random() * 2500);
+    })();
+
+    const band = eyes.closest('section');
+    if (!band || !mouse) return;
+    let px = 0, py = 0, raf = 0;
+    const follow = () => {
+      raf = 0;
+      const box = eyes.getBoundingClientRect();
+      const dx = px - (box.left + box.width / 2), dy = py - (box.top + box.height / 2);
+      const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 160) / d;   // nearer than 160px: less far off-centre
+      eyes.style.setProperty('--look-x', (dx * k * PUPIL_TRAVEL.x).toFixed(2));
+      eyes.style.setProperty('--look-y', (dy * k * PUPIL_TRAVEL.y).toFixed(2));
+    };
+    band.addEventListener('pointermove', (e) => {
+      if (e.pointerType === 'touch') return;
+      following = true; delete eyes.dataset.look;   // data-look's own values would win over the pointer's
+      px = e.clientX; py = e.clientY;
+      raf ||= requestAnimationFrame(follow);
+    });
+    band.addEventListener('pointerleave', () => {
+      following = false; eyes.dataset.look = 'you';
+      eyes.style.removeProperty('--look-x'); eyes.style.removeProperty('--look-y');
+    });
+  });
+})();
+
+/* ============================================================
+   Entrances (aigraget.html) — revealOnce(el, onIn): .is-armed hides el's parts (only with script and motion
+   allowed; without them everything simply shows), and once el is far enough into view (threshold) .is-in plays the
+   entrance in tailwind.css; onIn runs then. Returns false when nothing will play
+   ============================================================ */
+function revealOnce(el, onIn, threshold = 0.4) {
+  if (!el || !('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+  el.classList.add('is-armed');
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    io.disconnect();
+    el.classList.add('is-in');
+    onIn?.();
+  }, { threshold });
+  io.observe(el);
+  return true;
+}
+
+/* 05 · WHY — the bubbles pop in one after another like messages, each growing out of its tail, then the eyes under
+   the answer come up (tailwind.css · .why.is-in) */
+revealOnce(document.querySelector('.why'), null, 0.3);
+
+/* 05b · ABOUT TIMELINE — the line draws, the markers pop, the years rise (tailwind.css · .timeline.is-in). When AI
+   has landed, the eyes under the lead turn to it and blink, then look back at you */
+(function aboutTimeline() {
+  const line = document.querySelector('.timeline');
+  const LANDED = 1700;                         // ms: AI's step (--d 1.25s) and its pop
+  const PUPIL_TRAVEL = { x: 9, y: 10.54 };     // the brand's pupil oval (BRAND.md → Eyes)
+  revealOnce(line, () => {
+    const eyes = document.querySelector('.about__eyes > .eyes'), ai = line.querySelector('.timeline__dot--ai');
+    if (!eyes || !ai) return;
+    setTimeout(() => {
+      const a = ai.getBoundingClientRect(), e = eyes.getBoundingClientRect();
+      const dx = a.left + a.width / 2 - (e.left + e.width / 2), dy = a.top + a.height / 2 - (e.top + e.height / 2);
+      const d = Math.hypot(dx, dy) || 1;
+      delete eyes.dataset.look;                // data-look's own values would win
+      eyes.style.setProperty('--look-x', (dx / d * PUPIL_TRAVEL.x).toFixed(2));
+      eyes.style.setProperty('--look-y', (dy / d * PUPIL_TRAVEL.y).toFixed(2));
+      setTimeout(() => { eyes.classList.add('is-blink'); setTimeout(() => eyes.classList.remove('is-blink'), 140); }, 500);
+      setTimeout(() => {
+        eyes.style.removeProperty('--look-x'); eyes.style.removeProperty('--look-y');
+        eyes.dataset.look = 'you';
+      }, 2200);
+    }, LANDED);
+  });
 })();
 
 /* ============================================================
