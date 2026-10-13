@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-2" />
+  <link rel="stylesheet" href="styles.css?v=pages-7" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -411,6 +411,289 @@
           <li><button type="button" class="reel__item" data-video=""><span class="reel__num">08</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Գործընթացների ավտոմատացում AI-ով</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
           <li><button type="button" class="reel__item" data-video=""><span class="reel__num">09</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Ինքնավար ագենտների ստեղծում</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
         </ol>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05h · SKILLS — «AI-ՀՄՏՈՒԹՅՈՒՆ 9 ՕՆԼԱՅՆ ԴԱՍԵՐԻ ԱՐԴՅՈՒՆՔՈՒՄ»: the 9 lessons, each a card in a feed colour (black text) that
+         opens with its + (a native <details>): what you leave with, what we learn, the tools. On the page grid as the
+         FAQ: the title on the left (it stays in view from lg up), the two parts of the course beside it, each under its
+         length (the first 3 lessons, then the other 6; numbered 1–9 through the course). Titles and colours from the
+         reference; the opened texts are the course page's (ai-grager.html) for now.
+         TODO: the new, shorter texts for the opened cards
+         ========================================================= -->
+    <section class="skills" id="skills" aria-labelledby="skills-title">
+      <h2 class="section-title skills__title" id="skills-title">AI-ՀՄՏՈՒ&shy;ԹՅՈՒՆ 9 ՕՆԼԱՅՆ ԴԱՍԵՐԻ ԱՐԴՅՈՒՆ&shy;ՔՈՒՄ</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="skills__groups">
+        <div class="skills__group">
+          <p class="skills__length"><i class="ic ic--clock" aria-hidden="true"></i>Տևողությունը՝ 1&nbsp;շաբաթ • 3&nbsp;դաս • 6&nbsp;ժամ</p>   <!-- &nbsp;: each number stays with its word -->
+          <div class="skills__list">
+            <details class="skill" data-bg="yellow">
+              <summary class="skill__head">   <!-- &#8288; (word joiner): the time never breaks at its dash -->
+                <span class="skill__day">1-ին շաբաթ · Երեքշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 1 · AI հիմունքներ և անվտանգություն</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Հասկանում ենք՝ ինչ սպասել AI-ից, ինչպես արդյունավետ հրահանգներ տալ և խուսափել սկսնակների հիմնական սխալներից։</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Ի՞նչ է AI-ն ու ինչո՞վ է այն տարբերվում ավանդական ալգորիթմական ծրագրերից, AI մոդելներ VS AI գործիքներ</li>
+                    <li>Ինչպես են աշխատում LLM-ները. հասկացություններ՝ տոկեններ (tokens), կոնտեքստի պատուհան…</li>
+                    <li>Prompt Engineering. որակյալ հրահանգների կառուցվածքը AI-ից լավագույն արդյունքները ստանալու համար</li>
+                    <li>Հալյուցինացիաներ, Deep Fake-եր և AI-ի անվտանգ կիրառում</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/arena.svg" alt="" />Arena.ai (LMArena)</li>
+                    <li class="tool-pill"><img src="assets/logos/chatgpt.svg" alt="" />ChatGPT</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                    <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="teal">
+              <summary class="skill__head">
+                <span class="skill__day">1-ին շաբաթ · Հինգշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 2 · AI-ը կյանքի 10 իրավիճակներում</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Ծանոթանում ենք 10 ռեալ սցենարի (use cases) և սովորում չսահմանափակվել միայն մեկ գործիքով՝ ստեղծելով աշխատանքահոսքեր (workflows)։</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Մուլտիմոդալ AI կիրառում իրական օրինակներով՝ տեքստեր, պատկերներ, աուդիոներ (տեքստից՝ ձայն TTS և ձայնից՝ տեքստ STT)…</li>
+                    <li>Գործիքների համադրում. ինչպես աշխատել կոնկրետ AI գործիքներով կոնկրետ խնդիրների լուծման համար</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/google_ai_studio.png" alt="" />Google AI Studio</li>
+                    <li class="tool-pill"><img src="assets/logos/chatgpt.svg" alt="" />ChatGPT</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                    <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                    <li class="tool-pill"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+                    <li class="tool-pill"><img src="assets/logos/wispr-flow.svg" alt="" />Wispr Flow</li>
+                    <li class="tool-pill"><img src="assets/logos/oboe.svg" alt="" />Oboe</li>
+                    <li class="tool-pill"><img src="assets/logos/suno.svg" alt="" />Suno</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="pink">
+              <summary class="skill__head">
+                <span class="skill__day">1-ին շաբաթ · Շաբաթ · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 3 · Քո 1-ին AI նախագիծը</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Ունենում ենք մեր 1-ին AI նախագիծը (պրեզենտացիա + ելույթի տեքստ)։</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Պրեզենտացիաների ակնթարթային գեներացիա, դիզայնի ադապտացիա և բովանդակության հարմարեցում լսարանին՝ talk-եր, հաշվետվություններ…</li>
+                    <li>Ելույթի խոսքի գեներացիա. ինչպես ինֆորմացիան AI-ի օգնությամբ դարձնել գրավիչ պատմություն ու ներկայացնել մեր լսարանին</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/gamma.svg" alt="" />Gamma.app</li>
+                    <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="skills__group">
+          <p class="skills__length"><i class="ic ic--clock" aria-hidden="true"></i>Տևողությունը՝ 3&nbsp;շաբաթ • 6&nbsp;դաս • 12&nbsp;ժամ</p>
+          <div class="skills__list">
+            <details class="skill" data-bg="pink">
+              <summary class="skill__head">
+                <span class="skill__day">2-րդ շաբաթ · Երեքշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 4 · Հետազոտություն ու աղբյուրահեն կոնտենտ</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <ul class="skill__outcomes">
+                  <li>Մեր նյութերի հիման վրա ստեղծված փոդքասթ, վիդեո, մտքի քարտեզ, հարցաշարեր, հաշվետվություններ և այլն</li>
+                  <li>Մեզ հետաքրքրող թեմայի խորը հետազոտություն և ինֆոգրաֆիկա</li>
+                  </ul>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Սեփական աղբյուրների հիման վրա նոր մուլտիմոդալ կոնտենտի ստեղծում (տեքստեր, պատկերներ, վիդեոներ, փոդքասթներ, ուղեցույցներ…)</li>
+                    <li>Արագ և 100-ավոր աղբյուրներով խորքային հետազոտություն րոպեների ընթացքում</li>
+                    <li>Հետազոտությունից ինֆոգրաֆիկայի և մուլտիմեդիա կոնտենտի գեներացիա</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                    <li class="tool-pill"><img src="assets/logos/notebooklm.svg" alt="" />NotebookLM</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="sky">
+              <summary class="skill__head">
+                <span class="skill__day">2-րդ շաբաթ · Հինգշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 5 · 1000 բառի տեղ խոսող նկարներ</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <ul class="skill__outcomes">
+                  <li>Մեր դեմքով նոր նկարներ՝ տարբեր կերպարներով, ոճերով, տրամադրությամբ ու միջավայրերում</li>
+                  <li>Լրիվ նոր պատկերների գեներացիա (վերակահավորված սենյակ, պատմական կերպարի վերականգնում և այլ օրինակներ)</li>
+                  </ul>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Նկարների գեներացիա (տեքստից պատկեր, գոյություն ունեցող պատկերը՝ որպես օրինակ. օբյեկտ, ոճ, կոմպոզիցիա, ճեպանկար…)</li>
+                    <li>Նկարներ գեներացնելու Prompt-երի խորացված կառուցում՝ ոճ, լուսավորություն, կոմպոզիցիա (լավ հրահանգի ճիշտ կառուցվածքը)</li>
+                    <li>Նկարների խմբագրում և հարստացում (ոճ, հին նկարների վերականգնում, կերպարի դիրքի փոփոխում, նկարի պակասող հատվածի ավելացում, տեքստի ավելացում և այլն)</li>
+                    <li>Գաղտնի հնարքներ և պրոֆեսիոնալ տեխնիկաներ (մաշկ և տեքստուրաներ, լուսավորություն, ռակուրս, դիտանկյուն, ոճեր, բանալի բառեր…)</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+                    <li class="tool-pill"><img src="assets/logos/chatgpt.svg" alt="" />ChatGPT</li>
+                    <li class="tool-pill"><img src="assets/logos/grok.svg" alt="" />Grok</li>
+                    <li class="tool-pill"><img src="assets/logos/higgsfield.svg" alt="" />Higgsfield</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="yellow">
+              <summary class="skill__head">
+                <span class="skill__day">3-րդ շաբաթ · Երեքշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 6 · AI վիդեոների գեներացիա</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Ամբողջական AI վիդեո կոնտենտ՝ իր պատմությամբ, կերպարներով ու ձայնով</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Տպավորիչ վիդեո ստեղծելու պարտադիր քայլերը (սցենար, կադրավորում, մոնտաժ)</li>
+                    <li>Վիդեո գեներացիայի Prompt տեխնիկաներ (Ռեժիսորի բանաձև, JSON, ժամանականիշով և բացասական Prompting)</li>
+                    <li>Տեքստային Prompt-ից կամ ռեֆեռալ պատկերներից վիդեոյի գեներացիա, սկզբնական և վերջնական կադրերի կառավարում</li>
+                    <li>Սուպեր օգտակար նրբություններ (կադր և պլան, ռակուրս / դիտանկյուն, կամերայի շարժում)</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/gemini.svg" alt="" />Gemini</li>
+                    <li class="tool-pill"><img src="assets/logos/nano-banana.svg" alt="" />Nano Banana</li>
+                    <li class="tool-pill"><img src="assets/logos/veo.svg" alt="" />Veo 3.1</li>
+                    <li class="tool-pill"><img src="assets/logos/google-flow.svg" alt="" />Google Flow</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="sky">
+              <summary class="skill__head">
+                <span class="skill__day">3-րդ շաբաթ · Հինգշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 7 · Կայքէջերի գեներացիա</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Ֆունկցիոնալ CV կայքէջ, որը ներկայացնում է մեզ ու տալիս հնարավորություն, որ հետաքրքրվողները կայքով կապվեն մեզ հետ</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Կայքէջի էության ու տերմինների ծանոթացում</li>
+                    <li>Մանրամասն Prompt-ով կայքէջի գեներացիա</li>
+                    <li>AI-ով և ձեռքով խմբագրումներ (layout, դիզայն և կոնտենտ, ֆունկցիոնալություն)</li>
+                    <li>Domain-ի ստեղծում, միացում և կայքի հրապարակում</li>
+                    <li>Անալիտիկայի ակտիվացում (քանի՞ հոգի է այցելել կայք, ե՞րբ, որտեղի՞ց ու ո՞ր հատվածներում է մնացել)</li>
+                    <li>Backend և տվյալների բազա (ստեղծում ենք Backend՝ բարդ ֆունկցիոնալներն ապահովելու համար)</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/lovable.svg" alt="" />Lovable</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="teal">
+              <summary class="skill__head">
+                <span class="skill__day">4-րդ շաբաթ · Երեքշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 8 · Գործընթացների ավտոմատացում</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Ավտոմատացում, որը անհատականացված նամակներ է ուղարկում մեր ստեղծած կայքով մեզ հետ կապված մարդկանց</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Ավանդական ավտոմատացում VS AI ավտոմատացում</li>
+                    <li>Մեր հիմնական գործիքին ծանոթացում՝ նամակագրության օգնականի ստեղծմամբ</li>
+                    <li>Հիմնական ավտոմատացման քայլ առ քայլ ստեղծում, որը անհատականացված նամակներ է ուղարկում մեր ստեղծած կայքով մեզ հետ կապված մարդկանց</li>
+                    <li>AI ավտոմատացումների top գործիքները</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/make.svg" alt="" />Make.com</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+            <details class="skill" data-bg="yellow">
+              <summary class="skill__head">
+                <span class="skill__day">4-րդ շաբաթ · Հինգշաբթի · 19:00&#8288;–&#8288;21:00</span>
+                <span class="skill__title">Դաս 9 · Ինքնավար ագենտներ</span>
+                <span class="skill__toggle" aria-hidden="true"><i class="ic ic--plus"></i></span>
+              </summary>
+              <div class="skill__body">
+                <div class="skill__part">
+                  <p class="skill__label">Դասի վերջում</p>
+                  <p class="skill__outcome">Անձնական ագենտ, որը պլանավորում և ամրագրում է հանդիպումներ՝ մեր կայքի միջոցով մեզ հետ հանդիպել ցանկացող մարդկանց հետ</p>
+                </div>
+                <div class="skill__part">
+                  <p class="skill__label">Ի՞նչ ենք սովորում</p>
+                  <ul class="skill__topics">
+                    <li>Ի՞նչ է ագենտը, ինչպե՞ս է աշխատում ու ինչպե՞ս է տարբերվում AI ավտոմատացումից</li>
+                    <li>Ստեղծում ենք մեր անձնական ագենտին, որը պլանավորում և ամրագրում է հանդիպումներ՝ մեր կայքի միջոցով մեզ հետ հանդիպել ցանկացող մարդկանց հետ</li>
+                    <li>Ծանոթանում ենք Claude-ին արդեն որպես ավտոմատ ագենտներ ստեղծող օգնական, որ ագենտներին ձեռքով չստեղծենք</li>
+                  </ul>
+                  <p class="skill__label">Գործիքներ</p>
+                  <ul class="skill__tools">
+                    <li class="tool-pill"><img src="assets/logos/make.svg" alt="" />Make.com</li>
+                    <li class="tool-pill"><img src="assets/logos/claude.svg" alt="" />Claude</li>
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -171,7 +171,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .pricing, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .reel, .skills, .pricing, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -1173,6 +1173,97 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .reel__item { grid-template-columns: --spacing(5) --spacing(20) minmax(0, 1fr); gap: --spacing(3); padding: --spacing(3) --spacing(4); }
 }
 
+/* ============================================================
+   05h · SKILLS («AI-ՀՄՏՈՒԹՅՈՒՆ 9 ՕՆԼԱՅՆ ԴԱՍԵՐԻ ԱՐԴՅՈՒՆՔՈՒՄ», aigraget.html)
+   ============================================================ */
+/* White, between the Black videos band and the Blue stats strip. On the page grid as the FAQ: the title on the left
+   (it stays in view while the lessons scroll by, from xl up), the two parts of the course beside it, each under its
+   length; stacked below xl, where the title's column would be narrower than its longest word */
+.skills {
+  display: grid; grid-template-columns: minmax(--spacing(100), 1fr) minmax(0, 2fr); align-items: start;   /* 400px: the title's longest word (388 at Headline H2) */
+  gap: var(--title-gap) var(--card-gap);
+  interpolate-size: allow-keywords;   /* lets a card's height animate to auto (below) */
+}
+.skills__title { position: sticky; top: calc(--spacing(24) + var(--bar-h)); }   /* under the fixed nav (and the bar, when shown), as scroll-padding-top */
+.skills__groups { display: flex; flex-direction: column; gap: --spacing(10); }
+.skills__group { display: flex; flex-direction: column; gap: --spacing(4); }
+.skills__length {
+  display: flex; align-items: flex-start; gap: --spacing(2);   /* the clock by the first line when it wraps (320) */
+  @apply text-aqb-label; color: var(--color-ink-600);   /* a detail: how long, how many */
+}
+.skills__length .ic { margin-top: 2px; color: var(--color-primary); }   /* the clock, Blue as the package cards' clock and calendar */
+.skills__list { display: flex; flex-direction: column; gap: --spacing(3); }
+/* A lesson: a feed-colour card with black text (BRAND.md → Text on colour), the day over «Դաս N · its name»
+   (a card title: Subhead), the + on the right; opened, a hairline and then what it holds: what you leave with on
+   the left, what we learn and the tools on the right (the course page's lesson, ai-grager.html, made compact) */
+.skill {
+  border-radius: var(--radius-3xl);
+  background: var(--skill-bg, var(--color-feed-yellow));
+  color: var(--color-black);
+}
+.skill[data-bg="yellow"] { --skill-bg: var(--color-feed-yellow); }
+.skill[data-bg="teal"]   { --skill-bg: var(--color-feed-teal); }
+.skill[data-bg="pink"]   { --skill-bg: var(--color-feed-pink); }
+.skill[data-bg="sky"]    { --skill-bg: var(--color-feed-sky); }
+.skill__head {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: --spacing(4); row-gap: --spacing(1);
+  padding: --spacing(5) --spacing(6);
+  cursor: pointer; list-style: none;
+  border-radius: inherit;
+}
+.skill__head::-webkit-details-marker { display: none; }
+.skill__head:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.skill__day { grid-column: 1; @apply text-aqb-label; }
+.skill__title { grid-column: 1; @apply text-aqb-subhead; text-wrap: balance; }
+/* The + : a White circle (as the round arrows), turned 45° into a ✕ while the card is open */
+.skill__toggle {
+  grid-column: 2; grid-row: 1 / 3;
+  display: grid; place-items: center;
+  width: --spacing(11); height: --spacing(11); border-radius: var(--radius-full);
+  background: var(--color-white);
+  transition: rotate .3s var(--ease-smooth), scale .2s ease;
+}
+.skill__head:hover .skill__toggle { scale: 1.08; }
+.skill[open] .skill__toggle { rotate: 45deg; }
+/* The opening: the content grows from 0 to its height (where ::details-content is supported; elsewhere it just opens) */
+.skill::details-content {
+  block-size: 0; overflow: clip;
+  transition: block-size .35s var(--ease-smooth), content-visibility .35s allow-discrete;
+}
+.skill[open]::details-content { block-size: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .skill::details-content, .skill__toggle { transition: none; }
+}
+.skill__body {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: --spacing(6) --spacing(8);
+  margin: 0 --spacing(6); padding: --spacing(5) 0 --spacing(6);
+  border-top: 1px solid color-mix(in oklab, var(--color-black) 20%, transparent);   /* as the course page's result line */
+}
+.skill__part { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3); }
+.skill__label { @apply text-aqb-caption; }
+.skill__part .skill__label:not(:first-child) { margin-top: --spacing(3); }   /* «Գործիքներ» after the topics */
+.skill__outcome { @apply text-aqb-label; }   /* what you leave with: the detail cut, as the course page */
+.skill__outcomes { display: flex; flex-direction: column; gap: --spacing(2); padding-left: --spacing(5); list-style: disc; }
+.skill__outcomes li { @apply text-aqb-label; }
+.skill__topics { display: flex; flex-direction: column; gap: --spacing(2); padding-left: --spacing(5); list-style: disc; }
+.skill__topics li { @apply text-aqb-label; font-weight: var(--font-weight-text); }   /* reading text, compact: there are many */
+.skill__tools { display: flex; flex-wrap: wrap; gap: --spacing(2); }
+@media (width < theme(--breakpoint-xl)) {
+  .skills { grid-template-columns: minmax(0, 1fr); }
+  .skills__title { position: static; }
+}
+/* The two long titles (videos, skills) carry &shy; for phones; from md up there's room to break between words, so the
+   soft hyphens are ignored (else the browser fills the line by splitting a word) */
+@media (width >= theme(--breakpoint-md)) {
+  .reel .section-title, .skills__title { hyphens: none; }
+}
+@media (width < theme(--breakpoint-md)) {
+  .skill__head { padding: --spacing(4) --spacing(5); column-gap: --spacing(3); }
+  .skill__title { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* phones: one step down, still the detail cut */
+  .skill__toggle { width: --spacing(10); height: --spacing(10); }
+  .skill__body { grid-template-columns: minmax(0, 1fr); margin-inline: --spacing(5); padding-bottom: --spacing(5); }
+}
+
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
   display: flex; flex-direction: column; gap: var(--card-gap);
@@ -1700,6 +1791,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--globe      { --i: url("assets/icons/globe.svg"); }     /* the internet (same) */
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
 .ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */
+.ic--plus       { --i: url("assets/icons/plus.svg"); }      /* opens a card; turned 45° it closes it (the lessons, aigraget.html) */
 
 /* ============================================================
    06 · TEACHERS
