@@ -171,7 +171,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .skills, .audience, .pricing, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -947,7 +947,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 
 /* ============================================================
-   05b · ABOUT («ԾՐԱԳՐԻ ՄԱՍԻՆ», aigraget.html)
+   05b · ABOUT («Ծրագրի մասին», aigraget.html)
    ============================================================ */
 /* The Blue ground (white text, BRAND.md → Text on colour), full-bleed, after the Black why band: the title, the
    timeline, then the words, the last two on one set of columns (--about-cols) */
@@ -1080,7 +1080,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 
 /* ============================================================
-   05g · COURSE VIDEOS («ԴԱՍԸՆԹԱՑԻ ԿԱՌՈՒՑՎԱԾՔԸ», aigraget.html)
+   05g · COURSE VIDEOS («Դասընթացի կառուցվածքը», aigraget.html)
    ============================================================ */
 /* The brand's Black ground (white text), full-bleed, between the Blue about band and the Blue stats strip: the player
    and the lesson list side by side from lg up (5 : 3), the list as tall as the player (contain: size lets the
@@ -1174,7 +1174,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 
 /* ============================================================
-   05h · SKILLS («AI-ՀՄՏՈՒԹՅՈՒՆ 9 ՕՆԼԱՅՆ ԴԱՍԵՐԻ ԱՐԴՅՈՒՆՔՈՒՄ», aigraget.html)
+   05h · SKILLS («AI-հմտություն 9 օնլայն դասերի արդյունքում», aigraget.html)
    ============================================================ */
 /* White, between the Black videos band and the Blue stats strip. On the page grid as the FAQ: the title on the left
    (it stays in view while the lessons scroll by, from xl up), the two parts of the course beside it, each under its
@@ -1255,7 +1255,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 /* The two long titles (videos, skills) carry &shy; for phones; from md up there's room to break between words, so the
    soft hyphens are ignored (else the browser fills the line by splitting a word) */
 @media (width >= theme(--breakpoint-md)) {
-  .reel .section-title, .skills__title, .audience__title { hyphens: none; }
+  .reel .section-title, .skills__title, .audience__title, .pricing__title { hyphens: none; }
 }
 @media (width < theme(--breakpoint-md)) {
   .skill__head { padding: --spacing(4) --spacing(5); column-gap: --spacing(3); }
@@ -1265,7 +1265,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 
 /* ============================================================
-   05i · AUDIENCE («ԴԱՍԸՆԹԱՑԸ ՔԵԶ ՀԱՄԱՐ Է…», aigraget.html)
+   05i · AUDIENCE («Դասընթացը քեզ համար է…», aigraget.html)
    ============================================================ */
 /* The brand's Black ground, full-bleed, between the White lessons and the Blue stats. Who you are and what you get, in
    the brand's chat bubble without its tail (script.js · 03b cuts it: the bottom edge falls away to one corner), a feed
@@ -1346,6 +1346,162 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .audience__bubble { padding-inline: --spacing(6); }
 }
 
+/* ============================================================
+   05k · FORMAT («Ինչպես են անցնում դասերը», aigraget.html)
+   ============================================================ */
+/* The brand's Black ground (white title), full-bleed, between the grey «Ի՞նչ ես ստանում» and the Blue stats: four
+   cards, a feed colour each (data-bg: Sky, Pink, Yellow, Teal; black text, BRAND.md → Text on colour), each its icon on
+   a Black disc (white icon), its fact (a card title: Subhead) and the detail
+   (reading text), cut into the brand bubble at the top-right corner, clear of the icon (script.js · 05k); 4 in a row
+   from xl (narrower, the titles broke word by word), 2 × 2 from md, one column on phones */
+.format {
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.format .section-title { color: var(--color-white); }
+/* The eye logo (white on Black, with the ™) peeks from the last card's stepped corner, outside the card (BRAND.md →
+   Bubble construction: Peek): script.js (05k) sizes it to the step and sets it on its shoulder; hidden until then.
+   It blinks and glances (05 peekEyes) */
+.format__cards { position: relative; }
+.format__eyes { position: absolute; z-index: 1; display: block; pointer-events: none; visibility: hidden; }
+.format__eyes.is-placed { visibility: visible; }
+.format__eyes .eyes { width: 100%; }
+.format__list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--card-gap); }
+.format__card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3);
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);   /* until script.js cuts it (its corners: the same 24) */
+  background: var(--format-bg, var(--color-feed-yellow));
+  color: var(--color-black);
+}
+.format__card[data-bg="yellow"] { --format-bg: var(--color-feed-yellow); }
+.format__card[data-bg="teal"]   { --format-bg: var(--color-feed-teal); }
+.format__card[data-bg="pink"]   { --format-bg: var(--color-feed-pink); }
+.format__card[data-bg="sky"]    { --format-bg: var(--color-feed-sky); }
+.format__icons { display: flex; align-items: center; gap: --spacing(3); margin-bottom: --spacing(3); }
+.format__icons .format__icon { margin-bottom: 0; }
+.format__logo { width: auto; height: --spacing(4); }   /* the Zoom wordmark, small enough to stay clear of the cut corner */
+.format__icon {
+  display: grid; place-items: center;
+  width: --spacing(14); height: --spacing(14); margin-bottom: --spacing(3);
+  border-radius: var(--radius-full);
+  background: var(--color-black); color: var(--color-white);   /* Black reads on every card colour (Blue was faint on Teal) */
+}
+.format__title { @apply text-aqb-subhead; text-wrap: balance; }
+.format__text { @apply text-aqb-body-s; }   /* black, as all text on a feed colour */
+.format__days { display: flex; flex-direction: column; gap: --spacing(2); @apply text-aqb-body-s; }
+/* the week in the detail cut (b, strong: SemiBold) */
+@media (width < theme(--breakpoint-xl)) {
+  .format__list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (width < theme(--breakpoint-md)) {
+  .format__list { grid-template-columns: minmax(0, 1fr); }
+  .format__card { padding: --spacing(6); }
+}
+
+/* ============================================================
+   05l · CALLBACK («Պատվիրել հետադարձ զանգ», aigraget.html)
+   ============================================================ */
+/* Blue, full-bleed, white text (BRAND.md → Text on colour), centred: the line as the section title, the call button beside it (the floating phone button: .fab .fab--label, dark); the button
+   wraps under the line when there's no room */
+.callback {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: --spacing(4) var(--card-gap);   /* the two centred in the band */
+  text-align: center;   /* the title's lines too, when it wraps (phones) */
+  background: var(--color-primary);
+  box-shadow: 0 0 0 100vmax var(--color-primary);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.callback .section-title { color: var(--color-white); }
+
+/* ============================================================
+   05n · NEEDS («Սովորելու համար պարտադիր չէ / բավական է», aigraget.html)
+   ============================================================ */
+/* The brand's Black ground, full-bleed, between the grey packages and the Blue stats: what you don't need (Pink) and
+   what's enough (Teal), black text (BRAND.md → Text on colour), each led by its ✕ / ✓ on a Black disc (as the format
+   cards' icons: the no and the yes), a card title (Subhead) and the items (reading text) as bullets; cut into the brand bubble at
+   the top-right corner (script.js · 05k bubbleCards). Under them the note, white on the Black, in the detail cut,
+   the brand's eyes saying it. One column on phones */
+.needs {
+  display: flex; flex-direction: column; gap: var(--card-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.needs__cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }
+.needs__card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3);
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);   /* until script.js cuts it (its corners: the same 24) */
+  background: var(--needs-bg, var(--color-feed-pink));
+  color: var(--color-black);
+}
+.needs__card[data-bg="pink"] { --needs-bg: var(--color-feed-pink); }
+.needs__card[data-bg="teal"] { --needs-bg: var(--color-feed-teal); }
+.needs__icon {
+  display: grid; place-items: center;
+  width: --spacing(14); height: --spacing(14); margin-bottom: --spacing(3);
+  border-radius: var(--radius-full);
+  background: var(--color-black); color: var(--color-white);
+}
+.needs__title { @apply text-aqb-subhead; text-wrap: balance; }
+.needs__list { display: flex; flex-direction: column; gap: --spacing(2); padding-left: --spacing(6); list-style: disc; @apply text-aqb-body-s; }   /* plain bullets: the disc over the title already says no / yes */
+.needs__note {
+  display: flex; align-items: flex-start; gap: --spacing(4);   /* the eyes by the first line, however many it wraps to */
+  max-width: --spacing(180);   /* ~70 characters: a comfortable line, not the full 1280 */
+  margin-top: --spacing(2);   /* a little more air than the cards' gap: the note is apart from them */
+  @apply text-aqb-body-s; font-weight: var(--font-weight-detail); text-wrap: pretty;   /* no word left alone on the last line */
+}
+.needs__eyes { flex: none; display: block; width: --spacing(14); margin-top: --spacing(0.5); }   /* 112.6 wide with the ™, as the audience sum's; centred on the first 28px line */
+.needs__eyes .eyes { width: 100%; }
+@media (width < theme(--breakpoint-md)) {
+  .needs__cards { grid-template-columns: minmax(0, 1fr); }
+  .needs__card { padding: --spacing(6); }
+}
+
+/* ============================================================
+   05o · CERTIFICATE («Դասընթացի ավարտին տրվում է հավաստագիր», aigraget.html)
+   ============================================================ */
+/* White, between the Black needs and the Blue stats: the title and what the certificate confirms (reading text) on
+   the left (top-aligned with the paper), the example certificate on the right, a hairline and a short shadow. The brand's eyes (with the ™) on an Ink circle peek over its top edge from behind it (BRAND.md →
+   Bubble construction: Peek; the white eyes need a dark ground). The paper rises as it scrolls in, then the eyes
+   come up (script.js · revealOnce; they blink: 05 peekEyes). Stacked below lg */
+.certificate { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; gap: var(--title-gap) var(--card-gap); }
+.certificate__text { display: flex; flex-direction: column; gap: --spacing(6); padding-top: --spacing(10); }   /* top-aligned: the title level with the paper's top edge (its margin) */
+.certificate__lead { @apply text-aqb-body-m; color: var(--color-ink-700); text-wrap: pretty; }
+.certificate__paper { position: relative; isolation: isolate; margin: --spacing(10) 0 --spacing(4); }
+.certificate__paper img {
+  display: block; width: 100%; height: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 0 0 1px var(--line), 0 8px 16px -8px color-mix(in oklab, var(--color-ink-900) 20%, transparent);   /* a hairline and a short, tight shadow: paper on a desk */
+}
+.certificate__eyes {
+  position: absolute; z-index: -1; right: --spacing(10); top: --spacing(-16);   /* two thirds of the circle above the paper */
+  display: grid; place-items: start center; padding-top: --spacing(4);
+  width: --spacing(24); height: --spacing(24); border-radius: var(--radius-full);   /* 96px, as the about lead's */
+  background: var(--color-neutral-ink);
+}
+.certificate__eyes .eyes { width: 66%; }   /* the ™ beside the right eye, inside the circle */
+/* The entrance: the paper rises into place, then the eyes rise from behind it */
+.certificate.is-armed .certificate__paper { opacity: 0; translate: 0 --spacing(10); }
+.certificate.is-in .certificate__paper { opacity: 1; translate: 0 0; transition: opacity .4s, translate .7s cubic-bezier(.2, .8, .2, 1); }
+.certificate.is-armed .certificate__eyes { translate: 0 --spacing(10); }
+.certificate.is-in .certificate__eyes { translate: 0 0; transition: translate .55s cubic-bezier(.34, 1.56, .64, 1) .8s; }
+@media (width < theme(--breakpoint-xl)) {
+  .certificate { grid-template-columns: repeat(2, minmax(0, 1fr)); }   /* lg: the text gets half, so the title keeps to 3 lines */
+}
+@media (width < theme(--breakpoint-lg)) {
+  .certificate { grid-template-columns: minmax(0, 1fr); }
+  .certificate__text { padding-top: 0; }
+}
+@media (width < theme(--breakpoint-md)) {
+  .certificate__eyes { right: --spacing(6); top: --spacing(-12); width: --spacing(18); height: --spacing(18); padding-top: --spacing(3); }
+}
+
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
   display: flex; flex-direction: column; gap: var(--card-gap);
@@ -1354,6 +1510,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   clip-path: inset(0 -100vmax);
 }
 /* «AI գրագիտություն / PRO դասընթացներ» pill toggle */
+.pricing__title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }   /* aigraget.html: the title over the cards, at the section-title gap */
 .pkg-switch { display: flex; justify-content: center; }
 .pill-tabs {
   display: inline-flex; gap: --spacing(1);
@@ -2519,6 +2676,11 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
   @apply text-aqb-label; line-height: --spacing(5);   /* layout box: the pill height */
   white-space: nowrap;
 }
+/* size step: --lg, 64px tall (as .btn--lg), the text a step up (Body M in the detail cut) and the icon 24px: a phone
+   number that is the point of its band (aigraget.html · callback) */
+.fab--lg { height: --spacing(16); }
+.fab--lg.fab--label { gap: --spacing(3); padding-inline: --spacing(7); @apply text-aqb-body-m; font-weight: var(--font-weight-detail); line-height: --spacing(6); }   /* layout box: the line, as tall as the icon */
+.fab--lg .ic { width: --spacing(6); height: --spacing(6); }
 /* contact: opens the group below; while it's open it turns dark with an ✕ and stays outside the group */
 .fab--contact,
 .fab-group {

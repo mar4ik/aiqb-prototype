@@ -1447,6 +1447,38 @@ function shapeElement(el, pts) {
 }
 const canClip = 'clipPath' in document.documentElement.style;
 
+// The brand bubble's outline (BRAND.md → Bubble construction) for a box W × H: rounded rectangles merged (outer
+// corners 24, inner 12: the brand's 20 / 10 ratio at the site's card rounding), with, from `spec`, a straight angled
+// tail or a stepped corner at a top corner ('tail-left' · 'step-left' · 'tail-right' · 'step-right') and a slit in the
+// right side ('slit') where there's room. p: how far the cut is in (0 a plain rectangle, 1 the bubble, more = deeper);
+// safe: the line every cut stays above (where the text starts). Shared by the learn tiles (05c) and the format cards (05k)
+const BUBBLE = { R: 24, r: 12, TAIL: 22, SLIT: 12, INSET: 16 };
+function bubblePoints(W, H, spec, { p = 1, safe = H } = {}) {
+  const { R, r, TAIL, SLIT, INSET } = BUBBLE;
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+  const has = (f) => (spec || '').split(' ').includes(f);
+  const a = clamp(W * 0.3, 56, 150);
+  const tFull = Math.min(clamp(H * 0.12, 28, 52), safe - 8);     // the cut's depth when the bubble is whole
+  const t = Math.max(2, Math.min(tFull * p, safe - 8));           // …and right now (crop-in, hover)
+  const tail = TAIL * Math.min(1, p);                             // the tail leans out as the cut goes in
+  const s = Math.round(H * 0.38);
+  const left = tFull >= 20 && (has('tail-left') ? 'tail' : has('step-left') ? 'step' : null);
+  const right = tFull >= 20 && (has('tail-right') ? 'tail' : has('step-right') ? 'step' : null);
+  const slit = has('slit') && s >= tFull + 2 * R && s + SLIT + 2 * R < safe;
+
+  const pts = [];
+  if (left) pts.push([0, t, R], [a, t, r], left === 'tail' ? [a - tail, 0, 0] : [a, 0, R]);
+  else pts.push([0, 0, R]);
+  if (right) pts.push(right === 'tail' ? [W - a + tail, 0, 0] : [W - a, 0, R], [W - a, t, r], [W, t, R]);
+  else pts.push([W, 0, R]);
+  if (slit) {
+    const d = Math.round(INSET + 2 + (W * 0.38 - INSET - 2) * Math.min(1, p));   // the slit opens with the cut
+    pts.push([W, s, R], [W - d, s, SLIT / 2], [W - d, s + SLIT, SLIT / 2], [W - INSET, s + SLIT, R], [W - INSET, H, R]);
+  } else pts.push([W, H, R]);
+  pts.push([0, H, R]);
+  return { pts, left, right, a, t, tFull };
+}
+
 // The brand's eyes as an inline 96 × 50 SVG (.eyes: white ovals, black pupils; data-look / --look-x, --look-y turn the
 // pupils) — the learn tiles' peeking eyes (05c) and the mission's crowd (08). { tm: true } adds the eye logo's ™
 // (trademark.svg's paths, scaled to these eyes) beside the right eye's top, and widens the drawing to 112.6 × 50 to hold it
@@ -1526,12 +1558,12 @@ function makeEyes({ tm = false } = {}) {
 })();
 
 /* ============================================================
-   05 / 05b / 05i · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail, under the about lead's and by the audience sum: each
+   05 / 05b / 05i · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail, under the about lead's, by the audience sum, in the last format card's corner (05k) and by the needs note (05n): each
    pair blinks now and then and glances around while on screen, and while the pointer is over its section it looks
    at it (mouse screens only), within the brand's pupil oval; at rest, at you
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
@@ -1604,6 +1636,10 @@ revealOnce(document.querySelector('.why'), null, 0.3);
    (tailwind.css · .audience.is-in) */
 revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones the section is several screens tall
 
+/* 05o · CERTIFICATE — the paper rises into place, then the eyes rise from behind it
+   (tailwind.css · .certificate.is-in) */
+revealOnce(document.querySelector('.certificate'), null, 0.3);
+
 /* 05b · ABOUT TIMELINE — the line draws, the markers pop, the years rise (tailwind.css · .timeline.is-in). When AI
    has landed, the eyes under the lead turn to it and blink, then look back at you */
 (function aboutTimeline() {
@@ -1670,6 +1706,69 @@ revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones 
     player.append(frame);
   });
 })();
+
+/* ============================================================
+   05k / 05n · BUBBLE CARDS (aigraget.html) — each «Ինչպես են անցնում դասերը» card (and «Սովորելու համար…», 05n) cut into
+   the brand bubble (bubblePoints, as the learn tiles): its top-right corner, clear of the icon, a tail and a step in
+   turn; nothing cut where the title starts. When the row scrolls into view the corners cut in one card after another.
+   The eye logo (.format__eyes) peeks from the last format card's step, on its shoulder, sized to it (as the learn
+   tiles' eyes; it blinks: 05 peekEyes). Without script: rounded cards, no eyes
+   ============================================================ */
+bubbleCards('.format__card', '.format__title', document.querySelector('.format__eyes'));
+bubbleCards('.needs__card', '.needs__title');
+function bubbleCards(cardSel, titleSel, eyes = null) {
+  const cards = [...document.querySelectorAll(cardSel)];
+  if (!cards.length || !canClip) return;
+  const SHAPES = ['tail-right', 'step-right', 'tail-right', 'step-right'];
+  const GAP = 4;                // air between the eyes and the shape
+  const progress = new Map();   // card → its cut: 0 a plain rectangle · 1 the bubble
+  const animating = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window;
+
+  function shape(card, i) {
+    const W = card.clientWidth, H = card.clientHeight;
+    if (!W || !H) return;
+    const title = card.querySelector(titleSel);
+    const safe = title ? title.offsetTop - 12 : H;   // keep the cut above the text
+    const { pts, right, a, t, tFull } = bubblePoints(W, H, SHAPES[i % SHAPES.length], { p: progress.get(card) ?? 1, safe });
+    shapeElement(card, pts);
+    if (eyes && i === cards.length - 1) placeEyes(card, { right, a, t, tFull, W });
+  }
+  // In the last card's step: right of the raised part, sitting on the shoulder (its height t), clear of both by GAP
+  function placeEyes(card, { right, a, t, tFull, W }) {
+    if (right !== 'step') { eyes.classList.remove('is-placed'); return; }
+    const ar = EYES_TM_W / 50;
+    const w = Math.min(a - 2 * GAP, (tFull - 2 * GAP) * ar), h = w / ar;   // sized by the full cut: the same as it cuts in
+    Object.assign(eyes.style, {
+      left: `${(card.offsetLeft + W - a + GAP).toFixed(1)}px`,
+      top: `${(card.offsetTop + t - GAP - h).toFixed(1)}px`,
+      width: `${w.toFixed(1)}px`,
+    });
+    eyes.classList.add('is-placed');
+  }
+  if (animating) cards.forEach((card) => progress.set(card, 0));
+  const all = () => cards.forEach(shape);
+  all();
+  const resizer = new ResizeObserver((entries) => entries.forEach((en) => shape(en.target, cards.indexOf(en.target))));
+  cards.forEach((card) => resizer.observe(card));
+  document.fonts?.ready.then(all);
+  if (!animating) return;
+
+  const ease = (x) => 1 - Math.pow(1 - x, 3);
+  const io = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    io.disconnect();
+    cards.forEach((card, i) => {
+      const start = performance.now() + i * 90;
+      (function frame(now) {
+        const k = Math.min(1, Math.max(0, (now - start) / 650));
+        progress.set(card, ease(k));
+        shape(card, i);
+        if (k < 1) requestAnimationFrame(frame);
+      })(performance.now());
+    });
+  }, { threshold: 0.35 });
+  io.observe(cards[0].parentElement);
+}
 
 /* ============================================================
    15 · Course page (ai-grager.html) — the week's eyes: they rise from behind the card's top-right corner while the pointer is
@@ -1740,10 +1839,9 @@ revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones 
     'step-left tail-right',       // Ավտոմատացում
     'tail-right slit',            // Ագենտներ
   ];
-  const R = 24, r = 12, TAIL = 22, SLIT = 12, INSET = 16;
+  const { TAIL } = BUBBLE;
   const EYES_GAP = 4;                             // air between the eyes and the shape
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };        // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
-  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const eyesOf = new Map();                       // tile → its eyes (an <svg class="eyes"> in the tile's column)
   const HOVER = 1.3;                              // how much deeper the cut goes on hover
@@ -1779,29 +1877,9 @@ revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones 
   function shape(tile, i) {
     const W = tile.clientWidth, H = tile.clientHeight;
     if (!W || !H) return;
-    const has = (f) => (SHAPES[i % SHAPES.length] || '').split(' ').includes(f);
     const title = tile.querySelector('.learn-tile__pkg, .learn-tile__title');   // the course line sits above the title
     const safe = title ? title.offsetTop - 12 : H;   // keep every cut above the text
-    const p = progress.get(tile) ?? 1;
-    const a = clamp(W * 0.3, 56, 150);
-    const tFull = Math.min(clamp(H * 0.12, 28, 52), safe - 8);     // the cut's depth when the bubble is whole
-    const t = Math.max(2, Math.min(tFull * p, safe - 8));           // …and right now (crop-in, hover)
-    const tail = TAIL * Math.min(1, p);                             // the tail leans out as the cut goes in
-    const s = Math.round(H * 0.38);
-    const left = tFull >= 20 && (has('tail-left') ? 'tail' : has('step-left') ? 'step' : null);
-    const right = tFull >= 20 && (has('tail-right') ? 'tail' : has('step-right') ? 'step' : null);
-    const slit = has('slit') && s >= tFull + 2 * R && s + SLIT + 2 * R < safe;
-
-    const pts = [];
-    if (left) pts.push([0, t, R], [a, t, r], left === 'tail' ? [a - tail, 0, 0] : [a, 0, R]);
-    else pts.push([0, 0, R]);
-    if (right) pts.push(right === 'tail' ? [W - a + tail, 0, 0] : [W - a, 0, R], [W - a, t, r], [W, t, R]);
-    else pts.push([W, 0, R]);
-    if (slit) {
-      const d = Math.round(INSET + 2 + (W * 0.38 - INSET - 2) * Math.min(1, p));   // the slit opens with the cut
-      pts.push([W, s, R], [W - d, s, SLIT / 2], [W - d, s + SLIT, SLIT / 2], [W - INSET, s + SLIT, R], [W - INSET, H, R]);
-    } else pts.push([W, H, R]);
-    pts.push([0, H, R]);
+    const { pts, left, right, a, t, tFull } = bubblePoints(W, H, SHAPES[i % SHAPES.length], { p: progress.get(tile) ?? 1, safe });
     shapeElement(tile, pts);
     placeEyes(tile, { left, right, a, t, tFull, W });
   }
