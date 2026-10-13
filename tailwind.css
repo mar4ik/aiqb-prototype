@@ -161,6 +161,7 @@
 
 
 @property --ribbon-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }   /* the Bundle ribbon (05) */
+@property --fill { syntax: "<percentage>"; inherits: true; initial-value: 100%; }   /* the progress bar's fill (05p), so it can animate */
 
 @layer components {
 
@@ -171,7 +172,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .mission, .referral, .faq, .contact {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -1502,6 +1503,134 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .certificate__eyes { right: --spacing(6); top: --spacing(-12); width: --spacing(18); height: --spacing(18); padding-top: --spacing(3); }
 }
 
+/* ============================================================
+   05p · KEPT («Դասերից հետո նյութերը մնում են քեզ հետ», aigraget.html)
+   ============================================================ */
+/* The brand's Black ground (white title), full-bleed, between the White certificate and the Blue stats: four tiles,
+   a feed colour each (data-bg; black text, BRAND.md → Text on colour), each its picture in one 64px slot (so the titles
+   line up), its title (the headline cut at Body M) and the line (reading text). The pictures: «500+» as a big number
+   (Headline H1), the AI tools' logos (.tool-stack), a progress bar that fills to the certificate's ✓, the two
+   invitations as tickets. Cut into the brand bubble at the top-right corner, clear of the pictures (script.js · 05k
+   bubbleCards); the eye logo stands on the last tile's step, as wide as it (bigEyes). The title on top; the tiles 4 in a
+   row from xl, 2 × 2 from md, one column on phones */
+.kept {
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.kept .section-title { color: var(--color-white); }
+.kept__heading { max-width: --spacing(200); text-wrap: balance; }
+.kept__cards { position: relative; }
+.kept__eyes { position: absolute; z-index: 1; display: block; pointer-events: none; visibility: hidden; }
+.kept__eyes.is-placed { visibility: visible; }
+.kept__eyes .eyes { width: 100%; }
+.kept__grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--card-gap); }
+.kept__card {
+  position: relative;   /* the cut measures the title from the tile (script.js) */
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3);
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);   /* until script.js cuts it (its corners: the same 24) */
+  background: var(--kept-bg, var(--color-feed-yellow));
+  color: var(--color-black);
+}
+.kept__card[data-bg="yellow"] { --kept-bg: var(--color-feed-yellow); }
+.kept__card[data-bg="sky"]    { --kept-bg: var(--color-feed-sky); }
+.kept__card[data-bg="teal"]   { --kept-bg: var(--color-feed-teal); }
+.kept__card[data-bg="pink"]   { --kept-bg: var(--color-feed-pink); }
+.kept__title { @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); text-wrap: balance; }   /* the headline cut a step under Subhead (as the audience sum): it fits 4 in a row, where Subhead's long words didn't (asked Oct 2026) */
+.kept__text { @apply text-aqb-body-s; }
+/* The picture slot: one height for every tile, so the titles line up across the row */
+.kept__pic, .kept__num { display: flex; align-items: center; height: --spacing(16); }
+.kept__head { display: flex; flex-direction: column; gap: --spacing(3); }   /* the prompts' title: the number (its picture), then the words */
+.kept__num { @apply text-aqb-headline-h1 italic; }   /* a big number: Headline, the headline cut */
+.kept__progress { gap: --spacing(2); width: 60%; }   /* narrow of the cut corner */
+.kept__bar {
+  flex: 1; height: --spacing(3); border-radius: var(--radius-full); overflow: hidden;
+  background: color-mix(in oklab, var(--color-black) 15%, transparent);   /* a faint Black track */
+}
+.kept__bar::before { content: ""; display: block; width: var(--fill, 100%); height: 100%; border-radius: inherit; background: var(--color-black); }   /* the Black fill */
+.kept__done {
+  display: grid; place-items: center; flex: none;
+  width: --spacing(8); height: --spacing(8); border-radius: var(--radius-full);
+  background: var(--color-black); color: var(--color-white);
+}
+.kept__ticket {
+  display: grid; place-items: center;
+  width: --spacing(22); height: --spacing(12); border-radius: var(--radius-lg);
+  background: var(--color-black); color: var(--color-white);
+  rotate: -6deg;
+}
+.kept__ticket + .kept__ticket { margin-left: --spacing(-6); rotate: 6deg; background: var(--color-white); color: var(--color-black); }
+/* The entrance (script.js · revealOnce): the bar fills, then the ✓ pops; the tickets slide apart */
+.kept.is-armed .kept__bar { --fill: 0%; }
+.kept.is-in .kept__bar { --fill: 100%; transition: --fill 1.4s cubic-bezier(.4, 0, .2, 1) .3s; }
+.kept.is-armed .kept__done { scale: 0; }
+.kept.is-in .kept__done { scale: 1; transition: scale .5s cubic-bezier(.34, 1.56, .64, 1) 1.6s; }
+.kept.is-armed .kept__ticket + .kept__ticket { translate: --spacing(-8) 0; rotate: -6deg; }
+.kept.is-in .kept__ticket + .kept__ticket { translate: 0 0; rotate: 6deg; transition: translate .6s cubic-bezier(.34, 1.56, .64, 1) .5s, rotate .6s cubic-bezier(.34, 1.56, .64, 1) .5s; }
+@media (width < theme(--breakpoint-xl)) {
+  .kept__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (width < theme(--breakpoint-md)) {
+  .kept__grid { grid-template-columns: minmax(0, 1fr); }
+  .kept__card { padding: --spacing(6); }
+}
+
+/* ============================================================
+   12 · CONTACT («Ունե՞ս հարցեր», aigraget.html)
+   ============================================================ */
+/* The last section, a Blue band, full-bleed (white text: BRAND.md → Text on colour), everything centred: the title and
+   its line (reading text), then a narrow White form card under them (as the referral form: the .field atoms, the note
+   as small print, the primary button full width). The brand's eyes (with the ™) on an Ink circle at the start of the
+   title, asking it. Sent, the confirmation takes the form's place: a ✓ on a Blue disc and the line (a card
+   title: Subhead) */
+.contact {
+  display: flex; flex-direction: column; align-items: center;
+  gap: var(--title-gap);
+  text-align: center;
+  background: var(--color-primary);
+  box-shadow: 0 0 0 100vmax var(--color-primary);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.contact .section-title { color: var(--color-white); }
+.contact__text { display: flex; flex-direction: column; gap: --spacing(4); }
+.contact__lead { @apply text-aqb-body-m; }
+.contact__card {
+  position: relative; isolation: isolate;
+  display: flex; flex-direction: column;   /* the confirmation fills it (script.js keeps its height) */
+  text-align: left;   /* the labels and fields read from the left, as every form */
+  width: min(100%, --spacing(120));
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);
+  background: var(--color-white); color: var(--color-ink-900);
+}
+.contact__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: --spacing(3) --spacing(4); }   /* the eyes, then the title; the title wraps under them on the narrowest phones */
+.contact__eyes {   /* the eyes on an Ink circle (as the about lead's and the certificate's) */
+  flex: none; display: grid; place-items: center;
+  width: --spacing(16); height: --spacing(16); border-radius: var(--radius-full);   /* 64px: a little taller than the title's line */
+  background: var(--color-neutral-ink);
+}
+.contact__eyes .eyes { width: 66%; }   /* the ™ beside the right eye, inside the circle */
+.contact__form { display: flex; flex-direction: column; gap: --spacing(5); }
+.contact__note { margin-top: --spacing(3); @apply text-aqb-caption; color: var(--color-ink-600); }   /* small print, a little apart from the last field */
+.contact__done {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: --spacing(4);
+  flex: 1; text-align: center; outline: none;
+}
+.contact__done[hidden] { display: none; }
+.contact__check {
+  display: grid; place-items: center;
+  width: --spacing(14); height: --spacing(14); border-radius: var(--radius-full);
+  background: var(--color-primary); color: var(--color-white);
+}
+.contact__done-text { @apply text-aqb-subhead; text-wrap: balance; }
+@media (width < theme(--breakpoint-md)) {
+  .contact__card { padding: --spacing(6); }
+}
+
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
   display: flex; flex-direction: column; gap: var(--card-gap);
@@ -2212,28 +2341,12 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .avatar:nth-child(8n+8) { --av: var(--color-ink-900); }
 
 /* ============================================================
-   05e · REFUND — the money-back promise as an Orange band right after the prices (the loudest promise sits next to
-   the number it answers). All text White: BRAND.md → Text on colour (white on Orange at every size)
-   ============================================================ */
-.refund {
-  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start;
-  gap: --spacing(6) --spacing(12);
-  background: var(--color-accent);
-  box-shadow: 0 0 0 100vmax var(--color-accent);
-  clip-path: inset(0 -100vmax);
-  color: var(--color-white);
-}
-.refund__title { @apply text-aqb-headline-h1 italic; text-wrap: balance; color: var(--color-white); }
-.refund__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); @apply text-aqb-body-m; }
-.refund__condition { @apply text-aqb-label; }   /* the one condition: a detail (SemiBold), stated plainly, not ticked as a perk */
-.refund__body .btn { margin-top: --spacing(2); }
-
-/* ============================================================
    05f · FEEDBACK («Ի՞նչ են ասում մասնակիցները») — every review in the brand's chat bubble (BRAND.md → Chat bubble), a
    feed colour each with black text; script.js (03b) cuts the bubble, its tail pointing down at the person under it.
    Bubbles keep their own height (a conversation, not a row of equal boxes). A full-bleed row that scrolls sideways,
    as the teachers' (shared rules there: .quotes, __top, __row).
    ============================================================ */
+.quotes { background: var(--surface); }   /* the grey section band (as the packages'), between the Blue stats and the White FAQ; the section runs full width, so no bleed needed */
 .quotes__row { align-items: flex-start; }   /* each bubble as tall as its words */
 
 .quote { display: flex; flex-direction: column; gap: --spacing(2); flex: none; width: clamp(--spacing(75), 30vw, --spacing(110)); scroll-snap-align: start; }   /* ≈3.3 in view, the next one peeks in */
@@ -2285,7 +2398,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .mission__kicker { @apply text-aqb-body-m; }
 .mission__title { @apply text-aqb-display-l italic; }
 .mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); max-width: --spacing(120); }
-.mission__text { @apply text-aqb-body-s; }
+.mission__text { display: flex; flex-direction: column; gap: --spacing(3); @apply text-aqb-body-s; }   /* its paragraphs, a line's air apart */
 
 /* The crowd: the brand's eyes (BRAND.md → Eyes), a row of "people" in three sizes standing on one line, drifting under
    the headline in a seamless loop (script.js builds the row twice; the CSS moves it by half). As wide as the headline:
@@ -2308,6 +2421,34 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .crowd .eyes { flex: none; width: --spacing(14); }
 .crowd .eyes:nth-child(3n+2) { width: --spacing(11); }
 .crowd .eyes:nth-child(5n+3) { width: --spacing(17); }
+
+/* The flight (aigraget.html): the eye logo (one pair, with the ™) flies under the headline like a rocket, always in
+   view: it hovers in place, bobbing and tilting a little, while three White speed lines stream behind it (each
+   stretching out from the eyes and fading, in turn). For reduced motion it stands still, the lines at full length */
+.flight { width: 100%; margin-top: --spacing(8); padding: --spacing(4) 0; }
+.flight__ship {
+  display: inline-flex; align-items: center; gap: --spacing(1.5);
+  animation: flight-bob 1.6s ease-in-out infinite;
+}
+.flight__ship .eyes { width: --spacing(18); }
+.flight__lines { display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(1.75); }
+.flight__lines span {
+  display: block; height: --spacing(1); border-radius: var(--radius-full); background: var(--color-white);
+  transform-origin: 100% 50%;   /* they stretch out from the eyes */
+  animation: flight-line .7s ease-out infinite;
+}
+.flight__lines span:nth-child(1) { width: --spacing(10); animation-delay: -.2s; }
+.flight__lines span:nth-child(2) { width: --spacing(16); }
+.flight__lines span:nth-child(3) { width: --spacing(8); animation-delay: -.45s; }
+@keyframes flight-bob {
+  0%, 100% { translate: 0 0; rotate: -3deg; }
+  50%      { translate: 0 --spacing(-2); rotate: 1deg; }
+}
+@keyframes flight-line {
+  0%   { scale: .3 1; opacity: 1; }
+  100% { scale: 1.15 1; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .flight__ship, .flight__lines span { animation: none; } }
 
 /* ============================================================
    09 · REFERRAL
@@ -2530,6 +2671,8 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
 .faq__answer a { text-decoration: underline; text-underline-offset: 3px; }
 .faq__answer a .ic--external { width: --spacing(3.5); height: --spacing(3.5); margin-left: --spacing(0.5); vertical-align: -1px; }   /* opens in a new tab */
 .faq__pro { display: flex; flex-direction: column; gap: --spacing(2); }
+.faq__bullets { display: flex; flex-direction: column; gap: --spacing(2); padding-left: --spacing(5); list-style: disc; }   /* a list inside an answer: plain bullets */
+.faq__bullets--steps { list-style: decimal; }   /* steps to take, in order */
 
 /* «Ե՞րբ են դասերը» — two schedule blocks side by side */
 .schedules { display: grid; grid-template-columns: 1fr 1fr; gap: --spacing(3); }
@@ -3026,7 +3169,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .pro-card { height: --spacing(80); }
   .learn-grid { --learn-col-w: calc((100% - var(--card-gap)) / 2.25); --learn-h: --spacing(75); }   /* two tiles in view, the third peeking: three were too narrow for the titles at 768 (words broke mid-word) */
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
-  .refund { grid-template-columns: minmax(0, 1fr); align-items: start; }
   .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
 }
@@ -3093,9 +3235,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .stats__row { grid-template-columns: minmax(0, 1fr); gap: --spacing(8); }
   .stat__num { @apply text-aqb-headline-h1; }
   .mission__title { @apply text-aqb-headline-h1; }   /* phones: Display steps down to Headline H1 */
-  .refund__title { @apply text-aqb-headline-h2; }    /* phones: Headline H1 → H2 */
-  .refund__body { @apply text-aqb-body-s; }
-  .refund__body .btn { align-self: stretch; }   /* full width, as the hero's on phones */
   .quote__bubble { padding: --spacing(5) --spacing(6) --spacing(13); }   /* the tail keeps its room (bottom − top) */
   .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */

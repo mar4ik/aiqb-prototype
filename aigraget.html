@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-36" />
+  <link rel="stylesheet" href="styles.css?v=pages-51" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -1106,6 +1106,174 @@
     </section>
 
     <!-- =========================================================
+         05p · KEPT — «Դասերից հետո նյութերը մնում են քեզ հետ»: what stays with you after the lessons, four tiles on Black, a
+         feed colour each (black text), each with its own picture: «500+» (the prompts), the AI tools' logos (.tool-stack),
+         a progress bar that fills to the certificate's ✓, the two invitations as tickets. Cut into the brand bubble at the
+         top-right corner (script.js · 05k bubbleCards); the eyes stand on the last tile's step.
+         The title on top; the tiles 4 in a row from xl, 2 × 2 from md, 1 on phones
+         ========================================================= -->
+    <section class="kept" aria-labelledby="kept-title">
+      <h2 class="section-title kept__heading" id="kept-title">Դասերից հետո նյութերը մնում են քեզ հետ</h2>
+      <div class="kept__cards">
+        <ul class="kept__grid">
+          <li class="kept__card" data-bg="yellow">
+            <h3 class="kept__head"><span class="kept__num">500+</span> <span class="kept__title">պատրաստի պրոմպտ</span></h3>
+            <p class="kept__text">Գրադարան, որից կարող ես օգտվել քո առաջադրանքները ձևակերպելիս։</p>
+          </li>
+          <li class="kept__card" data-bg="sky">
+            <ul class="tool-stack kept__pic" aria-hidden="true">   <!-- four: more reach the cut corner on the narrowest tiles (md) -->
+              <li class="tool-stack__logo"><img src="assets/logos/chatgpt.svg" alt="" /></li>
+              <li class="tool-stack__logo"><img src="assets/logos/gemini.svg" alt="" /></li>
+              <li class="tool-stack__logo"><img src="assets/logos/claude.svg" alt="" /></li>
+              <li class="tool-stack__logo"><img src="assets/logos/notebooklm.svg" alt="" /></li>
+            </ul>
+            <h3 class="kept__title">AI գործիքների ցանկ</h3>
+            <p class="kept__text">Որպեսզի անհրաժեշտ գործիքը նորից չփնտրես զրոյից։</p>
+          </li>
+          <li class="kept__card" data-bg="teal">
+            <span class="kept__pic kept__progress" aria-hidden="true"><span class="kept__bar"></span><span class="kept__done"><i class="ic ic--check"></i></span></span>   <!-- fills as the section scrolls in, then the ✓ (script.js · revealOnce) -->
+            <h3 class="kept__title">Առաջընթացի վերահսկում և հավաստագիր</h3>
+            <p class="kept__text">Ծրագրի շրջանակում կհետևես առաջընթացիդ և կստանաս հավաստագիր։</p>
+          </li>
+          <li class="kept__card" data-bg="pink">
+            <span class="kept__pic" aria-hidden="true"><span class="kept__ticket"><i class="ic ic--lg ic--calendar"></i></span><span class="kept__ticket"><i class="ic ic--lg ic--calendar"></i></span></span>   <!-- the invitation for 2: two tickets -->
+            <h3 class="kept__title">Օֆլայն հանդիպումների հնարավո&shy;րություն</h3>   <!-- &shy;: narrow tiles break the long word at a syllable -->
+            <p class="kept__text">Փաթեթում ներառված է 2 հոգու հրավիրատոմս։</p>
+          </li>
+        </ul>
+        <span class="kept__eyes" aria-hidden="true">   <!-- the eye logo (with its ™), peeking from the last tile's stepped corner (script.js · 05k places it); it blinks (05 peekEyes) -->
+          <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you">
+            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+          </svg>
+        </span>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         06 · TEACHERS — «Ովքե՞ր են սովորեցնում»: after what stays with you (05p). Names, titles and bios from the teachers
+         sheet (Oct 2026)
+         ========================================================= -->
+    <section class="teachers" id="teachers">
+      <div class="teachers__top">
+        <h2 class="section-title">Ովքե՞ր են սովորեցնում</h2>
+        <div class="teachers__nav">
+          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
+        </div>
+      </div>
+
+      <div class="teachers__row">
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/anahit.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanian/" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Անահիտ Վարդանյան</h3>
+              <p class="teacher__role">AI Strategist</p>
+            </div>
+            <p class="teacher__bio">5+ տարվա փորձ հաղորդակցության ոլորտում։ «AI քեզ բան» կրթական ծրագրի համակարգող։</p>
+            <p class="teacher__meta">110+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/nairi.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg/" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Նաիրի Արեգ Հացպանյան</h3>
+              <p class="teacher__role">Full-Stack AI Engineer</p>
+            </div>
+            <p class="teacher__bio">7+ տարվա փորձ Full-Stack Development և Vibe Coding։ Մասնագիտացած է custom AI agent ստեղծելու և AI ավտոմատացումների մեջ։</p>
+            <p class="teacher__meta">90+ ժամ · Start · Level-Up · PRO · Webinar</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/artak.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/artakgrigoryan/" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
+              <p class="teacher__role">AI Transformation Consultant</p>
+            </div>
+            <p class="teacher__bio">Արտակը 10+ տարվա նախագծերի կառավարման փորձ ունի։ AI Transformation թիմի համակարգող է և AI PM։ Վարում է AI ավտոմատացման, AI ագենտների և աղբյուրահեն հետազոտության դասընթացներ։</p>
+            <p class="teacher__meta">120+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_kh.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lika13/" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
+              <p class="teacher__role">Senior Product Designer &amp; AI Artist</p>
+            </div>
+            <p class="teacher__bio">15+ տարվա փորձ Product Design և UX/UI ոլորտներում։ Մասնագիտացած է AI-ով վիզուալներ գեներացնելու և UX/UI-ի մեջ։</p>
+            <p class="teacher__meta">80+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/lilit_b.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan-96a2152aa/" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
+              <p class="teacher__role">AI Artist &amp; Director</p>
+            </div>
+            <p class="teacher__bio">10+ տարվա փորձ ֆիլմարտադրության ոլորտում՝ ռեժիսոր, սցենարիստ։ Մասնագիտացած է AI-ով վիդեո պատմություններ գեներացնելու մեջ։ 2025 թ. դեկտեմբերի առաջին մրցանակին է արժանացել AI International Film Festival-ում՝ որպես Best AI Movie։</p>
+            <p class="teacher__meta">75+ ժամ · Level-Up</p>
+          </div>
+        </article>
+
+        <article class="teacher">
+          <div class="teacher__photo">
+            <img src="assets/teachers/gevorg.webp" alt="Գևորգ Պողոսյան" loading="lazy" />
+          </div>
+          <a class="teacher__link" href="https://www.linkedin.com/in/gevorg-poghosyan-a6580a85/" target="_blank" rel="noopener" aria-label="Գևորգ Պողոսյան — LinkedIn">
+            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
+          </a>
+          <div class="teacher__body">
+            <div class="teacher__head">
+              <h3 class="teacher__name">Գևորգ Պողոսյան</h3>
+              <p class="teacher__role">AI First Mindset</p>
+            </div>
+            <p class="teacher__bio">30+ տարվա ձեռնարկատիրական փորձով։ «AI-ն առաջին հերթին» մտածելակերպի ուսուցիչ։</p>
+            <p class="teacher__meta">120+ ժամ · PRO · Webinar</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- =========================================================
          07 · STATS — «Թվերով»: a Blue proof strip between the tiles and the packages
          ========================================================= -->
     <section class="stats" aria-labelledby="stats-title">
@@ -1146,238 +1314,238 @@
       </div>
       <div class="quotes__row">
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից առաջ էլ օգտագործում էի AI, բայց հիմնականում միայն տեքստեր գրելու համար։ Հիմա արդեն լրիվ ուրիշ մակարդակով եմ կիրառում աշխատանքի մեջ։ Շատ պրոցեսներ արագացրել եմ, սկսել եմ ավելի շատ պատվերներ վերցնել, ու դա բնականաբար ազդել է նաև եկամտիս վրա։ Ամենակարևորը՝ հիմա հստակ գիտեմ՝ որ գործիքը ինչի համար օգտագործեմ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից առաջ էլ օգտագործում էի AI, բայց հիմնականում միայն տեքստեր գրելու համար։</p><p>Հիմա արդեն լրիվ ուրիշ մակարդակով եմ կիրառում աշխատանքի մեջ։ Շատ պրոցեսներ արագացրել եմ, սկսել եմ ավելի շատ պատվերներ վերցնել, ու դա բնականաբար ազդել է նաև եկամտիս վրա։</p><p>Ամենակարևորը՝ հիմա հստակ գիտեմ՝ որ գործիքը ինչի համար օգտագործեմ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱԱ</span>
             <span class="quote__name">Արմինե Անտոնյան<span class="quote__meta">SMM մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Անկեղծ՝ չէի սպասում, որ էսքան կիրառելի կլինի։ Դասերից հետո մի քանի գործիք միանգամից մտցրեցի աշխատանքային պրոցեսիս մեջ։ Հիմա նույն ժամանակում ավելի շատ աշխատանք եմ հասցնում անել և նոր ծառայություններ եմ առաջարկում հաճախորդներիս։ Ինձ համար շատ լավ ներդրում էր։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Անկեղծ՝ չէի սպասում, որ էսքան կիրառելի կլինի։</p><p>Դասերից հետո մի քանի գործիք միանգամից մտցրեցի աշխատանքային պրոցեսիս մեջ։ Հիմա նույն ժամանակում ավելի շատ աշխատանք եմ հասցնում անել և նոր ծառայություններ եմ առաջարկում հաճախորդներիս։</p><p>Ինձ համար շատ լավ ներդրում էր։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍՂ</span>
             <span class="quote__name">Սամսոն Ղազարյան<span class="quote__meta">Գրաֆիկ դիզայներ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ից օգտվում էի նաև մինչև դասընթացը, դրա համար սկզբում մտածում էի՝ արդյոք նոր բան կստանա՞մ։ Ու ստացա։ Հատկապես հավանեցի, որ ուղղակի գործիքներ չէին ցույց տալիս, այլ սովորեցնում էին՝ ինչպես մտածել ու ճիշտ առաջադրանք տալ AI-ին։ Աշխատանքիս արագության տարբերությունն արդեն շատ զգալի է։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ից օգտվում էի նաև մինչև դասընթացը, դրա համար սկզբում մտածում էի՝ արդյոք նոր բան կստանա՞մ։ Ու ստացա։</p><p>Հատկապես հավանեցի, որ ուղղակի գործիքներ չէին ցույց տալիս, այլ սովորեցնում էին՝ ինչպես մտածել ու ճիշտ առաջադրանք տալ AI-ին։</p><p>Աշխատանքիս արագության տարբերությունն արդեն շատ զգալի է։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍՀ</span>
             <span class="quote__name">Սաթենիկ Հայրապետյան<span class="quote__meta">Մարքեթինգի մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ դեպքում ամենամեծ արդյունքը եկամտի աճն էր։ AI-ի շնորհիվ սկսեցի որոշ աշխատանքներ շատ ավելի արագ անել և կարողացա ամսվա ընթացքում ավելի շատ պատվեր վերցնել։ Դասընթացից ստացած գիտելիքներից մինչև հիմա գրեթե ամեն օր օգտվում եմ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ դեպքում ամենամեծ արդյունքը եկամտի աճն էր։</p><p>AI-ի շնորհիվ սկսեցի որոշ աշխատանքներ շատ ավելի արագ անել և կարողացա ամսվա ընթացքում ավելի շատ պատվեր վերցնել։ Դասընթացից ստացած գիտելիքներից մինչև հիմա գրեթե ամեն օր օգտվում եմ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
             <span class="quote__name">Աննա Սարգսյան<span class="quote__meta">Freelancer</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Մինչև դասընթացը ամեն փոքր բանի համար տարբեր մասնագետների էի դիմում։ Հիմա շատ հարցեր ինքս եմ կարողանում լուծել AI-ի օգնությամբ՝ գաղափարներից ու տեքստերից մինչև վիզուալներ։ Ե՛վ ժամանակ եմ խնայում, և՛ ծախսերս են պակասել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Մինչև դասընթացը ամեն փոքր բանի համար տարբեր մասնագետների էի դիմում։</p><p>Հիմա շատ հարցեր ինքս եմ կարողանում լուծել AI-ի օգնությամբ՝ գաղափարներից ու տեքստերից մինչև վիզուալներ։ Ե՛վ ժամանակ եմ խնայում, և՛ ծախսերս են պակասել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՏՊ</span>
             <span class="quote__name">Տիգրանուհի Պողոսյան<span class="quote__meta">Փոքր բիզնեսի սեփականատեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե մի բան առանձնացնեմ՝ արագությունն է։ Այն, ինչի վրա առաջ 2-3 ժամ էի ծախսում, հիմա երբեմն 30-40 րոպեում եմ անում։ Դրա շնորհիվ ավելի շատ նախագծերի հետ եմ հասցնում աշխատել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե մի բան առանձնացնեմ՝ արագությունն է։</p><p>Այն, ինչի վրա առաջ 2-3 ժամ էի ծախսում, հիմա երբեմն 30-40 րոպեում եմ անում։ Դրա շնորհիվ ավելի շատ նախագծերի հետ եմ հասցնում աշխատել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
             <span class="quote__name">Անահիտ Կիրակոսյան<span class="quote__meta">Content creator</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Մտածում էի՝ AI-ը ավելի շատ մարքեթինգի կամ IT-ի մարդկանց համար է։ Դասընթացից հետո հասկացա, թե ինչքան բան կարող եմ կիրառել հենց իմ աշխատանքի մեջ։ Հիմա շատ առօրյա առաջադրանքներ զգալի արագ եմ անում։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Մտածում էի՝ AI-ը ավելի շատ մարքեթինգի կամ IT-ի մարդկանց համար է։</p><p>Դասընթացից հետո հասկացա, թե ինչքան բան կարող եմ կիրառել հենց իմ աշխատանքի մեջ։ Հիմա շատ առօրյա առաջադրանքներ զգալի արագ եմ անում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՏՀ</span>
             <span class="quote__name">Տաթև Հայրապետյան<span class="quote__meta">HR մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պրակտիկ դասընթաց էր։ Ոչ թե ուղղակի լսում ես ու մոռանում, այլ սովորածդ կարող ես նույն օրը փորձել աշխատանքի մեջ։ Ինձ մոտ AI-ն արդեն ամենօրյա աշխատանքային գործիք է դարձել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պրակտիկ դասընթաց էր։ Ոչ թե ուղղակի լսում ես ու մոռանում, այլ սովորածդ կարող ես նույն օրը փորձել աշխատանքի մեջ։</p><p>Ինձ մոտ AI-ն արդեն ամենօրյա աշխատանքային գործիք է դարձել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՏՄ</span>
             <span class="quote__name">Տիգրան Մարտիրոսյան<span class="quote__meta">Վաճառքի մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Սկզբում մի քիչ վախ ունեի, որ AI-ը մեր աշխատանքը փոխարինելու է։ Հիմա հակառակ կերպ եմ նայում դրան։ Սովորեցի օգտագործել որպես օգնական, դրա շնորհիվ ավելի արագ եմ աշխատում, ավելի շատ ազատ ժամանակ եմ ունենում, ու եկամուտս էլ աճել է։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Սկզբում մի քիչ վախ ունեի, որ AI-ը մեր աշխատանքը փոխարինելու է։ Հիմա հակառակ կերպ եմ նայում դրան։</p><p>Սովորեցի օգտագործել որպես օգնական, դրա շնորհիվ ավելի արագ եմ աշխատում, ավելի շատ ազատ ժամանակ եմ ունենում, ու եկամուտս էլ աճել է։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԿՏ</span>
             <span class="quote__name">Կարինե Տոնոյան<span class="quote__meta">Copywriter</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո առաջին անգամ զգացի, որ AI-ը ոչ թե ուղղակի թրենդ է, այլ իրական գործիք, որը կարող է փող ու ժամանակ խնայել բիզնեսում։ Հիմա ամեն շաբաթ օգտագործում եմ տարբեր խնդիրներ լուծելու համար։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո առաջին անգամ զգացի, որ AI-ը ոչ թե ուղղակի թրենդ է, այլ իրական գործիք, որը կարող է փող ու ժամանակ խնայել բիզնեսում։</p><p>Հիմա ամեն շաբաթ օգտագործում եմ տարբեր խնդիրներ լուծելու համար։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍՀ</span>
             <span class="quote__name">Սամվել Հովհաննիսյան<span class="quote__meta">Ձեռնարկատեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ բացահայտումը այն էր, թե ինչքան առօրյա աշխատանք կարելի է հեշտացնել AI-ով։ Հիմա շատ առաջադրանքներ, որոնց վրա նախկինում ժամեր էի ծախսում, անում եմ անհամեմատ արագ։ Իրոք զգում եմ, որ աշխատանքային արդյունավետությունս լրիվ այլ մակարդակի է անցել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ բացահայտումը այն էր, թե ինչքան առօրյա աշխատանք կարելի է հեշտացնել AI-ով։</p><p>Հիմա շատ առաջադրանքներ, որոնց վրա նախկինում ժամեր էի ծախսում, անում եմ անհամեմատ արագ։ Իրոք զգում եմ, որ աշխատանքային արդյունավետությունս լրիվ այլ մակարդակի է անցել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՆ</span>
             <span class="quote__name">Արուս Նիկողոսյան<span class="quote__meta">Project Manager</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Ամենաշատը հավանեցի, որ ջուր չկար։ Ամեն ինչ կոնկրետ էր ու կիրառելի։ Սովորած գործիքներից մի քանիսը հենց հաջորդ օրը սկսեցի օգտագործել աշխատանքի մեջ։ Հիմա կոնտենտ ստեղծելու պրոցեսը շատ ավելի արագ է դարձել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Ամենաշատը հավանեցի, որ ջուր չկար։ Ամեն ինչ կոնկրետ էր ու կիրառելի։</p><p>Սովորած գործիքներից մի քանիսը հենց հաջորդ օրը սկսեցի օգտագործել աշխատանքի մեջ։ Հիմա կոնտենտ ստեղծելու պրոցեսը շատ ավելի արագ է դարձել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
             <span class="quote__name">Աննա Սիմոնյան<span class="quote__meta">SMM մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Ինձ համար շատ կարևոր էր, որ ամեն ինչ հասկանալի էր նույնիսկ առանց տեխնիկական գիտելիքների։ Դասընթացից հետո արդեն կարողանում եմ AI գործիքներով ինքնուրույն տարբեր նախագծեր անել։ Էլ չեմ խոսում, թե ինչքան է իմ համալսարանական կյանքը հեշտացել AI-ի շնորհիվ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Ինձ համար շատ կարևոր էր, որ ամեն ինչ հասկանալի էր նույնիսկ առանց տեխնիկական գիտելիքների։</p><p>Դասընթացից հետո արդեն կարողանում եմ AI գործիքներով ինքնուրույն տարբեր նախագծեր անել։ Էլ չեմ խոսում, թե ինչքան է իմ համալսարանական կյանքը հեշտացել AI-ի շնորհիվ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՆՍ</span>
             <span class="quote__name">Նելլի Սիմոնյան<span class="quote__meta">Ուսանող</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե առաջ AI-ն ինձ համար պարզապես ChatGPT-ն էր, հիմա այն դարձել է բիզնեսում ամենաշատ օգտագործվող գործիքներից մեկը։ Կոնտենտ, գաղափարներ, առաջարկներ, վերլուծություն՝ շատ բան արդեն շատ ավելի արագ եմ անում։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Եթե առաջ AI-ն ինձ համար պարզապես ChatGPT-ն էր, հիմա այն դարձել է բիզնեսում ամենաշատ օգտագործվող գործիքներից մեկը։</p><p>Կոնտենտ, գաղափարներ, առաջարկներ, վերլուծություն՝ շատ բան արդեն շատ ավելի արագ եմ անում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՄ</span>
             <span class="quote__name">Արմեն Մեսրոպյան<span class="quote__meta">Բիզնեսի սեփականատեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ը չէր փոխարինել իմ մասնագիտությանը, հակառակը՝ ավելի շատ հնարավորություններ տվեց։ Հիմա հաճախորդներին կարողանում եմ ավելի շատ տարբերակներ առաջարկել և շատ ավելի արագ աշխատել։ Անձամբ ինձ համար սա ամենաօգտակար դասընթացներից էր վերջին շրջանում։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>AI-ը չէր փոխարինել իմ մասնագիտությանը, հակառակը՝ ավելի շատ հնարավորություններ տվեց։ Հիմա հաճախորդներին կարողանում եմ ավելի շատ տարբերակներ առաջարկել և շատ ավելի արագ աշխատել։</p><p>Անձամբ ինձ համար սա ամենաօգտակար դասընթացներից էր վերջին շրջանում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍԿ</span>
             <span class="quote__name">Սիմոն Կարապետյան<span class="quote__meta">Գրաֆիկ դիզայներ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Դասընթացից հետո աշխատանքային օրս իրականում փոխվել է։ Այն գործերը, որոնք անընդհատ հետաձգում էի, որովհետև շատ ժամանակ էին պահանջում, հիմա AI-ի օգնությամբ շատ արագ եմ անում։ Ու շատ հաճելի է, երբ հասկանում ես, որ տեխնոլոգիան ոչ թե բարդացնում, այլ հեշտացնում է աշխատանքդ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Դասընթացից հետո աշխատանքային օրս իրականում փոխվել է։</p><p>Այն գործերը, որոնք անընդհատ հետաձգում էի, որովհետև շատ ժամանակ էին պահանջում, հիմա AI-ի օգնությամբ շատ արագ եմ անում։ Ու շատ հաճելի է, երբ հասկանում ես, որ տեխնոլոգիան ոչ թե բարդացնում, այլ հեշտացնում է աշխատանքդ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
             <span class="quote__name">Անիտա Կարապետյան<span class="quote__meta">Content Manager</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Մի բան հաստատ կարող եմ ասել՝ դասընթացից հետո նույն ծավալի աշխատանքն ավելի քիչ ժամանակում եմ անում։ Դրա շնորհիվ կարողացել եմ լրացուցիչ պատվերներ վերցնել՝ առանց ամբողջ օրը համակարգչի առաջ անցկացնելու։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Մի բան հաստատ կարող եմ ասել՝ դասընթացից հետո նույն ծավալի աշխատանքն ավելի քիչ ժամանակում եմ անում։</p><p>Դրա շնորհիվ կարողացել եմ լրացուցիչ պատվերներ վերցնել՝ առանց ամբողջ օրը համակարգչի առաջ անցկացնելու։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՍ</span>
             <span class="quote__name">Անուշ Սահակյան<span class="quote__meta">Copywriter</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Չէի պատկերացնում, որ AI-ը կարող է այսքան օգտակար լինել վաճառքներում։ Հիմա օգտագործում եմ առաջարկներ կազմելիս, հաճախորդների հետ հաղորդակցության տարբերակներ մշակելիս ու նույնիսկ հանդիպումներին պատրաստվելիս։ Շատ գործնական գիտելիքներ ստացա։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Չէի պատկերացնում, որ AI-ը կարող է այսքան օգտակար լինել վաճառքներում։</p><p>Հիմա օգտագործում եմ առաջարկներ կազմելիս, հաճախորդների հետ հաղորդակցության տարբերակներ մշակելիս ու նույնիսկ հանդիպումներին պատրաստվելիս։ Շատ գործնական գիտելիքներ ստացա։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԳՍ</span>
             <span class="quote__name">Գևորգ Սաֆարյան<span class="quote__meta">Վաճառքի մենեջեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Դասընթացից առաջ էլ ակտիվ օգտագործում էի AI, դրա համար բավական բարձր սպասելիքներով էի եկել։ Բայց միևնույն է շատ նոր բաներ տարա ինձ հետ։ Հատկապես workflow-ներիս մեջ AI-ը ճիշտ ինտեգրելուց հետո աշխատանքի արագության տարբերությունը շատ զգալի դարձավ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Դասընթացից առաջ էլ ակտիվ օգտագործում էի AI, դրա համար բավական բարձր սպասելիքներով էի եկել։ Բայց միևնույն է շատ նոր բաներ տարա ինձ հետ։</p><p>Հատկապես workflow-ներիս մեջ AI-ը ճիշտ ինտեգրելուց հետո աշխատանքի արագության տարբերությունը շատ զգալի դարձավ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՔՎ</span>
             <span class="quote__name">Քրիստինե Վրացյան<span class="quote__meta">Digital Marketing Specialist</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պարզ՝ հիմա ավելի քիչ ժամանակում ավելի շատ բան եմ հասցնում։ Ինձ համար հենց սա էր դասընթացի ամենամեծ արդյունքը։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ պարզ՝ հիմա ավելի քիչ ժամանակում ավելի շատ բան եմ հասցնում։</p><p>Ինձ համար հենց սա էր դասընթացի ամենամեծ արդյունքը։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՀ</span>
             <span class="quote__name">Արամ Հովհաննեսյան<span class="quote__meta">Ձեռնարկատեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացին մասնակցել եմ հիմնականում հետաքրքրությունից, բայց արդյունքում AI-ը դարձել է իմ աշխատանքային առօրյայի մի մասը։ Շատ գործեր, հատկապես տեքստային ու վերլուծական, հիմա անհամեմատ արագ եմ անում։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացին մասնակցել եմ հիմնականում հետաքրքրությունից, բայց արդյունքում AI-ը դարձել է իմ աշխատանքային առօրյայի մի մասը։</p><p>Շատ գործեր, հատկապես տեքստային ու վերլուծական, հիմա անհամեմատ արագ եմ անում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱԿ</span>
             <span class="quote__name">Արմենուհի Կարապետյան<span class="quote__meta">HR Manager</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Ամենալավ մասը ինձ համար նոր գործիքների բացահայտումն էր։ Որոշ բաներ, որոնք նախկինում կամ չէի կարողանում անել, կամ շատ երկար էին տևում, հիմա AI-ով լուծում եմ մի քանի քայլով։ Սկսել եմ նաև AI-ի հետ կապված պատվերներ վերցնել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ամենալավ մասը ինձ համար նոր գործիքների բացահայտումն էր։</p><p>Որոշ բաներ, որոնք նախկինում կամ չէի կարողանում անել, կամ շատ երկար էին տևում, հիմա AI-ով լուծում եմ մի քանի քայլով։ Սկսել եմ նաև AI-ի հետ կապված պատվերներ վերցնել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՀՆ</span>
             <span class="quote__name">Հասմիկ Նալբանդյան<span class="quote__meta">Վիդեո մոնտաժող</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Վերջապես AI-ից սկսեցի օգտվել ոչ թե ուղղակի “մի caption գրի” մակարդակով։ Դասընթացից հետո լրիվ փոխվել է իմ մոտեցումը։ Հիմա research-ից մինչև կոնտենտի գաղափարներ ու վիզուալներ՝ տարբեր փուլերում օգտագործում եմ AI։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Վերջապես AI-ից սկսեցի օգտվել ոչ թե ուղղակի “մի caption գրի” մակարդակով։ Դասընթացից հետո լրիվ փոխվել է իմ մոտեցումը։</p><p>Հիմա research-ից մինչև կոնտենտի գաղափարներ ու վիզուալներ՝ տարբեր փուլերում օգտագործում եմ AI։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԱՀ</span>
             <span class="quote__name">Անահիտ Հակոբյան<span class="quote__meta">Social Media Manager</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ ոլորտում արագությունը շատ կարևոր է։ AI-ի օգնությամբ հիմա ավելի արագ եմ պատրաստում հայտարարությունների տեքստերը, առաջարկները և հաճախորդների համար անհրաժեշտ նյութերը։ Սովորածը հենց աշխատանքիս մեջ եմ օգտագործում, դրա համար արդյունքն էլ շատ արագ զգացի։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Իմ ոլորտում արագությունը շատ կարևոր է։</p><p>AI-ի օգնությամբ հիմա ավելի արագ եմ պատրաստում հայտարարությունների տեքստերը, առաջարկները և հաճախորդների համար անհրաժեշտ նյութերը։ Սովորածը հենց աշխատանքիս մեջ եմ օգտագործում, դրա համար արդյունքն էլ շատ արագ զգացի։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՌԿ</span>
             <span class="quote__name">Ռոբերտ Կիրակոսյան<span class="quote__meta">Անշարժ գույքի գործակալ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Սովորաբար դասընթացներից հետո նոթերը մնում են մի կողմում ու մոռացվում։ Այստեղ հակառակն էր։ Սովորածներից շատերը մինչև հիմա ամեն օր օգտագործում եմ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Սովորաբար դասընթացներից հետո նոթերը մնում են մի կողմում ու մոռացվում։ Այստեղ հակառակն էր։</p><p>Սովորածներից շատերը մինչև հիմա ամեն օր օգտագործում եմ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍԹ</span>
             <span class="quote__name">Սիրարփի Թովմասյան<span class="quote__meta">Account Manager</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո կարողացա ընդլայնել ծառայություններիս ցանկը և սկսել այնպիսի պատվերներ վերցնել, որոնք առաջ չէի վերցնի։ Իմ դեպքում AI սովորելը շատ ուղիղ կապ ունեցավ եկամտի աճի հետ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Դասընթացից հետո կարողացա ընդլայնել ծառայություններիս ցանկը և սկսել այնպիսի պատվերներ վերցնել, որոնք առաջ չէի վերցնի։</p><p>Իմ դեպքում AI սովորելը շատ ուղիղ կապ ունեցավ եկամտի աճի հետ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՀԹ</span>
             <span class="quote__name">Հայրապետ Թունյան<span class="quote__meta">Freelancer</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Փոքր բիզնես ունենալու դեպքում միշտ չէ, որ կարող ես ամեն աշխատանքի համար առանձին մասնագետ ունենալ։ AI-ի շնորհիվ հիմա շատ բաներ ինքնուրույն եմ անում։ Դա ինձ համար և՛ ժամանակի, և՛ գումարի խնայողություն է։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Փոքր բիզնես ունենալու դեպքում միշտ չէ, որ կարող ես ամեն աշխատանքի համար առանձին մասնագետ ունենալ։</p><p>AI-ի շնորհիվ հիմա շատ բաներ ինքնուրույն եմ անում։ Դա ինձ համար և՛ ժամանակի, և՛ գումարի խնայողություն է։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԿՄ</span>
             <span class="quote__name">Կարապետ Մարտիրոսյան<span class="quote__meta">Փոքր բիզնեսի հիմնադիր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ էի վախենում, որ AI-ի պատճառով դիզայներների պահանջարկը կնվազի։ Դասընթացից հետո կարծիքս փոխվեց։ Եթե ճիշտ ես օգտագործում, AI-ը քեզ ավելի ուժեղ մասնագետ է դարձնում։ Իմ աշխատանքում արդեն զգում եմ դրա ազդեցությունը։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Շատ էի վախենում, որ AI-ի պատճառով դիզայներների պահանջարկը կնվազի։ Դասընթացից հետո կարծիքս փոխվեց։</p><p>Եթե ճիշտ ես օգտագործում, AI-ը քեզ ավելի ուժեղ մասնագետ է դարձնում։ Իմ աշխատանքում արդեն զգում եմ դրա ազդեցությունը։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՆՏ</span>
             <span class="quote__name">Նանե Տիտանյան<span class="quote__meta">Դիզայներ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Արդեն առաջին դասերից հետո սկսեցի փորձարկել սովորածս։ Ամենակարևոր արդյունքը՝ հիմա շատ ավելի արագ եմ գաղափարներ մշակում և կոնտենտ ստեղծում։ Կարողանում եմ ավելի շատ աշխատանք անել ու չծանրաբեռնվել այնպես, ինչպես առաջ։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Արդեն առաջին դասերից հետո սկսեցի փորձարկել սովորածս։</p><p>Ամենակարևոր արդյունքը՝ հիմա շատ ավելի արագ եմ գաղափարներ մշակում և կոնտենտ ստեղծում։ Կարողանում եմ ավելի շատ աշխատանք անել ու չծանրաբեռնվել այնպես, ինչպես առաջ։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԴՍ</span>
             <span class="quote__name">Դիանա Սերոբյան<span class="quote__meta">Content Creator</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Ես տեխնոլոգիաներից շատ հեռու մարդ եմ ու սկզբում մտածում էի՝ չեմ հասկանա։ Բայց ամեն ինչ շատ մատչելի էր։ Հիմա AI-ով ինքս կարողանում եմ ապրանքների նկարագրություններ, գովազդային գաղափարներ ու տարբեր նյութեր պատրաստել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ես տեխնոլոգիաներից շատ հեռու մարդ եմ ու սկզբում մտածում էի՝ չեմ հասկանա։ Բայց ամեն ինչ շատ մատչելի էր։</p><p>Հիմա AI-ով ինքս կարողանում եմ ապրանքների նկարագրություններ, գովազդային գաղափարներ ու տարբեր նյութեր պատրաստել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՍՊ</span>
             <span class="quote__name">Սաթենիկ Պողոսյան<span class="quote__meta">Օնլայն խանութի սեփականատեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ արժեքը ճիշտ prompt գրելը սովորելն էր։ Մինչև այդ հաճախ մտածում էի՝ AI-ը լավ արդյունք չի տալիս։ Պարզվեց՝ ես ճիշտ հարց չէի տալիս։ Հիմա ստացած արդյունքների որակը լրիվ ուրիշ է։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="pink"><p>Ինձ համար ամենամեծ արժեքը ճիշտ prompt գրելը սովորելն էր։</p><p>Մինչև այդ հաճախ մտածում էի՝ AI-ը լավ արդյունք չի տալիս։ Պարզվեց՝ ես ճիշտ հարց չէի տալիս։</p><p>Հիմա ստացած արդյունքների որակը լրիվ ուրիշ է։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԿՄ</span>
             <span class="quote__name">Կիմա Մինասյան<span class="quote__meta">PR մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="sky"><p>Research, գաղափարներ, ռազմավարության առաջին draft, տեքստեր, presentation-ի կառուցվածք... առաջ սրանք միասին ահավոր շատ ժամանակ էին խլում։ Հիմա AI-ը ճիշտ օգտագործելու շնորհիվ պրոցեսս շատ ավելի արագ է։ Դասընթացից ստացած գիտելիքը հաստատ մնացող գիտելիք է։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="sky"><p>Research, գաղափարներ, ռազմավարության առաջին draft, տեքստեր, presentation-ի կառուցվածք... առաջ սրանք միասին ահավոր շատ ժամանակ էին խլում։</p><p>Հիմա AI-ը ճիշտ օգտագործելու շնորհիվ պրոցեսս շատ ավելի արագ է։ Դասընթացից ստացած գիտելիքը հաստատ մնացող գիտելիք է։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԿԳ</span>
             <span class="quote__name">Կամիլա Գևորգյան<span class="quote__meta">Մարքեթինգի մենեջեր</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից հետո ավելի վստահ սկսեցի աշխատել հաճախորդների հետ։ Առաջ որոշ առաջադրանքներից վախենում էի, որովհետև շատ ժամանակ էին պահանջում։ Հիմա արդեն ունեմ գործիքներ, որոնք օգնում են արագ լուծումներ գտնել։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="yellow"><p>Դասընթացից հետո ավելի վստահ սկսեցի աշխատել հաճախորդների հետ։</p><p>Առաջ որոշ առաջադրանքներից վախենում էի, որովհետև շատ ժամանակ էին պահանջում։ Հիմա արդեն ունեմ գործիքներ, որոնք օգնում են արագ լուծումներ գտնել։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ՏՔ</span>
             <span class="quote__name">Տոմա Քանքարանյան<span class="quote__meta">SMM մասնագետ</span></span>
           </figcaption>
         </figure>
         <figure class="quote">
-          <blockquote class="quote__bubble" data-bg="teal"><p>Ես եկել էի պարզապես AI-ից օգտվել սովորելու համար։ Բայց արդյունքում հասկացա, թե որքան կարող է այն հեշտացնել աշխատանքս։ Դասերի պլանավորումից մինչև նյութերի պատրաստում՝ հիմա շատ ավելի արագ եմ անում։</p></blockquote>
+          <blockquote class="quote__bubble" data-bg="teal"><p>Ես եկել էի պարզապես AI-ից օգտվել սովորելու համար։ Բայց արդյունքում հասկացա, թե որքան կարող է այն հեշտացնել աշխատանքս։</p><p>Դասերի պլանավորումից մինչև նյութերի պատրաստում՝ հիմա շատ ավելի արագ եմ անում։</p></blockquote>
           <figcaption class="quote__who">
             <span class="avatar avatar--letter" aria-hidden="true">ԿՍ</span>
             <span class="quote__name">Կարինե Ստեփանյան<span class="quote__meta">Ուսուցիչ</span></span>
@@ -1461,153 +1629,106 @@
     </dialog>
 
     <!-- =========================================================
-         05e · REFUND — the money-back promise as its own Orange band, straight after the prices it answers
-         (white headline, black text: BRAND.md → Text on colour); the same words as the course pages' refund
+         10 · FAQ — «Հարցեր՝ մինչև գրանցվելը»: right after the reviews, the questions people ask before they sign up. The
+         FAQ's own look: the title on the left, the questions split by lines, each answer indented behind a grey line under
+         its question (a native <details>)
          ========================================================= -->
-    <section class="refund" aria-labelledby="refund-title">
-      <h2 class="refund__title" id="refund-title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
-      <!-- the promise, its one condition (a detail line), then the same ask as the hero's -->
-      <div class="refund__body">
-        <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Եթե վերջում սպասելիքներդ չարդարանան, կվերադարձնենք քո վճարած ողջ գումարը։</p>
-        <p class="refund__condition">Միակ պայմանը՝ մասնակցություն բոլոր դասերին</p>
-        <a href="#packages" class="btn btn--dark btn--base">Ընտրել դասընթաց</a>
+    <section class="faq" id="faq">
+      <h2 class="section-title faq__title">Հարցեր՝ մինչև գրանցվելը</h2>
+      <div class="faq__list">
+        <details class="faq__item" open>
+          <summary>Պե՞տք է նախապես իմանալ AI</summary>
+          <div class="faq__answer">
+            <p>Ոչ։ Ծրագիրը սկսվում է հիմունքներից։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Եթե արդեն օգտվում եմ ChatGPT-ից, ինձ պե՞տք է</summary>
+          <div class="faq__answer">
+            <p>Եթե հիմնականում հարցեր ես տալիս, այստեղ կսովորես աշխատել ավելի հստակ առաջադրանքներով, ստուգել պատասխաններն ու կիրառել տարբեր գործիքներ։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Կա՞ գումարի վերադարձի երաշխիք</summary>
+          <div class="faq__answer">
+            <p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ե՞րբ են դասերը</summary>
+          <div class="faq__answer">
+            <p>Երեկոյան՝ 19:00&#8288;–&#8288;21:00, Երևանի ժամանակով։</p>   <!-- &#8288; (word joiner): the time never breaks at its dash -->
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Տեսագրությունները հասանելի՞ են</summary>
+          <div class="faq__answer">
+            <p>Այո։ Դասերի տեսագրություններն ու սլայդները հասանելի են 6 ամիս։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ինչպե՞ս մասնակցել անվճար կամ զեղչով</summary>
+          <div class="faq__answer">
+            <p>Դասընթացին կարող ես մասնակցել անվճար հետևյալ տարբերակներով.</p>
+            <ul class="faq__bullets">
+              <li>Վճարել ամբողջ գումարը, այնուհետև ստանալ 100% վերադարձ եկամտահարկի միջոցով</li>
+              <li>Հրավիրել 10 ընկեր, յուրաքանչյուրի համար ստանալ 10% զեղչ (նրանց ևս կտրամադրվի 10% զեղչ ձեր հրավերով մասնակցելու դեպքում)</li>
+            </ul>
+            <p>Կարող ես մասնակցել զեղչով հետևյալ տարբերակներով.</p>
+            <ul class="faq__bullets">
+              <li>Գրանցվել «3 ընկեր» փաթեթով, ստանալ 62% զեղչ</li>
+              <li>Հրավիրել ընկերոջը, յուրաքանչյուրի համար ստանալ 10% զեղչ</li>
+            </ul>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ի՞նչ է ներառված արժեքի մեջ</summary>
+          <div class="faq__answer">
+            <p>9 դասերը, ուսումնական նյութերը, պրոմպտների գրադարանը, AI գործիքների ցանկը, հավաստագիրը և նշված օֆլայն հրավիրատոմսը։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ինչպե՞ս իմանամ՝ ինձ պետք է, թե ոչ</summary>
+          <div class="faq__answer">
+            <ol class="faq__bullets faq__bullets--steps">
+              <!-- TODO: the real AI-literacy test link (as Hero B's and the audience block's: a blank placeholder for now, opens in a new tab) -->
+              <li><a href="about:blank" target="_blank" rel="noopener">Անցիր օնլայն էքսպրես թեստ հիմա<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <li><a href="#skills">Ծանոթացիր բացվածքին</a></li>   <!-- the 9 lessons' topics (05h) -->
+            </ol>
+          </div>
+        </details>
       </div>
     </section>
 
     <!-- =========================================================
-         06 · TEACHERS — «Ովքե՞ր են սովորեցնում»
-         ========================================================= -->
-    <section class="teachers" id="teachers">
-      <div class="teachers__top">
-        <h2 class="section-title">Ովքե՞ր են սովորեցնում</h2>
-        <div class="teachers__nav">
-          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
-          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
-        </div>
-      </div>
-
-      <div class="teachers__row">
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/anahit.webp" alt="Անահիտ Վարդանյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/anahit-vardanian/" target="_blank" rel="noopener" aria-label="Անահիտ Վարդանյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Անահիտ Վարդանյան</h3>
-              <p class="teacher__role">AI Strategist</p>
-            </div>
-            <p class="teacher__bio">5+ տարվա փորձ հաղորդակցության ոլորտում։ «AI քեզ բան» կրթական ծրագրի համակարգող։</p>
-            <p class="teacher__meta">110+ ժամ · Start · Level-Up · PRO · Webinar</p>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/nairi.webp" alt="Նաիրի Արեգ Հացպանյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/nairi-areg/" target="_blank" rel="noopener" aria-label="Նաիրի Արեգ Հացպանյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Նաիրի Արեգ Հացպանյան</h3>
-              <p class="teacher__role">Full-Stack AI Engineer</p>
-            </div>
-            <p class="teacher__bio">7+ տարվա փորձ Full-Stack Development և Vibe Coding։ Մասնագիտացած է custom AI agent ստեղծելու և AI ավտոմատացումների մեջ։</p>
-            <p class="teacher__meta">90+ ժամ · Start · Level-Up · PRO · Webinar</p>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/artak.webp" alt="Արտակ Գրիգորյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/artakgrigoryan/" target="_blank" rel="noopener" aria-label="Արտակ Գրիգորյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Արտակ Գրիգորյան</h3>
-              <p class="teacher__role">AI Automation Expert</p>
-            </div>
-            <p class="teacher__bio">10+ տարվա փորձ նախագծերի կառավարման ոլորտում։ AI ավտոմատացումների դասընթացավար և փորձագետ։</p>
-            <p class="teacher__meta">120+ ժամ · Level-Up</p>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/lilit_kh.webp" alt="Լիլիթ Խաչատրյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/lika13/" target="_blank" rel="noopener" aria-label="Լիլիթ Խաչատրյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Լիլիթ Խաչատրյան</h3>
-              <p class="teacher__role">Senior Product Designer &amp; AI Artist</p>
-            </div>
-            <p class="teacher__bio">15+ տարվա փորձ Product Design և UX/UI ոլորտներում։ Մասնագիտացած է AI-ով վիզուալներ գեներացնելու և UX/UI-ի մեջ։</p>
-            <p class="teacher__meta">80+ ժամ · Level-Up</p>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/lilit_b.webp" alt="Լիլիթ Բարսեղյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/lilit-barseghyan-96a2152aa/" target="_blank" rel="noopener" aria-label="Լիլիթ Բարսեղյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Լիլիթ Բարսեղյան</h3>
-              <p class="teacher__role">AI Artist &amp; Director</p>
-            </div>
-            <p class="teacher__bio">10+ տարվա փորձ ֆիլմարտադրության ոլորտում՝ ռեժիսոր, սցենարիստ։ Մասնագիտացած է AI-ով վիդեո պատմություններ գեներացնելու մեջ։ 2025 թ. դեկտեմբերի առաջին մրցանակին է արժանացել RUNWAY AI ֆիլմերի համաշխարհային ֆեստիվալում։</p>
-            <p class="teacher__meta">75+ ժամ · Level-Up</p>
-          </div>
-        </article>
-
-        <article class="teacher">
-          <div class="teacher__photo">
-            <img src="assets/teachers/gevorg.webp" alt="Գևորգ Պողոսյան" loading="lazy" />
-          </div>
-          <a class="teacher__link" href="https://www.linkedin.com/in/gevorg-poghosyan-a6580a85/" target="_blank" rel="noopener" aria-label="Գևորգ Պողոսյան — LinkedIn">
-            <img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" />
-          </a>
-          <div class="teacher__body">
-            <div class="teacher__head">
-              <h3 class="teacher__name">Գևորգ Պողոսյան</h3>
-              <p class="teacher__role">AI First Mindset</p>
-            </div>
-            <p class="teacher__bio">30+ տարվա ձեռնարկատիրական փորձով։ «AI-ն առաջին հերթին» մտածելակերպի ուսուցիչ։</p>
-            <p class="teacher__meta">120+ ժամ · PRO · Webinar</p>
-          </div>
-        </article>
-
-      </div>
-    </section>
-
-
-    <!-- =========================================================
-         08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI-գրագետ հայ», a Teal band
+         08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI-գրագետ հայ», a Teal band; the eye logo flies under the headline
          ========================================================= -->
     <section class="mission" id="mission">
       <div class="mission__row">
         <div class="mission__head">
           <p class="mission__kicker">Մեր առաքելությունը</p>
           <h2 class="mission__title">1,000,000<br />AI-գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
-          <!-- The million: a crowd of the brand's eyes drifting under the headline, each pair someone who learned;
-               script.js (08 · missionCrowd) fills the row, and the eyes blink and look around -->
-          <div class="crowd" aria-hidden="true"><div class="crowd__track"></div></div>
+          <!-- The flight: the eye logo (one pair, with the ™) flies under the headline like a rocket, always in view: hovering,
+               speed lines streaming behind it (tailwind.css · .flight; it stands still for reduced motion). index.html keeps
+               the crowd of eyes -->
+          <div class="flight" aria-hidden="true">
+            <span class="flight__ship">
+              <span class="flight__lines"><span></span><span></span><span></span></span>
+              <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="right">
+                <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+                <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+                <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+                <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+                <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+              </svg>
+            </span>
+          </div>
         </div>
         <div class="mission__body">
-          <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։ Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
+          <div class="mission__text">   <!-- the goal, then what it means for you: a paragraph each -->
+            <p>Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։</p>
+            <p>Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
+          </div>
           <a href="#packages" class="btn btn--primary btn--base">Ընտրել դասընթաց</a>   <!-- the same words as the hero's ask: a second wording would read as a second offer -->
         </div>
       </div>
@@ -1618,7 +1739,8 @@
          09b · WEBINAR — the animated wordmark «AI քեզ վեբինար» (every letter
          shuffles its font, script.js) + the webinar date, time and sign-up
          ========================================================= -->
-    <section class="wordmark" id="webinar" aria-labelledby="webinar-title">
+    <!-- Hidden for now — remove `hidden` to bring the webinar section back -->
+    <section class="wordmark" id="webinar" aria-labelledby="webinar-title" hidden>
       <div class="wordmark__box">
         <h2 class="sr-only" id="webinar-title">AI քեզ վեբինար</h2>
         <div class="wordmark__type shuffle" aria-hidden="true">
@@ -1637,70 +1759,10 @@
     </section>
 
     <!-- =========================================================
-         10 · FAQ — «Հաճախ տրվող հարցեր»
-         ========================================================= -->
-    <section class="faq" id="faq">
-      <h2 class="section-title faq__title">Հաճախ տրվող հարցեր</h2>
-      <div class="faq__list">
-        <details class="faq__item" open>
-          <summary>Ի՞նչ մակարդակի համար է ծրագիրը</summary>
-          <div class="faq__answer">
-            <p><strong>AI գրագեր</strong>-ը սկսվում է զրոյից. AI-ի հետ ոչ մի փորձ պետք չէ։ Առաջին 3 դասը հիմունքներն են, հաջորդ 6-ը՝ հետազոտություն, նկարներ, վիդեոներ, կայքէջեր, ավտոմատացում և AI ագենտներ։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Կարո՞ղ եմ գնել միայն առաջին 3 դասը</summary>
-          <div class="faq__answer">
-            <p>Այո՝ <strong>֏ 19,500</strong>։ Եթե հետո որոշես շարունակել, կվճարես միայն տարբերությունը՝ <strong>֏ 26,200</strong>։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>PRO դասընթացներ</summary>
-          <div class="faq__answer">
-            <ul class="faq__pro">
-              <li><strong>AI քեզ ուսուցիչ</strong> — Մանրամասներին ծանոթացիր <a href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
-              <!-- TODO: real link for «AI քեզ project manager» -->
-              <li><strong>AI քեզ project manager</strong> — Մանրամասներին ծանոթացիր <a href="https://example.com/ai-qez-project-manager" target="_blank" rel="noopener">կայքում<i class="ic ic--external" aria-hidden="true"></i></a></li>
-              <li><strong>AI քեզ բժիշկ</strong> — Շուտով, <a href="doctor-register.html" target="_blank" rel="noopener">գրանցվել նախապես</a></li>
-            </ul>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Կա՞ գումարի վերադարձի երաշխիք</summary>
-          <div class="faq__answer">
-            <p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Ե՞րբ են դասերը</summary>
-          <div class="faq__answer">
-            <div class="schedules schedules--single">
-              <div class="schedule">
-                <p class="schedule__name">AI գրագեր</p>
-                <dl class="schedule__rows">
-                <div><dt>Մեկնարկ</dt><dd>ամեն ամսվա առաջին երեքշաբթի</dd></div>
-                <div><dt>Տևողություն</dt><dd>4 շաբաթ · 9 դաս · 18 ժամ</dd></div>
-                <div><dt>Ձևաչափ</dt><dd>օնլայն (Zoom)</dd></div>
-                <div><dt>Օրեր</dt><dd>1-ին շաբաթ՝ երեքշաբթի, հինգշաբթի, շաբաթ<br />2–4-րդ շաբաթ՝ երեքշաբթի և հինգշաբթի</dd></div>
-                <div><dt>Ժամ</dt><dd>19:00 – 21:00</dd></div>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Կստանա՞մ դասերի տեսագրությունները</summary>
-          <div class="faq__answer">
-            <p>Այո, թե բոլոր տեսաձայնագրությունները, թե բոլոր սահիկաշարերը հասանելի կլինեն բոլոր մասնակիցներին 6 ամիս։</p>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- =========================================================
          09 · REFERRAL — «Հրավիրիր ընկերոջդ»
          ========================================================= -->
-    <section class="referral" id="referral">
+    <!-- Hidden for now — remove `hidden` to bring «Հրավիրիր ընկերոջդ» back -->
+    <section class="referral" id="referral" hidden>
       <div class="referral__inner referral__panel">
         <div class="referral__left">
           <div class="referral__head">
@@ -1753,6 +1815,53 @@
           </div>
           <button type="submit" class="btn btn--primary btn--block btn--base" disabled>Ստեղծել պրոմոկոդ</button>
         </form>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         12 · CONTACT — «Ունե՞ս հարցեր»: the last section, a Blue band, all centred: the title and its line (white), then a
+         narrow White form card (name, phone, email: the .field atoms); the brand's eyes (with the ™) on an Ink circle at the
+         start of the title. «Ուղարկել» stays disabled until every field is filled in (a valid email, 8 digits after +374); sent, a
+         confirmation takes the form's place (script.js · 12 contactForm)
+         ========================================================= -->
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="contact__text">
+        <div class="contact__head">
+          <span class="contact__eyes" aria-hidden="true">   <!-- on an Ink circle, at the start of the title: they ask it; they blink (script.js · 05 peekEyes) -->
+            <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you">
+              <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+              <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+              <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+              <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+              <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+            </svg>
+          </span>
+          <h2 class="section-title" id="contact-title">Ունե՞ս հարցեր</h2>
+        </div>
+        <p class="contact__lead">Մեր մասնագետը կապ կհաստատի քեզ հետ</p>
+      </div>
+      <div class="contact__card">
+        <form class="contact__form" novalidate>
+          <label class="field">
+            <span class="field__label">Անուն</span>
+            <input class="field__input" type="text" name="name" autocomplete="name" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Հեռ. համար</span>
+            <input class="field__input" type="tel" name="phone" inputmode="tel" placeholder="+374" autocomplete="tel" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. հասցե</span>
+            <input class="field__input" type="email" name="email" placeholder="example@email.com" autocomplete="email" required />
+          </label>
+          <p class="contact__note">Բոլոր դաշտերը պարտադիր են։</p>
+          <button type="submit" class="btn btn--primary btn--block btn--base" disabled>Ուղարկել</button>   <!-- enabled once every field is filled in -->
+        </form>
+        <!-- After «Ուղարկել»: the form steps aside for this. The section's own line as the confirmation (TODO: its own words, if wanted) -->
+        <div class="contact__done" data-done hidden tabindex="-1" role="status">
+          <span class="contact__check" aria-hidden="true"><i class="ic ic--lg ic--check"></i></span>
+          <p class="contact__done-text">Մեր մասնագետը կապ կհաստատի քեզ հետ</p>
+        </div>
       </div>
     </section>
 
@@ -1849,6 +1958,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-12"></script>
+  <script src="script.js?v=pages-17"></script>
 </body>
 </html>

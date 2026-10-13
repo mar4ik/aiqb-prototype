@@ -1250,6 +1250,15 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   update();
 })();
 
+// The 8 digits after +374, however people type them: «091 12 34 56» (the leading 0) and «+374 91 123456» count too.
+// Shared by the 3-friends form (05d) and the contact form (12)
+function armPhoneDigits(value) {
+  let digits = value.replace(/\D/g, '');
+  if (digits.length === 11 && digits.startsWith('374')) digits = digits.slice(3);
+  if (digits.length === 9 && digits.startsWith('0')) digits = digits.slice(1);
+  return digits;
+}
+
 /* ============================================================
    05d · 3-FRIENDS FORM — «Գրանցվել ընկերներով» opens the popup
    (.modal, a native <dialog>: Escape closes it, focus stays inside).
@@ -1264,13 +1273,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   const submit = form.querySelector('button[type="submit"]');
   const phone = form.elements.phone1;
 
-  // The 8 digits after +374, however people type them: «091 12 34 56» (the leading 0) and «+374 91 123456» count too
-  function phoneDigits() {
-    let digits = phone.value.replace(/\D/g, '');
-    if (digits.length === 11 && digits.startsWith('374')) digits = digits.slice(3);
-    if (digits.length === 9 && digits.startsWith('0')) digits = digits.slice(1);
-    return digits;
-  }
+  const phoneDigits = () => armPhoneDigits(phone.value);
 
   function update() {
     const ok = Array.from(form.querySelectorAll('input')).every((input) => input.value.trim() !== '' && input.checkValidity());
@@ -1304,6 +1307,38 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     // TODO (developer): send the three people (new FormData(form)) and their emails, and show the confirmation only once
     // that worked. Until then it shows straight away: nothing is sent yet.
     showDone(true);
+  });
+  update();
+})();
+
+/* ============================================================
+   12 · CONTACT FORM (aigraget.html) — «Ունե՞ս հարցեր»: «Ուղարկել» stays disabled until every field is filled in (a name,
+   8 digits after +374, a valid email). Sent, the confirmation takes the form's place (the card keeps its height) and
+   the eyes by the title look at you. Front end only (TODO, developer: send new FormData(form), and show the confirmation once
+   that worked; until then it shows straight away and nothing is sent)
+   ============================================================ */
+(function contactForm() {
+  const form = document.querySelector('.contact__form');
+  if (!form) return;
+  const card = form.closest('.contact__card');
+  const done = card.querySelector('[data-done]');
+  const eyes = form.closest('.contact').querySelector('.contact__eyes .eyes');
+  const submit = form.querySelector('button[type="submit"]');
+  const { name, phone, email } = form.elements;
+
+  function update() {
+    submit.disabled = !(name.value.trim() !== '' && armPhoneDigits(phone.value).length === 8 && email.value.trim() !== '' && email.checkValidity());
+  }
+
+  form.addEventListener('input', update);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();               // no backend yet
+    if (submit.disabled) return;
+    card.style.minHeight = `${card.offsetHeight}px`;   // the card keeps its size: the page doesn't jump
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+    if (eyes) eyes.dataset.look = 'you';
   });
   update();
 })();
@@ -1563,7 +1598,7 @@ function makeEyes({ tm = false } = {}) {
    at it (mouse screens only), within the brand's pupil oval; at rest, at you
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
@@ -1640,6 +1675,9 @@ revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones 
    (tailwind.css · .certificate.is-in) */
 revealOnce(document.querySelector('.certificate'), null, 0.3);
 
+/* 05p · KEPT — the progress bar fills, then its ✓ pops; the second ticket slides out (tailwind.css · .kept.is-in) */
+revealOnce(document.querySelector('.kept'), null, 0.3);
+
 /* 05b · ABOUT TIMELINE — the line draws, the markers pop, the years rise (tailwind.css · .timeline.is-in). When AI
    has landed, the eyes under the lead turn to it and blink, then look back at you */
 (function aboutTimeline() {
@@ -1712,11 +1750,13 @@ revealOnce(document.querySelector('.certificate'), null, 0.3);
    the brand bubble (bubblePoints, as the learn tiles): its top-right corner, clear of the icon, a tail and a step in
    turn; nothing cut where the title starts. When the row scrolls into view the corners cut in one card after another.
    The eye logo (.format__eyes) peeks from the last format card's step, on its shoulder, sized to it (as the learn
-   tiles' eyes; it blinks: 05 peekEyes). Without script: rounded cards, no eyes
+   tiles' eyes; it blinks: 05 peekEyes), and the kept tiles' eyes from theirs (05p: { bigEyes }, as wide as the step,
+   standing on its shoulder and rising above the tile). Without script: rounded cards, no eyes
    ============================================================ */
 bubbleCards('.format__card', '.format__title', document.querySelector('.format__eyes'));
 bubbleCards('.needs__card', '.needs__title');
-function bubbleCards(cardSel, titleSel, eyes = null) {
+bubbleCards('.kept__card', '.kept__title', document.querySelector('.kept__eyes'), { bigEyes: true });
+function bubbleCards(cardSel, titleSel, eyes = null, { bigEyes = false } = {}) {
   const cards = [...document.querySelectorAll(cardSel)];
   if (!cards.length || !canClip) return;
   const SHAPES = ['tail-right', 'step-right', 'tail-right', 'step-right'];
@@ -1737,7 +1777,7 @@ function bubbleCards(cardSel, titleSel, eyes = null) {
   function placeEyes(card, { right, a, t, tFull, W }) {
     if (right !== 'step') { eyes.classList.remove('is-placed'); return; }
     const ar = EYES_TM_W / 50;
-    const w = Math.min(a - 2 * GAP, (tFull - 2 * GAP) * ar), h = w / ar;   // sized by the full cut: the same as it cuts in
+    const w = bigEyes ? a - 2 * GAP : Math.min(a - 2 * GAP, (tFull - 2 * GAP) * ar), h = w / ar;   // sized by the full cut (the same as it cuts in), or the step's width
     Object.assign(eyes.style, {
       left: `${(card.offsetLeft + W - a + GAP).toFixed(1)}px`,
       top: `${(card.offsetTop + t - GAP - h).toFixed(1)}px`,
