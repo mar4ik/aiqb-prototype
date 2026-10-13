@@ -1500,13 +1500,7 @@
 
   .story-hero__meta .story-hero__endorse {
     padding-left: calc(var(--spacing) * 6);
-    border-left: 1px solid #ffffff4d;
-  }
-
-  @supports (color: color-mix(in lab, red, red)) {
-    .story-hero__meta .story-hero__endorse {
-      border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent);
-    }
+    border-left: 1px solid #0000;
   }
 
   .story-hero__endorse {

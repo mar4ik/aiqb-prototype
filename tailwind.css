@@ -655,9 +655,10 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 .story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
 .story-hero__actions .btn--primary { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
-/* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side with a hairline between them.
-   The line is the endorsement's left border; the row starts --cut left of the column and is clipped there, so when the
-   endorsement wraps under the dates its line falls in the clipped strip: it only shows while the two share a row */
+/* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side with air between them (no line
+   since Oct 2026: the endorsement's left border is transparent, so the spacing stays as it was). The row starts --cut
+   left of the column and is clipped there, so when the endorsement wraps under the dates its left air falls in the
+   clipped strip and it lines up with the column */
 .story-hero__meta {
   --cut: calc(--spacing(6) + 1px);   /* the line and the air after it */
   display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(3) --spacing(6);
@@ -665,7 +666,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   clip-path: inset(0 0 0 var(--cut));
 }
 .story-hero__meta .pill { margin-left: var(--cut); }   /* back on the column's edge */
-.story-hero__meta .story-hero__endorse { padding-left: --spacing(6); border-left: 1px solid color-mix(in oklab, var(--color-white) 30%, transparent); }
+.story-hero__meta .story-hero__endorse { padding-left: --spacing(6); border-left: 1px solid transparent; }   /* the air where the line was */
 .story-hero__endorse { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-caption; }
 .story-hero__endorse img { width: --spacing(9); height: auto; flex: none; }
 

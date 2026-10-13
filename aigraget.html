@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-51" />
+  <link rel="stylesheet" href="styles.css?v=pages-52" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -113,10 +113,11 @@
         <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
       </a>
       <div class="nav__links" id="nav-menu">
-        <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
-        <a href="#packages" class="nav__link">Դասընթացներ</a>
+        <!-- The page's stops, in page order; the footer's «Բաժիններ» uses the same labels (Oct 2026) -->
+        <a href="#skills" class="nav__link">Ի՞նչ կսովորես</a>
+        <a href="#packages" class="nav__link">Գները</a>
         <!-- «Դասընթացներ» sub nav: course links + the course promo (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain «Գները» link above. -->
         <div class="nav__item" hidden>
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
@@ -155,9 +156,9 @@
             </div>
           </div>
         </div>
-        <a href="#webinar" class="nav__link">Վեբինար</a>
-        <a href="#mission" class="nav__link">Մեր առաքելությունը</a>
-        <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
+        <a href="#teachers" class="nav__link">Ուսուցիչներ</a>
+        <a href="#faq" class="nav__link">Հարցեր</a>
+        <a href="#contact" class="nav__link">Կապ</a>
       </div>
       <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
       <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
@@ -1888,12 +1889,12 @@
       <div class="footer__links">
         <nav class="footer__col" aria-label="Բաժիններ">
           <p class="footer__heading">Բաժիններ</p>
-          <a href="#courses">Ի՞նչ կսովորես</a>
-          <a href="#packages">Դասընթացներ</a>
+          <a href="#skills">Ի՞նչ կսովորես</a>   <!-- the nav's links and labels, then the mission -->
+          <a href="#packages">Գները</a>
           <a href="#teachers">Ուսուցիչներ</a>
+          <a href="#faq">Հարցեր</a>
+          <a href="#contact">Կապ</a>
           <a href="#mission">Մեր առաքելությունը</a>
-          <a href="#referral">Հրավիրիր ընկերոջդ</a>
-          <a href="#faq">Հաճախ տրվող հարցեր</a>
           <a href="https://aiqezban.ai/join">Միացիր մեր թիմին</a>
         </nav>
         <div class="footer__col">
