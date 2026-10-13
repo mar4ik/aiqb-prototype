@@ -1485,8 +1485,8 @@ function makeEyes({ tm = false } = {}) {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble) and the about lead (05b · .about__lead), whose corners scale up 1.5× for their size
-  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead')];
+  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble), the about lead (05b · .about__lead) and the audience boxes (05i · .audience__bubble: the shape without its tail), whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1494,12 +1494,19 @@ function makeEyes({ tm = false } = {}) {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
-    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead') ? 1.5 : 1;   // corner scale
+    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble') ? 1.5 : 1;   // corner scale
     // The tip: the brand's, a little in from the right side; when the bubble speaks for the eyes on a circle under
-    // it (05b · .about__eyes), right over their middle, so it points at them
-    const who = el.nextElementSibling?.matches('.about__eyes') ? el.nextElementSibling.getBoundingClientRect() : null;
-    const tip = who ? Math.min(W - e, who.left + who.width / 2 - el.getBoundingClientRect().left) : W - e;
-    const pts = [
+    // it (05b · .about__eyes), right over their middle, so it points at them (layout offsets, not the on-screen box,
+    // which an entrance may still be scaling)
+    const who = el.nextElementSibling?.matches('.about__eyes') ? el.nextElementSibling : null;
+    const tip = who ? Math.min(W - e, who.offsetLeft + who.offsetWidth / 2 - el.offsetLeft) : W - e;
+    // 05i · .audience__bubble: the bubble without its tail, only the bottom edge falling away from the side to the
+    // other corner (so no two sit level)
+    const pts = el.matches('.audience__bubble') ? [
+      [0, 0, 8 * r], [W, 0, 8 * r],
+      [W, Hb, 8 * r],                           // the right side ends higher…
+      [0, H, 8 * r],                            // …and the bottom edge falls away to the bottom-left corner
+    ] : [
       [0, 0, 8 * r], [W, 0, 8 * r],
       [W, Hb, 4 * r],                           // the right side ends…
       [tip, Hb + 0.13 * T, 6 * r],              // …stepping in (a little, or to the eyes)
@@ -1508,8 +1515,8 @@ function makeEyes({ tm = false } = {}) {
       [0, H, 8 * r],                            // the bottom edge falls away to the bottom-left corner
     ];
     // .why__bubble--tail-left: the same bubble mirrored, its tail at the bottom-left (the second why block's points
-    // down to the answer between them); the points run backwards so the outline keeps its direction
-    shapeElement(el, el.matches('.why__bubble--tail-left') ? pts.map(([x, y, rad]) => [W - x, y, rad]).reverse() : pts);
+    // down to the answer between them; the audience's left column, 05i); the points run backwards so the outline keeps its direction
+    shapeElement(el, el.matches('.why__bubble--tail-left, .audience__col--left .audience__bubble') ? pts.map(([x, y, rad]) => [W - x, y, rad]).reverse() : pts);
   }
   const all = () => buttons.forEach(shape);
   all();
@@ -1519,12 +1526,12 @@ function makeEyes({ tm = false } = {}) {
 })();
 
 /* ============================================================
-   05 / 05b · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail and under the about lead's: each
+   05 / 05b / 05i · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail, under the about lead's and by the audience sum: each
    pair blinks now and then and glances around while on screen, and while the pointer is over its section it looks
    at it (mouse screens only), within the brand's pupil oval; at rest, at you
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
@@ -1592,6 +1599,10 @@ function revealOnce(el, onIn, threshold = 0.4) {
 /* 05 · WHY — the bubbles pop in one after another like messages, each growing out of its tail, then the eyes under
    the answer come up (tailwind.css · .why.is-in) */
 revealOnce(document.querySelector('.why'), null, 0.3);
+
+/* 05i · AUDIENCE — the bubbles pop in like messages, left and right in turn, then the eyes by the sum come up
+   (tailwind.css · .audience.is-in) */
+revealOnce(document.querySelector('.audience'), null, 0.1);   // 0.1: on phones the section is several screens tall
 
 /* 05b · ABOUT TIMELINE — the line draws, the markers pop, the years rise (tailwind.css · .timeline.is-in). When AI
    has landed, the eyes under the lead turn to it and blink, then look back at you */

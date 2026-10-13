@@ -171,7 +171,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .skills, .pricing, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .reel, .skills, .audience, .pricing, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -1255,13 +1255,95 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 /* The two long titles (videos, skills) carry &shy; for phones; from md up there's room to break between words, so the
    soft hyphens are ignored (else the browser fills the line by splitting a word) */
 @media (width >= theme(--breakpoint-md)) {
-  .reel .section-title, .skills__title { hyphens: none; }
+  .reel .section-title, .skills__title, .audience__title { hyphens: none; }
 }
 @media (width < theme(--breakpoint-md)) {
   .skill__head { padding: --spacing(4) --spacing(5); column-gap: --spacing(3); }
   .skill__title { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* phones: one step down, still the detail cut */
   .skill__toggle { width: --spacing(10); height: --spacing(10); }
   .skill__body { grid-template-columns: minmax(0, 1fr); margin-inline: --spacing(5); padding-bottom: --spacing(5); }
+}
+
+/* ============================================================
+   05i · AUDIENCE («ԴԱՍԸՆԹԱՑԸ ՔԵԶ ՀԱՄԱՐ Է…», aigraget.html)
+   ============================================================ */
+/* The brand's Black ground, full-bleed, between the White lessons and the Blue stats. Who you are and what you get, in
+   the brand's chat bubble without its tail (script.js · 03b cuts it: the bottom edge falls away to one corner), a feed
+   colour each with black text (BRAND.md → Text on colour), as the why blocks (05), two columns like a conversation,
+   the left one's falling left, the right one's right, a little lower; one column on phones */
+.audience {
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.audience__title { color: var(--color-white); max-width: --spacing(250); text-wrap: balance; }
+.audience__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--card-gap); }
+.audience__col { display: flex; flex-direction: column; gap: --spacing(4); }
+.audience__col:not(.audience__col--left) { margin-top: --spacing(16); }   /* the replies sit a little lower */
+.audience__bubble {
+  display: flex; flex-direction: column; gap: --spacing(2);
+  padding: --spacing(6) --spacing(7) --spacing(14);   /* the extra bottom padding is the falling edge's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--audience-bg, var(--color-feed-yellow));
+  color: var(--color-black);
+}
+.audience__bubble[data-bg="yellow"] { --audience-bg: var(--color-feed-yellow); }
+.audience__bubble[data-bg="teal"]   { --audience-bg: var(--color-feed-teal); }
+.audience__bubble[data-bg="pink"]   { --audience-bg: var(--color-feed-pink); }
+.audience__bubble[data-bg="sky"]    { --audience-bg: var(--color-feed-sky); }
+.audience__who { @apply text-aqb-subhead; text-wrap: balance; }   /* a card title: Subhead */
+.audience__gain { @apply text-aqb-body-s; }
+.audience__bubble--last .audience__gain { font-weight: var(--font-weight-detail); }   /* the closing one, in the detail cut (as the reference) */
+/* The last bubble closes it: centred under both columns at one column's width (as the why answer) */
+.audience__say {
+  align-self: center; width: calc((100% - var(--card-gap)) / 2);   /* one column */
+  display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3);
+}
+.audience__say .audience__bubble { align-self: stretch; }
+/* The entrance (script.js · revealOnce; without script, or for reduced motion, all of it simply shows): the bubbles
+   pop in like messages, left and right in turn, each growing out of its outer bottom corner (--d: when), then the eyes come up */
+.audience__bubble { transform-origin: 100% 100%; }
+.audience__col--left .audience__bubble { transform-origin: 0 100%; }
+.audience__col--left > :nth-child(1) { --d: 0s; }
+.audience__col:not(.audience__col--left) > :nth-child(1) { --d: .2s; }
+.audience__col--left > :nth-child(2) { --d: .4s; }
+.audience__col:not(.audience__col--left) > :nth-child(2) { --d: .6s; }
+.audience__col--left > :nth-child(3) { --d: .8s; }
+.audience__col:not(.audience__col--left) > :nth-child(3) { --d: 1s; }
+.audience__say { --d: 1.2s; }
+.audience__eyes { --e: 1.7s; }
+.audience.is-armed .audience__bubble { opacity: 0; scale: .6; }
+.audience.is-in .audience__bubble { opacity: 1; scale: 1; transition: opacity .3s var(--d), scale .55s cubic-bezier(.34, 1.56, .64, 1) var(--d); }
+.audience.is-armed .audience__eyes { opacity: 0; translate: 0 --spacing(4); }
+.audience.is-in .audience__eyes { opacity: 1; translate: 0 0; transition: opacity .3s var(--e), translate .55s cubic-bezier(.34, 1.56, .64, 1) var(--e); }
+/* The sum's speaker: the brand's eyes (with the ™), white on Black, at the start of the line, blinking (05 peekEyes) */
+.audience__eyes { flex: none; display: block; width: --spacing(14); }   /* 112.6 wide with the ™: the eyes themselves about 48px, a little taller than the line */
+.audience__eyes .eyes { width: 100%; }
+/* The foot: the sum (a statement, in the headline cut), then an Ink bar on the Black: the question (reading text), how long the
+   test takes by the clock (a detail, muted), and the way to it (the hero's test link, here the bar's one action) */
+.audience__foot { display: flex; flex-direction: column; gap: --spacing(5); margin-top: --spacing(6); }
+.audience__sum { display: flex; align-items: center; gap: --spacing(3); @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); text-wrap: balance; }   /* in the headline cut (ExtraBold Italic, the brand's only italic), a step under Subhead, as the timeline's words */
+.audience__test {
+  display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(3) --spacing(6);
+  padding: --spacing(4) --spacing(4) --spacing(4) --spacing(6);
+  border-radius: var(--radius-3xl);
+  background: var(--color-neutral-ink);
+}
+.audience__ask { flex: 1 1 --spacing(80); @apply text-aqb-body-s; }
+.audience__time {
+  display: flex; align-items: center; gap: --spacing(2);
+  @apply text-aqb-label; white-space: nowrap;
+  color: color-mix(in oklab, var(--color-white) 72%, var(--color-black));   /* secondary text on Black, as the videos' */
+}
+@media (width < theme(--breakpoint-md)) {
+  .audience__test { padding: --spacing(5); }
+  .audience__test .btn { flex: 1 1 100%; }   /* full width under the words, as the hero's on phones */
+  .audience__cols { grid-template-columns: minmax(0, 1fr); }
+  .audience__col:not(.audience__col--left) { margin-top: 0; }
+  .audience__say { width: 100%; }
+  .audience__bubble { padding-inline: --spacing(6); }
 }
 
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */

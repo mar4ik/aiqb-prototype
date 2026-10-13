@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-7" />
+  <link rel="stylesheet" href="styles.css?v=pages-15" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -695,6 +695,91 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <!-- =========================================================
+         05i · AUDIENCE — «ԴԱՍԸՆԹԱՑԸ ՔԵԶ ՀԱՄԱՐ Է, ԱՆԿԱԽ ՆՐԱՆԻՑ, ԹԵ ՈՐՏԵՂԻՑ ԵՍ ՍԿՍՈՒՄ»: who you are (Subhead) and what the course
+         gives you, each in the brand's chat bubble without its tail (its bottom edge falls away to one corner; script.js ·
+         03b cuts it; a feed colour each, black text), on Black, in two columns like a conversation, the right column a
+         little lower. The last bubble closes it, centred under both at one column's width, in the detail cut, and the brand's
+         eyes (with the ™), white on Black, say it
+         from under its tail, blinking (script.js · 05 peekEyes). The bubbles pop in like messages (revealOnce)
+         ========================================================= -->
+    <section class="audience" id="audience" aria-labelledby="audience-title">
+      <h2 class="section-title audience__title" id="audience-title">ԴԱՍԸՆ&shy;ԹԱՑԸ ՔԵԶ ՀԱՄԱՐ Է, ԱՆԿԱԽ ՆՐԱՆԻՑ, ԹԵ ՈՐՏԵ&shy;ՂԻՑ ԵՍ ՍԿՍՈՒՄ</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="audience__cols">
+        <ul class="audience__col audience__col--left">
+          <li class="audience__bubble" data-bg="yellow">
+            <h3 class="audience__who">Դեռ չես օգտագործում AI</h3>
+            <p class="audience__gain">Կսկսես զրոյից՝ քայլ առ քայլ, ու կհասկանաս՝ ինչ գործերում այն կարող է օգնել հենց քեզ։</p>
+          </li>
+          <li class="audience__bubble" data-bg="teal">
+            <h3 class="audience__who">Այս պահին չես աշխատում</h3>
+            <p class="audience__gain">Ձեռք կբերես կիրառելի հմտություններ, կկարողանաս գտնել աշխատանք կամ եկամուտ ստանալու նոր հնարավորություններ։</p>
+          </li>
+          <li class="audience__bubble" data-bg="pink">
+            <h3 class="audience__who">Բիզնես ունես</h3>
+            <p class="audience__gain">Կկարողանաս արագ պատրաստել բովանդակություն, վերլուծել տվյալներն ու AI-ի օգնությամբ կատարել այն գործերի մի մասը, որոնց համար թիմում ռեսուրս չի բավարարում։</p>
+          </li>
+        </ul>
+        <ul class="audience__col">
+          <li class="audience__bubble" data-bg="sky">
+            <h3 class="audience__who">Արդեն օգտագործում ես AI</h3>
+            <p class="audience__gain">Կկարողանաս տալ ավելի գրագետ առաջադրանքներ, ստանալ ավելի օգտակար արդյունք ու կիրառել նոր գործիքներ։</p>
+          </li>
+          <li class="audience__bubble" data-bg="yellow">
+            <h3 class="audience__who">Աշխատում ես</h3>
+            <p class="audience__gain">Կիմանաս՝ ինչպես AI-ը կիրառել քո մասնագիտության մեջ, արագացնել կրկնվող գործերը և ժամանակ ազատել կարևոր աշխատանքի համար։</p>
+          </li>
+          <li class="audience__bubble" data-bg="sky">
+            <h3 class="audience__who">Սովորում ես</h3>
+            <p class="audience__gain">Կկարողանաս ավելի հեշտ հասկանալ բարդ նյութերը, ուսումնասիրել աղբյուրներն ու պատրաստել պրեզենտացիաներ։</p>
+          </li>
+        </ul>
+      </div>
+      <div class="audience__say">
+        <div class="audience__bubble audience__bubble--last" data-bg="teal">
+          <h3 class="audience__who">Ուզում ես պարզապես հեշտացնել առօրյադ</h3>
+          <p class="audience__gain">Կկարողանաս ստեղծել քո AI օգնականը՝ ամենօրյա գործերի համար, ավելի հեշտ պլանավորել օրը, վիզուալիզացնել գաղափարներդ և շատ ավելին։</p>
+        </div>
+      </div>
+      <!-- The foot: the section's sum, then the way to the AI-literacy test for whoever isn't sure where they stand; how
+           long it takes by the clock -->
+      <div class="audience__foot">
+        <p class="audience__sum">
+          <span class="audience__eyes" aria-hidden="true">   <!-- the brand's eyes say it, white on Black, with the logo's ™; they blink (script.js · 05 peekEyes) -->
+          <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you">
+            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+          </svg>
+          </span>
+          Տարբեր իրավիճակներ, նույն անհրաժեշտ հիմքը՝ 8 AI-հմտություն։</p>
+        <div class="audience__test">
+          <p class="audience__ask">Չե՞ս կողմնորոշվում։ Ստուգիր AI-գրագիտությանդ մակարդակն օնլայն</p>
+          <p class="audience__time"><i class="ic ic--clock" aria-hidden="true"></i>1.5&nbsp;րոպե</p>
+          <!-- TODO: the real AI-literacy test link (as Hero B's «Ստուգի՛ր AI գրագիտությունդ»: a blank placeholder for now, opens in a new tab) -->
+          <a href="about:blank" class="btn btn--primary btn--base" target="_blank" rel="noopener">Անցնել էքսպրես թեստը<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05j · INCLUDED — «Ի՞նչ ես ստանում»: the course page's block (ai-grager.html · .course-included), as it is: the title on
+         the left, what comes with the course beside it as a list split by lines, a Blue check each, on the brand grey.
+         Here without the homework, the certificate as the Ministry's endorsement, and the refund through the income tax
+         ========================================================= -->
+    <section class="course-included" aria-labelledby="included-title">
+      <h2 class="section-title" id="included-title">Ի՞նչ ես ստանում</h2>
+      <ul class="course-included__list">
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Ռեսուրսներ</h3><p>Դասերի տեսաձայնագրություններ ու սահիկաշարեր՝ հասանելի 6 ամիս</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>AI-ների ցանկ</h3><p>Անընդհատ թարմացվող ցանկ՝ գործիքների նկարագրություններով</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Հարցաշարեր</h3><p>Առաջընթացը տեսնելու համար</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Սերտիֆիկատ</h3><p>ԿԳՄՍՆ կողմից երաշխավորված</p></div></li>
+        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Վճարված գումարի 100% վերադարձ</h3><p>Եկամտահարկի միջոցով</p></div></li>
+      </ul>
     </section>
 
     <!-- =========================================================
@@ -1672,6 +1757,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-2"></script>
+  <script src="script.js?v=pages-7"></script>
 </body>
 </html>
