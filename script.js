@@ -1618,6 +1618,48 @@ revealOnce(document.querySelector('.why'), null, 0.3);
   });
 })();
 
+/* 05g · COURSE VIDEOS — a lesson picked in the list moves into the player (its poster, number, name and teacher, a
+   quick fade between them) and is marked aria-current; play swaps the poster for the lesson's video when it has one
+   (data-video: a YouTube id; none yet, aigraget.html) */
+(function courseVideos() {
+  const reel = document.querySelector('.reel');
+  if (!reel) return;
+  const player = reel.querySelector('.reel__player');
+  const poster = player.querySelector('.reel__poster');
+  const now = { num: '.reel__now-num', name: '.reel__now-name', who: '.reel__now-who' };
+  for (const k in now) now[k] = player.querySelector(now[k]);
+  let current = reel.querySelector('.reel__item[aria-current="true"]');
+  const stop = () => player.querySelector('.reel__frame')?.remove();
+
+  reel.querySelectorAll('.reel__item').forEach((item) => item.addEventListener('click', () => {
+    if (item === current) return;
+    current?.removeAttribute('aria-current');
+    item.setAttribute('aria-current', 'true');
+    current = item;
+    stop();
+    player.classList.add('is-swapping');
+    setTimeout(() => {
+      poster.src = item.querySelector('.reel__thumb img').src;
+      now.num.textContent = item.querySelector('.reel__num').textContent;
+      now.name.textContent = item.querySelector('.reel__name').textContent;
+      now.who.textContent = item.querySelector('.reel__who').textContent;
+      player.classList.remove('is-swapping');
+    }, 200);
+    if (window.matchMedia('(width < 68.75rem)').matches) player.scrollIntoView({ behavior: 'smooth', block: 'center' });   // stacked: the player is above the list
+  }));
+
+  player.querySelector('.reel__play').addEventListener('click', () => {
+    const id = current?.dataset.video;
+    if (!id) return;   // TODO: no videos yet
+    const frame = document.createElement('iframe');
+    frame.className = 'reel__frame';
+    frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0`;
+    frame.title = now.name.textContent;
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    player.append(frame);
+  });
+})();
+
 /* ============================================================
    15 · Course page (ai-grager.html) — the week's eyes: they rise from behind the card's top-right corner while the pointer is
    on the card (or a lesson link in it has keyboard focus), follow the pointer over the hero and blink now and then,

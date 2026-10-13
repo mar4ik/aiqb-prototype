@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-1" />
+  <link rel="stylesheet" href="styles.css?v=pages-2" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -377,6 +377,40 @@
             <li><i class="ic ic--check" aria-hidden="true"></i>Ողջ գումարը ենթակա է վերադարձի եկամտահարկի միջոցով</li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
+         05g · COURSE VIDEOS — «ԴԱՍԸՆԹԱՑԻ ԿԱՌՈՒՑՎԱԾՔԸ»: a short video a lesson, by the teacher who gives it. On Black
+         (after the Blue about band): the player on the left, the 9 lessons on the right (a number, a preview, the lesson
+         and its teacher), the list as tall as the player and scrolling inside it from lg up; stacked below lg. A lesson
+         picked in the list moves into the player (script.js · 05g courseVideos).
+         TODO: the real videos (data-video on each lesson: a YouTube id) and their posters; until then the poster is the
+         teacher's photo. TODO: who gives which lesson — the teachers here are placeholders, in the teachers' order
+         ========================================================= -->
+    <section class="reel" id="structure" aria-labelledby="reel-title">
+      <h2 class="section-title" id="reel-title">ԴԱՍԸՆ&shy;ԹԱՑԻ ԿԱՌՈՒՑ&shy;ՎԱԾՔԸ</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="reel__body">
+        <figure class="reel__player">
+          <img class="reel__poster" src="assets/teachers/anahit.webp" alt="" />
+          <button type="button" class="reel__play" aria-label="Դիտել"><i class="ic ic--play" aria-hidden="true"></i></button>
+          <figcaption class="reel__caption">
+            <span class="reel__now-num">01</span>
+            <span class="reel__now-name">AI հիմունքներ և անվտանգություն</span>
+            <span class="reel__now-who">Անահիտ Վարդանյան</span>
+          </figcaption>
+        </figure>
+        <ol class="reel__list">
+          <li><button type="button" class="reel__item" data-video="" aria-current="true"><span class="reel__num">01</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI հիմունքներ և անվտանգություն</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">02</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI-ը կյանքի 10 իրավիճակներում</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">03</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">04</span><span class="reel__thumb"><img src="assets/teachers/lilit_kh.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Հետազոտություն ու աղբյուրահեն կոնտենտ</span><span class="reel__who">Լիլիթ Խաչատրյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">05</span><span class="reel__thumb"><img src="assets/teachers/lilit_b.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">1000 բառի տեղ խոսող նկարների գեներացիա</span><span class="reel__who">Լիլիթ Բարսեղյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">06</span><span class="reel__thumb"><img src="assets/teachers/gevorg.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</span><span class="reel__who">Գևորգ Պողոսյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">07</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">08</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Գործընթացների ավտոմատացում AI-ով</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">09</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Ինքնավար ագենտների ստեղծում</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
+        </ol>
       </div>
     </section>
 
@@ -1355,6 +1389,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-1"></script>
+  <script src="script.js?v=pages-2"></script>
 </body>
 </html>

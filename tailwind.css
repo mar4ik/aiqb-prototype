@@ -171,7 +171,7 @@
 }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .pricing, .stats, .refund, .mission, .referral, .faq {
+.courses, .why, .about, .reel, .pricing, .stats, .refund, .mission, .referral, .faq {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -1079,6 +1079,100 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .about__lead { padding-inline: --spacing(6); @apply text-aqb-body-m; }   /* one step down on phones, as the why blocks' padding */
 }
 
+/* ============================================================
+   05g · COURSE VIDEOS («ԴԱՍԸՆԹԱՑԻ ԿԱՌՈՒՑՎԱԾՔԸ», aigraget.html)
+   ============================================================ */
+/* The brand's Black ground (white text), full-bleed, between the Blue about band and the Blue stats strip: the player
+   and the lesson list side by side from lg up (5 : 3), the list as tall as the player (contain: size lets the
+   player alone set the row's height) and scrolling inside it; stacked below lg */
+.reel {
+  --reel-line: color-mix(in oklab, var(--color-white) 16%, transparent);   /* hairlines on Black */
+  --reel-muted: color-mix(in oklab, var(--color-white) 72%, var(--color-black));   /* secondary text on Black, as the join pages' */
+  display: flex; flex-direction: column; gap: var(--title-gap);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.reel .section-title { color: var(--color-white); }
+.reel__body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 3fr); gap: var(--card-gap); }   /* the list needs ~400px for a preview beside a two-line name */
+/* The player: 16:9, the poster (for now the teacher's photo, their face in the frame) under a dark scrim at the
+   bottom for the caption; the Orange play button in the middle (white on Orange, BRAND.md) */
+.reel__player {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
+  border-radius: var(--radius-3xl);
+  background: var(--color-neutral-ink);
+}
+.reel__poster { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; transition: opacity .25s ease; }
+.reel__player.is-swapping .reel__poster { opacity: 0; }
+.reel__player::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(0deg, color-mix(in oklab, var(--color-black) 80%, transparent) 0%, transparent 65%);   /* deep enough for a two-line name and its number */
+}
+.reel__frame { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 2; }   /* the video, once played */
+.reel__play {
+  position: absolute; left: 50%; top: 50%; z-index: 1; translate: -50% -50%;
+  display: grid; place-items: center;
+  width: --spacing(20); height: --spacing(20); border-radius: var(--radius-full);
+  background: var(--color-accent); color: var(--color-white);
+  transition: scale .2s ease;
+}
+.reel__play .ic { width: --spacing(8); height: --spacing(8); margin-left: --spacing(1); }   /* the triangle's weight sits left of its box: nudged to look centred */
+.reel__play:hover { scale: 1.06; }
+.reel__play:focus-visible { outline: 3px solid var(--color-white); outline-offset: 3px; }
+/* The caption, over the scrim: the lesson's number, its name (a card title: Subhead), its teacher */
+.reel__caption {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(1);
+  padding: --spacing(8);
+  transition: opacity .25s ease;
+}
+.reel__player.is-swapping .reel__caption { opacity: 0; }
+.reel__now-num { @apply text-aqb-label; color: var(--reel-muted); }
+.reel__now-name { @apply text-aqb-subhead; text-wrap: balance; }
+.reel__now-who { @apply text-aqb-label; color: var(--reel-muted); }
+/* The list: one lesson a row (its number, a 16:9 preview, the lesson over its teacher), hairlines between them; the
+   one in the player on Blue, the rest light up on hover */
+.reel__list {
+  contain: size; overflow-y: auto;
+  display: flex; flex-direction: column;
+  border: 1px solid var(--reel-line); border-radius: var(--radius-3xl);
+  scrollbar-width: thin; scrollbar-color: var(--reel-line) transparent;
+}
+.reel__list li + li { border-top: 1px solid var(--reel-line); }
+.reel__item {
+  display: grid; grid-template-columns: --spacing(6) --spacing(28) minmax(0, 1fr); align-items: center; gap: --spacing(4);
+  width: 100%; padding: --spacing(4) --spacing(5);
+  text-align: left; color: inherit;
+  transition: background-color var(--default-transition-duration);
+}
+.reel__item:hover { background: color-mix(in oklab, var(--color-white) 8%, transparent); }
+.reel__item[aria-current="true"] { background: var(--color-primary); }
+.reel__item:focus-visible { outline: 2px solid var(--color-white); outline-offset: -2px; }
+.reel__num { @apply text-aqb-label; color: var(--reel-muted); }
+.reel__item[aria-current="true"] .reel__num { color: var(--color-white); }
+.reel__thumb { aspect-ratio: 16 / 9; overflow: hidden; border-radius: var(--radius-lg); background: var(--color-neutral-ink); }
+.reel__thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center 25%; }
+.reel__text { display: flex; flex-direction: column; gap: --spacing(1); }
+.reel__name { @apply text-aqb-label; }
+.reel__who { @apply text-aqb-caption; color: var(--reel-muted); }
+.reel__item[aria-current="true"] .reel__who { color: var(--color-white); }
+@media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {   /* the list's narrowest: a smaller preview, closer rows */
+  .reel__item { grid-template-columns: --spacing(5) --spacing(20) minmax(0, 1fr); gap: --spacing(3); padding: --spacing(3) --spacing(4); }
+}
+@media (width < theme(--breakpoint-lg)) {
+  .reel__body { grid-template-columns: minmax(0, 1fr); }
+  .reel__list { contain: none; overflow: visible; }
+}
+@media (width < theme(--breakpoint-md)) {
+  .reel__player { border-radius: var(--radius-2xl); }
+  .reel__caption { display: none; }   /* a phone's player is too small for it and the play button: the lesson in Blue under it names it */
+  .reel__player::after { display: none; }
+  .reel__play { width: --spacing(14); height: --spacing(14); }
+  .reel__play .ic { width: --spacing(6); height: --spacing(6); }
+  .reel__item { grid-template-columns: --spacing(5) --spacing(20) minmax(0, 1fr); gap: --spacing(3); padding: --spacing(3) --spacing(4); }
+}
+
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
 .pricing {
   display: flex; flex-direction: column; gap: var(--card-gap);
@@ -1605,6 +1699,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--monitor    { --i: url("assets/icons/monitor.svg"); }   /* the computer (same) */
 .ic--globe      { --i: url("assets/icons/globe.svg"); }     /* the internet (same) */
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
+.ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */
 
 /* ============================================================
    06 · TEACHERS

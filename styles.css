@@ -481,7 +481,7 @@
     font-style: italic;
   }
 
-  .courses, .why, .about, .pricing, .stats, .refund, .mission, .referral, .faq {
+  .courses, .why, .about, .reel, .pricing, .stats, .refund, .mission, .referral, .faq {
     max-width: var(--container-page);
     padding: var(--section-y) var(--page-x);
     margin: 0 auto;
@@ -2589,6 +2589,304 @@
     }
   }
 
+  .reel {
+    --reel-line: #ffffff29;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .reel {
+      --reel-line: color-mix(in oklab, var(--color-white) 16%, transparent);
+    }
+  }
+
+  .reel {
+    --reel-muted: #b8b8b8;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .reel {
+      --reel-muted: color-mix(in oklab, var(--color-white) 72%, var(--color-black));
+    }
+  }
+
+  .reel {
+    gap: var(--title-gap);
+    background: var(--color-black);
+    box-shadow: 0 0 0 100vmax var(--color-black);
+    clip-path: inset(0 -100vmax);
+    color: var(--color-white);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .reel .section-title {
+    color: var(--color-white);
+  }
+
+  .reel__body {
+    gap: var(--card-gap);
+    grid-template-columns: minmax(0, 5fr) minmax(0, 3fr);
+    display: grid;
+  }
+
+  .reel__player {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-3xl);
+    background: var(--color-neutral-ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .reel__poster {
+    object-fit: cover;
+    object-position: center 25%;
+    width: 100%;
+    height: 100%;
+    transition: opacity .25s;
+  }
+
+  .reel__player.is-swapping .reel__poster {
+    opacity: 0;
+  }
+
+  .reel__player:after {
+    content: "";
+    pointer-events: none;
+    background: linear-gradient(0deg, #000c 0%, #0000 65%);
+    position: absolute;
+    inset: 0;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .reel__player:after {
+      background: linear-gradient(0deg, color-mix(in oklab, var(--color-black) 80%, transparent) 0%, transparent 65%);
+    }
+  }
+
+  .reel__frame {
+    z-index: 2;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+
+  .reel__play {
+    z-index: 1;
+    width: calc(var(--spacing) * 20);
+    height: calc(var(--spacing) * 20);
+    border-radius: var(--radius-full);
+    background: var(--color-accent);
+    color: var(--color-white);
+    place-items: center;
+    transition: scale .2s;
+    display: grid;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+  }
+
+  .reel__play .ic {
+    width: calc(var(--spacing) * 8);
+    height: calc(var(--spacing) * 8);
+    margin-left: var(--spacing);
+  }
+
+  .reel__play:hover {
+    scale: 1.06;
+  }
+
+  .reel__play:focus-visible {
+    outline: 3px solid var(--color-white);
+    outline-offset: 3px;
+  }
+
+  .reel__caption {
+    z-index: 1;
+    align-items: flex-start;
+    gap: var(--spacing);
+    padding: calc(var(--spacing) * 8);
+    flex-direction: column;
+    transition: opacity .25s;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .reel__player.is-swapping .reel__caption {
+    opacity: 0;
+  }
+
+  .reel__now-num {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    color: var(--reel-muted);
+  }
+
+  .reel__now-name {
+    font-size: var(--text-aqb-subhead);
+    line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
+    text-wrap: balance;
+  }
+
+  .reel__now-who {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    color: var(--reel-muted);
+  }
+
+  .reel__list {
+    contain: size;
+    border: 1px solid var(--reel-line);
+    border-radius: var(--radius-3xl);
+    scrollbar-width: thin;
+    scrollbar-color: var(--reel-line) transparent;
+    flex-direction: column;
+    display: flex;
+    overflow-y: auto;
+  }
+
+  .reel__list li + li {
+    border-top: 1px solid var(--reel-line);
+  }
+
+  .reel__item {
+    grid-template-columns: calc(var(--spacing) * 6) calc(var(--spacing) * 28) minmax(0, 1fr);
+    align-items: center;
+    gap: calc(var(--spacing) * 4);
+    width: 100%;
+    padding: calc(var(--spacing) * 4) calc(var(--spacing) * 5);
+    text-align: left;
+    color: inherit;
+    transition: background-color var(--default-transition-duration);
+    display: grid;
+  }
+
+  .reel__item:hover {
+    background: #ffffff14;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .reel__item:hover {
+      background: color-mix(in oklab, var(--color-white) 8%, transparent);
+    }
+  }
+
+  .reel__item[aria-current="true"] {
+    background: var(--color-primary);
+  }
+
+  .reel__item:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: -2px;
+  }
+
+  .reel__num {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    color: var(--reel-muted);
+  }
+
+  .reel__item[aria-current="true"] .reel__num {
+    color: var(--color-white);
+  }
+
+  .reel__thumb {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    background: var(--color-neutral-ink);
+    overflow: hidden;
+  }
+
+  .reel__thumb img {
+    object-fit: cover;
+    object-position: center 25%;
+    width: 100%;
+    height: 100%;
+  }
+
+  .reel__text {
+    gap: var(--spacing);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .reel__name {
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+  }
+
+  .reel__who {
+    font-size: var(--text-aqb-caption);
+    line-height: var(--tw-leading, var(--text-aqb-caption--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-caption--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-caption--font-weight));
+    color: var(--reel-muted);
+  }
+
+  .reel__item[aria-current="true"] .reel__who {
+    color: var(--color-white);
+  }
+
+  @media (min-width: 68.75rem) and (not (min-width: 80rem)) {
+    .reel__item {
+      grid-template-columns: calc(var(--spacing) * 5) calc(var(--spacing) * 20) minmax(0, 1fr);
+      gap: calc(var(--spacing) * 3);
+      padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+    }
+  }
+
+  @media not all and (min-width: 68.75rem) {
+    .reel__body {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .reel__list {
+      contain: none;
+      overflow: visible;
+    }
+  }
+
+  @media not all and (min-width: 48rem) {
+    .reel__player {
+      border-radius: var(--radius-2xl);
+    }
+
+    .reel__caption, .reel__player:after {
+      display: none;
+    }
+
+    .reel__play {
+      width: calc(var(--spacing) * 14);
+      height: calc(var(--spacing) * 14);
+    }
+
+    .reel__play .ic {
+      width: calc(var(--spacing) * 6);
+      height: calc(var(--spacing) * 6);
+    }
+
+    .reel__item {
+      grid-template-columns: calc(var(--spacing) * 5) calc(var(--spacing) * 20) minmax(0, 1fr);
+      gap: calc(var(--spacing) * 3);
+      padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+    }
+  }
+
   .pricing {
     gap: var(--card-gap);
     background: var(--surface);
@@ -3844,6 +4142,10 @@
 
   .ic--sparkles {
     --i: url("assets/icons/sparkles.svg");
+  }
+
+  .ic--play {
+    --i: url("assets/icons/play.svg");
   }
 
   .teachers, .quotes {
