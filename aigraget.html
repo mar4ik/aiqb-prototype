@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-52" />
+  <link rel="stylesheet" href="styles.css?v=pages-58" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -90,7 +90,7 @@
   <!-- Hidden for now — remove `hidden` to bring the bar back -->
   <div class="topbar" hidden>
     <div class="topbar__item">
-      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI գրագեր»՝ նոյեմբերի 3-ից</span>
+      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI-գրագետ»՝ նոյեմբերի 3-ից</span>
       <a href="#packages" class="btn btn--white btn--sm">Գրանցվել</a>
     </div>
   </div>
@@ -115,9 +115,9 @@
       <div class="nav__links" id="nav-menu">
         <!-- The page's stops, in page order; the footer's «Բաժիններ» uses the same labels (Oct 2026) -->
         <a href="#skills" class="nav__link">Ի՞նչ կսովորես</a>
-        <a href="#packages" class="nav__link">Գները</a>
+        <a href="#packages" class="nav__link">Դասընթացներ</a>
         <!-- «Դասընթացներ» sub nav: course links + the course promo (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain «Գները» link above. -->
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain «Դասընթացներ» link above. -->
         <div class="nav__item" hidden>
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
@@ -127,7 +127,7 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
-                  <a href="ai-grager.html" class="subnav__link">AI գրագեր <span class="pill pill--deal">−20%</span></a>
+                  <a href="ai-grager.html" class="subnav__link">AI-գրագետ <span class="pill pill--deal">−20%</span></a>
                   <a href="#packages" class="subnav__link">Առաջին 3 դասը</a>
                 </div>
                 <div class="subnav__group">
@@ -143,7 +143,7 @@
               <a href="#packages" class="subnav-promo">
                 <img class="subnav-promo__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
                 <span class="subnav-promo__head">
-                  <strong class="subnav-promo__name">AI գրագեր</strong>
+                  <strong class="subnav-promo__name">AI-գրագետ</strong>
                   <span class="subnav-promo__tagline">Զրոյից մինչև AI ագենտներ</span>
                 </span>
                 <span class="subnav-promo__price">
@@ -343,7 +343,7 @@
          the end of the line), on the Blue ground, the steps closing in as the years do (141, 50, 31 years); a vertical line below lg.
          Under it, on the timeline's columns: the lead in a chat bubble, the brand's eyes on a circle under its tail
          saying it (they blink: script.js · 05 peekEyes), and beside it the rest, the course's three proofs as a list.
-         «AI քեզ բան» and «AIգրագետ» in the detail cut. The timeline comes in once, as it scrolls into view (script.js ·
+         «AI քեզ բան» and «AI-գրագետ» in the detail cut. The timeline comes in once, as it scrolls into view (script.js ·
          05b aboutTimeline); AI's sparkle shakes now and then
          ========================================================= -->
     <section class="about" id="about" aria-labelledby="about-title">
@@ -370,10 +370,10 @@
         </div>
         <div class="about__body">
           <p>Մի բան հաստատ է՝ եթե դու չսովորես կառավարել AI-ը, AI օգտագործողներն են քեզ կառավարելու։</p>
-          <p><strong>«AI քեզ բան»</strong>-ի հետևում կանգնած է մեծ թիմ՝ միավորված մեկ առաքելության շուրջ․ օգնել 1 միլիոն հայի դառնալ AI-գրագետ։ Այդ նպատակով մենք ստեղծել ենք մեկ <strong>«AIգրագետ»</strong> դասընթացը, որը միավորում է AI-ից օգտվելու 8 պարտադիր հմտությունները՝ անկախ մասնագիտությունից ու նախնական գիտելիքներից։</p>
+          <p><strong>«AI քեզ բան»</strong>-ի հետևում կանգնած է մեծ թիմ՝ միավորված մեկ առաքելության շուրջ․ օգնել 1 միլիոն հայի դառնալ AI-գրագետ։ Այդ նպատակով մենք ստեղծել ենք մեկ <strong>«AI-գրագետ»</strong> դասընթացը, որը միավորում է AI-ից օգտվելու 8 պարտադիր հմտությունները՝ անկախ մասնագիտությունից ու նախնական գիտելիքներից։</p>
           <!-- The course's proofs, pulled out of the last paragraph (its own words) -->
           <ul class="about__proof">
-            <li><img src="assets/logos/armgerb.svg" alt="" />Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից</li>   <!-- the coat of arms, as the hero's endorsement -->
+            <li><i class="ic ic--check" aria-hidden="true"></i><span class="about__proof-gov"><img src="assets/logos/armgerb.svg" alt="" />Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից</span></li>   <!-- a check as the others, then the coat of arms (as the hero's endorsement) -->
             <li><i class="ic ic--check" aria-hidden="true"></i>Մասնակցության արդյունքում տրվում է հավաստագիր</li>
             <li><i class="ic ic--check" aria-hidden="true"></i>Ողջ գումարը ենթակա է վերադարձի եկամտահարկի միջոցով</li>
           </ul>
@@ -416,7 +416,7 @@
     </section>
 
     <!-- =========================================================
-         05h · SKILLS — «AI-հմտություն 9 օնլայն դասերի արդյունքում»: the 9 lessons, each a card in a feed colour (black text) that
+         05h · SKILLS — «Ի՞նչ կսովորես» · «AI-հմտություն 9 օնլայն դասերի արդյունքում»: the 9 lessons, each a card in a feed colour (black text) that
          opens with its + (a native <details>): what you leave with, what we learn, the tools. On the page grid as the
          FAQ: the title on the left (it stays in view from lg up), the two parts of the course beside it, each under its
          length (the first 3 lessons, then the other 6; numbered 1–9 through the course). Titles and colours from the
@@ -424,7 +424,10 @@
          TODO: the new, shorter texts for the opened cards
          ========================================================= -->
     <section class="skills" id="skills" aria-labelledby="skills-title">
-      <h2 class="section-title skills__title" id="skills-title">AI-հմտու&shy;թյուն 9 օնլայն դասերի արդյուն&shy;քում</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="section-head skills__head">
+        <h2 class="section-title" id="skills-title">Ի՞նչ կսովորես</h2>   <!-- the nav's label for this stop -->
+        <p class="section-sub">AI-հմտություն 9 օնլայն դասերի արդյունքում</p>
+      </div>
       <div class="skills__groups">
         <div class="skills__group">
           <p class="skills__length"><i class="ic ic--clock" aria-hidden="true"></i>Տևողությունը՝ 1&nbsp;շաբաթ • 3&nbsp;դաս • 6&nbsp;ժամ</p>   <!-- &nbsp;: each number stays with its word -->
@@ -848,7 +851,10 @@
          դասընթաց» / «Թողնել հայտ» lands here
          ========================================================= -->
     <section class="pricing" id="packages" aria-labelledby="packages-title">
-      <h2 class="section-title pricing__title" id="packages-title">Ընտրիր մասնակ&shy;ցության՝ քեզ ամենա&shy;հարմար տարբե&shy;րակը</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="section-head pricing__head">
+        <h2 class="section-title" id="packages-title">Դասըն&shy;թացներ</h2>   <!-- the nav's label for this stop; &shy;: the narrowest phones break it at a syllable -->
+        <p class="section-sub">Ընտրիր մասնակցության՝ քեզ ամենահարմար տարբերակը</p>
+      </div>
 
       <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI-Master),
            and the whole course for 3 friends together (one price a person). The two AI-Master cards wear the Bundle's
@@ -911,14 +917,14 @@
         <article class="pkg pkg--bundle pkg--master">
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <h3 class="pkg__name">AI-&#8288;գրագետ</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
             <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
                  way; the card crops what runs past its right edge) -->
             <span class="pkg__gift pkg__gift--mac02"><img src="assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>
             <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
-              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI-Master</strong> դասընթացի ընթացքում</p>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI-գրագետ</strong> դասընթացի ընթացքում</p>
               <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
             </div>
             <p class="pkg__desc">Ամբողջական AI<br />կրթություն մեկ ծրագրում</p>
@@ -945,7 +951,7 @@
 
           <div class="pkg__cta">
             <!-- TODO: the checkout link for AI-Master -->
-            <a href="#" class="btn btn--primary btn--block btn--base">Գնել AI-Master</a>
+            <a href="#" class="btn btn--primary btn--block btn--base">Գնել AI-գրագետ</a>
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
 
@@ -980,7 +986,7 @@
           <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">AI-&#8288;Master</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <h3 class="pkg__name">AI-&#8288;գրագետ</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
             <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
                  way; the card crops what runs past its right edge) -->
             <span class="pkg__gift pkg__gift--mac03"><img src="assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>
@@ -1707,7 +1713,7 @@
     <section class="mission" id="mission">
       <div class="mission__row">
         <div class="mission__head">
-          <p class="mission__kicker">Մեր առաքելությունը</p>
+          <p class="mission__kicker mission__kicker--lg">Մեր առաքելությունը</p>
           <h2 class="mission__title">1,000,000<br />AI-գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
           <!-- The flight: the eye logo (one pair, with the ™) flies under the headline like a rocket, always in view: hovering,
                speed lines streaming behind it (tailwind.css · .flight; it stands still for reduced motion). index.html keeps
@@ -1725,9 +1731,9 @@
             </span>
           </div>
         </div>
-        <div class="mission__body">
+        <div class="mission__body mission__body--bubble">   <!-- in the brand's chat bubble without its tail, Yellow on the Teal (script.js · 03b cuts it) -->
           <div class="mission__text">   <!-- the goal, then what it means for you: a paragraph each -->
-            <p>Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։</p>
+            <p>Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն <strong>1,000,000</strong> մարդու ձեռք բերել կիրառական AI գրագիտություն։</p>
             <p>Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
           </div>
           <a href="#packages" class="btn btn--primary btn--base">Ընտրել դասընթաց</a>   <!-- the same words as the hero's ask: a second wording would read as a second offer -->
@@ -1890,7 +1896,7 @@
         <nav class="footer__col" aria-label="Բաժիններ">
           <p class="footer__heading">Բաժիններ</p>
           <a href="#skills">Ի՞նչ կսովորես</a>   <!-- the nav's links and labels, then the mission -->
-          <a href="#packages">Գները</a>
+          <a href="#packages">Դասընթացներ</a>
           <a href="#teachers">Ուսուցիչներ</a>
           <a href="#faq">Հարցեր</a>
           <a href="#contact">Կապ</a>
@@ -1904,8 +1910,8 @@
           <a href="https://www.google.com/maps/search/?api=1&amp;query=Halabyan+65%2F5+Yerevan+Armenia" target="_blank" rel="noopener" class="footer__address">Երևան, Հալաբյան 65/5<br />Հայաստան 0078</a>
           <div class="footer__social">
             <a href="https://www.facebook.com/aiqezbanai/" target="_blank" rel="noopener" aria-label="Facebook"><img src="assets/social/facebook.svg" width="20" height="20" alt="" /></a>
-            <a href="https://www.instagram.com/ai_qez_ban_/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/social/instagram.svg" width="20" height="20" alt="" /></a>
-            <a href="https://www.linkedin.com/company/lumiverse-ecosystem/" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/social/linkedin.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.instagram.com/ai_qezban/" target="_blank" rel="noopener" aria-label="Instagram"><img src="assets/social/instagram.svg" width="20" height="20" alt="" /></a>
+            <a href="https://www.linkedin.com/company/ai-qez-ban" target="_blank" rel="noopener" aria-label="LinkedIn"><img src="assets/social/linkedin.svg" width="20" height="20" alt="" /></a>
           </div>
         </div>
       </div>
@@ -1959,6 +1965,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-17"></script>
+  <script src="script.js?v=pages-19"></script>
 </body>
 </html>

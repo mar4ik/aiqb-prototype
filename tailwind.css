@@ -170,6 +170,9 @@
   @apply text-aqb-headline-h2 italic;
   color: var(--color-ink-900);
 }
+/* A section title with a subtitle under it (reading text, as the certificate's lead): the pair in .section-head */
+.section-head { display: flex; flex-direction: column; gap: --spacing(6); }
+.section-sub { @apply text-aqb-body-m; color: var(--color-ink-700); text-wrap: pretty; }
 
 /* One section box for every content section: same side margins, same vertical rhythm */
 .courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .mission, .referral, .faq, .contact {
@@ -1065,16 +1068,17 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 }
 .about__eyes .eyes { width: 66%; }   /* the ™ stands out beside the right eye, inside the circle */
 .about__nobr { white-space: nowrap; }   /* «AI-ով։» stays whole (it broke at its hyphen on phones) */
-.about__body { grid-column: 2 / -1; display: flex; flex-direction: column; gap: --spacing(4); @apply text-aqb-body-s; }   /* white on Blue */
-/* The proofs: one to a line, each led by a mark in one 32px column (the Ministry's endorsement the coat of arms, as the
-   hero's endorsement; the rest white checks, centred in it), in the detail cut as the package lists' perks */
+.about__body { grid-column: 2 / -1; padding-left: --spacing(10); display: flex; flex-direction: column; gap: --spacing(4); @apply text-aqb-body-s; }   /* white on Blue; padding: a little more air from the bubble beside it (64px with the gap) */
+/* The proofs: one to a line, each led by a white check in one 32px column, in the detail cut as the package lists'
+   perks; the Ministry's endorsement has the coat of arms (as the hero's endorsement) between its check and its words */
 .about__proof { display: flex; flex-direction: column; gap: --spacing(3); margin-top: --spacing(2); font-weight: var(--font-weight-detail); }
 .about__proof li { display: grid; grid-template-columns: --spacing(8) minmax(0, 1fr); align-items: center; column-gap: --spacing(3); }
-.about__proof img { width: --spacing(8); height: auto; }
+.about__proof img { flex: none; width: --spacing(8); height: auto; }
+.about__proof-gov { display: flex; align-items: center; gap: --spacing(3); }   /* the coat of arms, then the words, as a check and its words */
 .about__proof .ic { justify-self: center; color: var(--color-white); }
 @media (width < theme(--breakpoint-lg)) {
   .about__text { grid-template-columns: minmax(0, 1fr); margin-top: --spacing(4); }
-  .about__body { grid-column: auto; }
+  .about__body { grid-column: auto; padding-left: 0; }   /* stacked: under the bubble, on the page's edge */
   .about__lead { @apply text-aqb-body-l; }
 }
 @media (width < theme(--breakpoint-md)) {
@@ -1186,7 +1190,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   gap: var(--title-gap) var(--card-gap);
   interpolate-size: allow-keywords;   /* lets a card's height animate to auto (below) */
 }
-.skills__title { position: sticky; top: calc(--spacing(24) + var(--bar-h)); }   /* under the fixed nav (and the bar, when shown), as scroll-padding-top */
+.skills__head { position: sticky; top: calc(--spacing(24) + var(--bar-h)); }   /* under the fixed nav (and the bar, when shown), as scroll-padding-top */
 .skills__groups { display: flex; flex-direction: column; gap: --spacing(10); }
 .skills__group { display: flex; flex-direction: column; gap: --spacing(4); }
 .skills__length {
@@ -1252,12 +1256,12 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .skill__tools { display: flex; flex-wrap: wrap; gap: --spacing(2); }
 @media (width < theme(--breakpoint-xl)) {
   .skills { grid-template-columns: minmax(0, 1fr); }
-  .skills__title { position: static; }
+  .skills__head { position: static; }
 }
-/* The two long titles (videos, skills) carry &shy; for phones; from md up there's room to break between words, so the
+/* The long titles (videos, audience) carry &shy; for phones; from md up there's room to break between words, so the
    soft hyphens are ignored (else the browser fills the line by splitting a word) */
 @media (width >= theme(--breakpoint-md)) {
-  .reel .section-title, .skills__title, .audience__title, .pricing__title { hyphens: none; }
+  .reel .section-title, .audience__title { hyphens: none; }
 }
 @media (width < theme(--breakpoint-md)) {
   .skill__head { padding: --spacing(4) --spacing(5); column-gap: --spacing(3); }
@@ -1614,7 +1618,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   width: --spacing(16); height: --spacing(16); border-radius: var(--radius-full);   /* 64px: a little taller than the title's line */
   background: var(--color-neutral-ink);
 }
-.contact__eyes .eyes { width: 66%; }   /* the ™ beside the right eye, inside the circle */
+.contact__eyes .eyes { width: 66%; translate: calc((112.6 - 96) / 2 / 112.6 * 100%) 0; }   /* the ™ beside the right eye, inside the circle; the pair (96 of the 112.6 drawing) centred, the ™ hanging right, as in the nav logo */
 .contact__form { display: flex; flex-direction: column; gap: --spacing(5); }
 .contact__note { margin-top: --spacing(3); @apply text-aqb-caption; color: var(--color-ink-600); }   /* small print, a little apart from the last field */
 .contact__done {
@@ -1640,7 +1644,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   clip-path: inset(0 -100vmax);
 }
 /* «AI գրագիտություն / PRO դասընթացներ» pill toggle */
-.pricing__title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }   /* aigraget.html: the title over the cards, at the section-title gap */
+.pricing__head { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }   /* aigraget.html: the title and subtitle over the cards, at the section-title gap */
 .pkg-switch { display: flex; justify-content: center; }
 .pill-tabs {
   display: inline-flex; gap: --spacing(1);
@@ -2397,9 +2401,18 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .mission__row { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; gap: --spacing(12); }   /* the paragraph starts level with the kicker */
 .mission__head { display: flex; flex-direction: column; gap: --spacing(3); }
 .mission__kicker { @apply text-aqb-body-m; }
+.mission__kicker--lg { margin-bottom: --spacing(5); @apply text-aqb-body-l; }   /* aigraget.html: one step up, still Regular (BRAND.md → Hierarchy), 32px over the headline with the head's gap */
 .mission__title { @apply text-aqb-display-l italic; }
 .mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); max-width: --spacing(120); }
 .mission__text { display: flex; flex-direction: column; gap: --spacing(3); @apply text-aqb-body-s; }   /* its paragraphs, a line's air apart */
+/* aigraget.html: the paragraph and the button in the brand's chat bubble without its tail, as the audience boxes
+   (BRAND.md → Chat bubble): Yellow with black text, so the words read on the Teal; script.js (03b) cuts it */
+.mission__body--bubble {
+  max-width: --spacing(136);   /* the words keep their measure inside the padding (120 + 2 × 8) */
+  padding: --spacing(8) --spacing(8) --spacing(16);   /* the extra bottom padding is the falling edge's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--color-feed-yellow);
+}
 
 /* The crowd: the brand's eyes (BRAND.md → Eyes), a row of "people" in three sizes standing on one line, drifting under
    the headline in a seamless loop (script.js builds the row twice; the CSS moves it by half). As wide as the headline:
@@ -3236,6 +3249,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .stats__row { grid-template-columns: minmax(0, 1fr); gap: --spacing(8); }
   .stat__num { @apply text-aqb-headline-h1; }
   .mission__title { @apply text-aqb-headline-h1; }   /* phones: Display steps down to Headline H1 */
+  .mission__kicker--lg { margin-bottom: --spacing(2); @apply text-aqb-body-m; }   /* …and the kicker with it, 20px over it */
   .quote__bubble { padding: --spacing(5) --spacing(6) --spacing(13); }   /* the tail keeps its room (bottom − top) */
   .hero__detail { @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */

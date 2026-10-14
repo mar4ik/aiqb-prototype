@@ -1552,8 +1552,8 @@ function makeEyes({ tm = false } = {}) {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble), the about lead (05b · .about__lead) and the audience boxes (05i · .audience__bubble: the shape without its tail), whose corners scale up 1.5× for their size
-  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble')];
+  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble), the about lead (05b · .about__lead) and the audience boxes (05i · .audience__bubble) and the mission's words (08 · .mission__body--bubble): those two the shape without its tail; whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1561,15 +1561,15 @@ function makeEyes({ tm = false } = {}) {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
-    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble') ? 1.5 : 1;   // corner scale
+    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble') ? 1.5 : 1;   // corner scale
     // The tip: the brand's, a little in from the right side; when the bubble speaks for the eyes on a circle under
     // it (05b · .about__eyes), right over their middle, so it points at them (layout offsets, not the on-screen box,
     // which an entrance may still be scaling)
     const who = el.nextElementSibling?.matches('.about__eyes') ? el.nextElementSibling : null;
     const tip = who ? Math.min(W - e, who.offsetLeft + who.offsetWidth / 2 - el.offsetLeft) : W - e;
-    // 05i · .audience__bubble: the bubble without its tail, only the bottom edge falling away from the side to the
-    // other corner (so no two sit level)
-    const pts = el.matches('.audience__bubble') ? [
+    // 05i · .audience__bubble and 08 · .mission__body--bubble: the bubble without its tail, only the bottom edge falling
+    // away from the side to the other corner (so no two sit level)
+    const pts = el.matches('.audience__bubble, .mission__body--bubble') ? [
       [0, 0, 8 * r], [W, 0, 8 * r],
       [W, Hb, 8 * r],                           // the right side ends higher…
       [0, H, 8 * r],                            // …and the bottom edge falls away to the bottom-left corner
