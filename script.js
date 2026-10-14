@@ -1595,10 +1595,11 @@ function makeEyes({ tm = false } = {}) {
 /* ============================================================
    05 / 05b / 05i · PEEKING EYES (aigraget.html) — the eyes under the why answer's tail, under the about lead's, by the audience sum, in the last format card's corner (05k) and by the needs note (05n): each
    pair blinks now and then and glances around while on screen, and while the pointer is over its section it looks
-   at it (mouse screens only), within the brand's pupil oval; at rest, at you
+   at it (mouse screens only), within the brand's pupil oval; at rest, at you. The mission's flying eye logo (08 ·
+   .flight) only blinks: it keeps looking ahead, where it flies
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .flight__ship .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
@@ -1614,6 +1615,7 @@ function makeEyes({ tm = false } = {}) {
         blink();
       }, 1200 + Math.random() * 2400);
     })();
+    if (eyes.closest('.flight')) return;   // the flight: a blink, no glances
     (function glance() {
       setTimeout(() => {
         if (onScreen && !following) eyes.dataset.look = LOOKS[Math.floor(Math.random() * LOOKS.length)];
