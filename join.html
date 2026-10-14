@@ -11,7 +11,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="AI քեզ բան" />
   <meta property="og:title" content="Միացի՛ր AI քեզ բան-ի թիմին" />
-  <meta property="og:description" content="Փնտրում ենք Community Owner. ընտրի՛ր քո առաքելությունը։" />
+  <meta property="og:description" content="Փնտրում ենք Learning Experience Coordinator և Growth Marketer. ընտրի՛ր քո առաքելությունը։" />
   <meta property="og:image" content="https://aiqb-prototype.vercel.app/assets/join/share.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -52,7 +52,7 @@
   <main class="join-main">
 
     <!-- =========================================================
-         02 · HERO — on Sky, short on purpose: the Community Owner role must come right after
+         02 · HERO — on Sky, short on purpose: the open roles must come right after
          ========================================================= -->
     <section class="join-hero">
       <h1 class="join-hero__title">
@@ -73,53 +73,64 @@
         <span data-lang="en">Choose your mission</span>
       </h2>
 
-      <!-- Each role is cut into a brand bubble, as the «Ի՞նչ սովորել» tiles on the main site: data-shape picks its
-           corners (script below); on hover the eyes rise from the cut corner. The priority role first, the page's
-           biggest message, in Blue -->
-      <div class="join-slot">
-        <a href="join/community-owner.html" class="join-feature" data-shape="tail-left step-right">
-          <span class="join-feature__title">Community Owner</span>
-          <span class="join-feature__text">
-            <span data-lang="hy">Ամբողջ համայնքը քոնն է՝ նրա առողջությունը, երջանկությունն ու աճը։</span>
-            <span data-lang="en">You own everything community. The health of it, the happiness of it, the growth of it — all of it is yours.</span>
-          </span>
-          <span class="join-apply">
-            <span class="btn btn--white btn--md join-feature__apply">
-              <span data-lang="hy">Դիմել</span>
-              <span data-lang="en">Apply</span>
-              <i class="ic ic--chev-right" aria-hidden="true"></i>
+      <!-- Each open role is cut into a brand bubble, as the «Ի՞նչ սովորել» tiles on the main site: data-shape picks its
+           corners (join.js · 1); on hover the eyes rise from the cut corner. Every open role the same size, each in its
+           own brand colour (data-bg: Blue, Orange, then the feed colours), one above the other. The filled
+           roles after them, as one slim Ink card each, not a link -->
+      <div class="join-roles__list">
+        <div class="join-slot">
+          <a href="join/learning-experience-coordinator.html" class="join-role" data-bg="blue" data-shape="tail-left step-right">
+            <span class="join-role__title">Learning Experience Coordinator (LC)</span>
+            <span class="join-role__text">
+              <span data-lang="hy">Յուրաքանչյուր դաս քոնն է՝ սկզբից մինչև վերջ։</span>
+              <span data-lang="en">You own the end-to-end experience of every “AI քեզ բան” online class.</span>
             </span>
-            <span class="join-feature__meta">
-              <span data-lang="hy">Համայնք · Լրիվ դրույք · Երևան</span>
-              <span data-lang="en">Community · Full-time · Yerevan</span>
+            <span class="join-apply">
+              <span class="btn btn--white btn--md">
+                <span data-lang="hy">Դիմել</span>
+                <span data-lang="en">Apply</span>
+                <i class="ic ic--chev-right" aria-hidden="true"></i>
+              </span>
+              <span class="join-role__meta">
+                <span data-lang="hy">Կրթություն · Լրիվ դրույք</span>
+                <span data-lang="en">Education · Full-time</span>
+              </span>
             </span>
-          </span>
-        </a>
-        <!-- From 1280px: the Community Owner herself, leaping across the bubble under its cut-out corner (a cut-out photo,
-             outside the card so its clip doesn't crop her; the eyes peek from the shoulder above her) -->
-        <img class="join-feature__photo" src="assets/join/community-owner.webp" width="1000" height="801" alt="" />
-      </div>
+          </a>
+        </div>
 
-      <!-- The other open roles: an Ink bubble each, laid out like the first — «Դիմել» in the same place -->
-      <div class="join-slot">
-        <a href="join/learning-experience-coordinator.html" class="join-role" data-shape="step-right">
-          <span class="join-role__title">Learning Experience Coordinator (LC)</span>
-          <span class="join-role__text">
-            <span data-lang="hy">Յուրաքանչյուր դաս քոնն է՝ սկզբից մինչև վերջ։</span>
-            <span data-lang="en">You own the end-to-end experience of every “AI քեզ բան” online class.</span>
-          </span>
-          <span class="join-apply">
-            <span class="btn btn--white btn--md">
-              <span data-lang="hy">Դիմել</span>
-              <span data-lang="en">Apply</span>
-              <i class="ic ic--chev-right" aria-hidden="true"></i>
+        <div class="join-slot">
+          <a href="join/growth-marketer.html" class="join-role" data-bg="orange" data-shape="step-left tail-right">
+            <span class="join-role__title">Growth Marketer</span>
+            <span class="join-role__text">
+              <span data-lang="hy">Գաղափարից մինչև արդյունք՝ աճի ամեն քայլը քոնն է։</span>
+              <span data-lang="en">From idea to impact — every step of growth is yours.</span>
             </span>
-            <span class="join-role__meta">
-              <span data-lang="hy">Կրթություն · Լրիվ դրույք</span>
-              <span data-lang="en">Education · Full-time</span>
+            <span class="join-apply">
+              <span class="btn btn--white btn--md">
+                <span data-lang="hy">Դիմել</span>
+                <span data-lang="en">Apply</span>
+                <i class="ic ic--chev-right" aria-hidden="true"></i>
+              </span>
+              <span class="join-role__meta">
+                <span data-lang="hy">Մարքեթինգ · Լրիվ դրույք · Երևան</span>
+                <span data-lang="en">Marketing · Full-time · Yerevan</span>
+              </span>
             </span>
-          </span>
-        </a>
+          </a>
+        </div>
+
+        <!-- Already with us: no longer open, kept as a thank-you (its page still answers old shared links) -->
+        <div class="join-slot">
+          <div class="join-role join-role--filled">
+            <span class="pill pill--zoom"><i class="ic ic--check" aria-hidden="true"></i><span data-lang="hy">Արդեն մեզ հետ է</span><span data-lang="en">Already with us</span></span>
+            <span class="join-role__title">Community Owner</span>
+            <span class="join-role__text">
+              <span data-lang="hy">Շնորհակալություն բոլոր դիմողներին։</span>
+              <span data-lang="en">Thank you to everyone who applied!</span>
+            </span>
+          </div>
+        </div>
       </div>
     </section>
 

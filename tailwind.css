@@ -2891,9 +2891,10 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
 /* ============================================================
    14 · JOIN PAGES (join.html + the role pages, join/*.html; script: join.js)
    Light pages, like the main site: white, with the roles on a full-width Black band like «Ի՞նչ սովորել» (the eyes
-   need it). The first screen has one job: show the Community Owner role (the hire we need first), so the hero is two
-   lines and that role is the biggest thing on the page. The roles are cut into brand bubbles like the «Ի՞նչ սովորել»
-   tiles (join.js → joinShapes), the eyes peeking from their cut corners on hover.
+   need it). The first screen has one job: show the open roles, so the hero is two lines. Every open role is the same
+   size, none louder than the others, each in its own feed colour; filled roles follow as slim Ink cards. The open
+   roles are cut into brand bubbles like the «Ի՞նչ սովորել» tiles (join.js → joinShapes), the eyes peeking from their
+   cut corners on hover.
    ============================================================ */
 .join {
   --join-muted: var(--color-ink-600);   /* secondary text (on the Black band: see .join-roles) */
@@ -2972,55 +2973,43 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 }
 .join-roles .section-title, .join-roles strong { color: var(--color-white); }
 .join-roles__title { margin-bottom: calc(var(--title-gap) - var(--card-gap)); }
-.join-slot { position: relative; }
-.join-feature, .join-role {
+/* The roles: one above the other, full width, on every screen */
+.join-roles__list { display: flex; flex-direction: column; gap: var(--card-gap); }
+.join-slot { position: relative; }   /* places the card's eyes (join.js · 1) */
+
+/* Every role: the same bubble, the same size. Open roles wear a brand colour (data-bg): Blue and Orange first, with
+   white text; more roles take the feed colours, with black text (BRAND.md → Text on colour). A step darker on hover;
+   on hover the eyes rise from the cut corner */
+.join-role {
+  --bubble: var(--color-ink-900);
   position: relative;
-  display: flex;
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(2);
+  padding: --spacing(16) --spacing(12) --spacing(10);   /* the top padding holds the cut (and sizes the eyes) */
   border-radius: var(--radius-3xl);
   background: var(--bubble);
   color: var(--color-white);
   transition: background-color var(--default-transition-duration);
 }
-
-/* The priority role: Blue, the biggest thing on the page */
-.join-feature {
-  --bubble: var(--color-primary);
-  flex-direction: column; align-items: flex-start; gap: --spacing(5);
-  padding: --spacing(20) --spacing(12) --spacing(10);
-}
-.join-feature:hover { --bubble: var(--color-primary-hover); }
-.join-feature .shape-ring path { stroke: var(--color-white); }   /* keyboard focus along the bubble: White on Blue */
-.join-feature:focus-visible:not(.is-shaped) { outline: 3px solid var(--color-white); outline-offset: 3px; }
-.join-feature__title { @apply text-aqb-display-l italic; }
-.join-feature__text { max-width: --spacing(150); @apply text-aqb-body-m; }
-.join-feature__meta { @apply text-aqb-label; }
-/* The photo: a cut-out on the right, leaping across the bubble under its lowered corner; lifts a little on hover.
-   On every screen: beside a narrower copy column on tablets; out of the cut-out corner on phones (see below) */
-.join-feature__photo {
-  position: absolute; right: calc(--spacing(6) * -1); top: --spacing(18); z-index: 2;   /* under the cut-out shoulder (clear of it on hover too, where the eyes peek); her shoe breaks out of the bubble */
-  width: min(--spacing(100), calc(100% - --spacing(206))); height: auto;   /* whatever the one-line title (≈ 824px with the padding) leaves */
-  pointer-events: none;   /* the card under it stays the link */
-  transition: translate .45s var(--ease-smooth);
-}
-.join-slot:hover .join-feature__photo { translate: 0 calc(--spacing(2) * -1); }
-@media (prefers-reduced-motion: reduce) { .join-feature__photo { transition: none; } }
-@media (width >= theme(--breakpoint-md)) and (width < theme(--breakpoint-xl)) {   /* tablets: a column for her on the right */
-  .join-feature { padding-right: --spacing(68); }
-  .join-feature__title { @apply text-aqb-headline-h1 italic; }
-  .join-feature__photo { width: --spacing(60); right: calc(--spacing(2) * -1); }
-}
-
-/* The other roles: an Ink bubble each, laid out like the first */
-.join-role {
-  --bubble: var(--color-ink-900);
-  flex-direction: column; align-items: flex-start; gap: --spacing(2);
-  padding: --spacing(16) --spacing(12) --spacing(10);   /* the top padding holds the cut (and sizes the eyes); sides and bottom as the first */
-}
-.join-role:hover { --bubble: var(--color-ink-800); }
-.join-role:focus-visible:not(.is-shaped) { outline: 3px solid var(--color-primary); outline-offset: 3px; }
+.join-role[data-bg] { --join-muted: var(--color-white); }
+.join-role[data-bg="blue"]   { --bubble: var(--color-primary); }
+.join-role[data-bg="orange"] { --bubble: var(--color-accent); }
+.join-role[data-bg="blue"]:hover   { --bubble: var(--color-primary-hover); }
+.join-role[data-bg="orange"]:hover { --bubble: color-mix(in oklab, var(--color-accent) 88%, var(--color-black)); }   /* a step darker, as Blue's hover */
+.join-role[data-bg="teal"], .join-role[data-bg="yellow"], .join-role[data-bg="pink"], .join-role[data-bg="sky"] { --join-muted: var(--color-ink-900); color: var(--color-black); }   /* the next roles: feed colours carry black text */
+.join-role[data-bg="teal"]   { --bubble: var(--color-feed-teal); }
+.join-role[data-bg="yellow"] { --bubble: var(--color-feed-yellow); }
+.join-role[data-bg="pink"]   { --bubble: var(--color-feed-pink); }
+.join-role[data-bg="sky"]    { --bubble: var(--color-feed-sky); }
+.join-role:is([data-bg="teal"], [data-bg="yellow"], [data-bg="pink"], [data-bg="sky"]):hover { background: color-mix(in oklab, var(--bubble) 94%, var(--color-black)); }
+.join-role[data-bg] .shape-ring path { stroke: currentColor; }   /* keyboard focus along the bubble, in the card's text colour */
+.join-role:focus-visible:not(.is-shaped) { outline: 3px solid var(--color-white); outline-offset: 3px; }
 .join-role__title { @apply text-aqb-subhead; font-weight: var(--font-weight-headline); font-style: italic; overflow-wrap: anywhere; }   /* a role name is a headline, as on its own page; card-title size */
 .join-role__text { @apply text-aqb-body-s; color: var(--join-muted); }
-.join-role__meta { @apply text-aqb-label; }   /* as the Blue card's details: white SemiBold */
+.join-role__meta { @apply text-aqb-label; }   /* the details: SemiBold */
+
+/* Filled («Already with us»): an Ink card, slim and quiet — not a link, no cut, no eyes; an «Already with us» tag over the name */
+.join-role--filled { padding: --spacing(8) --spacing(12); }
+.join-role--filled .pill { margin-bottom: --spacing(2); }
 
 /* Every role's «Դիմել»: right under its copy, the details beside it — the same place on every card */
 .join-apply { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(6); margin-top: --spacing(4); }
@@ -3098,12 +3087,9 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .join-roles { padding-block: --spacing(8) var(--section-y); }
   .join-hero__title { @apply text-aqb-headline-h2 italic; }   /* phones step down the scale */
   .join-hero { gap: --spacing(3); }
-  .join-feature { padding: --spacing(14) --spacing(5) --spacing(6); gap: --spacing(4); }
-  .join-feature__title { @apply text-aqb-headline-h2 italic; }   /* steps down: «Community» has to fit a phone's width */
-  .join-feature__photo { width: --spacing(36); top: calc(--spacing(17) * -1); right: calc(--spacing(2) * -1); }   /* leaping out of the cut-out corner, clear of the kicker */
-  .join-feature__text { @apply text-aqb-body-s; }
   .join-apply { margin-top: --spacing(2); }
   .join-role { padding: --spacing(14) --spacing(5) --spacing(6); }
+  .join-role--filled { padding: --spacing(6) --spacing(5); }
   .join-foot__mark { width: --spacing(32); }
   .post { gap: --spacing(10); margin-top: --spacing(8); }
   .post__title { @apply text-aqb-headline-h2 italic; }
