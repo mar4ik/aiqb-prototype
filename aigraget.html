@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-58" />
+  <link rel="stylesheet" href="styles.css?v=pages-62" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -90,7 +90,7 @@
   <!-- Hidden for now — remove `hidden` to bring the bar back -->
   <div class="topbar" hidden>
     <div class="topbar__item">
-      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI-գրագետ»՝ նոյեմբերի 3-ից</span>
+      <span class="topbar__text"><i class="ic ic--calendar" aria-hidden="true"></i>«AI գրագետ»՝ նոյեմբերի 3-ից</span>
       <a href="#packages" class="btn btn--white btn--sm">Գրանցվել</a>
     </div>
   </div>
@@ -109,15 +109,14 @@
        ========================================================= -->
   <header class="nav-wrap">
     <nav class="nav">
-      <a href="#" class="nav__logo">
+      <a href="index.html" class="nav__logo">
         <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
       </a>
       <div class="nav__links" id="nav-menu">
-        <!-- The page's stops, in page order; the footer's «Բաժիններ» uses the same labels (Oct 2026) -->
-        <a href="#skills" class="nav__link">Ի՞նչ կսովորես</a>
+        <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="#packages" class="nav__link">Դասընթացներ</a>
-        <!-- «Դասընթացներ» sub nav: course links + the course promo (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain «Դասընթացներ» link above. -->
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js).
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
         <div class="nav__item" hidden>
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
@@ -127,36 +126,39 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
-                  <a href="ai-grager.html" class="subnav__link">AI-գրագետ <span class="pill pill--deal">−20%</span></a>
-                  <a href="#packages" class="subnav__link">Առաջին 3 դասը</a>
+                  <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
+                  <a href="index.html#packages" class="subnav__link">Start</a>
                 </div>
                 <div class="subnav__group">
-                  <p class="subnav__label">PRO</p>
+                  <p class="subnav__label">PRO դասընթացներ</p>
                   <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI քեզ ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
                   <!-- TODO: real external link for «AI քեզ project manager» (same as the PRO card) -->
                   <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI քեզ project manager<i class="ic ic--external" aria-hidden="true"></i></a>
-                  <a href="doctor-register.html" class="subnav__link" target="_blank" rel="noopener">AI քեզ բժիշկ<i class="ic ic--external" aria-hidden="true"></i><span class="pill subnav__soon">Շուտով</span></a>
+                  <!-- no link yet: the name and the «Շուտով» label, in a neutral grey -->
+                  <span class="subnav__link subnav__link--soon" aria-disabled="true">AI քեզ բժիշկ<span class="pill subnav__soon">Շուտով</span></span>
                 </div>
               </div>
 
               <!-- The course promo, in the Bundle's look (replaces the wireframe's placeholder image) -->
-              <a href="#packages" class="subnav-promo">
-                <img class="subnav-promo__gift" src="assets/gift.webp" alt="" aria-hidden="true" />
+              <div class="subnav-promo">
+                <img class="subnav-promo__gift" src="assets/cards/hero_mac_03.webp" alt="" aria-hidden="true" />
                 <span class="subnav-promo__head">
-                  <strong class="subnav-promo__name">AI-գրագետ</strong>
-                  <span class="subnav-promo__tagline">Զրոյից մինչև AI ագենտներ</span>
+                  <strong class="subnav-promo__name">AI գրագետ</strong>
+                  <span class="subnav-promo__tagline">Մասնակցեք 3-ով՝ բացառիկ գնով</span>
                 </span>
                 <span class="subnav-promo__price">
-                  <s class="pkg__old">֏ 57,000</s>
-                  <span class="pill pill--deal">−20%</span>
-                  <span class="subnav-promo__amount">֏ 45,700</span>
+                  <span class="pkg__unit">1 անձը՝</span>
+                  <s class="pkg__old">֏ 45,700</s>
+                  <span class="pill pill--deal">−62%</span>
+                  <span class="subnav-promo__amount">֏ 17,366</span>
                 </span>
-                <span class="btn btn--primary btn--sm btn--block">Գնել</span>
-              </a>
+                <button type="button" class="btn btn--primary btn--block btn--sm" data-open="friends-form">Գրանցվել ընկերներով</button>
+                <a href="aigraget.html" class="btn btn--outline btn--block btn--sm">Մանրամասն</a>
+              </div>
             </div>
           </div>
         </div>
-        <a href="#teachers" class="nav__link">Ուսուցիչներ</a>
+        <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
         <a href="#faq" class="nav__link">Հարցեր</a>
         <a href="#contact" class="nav__link">Կապ</a>
       </div>
@@ -165,12 +167,6 @@
         <span></span><span></span>
       </button>
     </nav>
-    <!-- The course CTA, beside the pill; «Գրանցվել» is the webinar's. Its slot is 0 wide until the hero's own button is
-         scrolled past (script.js · 02), so the first screen asks once and the pill alone is centred -->
-    <!-- Hidden for now (the raffle band's «Թողնել հայտ» is the header's one action) — remove `hidden` to bring it back -->
-    <div class="nav-cta-slot" hidden>
-      <a href="#packages" class="btn btn--primary btn--md nav-cta" inert>Ընտրել դասընթաց</a>
-    </div>
   </header>
   <div class="nav-scrim" aria-hidden="true"></div>
 
@@ -239,18 +235,17 @@
         <h1 class="story-hero__title">8 պարտադիր <span class="story-hero__nobr">AI-հմտություն</span> <span class="story-hero__title-sub">բոլորի համար՝ անկախ մասնագիտությունից</span></h1>
         <div class="story-hero__actions">
           <a href="#packages" class="btn btn--primary btn--base">Ավելին</a>
-          <!-- TODO: the real AI-literacy test link (a blank placeholder for now, opens in a new tab) -->
-          <a href="about:blank" class="btn btn--line btn--base" target="_blank" rel="noopener">Ստուգի՛ր AI գրագիտությունդ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
+          <a href="https://form.typeform.com/to/lfiFv4dt" class="btn btn--line btn--base" target="_blank" rel="noopener">Ստուգի՛ր AI գրագիտությունդ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
 
-      <!-- The stage, with the draw in an Orange chat bubble along its bottom: a shelf the balls land on (script.js · 03 B
-           adds it to the physics; it falls in first). Outside .drop, whose role="img" would hide it from screen readers -->
+      <!-- The stage: the falling tools, the gifts, the eyes, and the course's name in two words that drop in with them
+           (.drop__ball--word: plain White text, no disc). The floor is the stage's bottom edge (script.js · 03). -->
       <div class="story-hero__stage">
-      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo">
+      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo, AI գրագետ">
         <!-- One ball a tool (its name in data-name); script.js sizes them for the stage and drops them in this order:
            the tools, then the three gifts (huge bubbles, data-size times a tool's size, each with one of the MacBook Neos
-           the AI-Master cards give, in a feed colour), the eyes last (bigger too), on top of the pile -->
+           the AI գրագետ cards give, in a feed colour), the eyes last (bigger too), on top of the pile -->
         <span class="drop__ball" data-name="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="" /></span>
         <span class="drop__ball" data-name="Gemini"><img src="assets/logos/gemini.svg" alt="" /></span>
         <span class="drop__ball" data-name="Claude"><img src="assets/logos/claude.svg" alt="" /></span>
@@ -267,9 +262,9 @@
         <span class="drop__ball" data-name="Arena"><img src="assets/logos/arena.svg" alt="" /></span>
         <span class="drop__ball" data-name="Oboe"><img src="assets/logos/oboe.svg" alt="" /></span>
         <span class="drop__ball" data-name="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="" /></span>
-        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="sky"><img src="assets/cards/hero_mac_01.webp" alt="" /></span>
-        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="pink"><img src="assets/cards/hero_mac_02.webp" alt="" /></span>
-        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="3.2" data-bg="yellow"><img src="assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="2.4" data-bg="sky"><img src="assets/cards/hero_mac_01.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="2.4" data-bg="pink"><img src="assets/cards/hero_mac_02.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="2.4" data-bg="yellow"><img src="assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
         <!-- The brand's eyes (.eyes, 96 × 50, no outline) on an Ink ball: they stay upright as it rolls -->
         <span class="drop__ball drop__ball--eyes" data-size="1.8">   <!-- data-size: bigger than a tool (script.js) -->
           <svg class="eyes" viewBox="0 0 96 50" data-look="you">
@@ -281,14 +276,9 @@
             <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
           </svg>
         </span>
+        <span class="drop__ball drop__ball--word" data-name="AI" data-size="2.2"><span>AI</span></span>
+        <span class="drop__ball drop__ball--word" data-name="Գրագետ" data-size="4"><span>Գրագետ</span></span>
       </div>
-        <div class="story-hero__bubble">
-          <p class="story-hero__bubble-kicker">Խաղարկություն</p>
-          <p class="story-hero__bubble-title">3 MacBook Neo</p>
-          <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
-          <p class="story-hero__bubble-text">հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
-          <a href="#packages" class="btn btn--primary btn--base story-hero__bubble-btn">Թողնել հայտ</a>
-        </div>
       </div>
     </section>
 
@@ -315,16 +305,14 @@
          ========================================================= -->
     <section class="why" id="courses">
       <div class="why__bubble" data-bg="sky">
-        <h2 class="why__title">AI-ի զարգացումը քեզ անհանգստաց&shy;նո՞ւմ է</h2>
-        <p class="why__text">Հետևում ես զարգացման արագությանը ու մտածում՝ ի՞նչ կլինի վաղը։ Ինչպե՞ս կփոխվի աշխատանքդ, ի՞նչն է իրական, ինչի՞ն կարելի է վստահել։</p>
+        <p class="why__text">Հետևում ես զարգացման արագությանը ու մտածում՝ ի՞նչ կլինի վաղը։</p>
+        <p class="why__text">Ինչպե՞ս կփոխվի աշխատանքդ, ի՞նչն է իրական, ինչի՞ն կարելի է վստահել։</p>
       </div>
       <div class="why__bubble why__bubble--tail-left" data-bg="pink">   <!-- its tail at the bottom-left, pointing down to the answer -->
-        <h2 class="why__title">AI-ի հնարավորու&shy;թյունները քեզ ոգևորո՞ւմ են</h2>
         <p class="why__text">Տեսնում ես նոր հնարավորություններ ու մտածում՝ ինչքա՜ն բան կարող ես անել։ Ուզում ես օգտվել դրանցից ու հետ չմնալ։</p>
       </div>
       <div class="why__answer">
         <div class="why__bubble" data-bg="yellow">
-          <h2 class="why__title">Երկու դեպքում էլ անելիքը մեկն է՝ սովորել աշխատել AI-ով։</h2>
           <p class="why__text">Հասկանալ հնարավորությունները, ճանաչել սահմանափակումներն ու օգտագործել այն քո օգտին։</p>
         </div>
         <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you" aria-hidden="true">   <!-- under the tail, outside the bubble; with the logo's ™ (as script.js → makeEyes({ tm: true })) -->
@@ -334,84 +322,6 @@
           <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
           <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
         </svg>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         05b · ABOUT — «Ծրագրի մասին»: a timeline of what everyone had to learn (electricity → the computer → the internet
-         → AI), one White line through a round marker a year (a Blue icon each on White; AI's the biggest, on Ink,
-         the end of the line), on the Blue ground, the steps closing in as the years do (141, 50, 31 years); a vertical line below lg.
-         Under it, on the timeline's columns: the lead in a chat bubble, the brand's eyes on a circle under its tail
-         saying it (they blink: script.js · 05 peekEyes), and beside it the rest, the course's three proofs as a list.
-         «AI քեզ բան» and «AI-գրագետ» in the detail cut. The timeline comes in once, as it scrolls into view (script.js ·
-         05b aboutTimeline); AI's sparkle shakes now and then
-         ========================================================= -->
-    <section class="about" id="about" aria-labelledby="about-title">
-      <h2 class="section-title" id="about-title">Ծրագրի մասին</h2>
-      <ol class="timeline">
-        <li class="timeline__item"><span class="timeline__year">1800</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--zap"></i></span></span><span class="timeline__what">էլեկտրաէներգիա</span></li>
-        <li class="timeline__item"><span class="timeline__year">1941</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--monitor"></i></span></span><span class="timeline__what">համակարգիչ</span></li>
-        <li class="timeline__item"><span class="timeline__year">1991</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--globe"></i></span></span><span class="timeline__what">համացանց</span></li>
-        <li class="timeline__item"><span class="timeline__year">2022</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot timeline__dot--ai"><i class="ic ic--lg ic--sparkles"></i></span></span><span class="timeline__what">AI</span></li>
-      </ol>
-      <div class="about__text">
-        <div class="about__say">
-          <p class="about__lead">   <!-- in the brand chat bubble (script.js · 03b) -->
-            Ինչպես ժամանակին սովորել ենք կարդալ, գրել, այնուհետև՝ օգտվել ինտերնետից, այսօր պարտադիր է սովորելը աշխատել <span class="about__nobr">AI-ով։</span></p>
-          <span class="about__eyes" aria-hidden="true">   <!-- under the tail, outside the bubble: the brand's eyes with the ™ on an Ink circle (as Hero B's eyes ball) -->
-          <svg class="eyes" viewBox="0 0 96 50" data-look="you">
-            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
-            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
-            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
-            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
-            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
-          </svg>
-          </span>
-        </div>
-        <div class="about__body">
-          <p>Մի բան հաստատ է՝ եթե դու չսովորես կառավարել AI-ը, AI օգտագործողներն են քեզ կառավարելու։</p>
-          <p><strong>«AI քեզ բան»</strong>-ի հետևում կանգնած է մեծ թիմ՝ միավորված մեկ առաքելության շուրջ․ օգնել 1 միլիոն հայի դառնալ AI-գրագետ։ Այդ նպատակով մենք ստեղծել ենք մեկ <strong>«AI-գրագետ»</strong> դասընթացը, որը միավորում է AI-ից օգտվելու 8 պարտադիր հմտությունները՝ անկախ մասնագիտությունից ու նախնական գիտելիքներից։</p>
-          <!-- The course's proofs, pulled out of the last paragraph (its own words) -->
-          <ul class="about__proof">
-            <li><i class="ic ic--check" aria-hidden="true"></i><span class="about__proof-gov"><img src="assets/logos/armgerb.svg" alt="" />Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից</span></li>   <!-- a check as the others, then the coat of arms (as the hero's endorsement) -->
-            <li><i class="ic ic--check" aria-hidden="true"></i>Մասնակցության արդյունքում տրվում է հավաստագիր</li>
-            <li><i class="ic ic--check" aria-hidden="true"></i>Ողջ գումարը ենթակա է վերադարձի եկամտահարկի միջոցով</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         05g · COURSE VIDEOS — «Դասընթացի կառուցվածքը»: a short video a lesson, by the teacher who gives it. On Black
-         (after the Blue about band): the player on the left, the 9 lessons on the right (a number, a preview, the lesson
-         and its teacher), the list as tall as the player and scrolling inside it from lg up; stacked below lg. A lesson
-         picked in the list moves into the player (script.js · 05g courseVideos).
-         TODO: the real videos (data-video on each lesson: a YouTube id) and their posters; until then the poster is the
-         teacher's photo. TODO: who gives which lesson — the teachers here are placeholders, in the teachers' order
-         ========================================================= -->
-    <section class="reel" id="structure" aria-labelledby="reel-title">
-      <h2 class="section-title" id="reel-title">Դասըն&shy;թացի կառուց&shy;վածքը</h2>   <!-- &shy;: phones break the long words at a syllable -->
-      <div class="reel__body">
-        <figure class="reel__player">
-          <img class="reel__poster" src="assets/teachers/anahit.webp" alt="" />
-          <button type="button" class="reel__play" aria-label="Դիտել"><i class="ic ic--play" aria-hidden="true"></i></button>
-          <figcaption class="reel__caption">
-            <span class="reel__now-num">01</span>
-            <span class="reel__now-name">AI հիմունքներ և անվտանգություն</span>
-            <span class="reel__now-who">Անահիտ Վարդանյան</span>
-          </figcaption>
-        </figure>
-        <ol class="reel__list">
-          <li><button type="button" class="reel__item" data-video="" aria-current="true"><span class="reel__num">01</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI հիմունքներ և անվտանգություն</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">02</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI-ը կյանքի 10 իրավիճակներում</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">03</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">04</span><span class="reel__thumb"><img src="assets/teachers/lilit_kh.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Հետազոտություն ու աղբյուրահեն կոնտենտ</span><span class="reel__who">Լիլիթ Խաչատրյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">05</span><span class="reel__thumb"><img src="assets/teachers/lilit_b.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">1000 բառի տեղ խոսող նկարների գեներացիա</span><span class="reel__who">Լիլիթ Բարսեղյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">06</span><span class="reel__thumb"><img src="assets/teachers/gevorg.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</span><span class="reel__who">Գևորգ Պողոսյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">07</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">08</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Գործընթացների ավտոմատացում AI-ով</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
-          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">09</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Ինքնավար ագենտների ստեղծում</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
-        </ol>
       </div>
     </section>
 
@@ -702,6 +612,41 @@
     </section>
 
     <!-- =========================================================
+         05g · COURSE VIDEOS — «Դասընթացի կառուցվածքը»: a short video a lesson, by the teacher who gives it. On Black
+         (after the Blue about band): the player on the left, the 9 lessons on the right (a number, a preview, the lesson
+         and its teacher), the list as tall as the player and scrolling inside it from lg up; stacked below lg. A lesson
+         picked in the list moves into the player (script.js · 05g courseVideos).
+         TODO: the real videos (data-video on each lesson: a YouTube id) and their posters; until then the poster is the
+         teacher's photo. TODO: who gives which lesson — the teachers here are placeholders, in the teachers' order
+         ========================================================= -->
+    <!-- Hidden for now (no lesson videos yet) — remove `hidden` to bring the section back -->
+    <section class="reel" id="structure" aria-labelledby="reel-title" hidden>
+      <h2 class="section-title" id="reel-title">Դասըն&shy;թացի կառուց&shy;վածքը</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="reel__body">
+        <figure class="reel__player">
+          <img class="reel__poster" src="assets/teachers/anahit.webp" alt="" />
+          <button type="button" class="reel__play" aria-label="Դիտել"><i class="ic ic--play" aria-hidden="true"></i></button>
+          <figcaption class="reel__caption">
+            <span class="reel__now-num">01</span>
+            <span class="reel__now-name">AI հիմունքներ և անվտանգություն</span>
+            <span class="reel__now-who">Անահիտ Վարդանյան</span>
+          </figcaption>
+        </figure>
+        <ol class="reel__list">
+          <li><button type="button" class="reel__item" data-video="" aria-current="true"><span class="reel__num">01</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI հիմունքներ և անվտանգություն</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">02</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI-ը կյանքի 10 իրավիճակներում</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">03</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Քո 1-ին AI նախագիծը՝ պրեզենտացիա ու Pitch</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">04</span><span class="reel__thumb"><img src="assets/teachers/lilit_kh.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Հետազոտություն ու աղբյուրահեն կոնտենտ</span><span class="reel__who">Լիլիթ Խաչատրյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">05</span><span class="reel__thumb"><img src="assets/teachers/lilit_b.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">1000 բառի տեղ խոսող նկարների գեներացիա</span><span class="reel__who">Լիլիթ Բարսեղյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">06</span><span class="reel__thumb"><img src="assets/teachers/gevorg.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">AI վիդեոների գեներացիա. քո վիդեոների ժամանակն է</span><span class="reel__who">Գևորգ Պողոսյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">07</span><span class="reel__thumb"><img src="assets/teachers/anahit.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Կայքէջերի գեներացիա՝ առանց ծրագրավորող լինելու</span><span class="reel__who">Անահիտ Վարդանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">08</span><span class="reel__thumb"><img src="assets/teachers/nairi.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Գործընթացների ավտոմատացում AI-ով</span><span class="reel__who">Նաիրի Արեգ Հացպանյան</span></span></button></li>
+          <li><button type="button" class="reel__item" data-video=""><span class="reel__num">09</span><span class="reel__thumb"><img src="assets/teachers/artak.webp" alt="" loading="lazy" /></span><span class="reel__text"><span class="reel__name">Ինքնավար ագենտների ստեղծում</span><span class="reel__who">Արտակ Գրիգորյան</span></span></button></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- =========================================================
          05i · AUDIENCE — «Դասընթացը քեզ համար է, անկախ նրանից, թե որտեղից ես սկսում»: who you are (Subhead) and what the course
          gives you, each in the brand's chat bubble without its tail (its bottom edge falls away to one corner; script.js ·
          03b cuts it; a feed colour each, black text), on Black, in two columns like a conversation, the right column a
@@ -710,7 +655,10 @@
          from under its tail, blinking (script.js · 05 peekEyes). The bubbles pop in like messages (revealOnce)
          ========================================================= -->
     <section class="audience" id="audience" aria-labelledby="audience-title">
-      <h2 class="section-title audience__title" id="audience-title">Դասըն&shy;թացը քեզ համար է, անկախ նրանից, թե որտե&shy;ղից ես սկսում</h2>   <!-- &shy;: phones break the long words at a syllable -->
+      <div class="section-head">
+        <h2 class="section-title audience__title" id="audience-title">Քեզ համար է</h2>
+        <p class="section-sub">Դասըն&shy;թացը քեզ համար է, անկախ նրանից, թե որտե&shy;ղից ես սկսում</p>   <!-- &shy;: phones break the long words at a syllable -->
+      </div>
       <div class="audience__cols">
         <ul class="audience__col audience__col--left">
           <li class="audience__bubble" data-bg="yellow">
@@ -764,26 +712,82 @@
         <div class="audience__test">
           <p class="audience__ask">Չե՞ս կողմնորոշվում։ Ստուգիր AI-գրագիտությանդ մակարդակն օնլայն</p>
           <p class="audience__time"><i class="ic ic--clock" aria-hidden="true"></i>1.5&nbsp;րոպե</p>
-          <!-- TODO: the real AI-literacy test link (as Hero B's «Ստուգի՛ր AI գրագիտությունդ»: a blank placeholder for now, opens in a new tab) -->
-          <a href="about:blank" class="btn btn--primary btn--base" target="_blank" rel="noopener">Անցնել էքսպրես թեստը<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
+          <!-- the AI-literacy test (the same link as Hero B's «Ստուգի՛ր AI գրագիտությունդ»), opens in a new tab -->
+          <a href="https://form.typeform.com/to/lfiFv4dt" class="btn btn--primary btn--base" target="_blank" rel="noopener">Անցնել էքսպրես թեստը<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
     </section>
 
     <!-- =========================================================
-         05j · INCLUDED — «Ի՞նչ ես ստանում»: the course page's block (ai-grager.html · .course-included), as it is: the title on
-         the left, what comes with the course beside it as a list split by lines, a Blue check each, on the brand grey.
-         Here without the homework, the certificate as the Ministry's endorsement, and the refund through the income tax
+         10 · FAQ — «Հարցեր՝ մինչև գրանցվելը»: right after «Քեզ համար է», the questions people ask before they sign up. The
+         FAQ's own look: the title on the left, the questions split by lines, each answer indented behind a grey line under
+         its question (a native <details>)
          ========================================================= -->
-    <section class="course-included" aria-labelledby="included-title">
-      <h2 class="section-title" id="included-title">Ի՞նչ ես ստանում</h2>
-      <ul class="course-included__list">
-        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Ռեսուրսներ</h3><p>Դասերի տեսաձայնագրություններ ու սահիկաշարեր՝ հասանելի 6 ամիս</p></div></li>
-        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>AI-ների ցանկ</h3><p>Անընդհատ թարմացվող ցանկ՝ գործիքների նկարագրություններով</p></div></li>
-        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Հարցաշարեր</h3><p>Առաջընթացը տեսնելու համար</p></div></li>
-        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Սերտիֆիկատ</h3><p>ԿԳՄՍՆ կողմից երաշխավորված</p></div></li>
-        <li><i class="ic ic--check" aria-hidden="true"></i><div><h3>Վճարված գումարի 100% վերադարձ</h3><p>Եկամտահարկի միջոցով</p></div></li>
-      </ul>
+    <section class="faq" id="faq">
+      <h2 class="section-title faq__title">Հարցեր՝ մինչև գրանցվելը</h2>
+      <div class="faq__list">
+        <details class="faq__item" open>
+          <summary>Պե՞տք է նախապես իմանալ AI</summary>
+          <div class="faq__answer">
+            <p>Ոչ։ Ծրագիրը սկսվում է հիմունքներից։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Եթե արդեն օգտվում եմ ChatGPT-ից, ինձ պե՞տք է</summary>
+          <div class="faq__answer">
+            <p>Եթե հիմնականում հարցեր ես տալիս, այստեղ կսովորես աշխատել ավելի հստակ առաջադրանքներով, ստուգել պատասխաններն ու կիրառել տարբեր գործիքներ։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Կա՞ գումարի վերադարձի երաշխիք</summary>
+          <div class="faq__answer">
+            <p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ե՞րբ են դասերը</summary>
+          <div class="faq__answer">
+            <p>Երեկոյան՝ 19:00&#8288;–&#8288;21:00, Երևանի ժամանակով։</p>   <!-- &#8288; (word joiner): the time never breaks at its dash -->
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Տեսագրությունները հասանելի՞ են</summary>
+          <div class="faq__answer">
+            <p>Այո։ Դասերի տեսագրություններն ու սլայդները հասանելի են 6 ամիս։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ինչպե՞ս մասնակցել անվճար կամ զեղչով</summary>
+          <div class="faq__answer">
+            <p>Դասընթացին կարող ես մասնակցել անվճար հետևյալ տարբերակներով.</p>
+            <ul class="faq__bullets">
+              <li>Վճարել ամբողջ գումարը, այնուհետև ստանալ 100% վերադարձ եկամտահարկի միջոցով</li>
+              <li>Հրավիրել 10 ընկեր, յուրաքանչյուրի համար ստանալ 10% զեղչ (նրանց ևս կտրամադրվի 10% զեղչ ձեր հրավերով մասնակցելու դեպքում)</li>
+            </ul>
+            <p>Կարող ես մասնակցել զեղչով հետևյալ տարբերակներով.</p>
+            <ul class="faq__bullets">
+              <li>Գրանցվել «3 ընկեր» փաթեթով, ստանալ 62% զեղչ</li>
+              <li>Հրավիրել ընկերոջը, յուրաքանչյուրի համար ստանալ 10% զեղչ</li>
+            </ul>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ի՞նչ է ներառված արժեքի մեջ</summary>
+          <div class="faq__answer">
+            <p>9 դասերը, ուսումնական նյութերը, պրոմպտների գրադարանը, AI գործիքների ցանկը, հավաստագիրը և նշված օֆլայն հրավիրատոմսը։</p>
+          </div>
+        </details>
+        <details class="faq__item">
+          <summary>Ինչպե՞ս իմանամ՝ ինձ պետք է, թե ոչ</summary>
+          <div class="faq__answer">
+            <ol class="faq__bullets faq__bullets--steps">
+              <!-- TODO: the real AI-literacy test link (as Hero B's and the audience block's: a blank placeholder for now, opens in a new tab) -->
+              <li><a href="about:blank" target="_blank" rel="noopener">Անցիր օնլայն էքսպրես թեստ հիմա<i class="ic ic--external" aria-hidden="true"></i></a></li>
+              <li><a href="#skills">Ծանոթացիր բացվածքին</a></li>   <!-- the 9 lessons' topics (05h) -->
+            </ol>
+          </div>
+        </details>
+      </div>
     </section>
 
     <!-- =========================================================
@@ -837,13 +841,21 @@
     </section>
 
     <!-- =========================================================
-         05l · CALLBACK — «Պատվիրել հետադարձ զանգ»: the line in the headline cut, white on Blue, and beside it the number as
-         the floating phone button, a size up (.fab .fab--label .fab--lg, dark as the back-to-top one), which calls
+         05l · CALLBACK — «Թողնել Հայտ»: the whole Blue band is a link to the contact form (#contact). The line in the headline
+         cut, white on Blue, and beside it the brand's eyes with the ™, blinking (script.js · 05 peekEyes)
          ========================================================= -->
-    <section class="callback" aria-labelledby="callback-title">
-      <h2 class="section-title" id="callback-title">Պատվիրել հետադարձ զանգ</h2>
-      <a href="tel:+37444199199" class="fab fab--label fab--lg" aria-label="Զանգել +374 44 199 199"><i class="ic ic--phone" aria-hidden="true"></i><span>+374 44 199 199</span></a>
-    </section>
+    <a href="#contact" class="callback" aria-labelledby="callback-title">
+      <h2 class="section-title" id="callback-title">Թողնել Հայտ</h2>
+      <span class="callback__eyes" aria-hidden="true">
+        <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you">
+          <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+          <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+          <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+          <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+          <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+        </svg>
+      </span>
+    </a>
 
     <!-- =========================================================
          05m · PACKAGES — «Ընտրիր մասնակցության՝ քեզ ամենահարմար տարբերակը»: the grey full-bleed band with the three cards
@@ -856,10 +868,10 @@
         <p class="section-sub">Ընտրիր մասնակցության՝ քեզ ամենահարմար տարբերակը</p>
       </div>
 
-      <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI-Master),
-           and the whole course for 3 friends together (one price a person). The two AI-Master cards wear the Bundle's
+      <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI գրագետ),
+           and the whole course for 3 friends together (one price a person). The two AI գրագետ cards wear the Bundle's
            campaign look (.pkg--bundle: the wash, the ribbon border, the gift; BRAND.md → Campaign colours).
-           Stacked below lg, the two AI-Master cards come first. -->
+           Stacked below lg, the two AI գրագետ cards come first. -->
       <div class="packages">
 
         <!-- ───── Start ───── -->
@@ -891,6 +903,8 @@
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
 
+        
+
           <div class="pkg__tools">
             <p class="pkg__label">10 AI գործիք</p>
             <ul class="tool-stack">
@@ -903,6 +917,7 @@
               <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma">+4<span class="sr-only">: Grok, Suno, Oboe, Gamma</span></li>
             </ul>
           </div>
+        
 
           <ul class="pkg__features">
             <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
@@ -910,21 +925,20 @@
             <li><i class="ic ic--check"></i>Սերտիֆիկատ</li>
             <li><i class="ic ic--check"></i>Պրոմպտ գրադարան՝ 500+ պատրաստի պրոմպտ</li>
           </ul>
-
         </article>
 
-        <!-- ───── AI-Master: the whole course ───── -->
+        <!-- ───── AI գրագետ: the whole course ───── -->
         <article class="pkg pkg--bundle pkg--master">
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">AI-&#8288;գրագետ</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <h3 class="pkg__name">AI&nbsp;գրագետ</h3>
             <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
                  way; the card crops what runs past its right edge) -->
-            <span class="pkg__gift pkg__gift--mac02"><img src="assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>
+            <span class="pkg__gift pkg__gift--mac02"><img src="assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
             <p class="pkg__tagline">Start + Level-&#8288;Up</p>   <!-- &#8288; (word joiner): the line never breaks inside «Level-Up» -->
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
-              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI-գրագետ</strong> դասընթացի ընթացքում</p>
+              <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI գրագետ</strong> դասընթացի ընթացքում</p>
               <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
             </div>
             <p class="pkg__desc">Ամբողջական AI<br />կրթություն մեկ ծրագրում</p>
@@ -950,10 +964,12 @@
           </div>
 
           <div class="pkg__cta">
-            <!-- TODO: the checkout link for AI-Master -->
-            <a href="#" class="btn btn--primary btn--block btn--base">Գնել AI-գրագետ</a>
+            <!-- TODO: the checkout link for AI գրագետ -->
+            <a href="#" class="btn btn--primary btn--block btn--base">Գնել AI գրագետ</a>
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
+
+        
 
           <div class="pkg__tools">
             <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
@@ -967,6 +983,7 @@
               <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
             </ul>
           </div>
+        
 
           <ul class="pkg__features">
             <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
@@ -978,18 +995,17 @@
             <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
             <li class="is-strong"><i class="ic ic--check"></i><span>3 MacBook Neo-ի խաղարկություն ամեն ամսվա գրանցվողների շրջանում</span></li>
           </ul>
-
         </article>
 
-        <!-- ───── AI-Master with 3 friends: the whole course, one price a person (−62% off AI-Master) ───── -->
+        <!-- ───── AI գրագետ with 3 friends: the whole course, one price a person (−62% off AI գրագետ) ───── -->
         <article class="pkg pkg--bundle pkg--friends">
           <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">AI-&#8288;գրագետ</h3>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
+            <h3 class="pkg__name">AI&nbsp;գրագետ</h3>
             <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
                  way; the card crops what runs past its right edge) -->
-            <span class="pkg__gift pkg__gift--mac03"><img src="assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>
+            <span class="pkg__gift pkg__gift--mac03"><img src="assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
             <p class="pkg__tagline">3 ընկերներով</p>
             <p class="pkg__desc"><strong>Մասնակցեք 3-ով՝<br />բացառիկ գնով,</strong> սովորեք<br />կիրառել AI-ը և փոխանակեք Ձեր նոր հմտությունները միասին։</p>
             <div class="pkg__schedule">
@@ -1019,6 +1035,8 @@
             <p class="pkg__guarantee"><i class="ic ic--shield"></i>100% գումարի վերադարձ</p>
           </div>
 
+        
+
           <div class="pkg__tools">
             <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
             <ul class="tool-stack">
@@ -1031,6 +1049,7 @@
               <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
             </ul>
           </div>
+        
 
           <ul class="pkg__features">
             <li><i class="ic ic--check"></i>Դասերի տեսագրություն</li>
@@ -1042,13 +1061,12 @@
             <li class="is-gift"><i class="ic ic--check"></i><span>Անվճար բաժանորդագրություն՝ 3 ամիս OmniDictate <span class="pill pill--gift">Նվեր</span></span></li>
             <li class="is-strong"><i class="ic ic--check"></i><span>3 MacBook Neo-ի խաղարկություն ամեն ամսվա գրանցվողների շրջանում</span></li>
           </ul>
-
         </article>
       </div>
     </section>
 
     <!-- =========================================================
-         05n · NEEDS — «Սովորելու համար պարտադիր չէ / բավական է»: what you don't need and what's enough, two cards on Black,
+         05n · NEEDS — «Սովորելու համար պարտադիր չէ / բավական է»: what you don't need and what's enough, two cards on Blue,
          Pink and Teal (black text, BRAND.md), each led by its ✕ or ✓ on a Black disc (the no and the yes), the items as bullets; cut into the brand
          bubble at the top-right corner (script.js · 05k bubbleCards, as the format cards). Under them the note, white on the Black,
          said by the brand's eyes (with the ™), blinking (05 peekEyes). Two columns from md
@@ -1088,41 +1106,21 @@
     </section>
 
     <!-- =========================================================
-         05o · CERTIFICATE — «Դասընթացի ավարտին տրվում է հավաստագիր»: the title and what it confirms on the left, the example
-         certificate on the right; the brand's eyes (with the ™) on an Ink circle peek over its
-         top edge. The paper rises as it scrolls in, then the eyes come up (script.js · revealOnce; 05 peekEyes).
-         TODO: the certificate is a real participant's (and the «Start» one, 3 lessons): a sample to replace it
-         ========================================================= -->
-    <section class="certificate" aria-labelledby="certificate-title">
-      <div class="certificate__text">
-        <h2 class="section-title" id="certificate-title">Դասընթացի ավարտին տրվում է հավաս&shy;տագիր</h2>   <!-- &shy;: the narrowest phones break the long word at a syllable -->
-        <p class="certificate__lead">որը հաստատում է, որ տիրապետում ես AI-&#8288;ից գրագետ օգտվելու համար անհրաժեշտ 8 հմտություններին։</p>   <!-- &#8288; (word joiner): «AI-ից» never breaks at its hyphen -->
-      </div>
-      <figure class="certificate__paper">
-        <span class="certificate__eyes" aria-hidden="true">
-          <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="down-left">
-            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
-            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
-            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
-            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
-            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
-          </svg>
-        </span>
-        <img src="assets/cards/certificate.webp" width="1600" height="1103" alt="Հավաստագրի օրինակ" loading="lazy" />
-      </figure>
-    </section>
-
-    <!-- =========================================================
-         05p · KEPT — «Դասերից հետո նյութերը մնում են քեզ հետ»: what stays with you after the lessons, four tiles on Black, a
+         05p · KEPT — «Ի՞նչ կմնա քեզ դասընթացից հետո»: what stays with you after the lessons, four tiles on Black, a
          feed colour each (black text), each with its own picture: «500+» (the prompts), the AI tools' logos (.tool-stack),
          a progress bar that fills to the certificate's ✓, the two invitations as tickets. Cut into the brand bubble at the
          top-right corner (script.js · 05k bubbleCards); the eyes stand on the last tile's step.
          The title on top; the tiles 4 in a row from xl, 2 × 2 from md, 1 on phones
          ========================================================= -->
     <section class="kept" aria-labelledby="kept-title">
-      <h2 class="section-title kept__heading" id="kept-title">Դասերից հետո նյութերը մնում են քեզ հետ</h2>
+      <h2 class="section-title kept__heading" id="kept-title">Ի՞նչ կմնա քեզ դասընթացից հետո</h2>
       <div class="kept__cards">
         <ul class="kept__grid">
+          <li class="kept__card" data-bg="pink">
+            <img class="kept__pic kept__cert" src="assets/cards/certificate.webp" width="1600" height="1103" alt="Հավաստագրի օրինակ" loading="lazy" />
+            <h3 class="kept__title">Հավաստագիր</h3>
+            <p class="kept__text">Որը հաստատում է, որ տիրապետում ես AI-&#8288;ից գրագետ օգտվելու համար անհրաժեշտ 8 հմտություններին։</p>
+          </li>
           <li class="kept__card" data-bg="yellow">
             <h3 class="kept__head"><span class="kept__num">500+</span> <span class="kept__title">պատրաստի պրոմպտ</span></h3>
             <p class="kept__text">Գրադարան, որից կարող ես օգտվել քո առաջադրանքները ձևակերպելիս։</p>
@@ -1139,13 +1137,8 @@
           </li>
           <li class="kept__card" data-bg="teal">
             <span class="kept__pic kept__progress" aria-hidden="true"><span class="kept__bar"></span><span class="kept__done"><i class="ic ic--check"></i></span></span>   <!-- fills as the section scrolls in, then the ✓ (script.js · revealOnce) -->
-            <h3 class="kept__title">Առաջընթացի վերահսկում և հավաստագիր</h3>
-            <p class="kept__text">Ծրագրի շրջանակում կհետևես առաջընթացիդ և կստանաս հավաստագիր։</p>
-          </li>
-          <li class="kept__card" data-bg="pink">
-            <span class="kept__pic" aria-hidden="true"><span class="kept__ticket"><i class="ic ic--lg ic--calendar"></i></span><span class="kept__ticket"><i class="ic ic--lg ic--calendar"></i></span></span>   <!-- the invitation for 2: two tickets -->
-            <h3 class="kept__title">Օֆլայն հանդիպումների հնարավո&shy;րություն</h3>   <!-- &shy;: narrow tiles break the long word at a syllable -->
-            <p class="kept__text">Փաթեթում ներառված է 2 հոգու հրավիրատոմս։</p>
+            <h3 class="kept__title">Առաջընթացի վերահսկում</h3>
+            <p class="kept__text">Ծրագրի շրջանակում կհետևես քո առաջընթացին։</p>
           </li>
         </ul>
         <span class="kept__eyes" aria-hidden="true">   <!-- the eye logo (with its ™), peeking from the last tile's stepped corner (script.js · 05k places it); it blinks (05 peekEyes) -->
@@ -1158,6 +1151,7 @@
           </svg>
         </span>
       </div>
+
     </section>
 
     <!-- =========================================================
@@ -1562,6 +1556,50 @@
     </section>
 
     <!-- =========================================================
+         05b · ABOUT — «Ծրագրի մասին»: a timeline of what everyone had to learn (electricity → the computer → the internet
+         → AI), one White line through a round marker a year (a Blue icon each on White; AI's the biggest, on Ink,
+         the end of the line), on the Black ground, the steps closing in as the years do (141, 50, 31 years); a vertical line below lg.
+         Under it, on the timeline's columns: the lead in a chat bubble, the brand's eyes on a circle under its tail
+         saying it (they blink: script.js · 05 peekEyes), and beside it the rest, the course's three proofs as a list.
+         «AI քեզ բան» and «AI գրագետ» in the detail cut. The timeline comes in once, as it scrolls into view (script.js ·
+         05b aboutTimeline); AI's sparkle shakes now and then
+         ========================================================= -->
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 class="section-title" id="about-title">Ծրագրի մասին</h2>
+      <ol class="timeline">
+        <li class="timeline__item"><span class="timeline__year">1800</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--zap"></i></span></span><span class="timeline__what">էլեկտրաէներգիա</span></li>
+        <li class="timeline__item"><span class="timeline__year">1941</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--monitor"></i></span></span><span class="timeline__what">համակարգիչ</span></li>
+        <li class="timeline__item"><span class="timeline__year">1991</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot"><i class="ic ic--lg ic--globe"></i></span></span><span class="timeline__what">համացանց</span></li>
+        <li class="timeline__item"><span class="timeline__year">2022</span><span class="timeline__mark" aria-hidden="true"><span class="timeline__dot timeline__dot--ai"><i class="ic ic--lg ic--sparkles"></i></span></span><span class="timeline__what">AI</span></li>
+      </ol>
+      <div class="about__text">
+        <div class="about__say">
+          <p class="about__lead">   <!-- in the brand chat bubble (script.js · 03b) -->
+            Ինչպես ժամանակին սովորել ենք կարդալ, գրել, այնուհետև՝ օգտվել ինտերնետից, այսօր պարտադիր է սովորելը աշխատել <span class="about__nobr">AI-ով։</span></p>
+          <span class="about__eyes" aria-hidden="true">   <!-- under the tail, outside the bubble: the brand's eyes with the ™ on an Ink circle (as Hero B's eyes ball) -->
+          <svg class="eyes" viewBox="0 0 96 50" data-look="you">
+            <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+            <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+            <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+            <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+            <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+          </svg>
+          </span>
+        </div>
+        <div class="about__body">
+          <p>Մի բան հաստատ է՝ եթե դու չսովորես կառավարել AI-ը, AI օգտագործողներն են քեզ կառավարելու։</p>
+          <p><strong>«AI քեզ բան»</strong>-ի հետևում կանգնած է մեծ թիմ՝ միավորված մեկ առաքելության շուրջ․ օգնել 1 միլիոն հայի դառնալ AI գրագետ։ Այդ նպատակով մենք ստեղծել ենք մեկ <strong>«AI գրագետ»</strong> դասընթացը, որը միավորում է AI-ից օգտվելու 8 պարտադիր հմտությունները՝ անկախ մասնագիտությունից ու նախնական գիտելիքներից։</p>
+          <!-- The course's proofs, pulled out of the last paragraph (its own words) -->
+          <ul class="about__proof">
+            <li><i class="ic ic--check" aria-hidden="true"></i><span class="about__proof-gov"><img src="assets/logos/armgerb.svg" alt="" />Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից</span></li>   <!-- a check as the others, then the coat of arms (as the hero's endorsement) -->
+            <li><i class="ic ic--check" aria-hidden="true"></i>Մասնակցության արդյունքում տրվում է հավաստագիր</li>
+            <li><i class="ic ic--check" aria-hidden="true"></i>Ողջ գումարը ենթակա է վերադարձի եկամտահարկի միջոցով</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- =========================================================
          05d · 3-FRIENDS FORM — the popup behind «Գրանցվել ընկերներով» (script.js → friendsForm): the three people
          who join together. Participant 1 also leaves a phone (the one we call); 2 and 3 a name and an email.
          Front end only. TODO (developer): send the form, then go on to payment / the confirmation. The fields' names:
@@ -1636,85 +1674,14 @@
     </dialog>
 
     <!-- =========================================================
-         10 · FAQ — «Հարցեր՝ մինչև գրանցվելը»: right after the reviews, the questions people ask before they sign up. The
-         FAQ's own look: the title on the left, the questions split by lines, each answer indented behind a grey line under
-         its question (a native <details>)
+         08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI գրագետ հայ», a Teal band; the eye logo flies under the headline
          ========================================================= -->
-    <section class="faq" id="faq">
-      <h2 class="section-title faq__title">Հարցեր՝ մինչև գրանցվելը</h2>
-      <div class="faq__list">
-        <details class="faq__item" open>
-          <summary>Պե՞տք է նախապես իմանալ AI</summary>
-          <div class="faq__answer">
-            <p>Ոչ։ Ծրագիրը սկսվում է հիմունքներից։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Եթե արդեն օգտվում եմ ChatGPT-ից, ինձ պե՞տք է</summary>
-          <div class="faq__answer">
-            <p>Եթե հիմնականում հարցեր ես տալիս, այստեղ կսովորես աշխատել ավելի հստակ առաջադրանքներով, ստուգել պատասխաններն ու կիրառել տարբեր գործիքներ։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Կա՞ գումարի վերադարձի երաշխիք</summary>
-          <div class="faq__answer">
-            <p>Այո — 100%։ Եթե մասնակցում ես բոլոր դասերին ու ինչ-որ պատճառով չես հավանում, վերադարձնում ենք ամբողջ գումարը՝ առանց ավելորդ հարցերի։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Ե՞րբ են դասերը</summary>
-          <div class="faq__answer">
-            <p>Երեկոյան՝ 19:00&#8288;–&#8288;21:00, Երևանի ժամանակով։</p>   <!-- &#8288; (word joiner): the time never breaks at its dash -->
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Տեսագրությունները հասանելի՞ են</summary>
-          <div class="faq__answer">
-            <p>Այո։ Դասերի տեսագրություններն ու սլայդները հասանելի են 6 ամիս։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Ինչպե՞ս մասնակցել անվճար կամ զեղչով</summary>
-          <div class="faq__answer">
-            <p>Դասընթացին կարող ես մասնակցել անվճար հետևյալ տարբերակներով.</p>
-            <ul class="faq__bullets">
-              <li>Վճարել ամբողջ գումարը, այնուհետև ստանալ 100% վերադարձ եկամտահարկի միջոցով</li>
-              <li>Հրավիրել 10 ընկեր, յուրաքանչյուրի համար ստանալ 10% զեղչ (նրանց ևս կտրամադրվի 10% զեղչ ձեր հրավերով մասնակցելու դեպքում)</li>
-            </ul>
-            <p>Կարող ես մասնակցել զեղչով հետևյալ տարբերակներով.</p>
-            <ul class="faq__bullets">
-              <li>Գրանցվել «3 ընկեր» փաթեթով, ստանալ 62% զեղչ</li>
-              <li>Հրավիրել ընկերոջը, յուրաքանչյուրի համար ստանալ 10% զեղչ</li>
-            </ul>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Ի՞նչ է ներառված արժեքի մեջ</summary>
-          <div class="faq__answer">
-            <p>9 դասերը, ուսումնական նյութերը, պրոմպտների գրադարանը, AI գործիքների ցանկը, հավաստագիրը և նշված օֆլայն հրավիրատոմսը։</p>
-          </div>
-        </details>
-        <details class="faq__item">
-          <summary>Ինչպե՞ս իմանամ՝ ինձ պետք է, թե ոչ</summary>
-          <div class="faq__answer">
-            <ol class="faq__bullets faq__bullets--steps">
-              <!-- TODO: the real AI-literacy test link (as Hero B's and the audience block's: a blank placeholder for now, opens in a new tab) -->
-              <li><a href="about:blank" target="_blank" rel="noopener">Անցիր օնլայն էքսպրես թեստ հիմա<i class="ic ic--external" aria-hidden="true"></i></a></li>
-              <li><a href="#skills">Ծանոթացիր բացվածքին</a></li>   <!-- the 9 lessons' topics (05h) -->
-            </ol>
-          </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI-գրագետ հայ», a Teal band; the eye logo flies under the headline
-         ========================================================= -->
-    <section class="mission" id="mission">
+    <!-- Hidden for now — remove `hidden` to bring the mission section back (its nav link and footer link are gone too) -->
+    <section class="mission" id="mission" hidden>
       <div class="mission__row">
         <div class="mission__head">
           <p class="mission__kicker mission__kicker--lg">Մեր առաքելությունը</p>
-          <h2 class="mission__title">1,000,000<br />AI-գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
+          <h2 class="mission__title">1,000,000<br />AI գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
           <!-- The flight: the eye logo (one pair, with the ™) flies under the headline like a rocket, always in view: hovering,
                speed lines streaming behind it (tailwind.css · .flight; it stands still for reduced motion); it blinks (script.js · 05 peekEyes). index.html keeps
                the crowd of eyes -->
@@ -1900,7 +1867,6 @@
           <a href="#teachers">Ուսուցիչներ</a>
           <a href="#faq">Հարցեր</a>
           <a href="#contact">Կապ</a>
-          <a href="#mission">Մեր առաքելությունը</a>
           <a href="https://aiqezban.ai/join">Միացիր մեր թիմին</a>
         </nav>
         <div class="footer__col">

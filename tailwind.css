@@ -172,10 +172,10 @@
 }
 /* A section title with a subtitle under it (reading text, as the certificate's lead): the pair in .section-head */
 .section-head { display: flex; flex-direction: column; gap: --spacing(6); }
-.section-sub { @apply text-aqb-body-m; color: var(--color-ink-700); text-wrap: pretty; }
+.section-sub { @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); color: var(--color-ink-700); text-wrap: pretty; }   /* the audience__sum cut: ExtraBold Italic, as the audience's summary line (aigraget.html only) */
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .mission, .referral, .faq, .contact {
+.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .refund, .mission, .referral, .faq, .contact {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -423,41 +423,44 @@
 .subnav__link:hover .ic { translate: 2px -2px; }
 .subnav__link .pill { height: --spacing(6); padding: 0 --spacing(2.5); }
 .subnav__soon { margin-left: --spacing(1); background: var(--color-accent); color: var(--color-white); }
+/* a name with no link yet (AI քեզ բժիշկ): it keeps the link's look, but no hover colour and no pointer */
+.subnav__link--soon { cursor: default; }
+.subnav__link--soon:hover { color: var(--color-ink-900); }
+/* a course link with a small line under it («AI գրագետ» / «Start + Level-Up») */
+.subnav__link--stack { flex-direction: column; align-items: flex-start; gap: 0; }
+.subnav__sub { @apply text-aqb-caption; color: var(--color-ink-600); }
 
 /* Bundle promo — same blue wash, price tags and gift as the Bundle package card */
+/* compact: the name and the price at Subhead, the line at Label, the two buttons at --sm (the dropdown is a small panel) */
 .subnav-promo {
   position: relative; overflow: hidden; isolation: isolate;
-  display: flex; flex-direction: column; gap: --spacing(4);
-  padding: --spacing(6);
+  display: flex; flex-direction: column; gap: --spacing(2.5);
+  padding: --spacing(4);
   border-radius: var(--radius-2xl);
   background: var(--color-campaign-bundle-wash);
 }
 .subnav-promo__gift {
-  position: absolute; top: --spacing(2); right: calc(--spacing(3) * -1); z-index: -1;
+  position: absolute; top: --spacing(1); right: calc(--spacing(4) * -1); z-index: -1;
   width: --spacing(36); height: --spacing(36); object-fit: contain;
   rotate: -10deg;
   transition: rotate .6s var(--ease-smooth);
   pointer-events: none;
 }
 .subnav-promo:hover .subnav-promo__gift { rotate: 0deg; }
-.subnav-promo__head { display: flex; flex-direction: column; gap: --spacing(1.5); padding-right: --spacing(24); }
-.subnav-promo__name { @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); }
-.subnav-promo__tagline { @apply text-aqb-subhead; color: var(--color-ink-800); white-space: nowrap; }
-.subnav-promo__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1.5) --spacing(2.5); margin-top: auto; }
-.subnav-promo__price .pkg__old { @apply text-aqb-body-m; }
-.subnav-promo__price .pill { height: --spacing(8); padding: 0 --spacing(3.5); }
-.subnav-promo__amount { flex-basis: 100%; @apply text-aqb-headline-h2 italic; color: var(--color-ink-900); }
+.subnav-promo__head { display: flex; flex-direction: column; gap: --spacing(0.5); padding-right: --spacing(14); }
+.subnav-promo__name { @apply text-aqb-subhead italic; color: var(--color-ink-900); }
+.subnav-promo__tagline { @apply text-aqb-label; color: var(--color-ink-800); }   /* wraps inside the banner */
+.subnav-promo__price { display: flex; align-items: center; flex-wrap: wrap; gap: --spacing(1) --spacing(2); margin-top: --spacing(1); }
+.subnav-promo__price .pkg__unit { @apply text-aqb-caption; }
+.subnav-promo__price .pkg__old { @apply text-aqb-caption; }
+.subnav-promo__price .pill { height: --spacing(6); padding: 0 --spacing(2.5); }
+.subnav-promo__amount { flex-basis: 100%; @apply text-aqb-subhead italic; color: var(--color-ink-900); }
 .subnav-promo:hover .btn--primary { background: var(--color-primary-hover); }
 
 /* Desktop: keep the dropdown short — tighter promo (mobile keeps the big version) */
 @media (width >= theme(--breakpoint-lg)) {
   .subnav__cols { padding-top: --spacing(5); padding-bottom: --spacing(3); }
   .subnav__link { min-height: --spacing(9); padding-block: --spacing(1); }
-  .subnav-promo { gap: --spacing(3); padding: --spacing(5) --spacing(6); }
-  .subnav-promo__gift { width: --spacing(30); height: --spacing(30); }
-  .subnav-promo__head { gap: --spacing(0.5); padding-right: --spacing(16); }
-  .subnav-promo__price { gap: --spacing(1) --spacing(2.5); }
-  .subnav-promo__price .pill { height: --spacing(7); }
 }
 
 /* The course CTA slides out from beside the pill once the hero's own button is scrolled past (body.is-past-hero-cta,
@@ -747,10 +750,13 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   -webkit-user-select: none;
 }
 .drop__ball img { width: 62%; height: 62%; border-radius: var(--radius-md); pointer-events: none; }   /* the logo big in its ball; the radius softens the square app-tile logos */
+/* The course's name, dropping in with the balls: two words in White, Headline H2, no disc. The word is wider than its
+   ball (--ball, script.js sizes the ball by data-size), so it centres over it and does not wrap */
+.drop__ball--word { @apply text-aqb-headline-h1 italic; background: none; color: var(--color-feed-yellow); white-space: nowrap; }
 .drop__ball--eyes { --ball: --spacing(44); background: var(--color-neutral-ink); }   /* 1.8 tools (data-size, script.js) */
 .drop__ball--eyes .eyes { width: 66%; }
-/* The gifts: three huge bubbles (data-size: 3.2 times a tool ball, script.js), each with one of the three MacBook Neos
-   (assets/cards/hero_mac_01–03, trimmed to the laptop) the AI-Master cards give, in a feed colour (BRAND.md: the feed
+/* The gifts: three big bubbles (data-size: 2.4 times a tool ball, script.js), each with one of the three MacBook Neos
+   (assets/cards/hero_mac_01–03, trimmed to the laptop) the AI գրագետ cards give, in a feed colour (BRAND.md: the feed
    colours rotate). The laptop fills the bubble edge to edge (its corners may cross the rim) and stays upright as it
    rolls. Without the physics (.is-still) they sit in the rows at their size too. */
 .drop__ball--gift { --ball: --spacing(80); }
@@ -793,6 +799,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .drop__ball--gift { --ball: --spacing(48); }
   .story-hero__bubble { padding: --spacing(4) --spacing(5) --spacing(9); }
   .story-hero__bubble-text { @apply text-aqb-label; font-weight: var(--font-weight-text); }
+  .drop__ball--word { @apply text-aqb-headline-h2 italic; }   /* phones: one step down (Headline H2), the word's ball hugs it (script.js) */
   .drop__ball--eyes { --ball: --spacing(25); }
 }
 
@@ -919,7 +926,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .why__bubble[data-bg="pink"]   { --why-bg: var(--color-feed-pink); }
 .why__bubble[data-bg="yellow"] { --why-bg: var(--color-feed-yellow); }
 .why__title { @apply text-aqb-subhead; text-wrap: balance; overflow-wrap: anywhere; }   /* long words break at their &shy; (aigraget.html) */
-.why__text { @apply text-aqb-body-s; }
+.why__text { @apply text-aqb-body-s; font-weight: var(--font-weight-text); }   /* the bubbles' text: body size, upright Regular (the brand's reading cut; italic is for headlines only, and Regular italic isn't loaded, so it fell back to ExtraBold Italic) */
 /* The answer: centred under the two, its words left-aligned; the eyes under its tail (bottom right), outside the bubble
    (BRAND.md → Bubble construction: Peek), so they say it; script.js (05 · peekEyes) blinks them and turns them to the
    pointer. (.why__bubble--tail-left, the second block, is mirrored by script.js · 03b: no CSS of its own) */
@@ -954,7 +961,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 /* ============================================================
    05b · ABOUT («Ծրագրի մասին», aigraget.html)
    ============================================================ */
-/* The Blue ground (white text, BRAND.md → Text on colour), full-bleed, after the Black why band: the title, the
+/* The Blue ground (white text, BRAND.md → Text on colour), full-bleed, after the grey reviews and before the Yellow contact band: the title, the
    timeline, then the words, the last two on one set of columns (--about-cols) */
 .about {
   --about-cols: minmax(0, 5fr) minmax(0, 3fr) minmax(0, 2fr) auto;   /* the steps close in as the years do: 141, 50, 31 */
@@ -965,12 +972,12 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   color: var(--color-white);
 }
 .about .section-title { color: var(--color-white); }
-/* The timeline: one White line through four round markers, the year over each (Headline H2, a big number, white on
-   Blue) and what came that year under it (Body M), close together so each step reads as one. The markers are White
+/* The timeline: one White line through four round markers, the year over each (Body M, as the line under it, white on
+   Black) and what came that year under it (Body M), close together so each step reads as one. The markers are White
    discs with a Blue icon; AI's, the end of the line, is the biggest, Ink with a white sparkle. From lg up; under it the line runs down (below) */
 .timeline { display: grid; grid-template-columns: var(--about-cols); gap: var(--card-gap); }
 .timeline__item { display: flex; flex-direction: column; gap: --spacing(2); }
-.timeline__year { @apply text-aqb-headline-h2 italic; translate: var(--x, 0) 0; }   /* --x: centred on its marker (lg up, below) */
+.timeline__year { @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); translate: var(--x, 0) 0; }   /* the same size and cut as the line under it; --x: centred on its marker (lg up, below) */
 .timeline__mark { position: relative; display: flex; align-items: center; height: --spacing(18); }   /* as tall as AI's disc: the line runs through every marker's middle */
 .timeline__mark::before {   /* the line, on to the next marker (across the gap) */
   content: ""; position: absolute; left: 0; right: calc(var(--card-gap) * -1); top: 50%;
@@ -1285,6 +1292,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   color: var(--color-white);
 }
 .audience__title { color: var(--color-white); max-width: --spacing(250); text-wrap: balance; }
+.audience .section-sub { color: var(--color-white); }   /* on Black, the subtitle in White (Ink 700 is for White grounds) */
 .audience__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: var(--card-gap); }
 .audience__col { display: flex; flex-direction: column; gap: --spacing(4); }
 .audience__col:not(.audience__col--left) { margin-top: --spacing(16); }   /* the replies sit a little lower */
@@ -1422,19 +1430,21 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   color: var(--color-white);
 }
 .callback .section-title { color: var(--color-white); }
+.callback__eyes { display: block; width: --spacing(28); }   /* the brand's eyes with the ™, blinking (script.js · 05 peekEyes) */
+.callback__eyes .eyes { width: 100%; height: auto; }
 
 /* ============================================================
    05n · NEEDS («Սովորելու համար պարտադիր չէ / բավական է», aigraget.html)
    ============================================================ */
-/* The brand's Black ground, full-bleed, between the grey packages and the Blue stats: what you don't need (Pink) and
+/* The brand's Blue ground, full-bleed, between the grey packages and the Black kept band: what you don't need (Pink) and
    what's enough (Teal), black text (BRAND.md → Text on colour), each led by its ✕ / ✓ on a Black disc (as the format
    cards' icons: the no and the yes), a card title (Subhead) and the items (reading text) as bullets; cut into the brand bubble at
-   the top-right corner (script.js · 05k bubbleCards). Under them the note, white on the Black, in the detail cut,
+   the top-right corner (script.js · 05k bubbleCards). Under them the note, white on the Blue, in the detail cut,
    the brand's eyes saying it. One column on phones */
 .needs {
   display: flex; flex-direction: column; gap: var(--card-gap);
-  background: var(--color-black);
-  box-shadow: 0 0 0 100vmax var(--color-black);
+  background: var(--color-primary);
+  box-shadow: 0 0 0 100vmax var(--color-primary);
   clip-path: inset(0 -100vmax);
   color: var(--color-white);
 }
@@ -1526,6 +1536,10 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   color: var(--color-white);
 }
 .kept .section-title { color: var(--color-white); }
+/* The certificate, merged into the kept section (aigraget.html · 05p): its own two columns, no section box of its own,
+   the lead in White on Black */
+.kept .kept__certificate { margin: 0 auto var(--section-y); padding: 0; }   /* first in the section, the tiles under it */
+.kept .certificate__lead { color: var(--color-white); }
 .kept__heading { max-width: --spacing(200); text-wrap: balance; }
 .kept__cards { position: relative; }
 .kept__eyes { position: absolute; z-index: 1; display: block; pointer-events: none; visibility: hidden; }
@@ -1550,6 +1564,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .kept__pic, .kept__num { display: flex; align-items: center; height: --spacing(16); }
 .kept__head { display: flex; flex-direction: column; gap: --spacing(3); }   /* the prompts' title: the number (its picture), then the words */
 .kept__num { @apply text-aqb-headline-h1 italic; }   /* a big number: Headline, the headline cut */
+.kept__cert { height: --spacing(16); width: auto; border-radius: var(--radius-lg); }   /* the sample certificate, small, in the tile's picture row */
 .kept__progress { gap: --spacing(2); width: 60%; }   /* narrow of the cut corner */
 .kept__bar {
   flex: 1; height: --spacing(3); border-radius: var(--radius-full); overflow: hidden;
@@ -1595,12 +1610,12 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   display: flex; flex-direction: column; align-items: center;
   gap: var(--title-gap);
   text-align: center;
-  background: var(--color-primary);
-  box-shadow: 0 0 0 100vmax var(--color-primary);
+  background: var(--surface);
+  box-shadow: 0 0 0 100vmax var(--surface);
   clip-path: inset(0 -100vmax);
-  color: var(--color-white);
+  color: var(--color-black);
 }
-.contact .section-title { color: var(--color-white); }
+.contact .section-title { color: var(--color-black); }
 .contact__text { display: flex; flex-direction: column; gap: --spacing(4); }
 .contact__lead { @apply text-aqb-body-m; }
 .contact__card {
@@ -1771,7 +1786,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg--bundle {
   overflow: hidden;   /* the gift (.pkg__gift) is cropped by the card's edge, never sticks out */
 }
-/* Only the 3-friends card wears the Bundle's wash (with its ribbon border); AI-Master is White, as Start */
+/* Only the 3-friends card wears the Bundle's wash (with its ribbon border); AI գրագետ is White, as Start */
 .pkg--friends {
   background: linear-gradient(180deg, var(--color-campaign-bundle-wash) 0%, color-mix(in oklab, var(--color-campaign-bundle-wash) 50%, var(--color-white)) 45%, var(--color-white) 100%);   /* Bundle's own colours: a deliberate exception to "no gradients" (BRAND.md → Campaign colours) */
 }
@@ -1781,7 +1796,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg--start .pkg__price { align-self: flex-start; }   /* in the column, «end» would push it right */
 /* Ribbon border: a bright band travels around the card and the border thickens as it passes.
    Drawn by ::before so it stays on top of the card's content.
-   Only the 3-friends card wears it (the best value); AI-Master keeps the campaign wash without it. */
+   Only the 3-friends card wears it (the best value); AI գրագետ keeps the campaign wash without it. */
 .pkg--friends::before {
   content: "";
   position: absolute;
@@ -1836,7 +1851,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 @media (width < theme(--breakpoint-md)), (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
   .pkg__corner--sash { top: 0; right: 0; width: auto; height: var(--pkg-pad); padding: 0 --spacing(5) 0 --spacing(4); border-radius: 0 0 0 var(--radius-xl); rotate: none; }
 }
-/* The gift: a MacBook Neo (assets/cards/hero_mac_02 / 03, trimmed to the laptop, ≈ 720 × 670; each AI-Master card its
+/* The gift: a MacBook Neo (assets/cards/hero_mac_02 / 03, trimmed to the laptop, ≈ 720 × 670; each AI գրագետ card its
    own, both leaning the same way), at the bottom right of the head, behind the see-through schedule box and off the
    card's words, running past the card's right edge (overflow: hidden on .pkg--bundle crops it). Size and offset are
    checked against every line of the card's text. */
@@ -1896,10 +1911,10 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   @apply text-aqb-headline-h1 italic;
   color: var(--color-ink-900);
 }
-/* Cards side by side below the full page width (1440): one step down the scale, Headline H2, so «AI-Master» fits on
+/* Cards side by side below the full page width (1440): one step down the scale, Headline H2, so «AI գրագետ» fits on
    one line and clears the sash (phones step down too, below) */
 @media (width >= theme(--breakpoint-lg)) and (width < theme(--container-page)) { .pkg__name { @apply text-aqb-headline-h2; } }
-.pkg__tagline { @apply text-aqb-subhead italic; font-weight: var(--font-weight-headline); color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); white-space: nowrap; }   /* «Start + Level-Up», «3 ընկերներով»: part of the plan's name, so the name's cut (ExtraBold Italic) at Subhead size, on one line */
+.pkg__tagline { @apply text-aqb-subhead; font-weight: var(--font-weight-detail); color: var(--color-ink-800); margin-top: calc(--spacing(1) * -1); white-space: nowrap; }   /* «Start + Level-Up», «3 ընկերներով»: a detail under the name, so SemiBold at Subhead size (not ExtraBold Italic: the name and the price stay the loud ones), on one line */
 .pkg__desc { @apply text-aqb-body-s; color: var(--color-ink-600); }
 .pkg__desc strong { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }   /* the 3-friends offer in a word */
 
@@ -1960,7 +1975,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pkg__unit { @apply text-aqb-label; color: var(--color-ink-600); white-space: nowrap; }   /* «1 անձը՝»: the price is a person's */
 .pkg__old {
   @apply text-aqb-body-s; color: var(--color-ink-400);
-  text-decoration: line-through; text-decoration-color: var(--color-accent); text-decoration-thickness: 3px;
+  text-decoration: line-through; text-decoration-color: var(--color-ink-400); text-decoration-thickness: 3px;
   white-space: nowrap;
 }
 
@@ -2007,7 +2022,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 
 /* Row 4 · CTA (right under the price) */
 .pkg__cta { display: flex; flex-direction: column; gap: --spacing(3); }
-/* Cards side by side: the two AI-Master prices a step bigger (Headline H1; phones keep H2) */
+/* Cards side by side: the two AI գրագետ prices a step bigger (Headline H1; phones keep H2) */
 @media (width >= theme(--breakpoint-lg)) {
   .pkg--bundle .pkg__amount { @apply text-aqb-headline-h1; }
 }
@@ -2270,6 +2285,23 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 /* ============================================================
    07 · STATS («Թվերով»)
    ============================================================ */
+/* ============================================================
+   05e · REFUND — the money-back promise as an Orange band right after the prices (the loudest promise sits next to
+   the number it answers). All text White: BRAND.md → Text on colour (white on Orange at every size)
+   ============================================================ */
+.refund {
+  display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start;
+  gap: --spacing(6) --spacing(12);
+  background: var(--color-accent);
+  box-shadow: 0 0 0 100vmax var(--color-accent);
+  clip-path: inset(0 -100vmax);
+  color: var(--color-white);
+}
+.refund__title { @apply text-aqb-headline-h1 italic; text-wrap: balance; color: var(--color-white); }
+.refund__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(4); @apply text-aqb-body-m; }
+.refund__condition { @apply text-aqb-label; }   /* the one condition: a detail (SemiBold), stated plainly, not ticked as a perk */
+.refund__body .btn { margin-top: --spacing(2); }
+
 .stats {
   background: var(--color-primary);
   box-shadow: 0 0 0 100vmax var(--color-primary);
@@ -3168,6 +3200,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .pro-grid { grid-template-columns: minmax(0, 1fr); max-width: --spacing(140); margin: 0 auto; width: 100%; }   /* width: in the flex column it would shrink to nothing (the cards have no content width) */
   .pro-card { height: --spacing(80); }
   .learn-grid { --learn-col-w: calc((100% - var(--card-gap)) / 2.25); --learn-h: --spacing(75); }   /* two tiles in view, the third peeking: three were too narrow for the titles at 768 (words broke mid-word) */
+  .refund { grid-template-columns: minmax(0, 1fr); align-items: start; }
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
   .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
@@ -3218,7 +3251,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   @starting-style { .modal[open] { translate: 0 100%; } }
   .modal__group { gap: --spacing(4); }
   .modal__group + .modal__group { padding-top: --spacing(6); }
-  .pill-tabs__tab { padding: --spacing(2.5) --spacing(4.5); font-size: var(--text-aqb-caption); }
+  .pill-tabs__tab { padding: --spacing(2.5) --spacing(3); font-size: var(--text-aqb-caption); white-space: nowrap; }   /* both labels on one line at 320 (the tab bar was 2 lines tall) */
   .endorse--strip { padding: --spacing(3) --spacing(4); }
   .courses__top { align-items: flex-end; }
   .learn-grid { padding-right: --spacing(4); margin-right: calc(--spacing(4) * -1); }

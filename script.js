@@ -631,10 +631,14 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     }
     function addBall(el, x, y) {
       el.addEventListener('animationend', (e) => { if (e.animationName === 'drop-hop') el.classList.remove('is-hop'); });
-      const body = Bodies.circle(x, y, Math.min(unit * sizeOf(el), W * 0.21), BALL);   // no ball wider than 42% of the stage (the gifts on a phone)
+      // On phones a course word's ball hugs its text (its width, most of it), not a tool's share of the pile
+      const word = el.classList.contains('drop__ball--word') && matchMedia('(width < 48rem)').matches;
+      const text = el.firstElementChild;
+      const r = word ? Math.max(text.offsetWidth, text.offsetHeight) / 2 : unit * sizeOf(el);
+      const body = Bodies.circle(x, y, Math.min(r, word ? W / 2 : W * 0.21), BALL);   // no ball wider than 42% of the stage (the gifts on a phone); a word's ball is its text
       const eyes = el.classList.contains('drop__ball--eyes');
       // the eyes and the gifts never turn (the eyes stay level, the laptops stand)
-      const ball = { el, body, r: body.circleRadius, eyes, upright: eyes || el.classList.contains('drop__ball--gift'), hopAt: 0, last: null };
+      const ball = { el, body, r: body.circleRadius, eyes, upright: eyes || el.classList.contains('drop__ball--gift') || el.classList.contains('drop__ball--word'), hopAt: 0, last: null };
       el.style.setProperty('--ball', `${2 * ball.r}px`);
       Composite.add(engine.world, body);
       balls.push(ball);
@@ -974,11 +978,22 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   const THRESHOLD = 80;
   const NUDGE = 6;   // px of scroll in one direction before the nav goes or comes back (no flicker on a wobble)
   let scrolled = null, lastY = window.scrollY;
+  // A nav link's own jump (#packages etc.) is not the reader scrolling down, so the nav stays put until it lands
+  // The jump ends once the page has stopped moving (a long smooth scroll can take over a second)
+  let anchorJump = false, anchorIdle = 0;
+  const endAnchorJump = () => { anchorJump = false; clearTimeout(anchorIdle); };
+  const idleAfter = (ms) => { clearTimeout(anchorIdle); anchorIdle = setTimeout(endAnchorJump, ms); };
+  document.querySelectorAll('.nav__links a[href^="#"]').forEach((a) => a.addEventListener('click', () => {
+    anchorJump = true;
+    idleAfter(8000);   // safety net if the page never moves
+  }));
+  window.addEventListener('scroll', () => { if (anchorJump) idleAfter(250); }, { passive: true });
+  window.addEventListener('scrollend', endAnchorJump);
 
   function update() {
     const y = window.scrollY;
     // Desktop nav (tailwind.css · 02): away while scrolling down, back when scrolling up
-    if (y <= THRESHOLD || y < lastY - NUDGE) document.body.classList.remove('is-nav-away');
+    if (anchorJump || y <= THRESHOLD || y < lastY - NUDGE) document.body.classList.remove('is-nav-away');
     else if (y > lastY + NUDGE) document.body.classList.add('is-nav-away');
     if (Math.abs(y - lastY) > NUDGE || y <= THRESHOLD) lastY = y;
 
@@ -1161,7 +1176,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   08 · MISSION — the crowd: the brand's eyes drifting under «1,000,000 AI-գրագետ հայ», each pair someone who
+   08 · MISSION — the crowd: the brand's eyes drifting under «1,000,000 AI գրագետ հայ», each pair someone who
    learned. The row is built twice (the CSS drift moves it by half, so it loops seamlessly). Now and then a pair
    blinks or glances somewhere new; while the pointer is over the band, they all look at it (mouse screens only).
    It only works while the band is on screen, and stands still for reduced motion.
@@ -1373,7 +1388,7 @@ function armPhoneDigits(value) {
 
 /* ============================================================
    05 · «Ի՞նչ սովորել» tiles → the course card
-   Each tile names the card that teaches it (data-pkg="master": the AI-Master
+   Each tile names the card that teaches it (data-pkg="master": the AI գրագետ
    card, the whole course). Wide screens: scroll to the card, name the topic
    in a banner inside it (.pkg-spot), and once the scroll lands spotlight it
    (.packages[data-spotlight]): it lifts. The spotlight ends when the card
@@ -1599,7 +1614,7 @@ function makeEyes({ tm = false } = {}) {
    .flight) only blinks: it keeps looking ahead, where it flies
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .flight__ship .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .callback__eyes > .eyes, .flight__ship .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you

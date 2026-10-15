@@ -6,7 +6,7 @@
   <title>AI գրագեր դասընթաց · AI քեզ բան</title>
   <meta name="description" content="AI գրագեր՝ AI դասընթաց զրոյից. 4 շաբաթ, 9 դաս, 18 ժամ, օնլայն՝ Zoom-ով։ AI-ի հիմունքներից մինչև նկարներ, վիդեոներ, քո կայքէջը, ավտոմատացումներ և AI ագենտներ։ Առաջին 3 դասը կարելի է գնել առանձին։" />
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css?v=grager-4" />
+  <link rel="stylesheet" href="styles.css?v=grager-5" />
 </head>
 <body>
 
@@ -18,6 +18,15 @@
        their links pointing back to it; script.js runs them. Styles: tailwind.css → 15 · COURSE PAGE.
        ========================================================= -->
 
+  <!-- =========================================================
+       01b · RAFFLE BAR (a full-width Yellow band fixed to the top, once the page is scrolled)
+       ========================================================= -->
+  <aside class="raffle-bar" aria-label="Խաղարկություն" inert>   <!-- comes in on scroll (script.js · 04 makes it inert until then) -->
+    <img class="raffle-bar__img" src="assets/cards/macbooks-bow.webp" width="800" height="410" alt="" />
+    <p class="raffle-bar__text">Գրանցվի՛ր Հոկտեմբեր, Նոյեմբեր, Դեկտեմբեր<br /> ամիսներին, մասնակցիր խաղարկությանը</p>
+    <a href="#packages" class="btn btn--primary btn--sm raffle-bar__btn">Թողնել հայտ</a>
+  </aside>
+
   <!-- MAIN NAV (as index.html; the CTA beside the pill comes in once the hero's own button is scrolled past) -->
   <header class="nav-wrap">
     <nav class="nav">
@@ -27,17 +36,58 @@
       <div class="nav__links" id="nav-menu">
         <a href="index.html#courses" class="nav__link">Ի՞նչ սովորել</a>
         <a href="index.html#packages" class="nav__link">Դասընթացներ</a>
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js).
+             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
+        <div class="nav__item" hidden>
+          <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
+            Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
+          </button>
+          <div class="subnav" id="subnav-courses">
+            <div class="subnav__panel">
+              <div class="subnav__cols">
+                <div class="subnav__group">
+                  <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
+                  <a href="index.html#packages" class="subnav__link">Start</a>
+                </div>
+                <div class="subnav__group">
+                  <p class="subnav__label">PRO դասընթացներ</p>
+                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI քեզ ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- TODO: real external link for «AI քեզ project manager» (same as the PRO card) -->
+                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI քեզ project manager<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- no link yet: the name and the «Շուտով» label, in a neutral grey -->
+                  <span class="subnav__link subnav__link--soon" aria-disabled="true">AI քեզ բժիշկ<span class="pill subnav__soon">Շուտով</span></span>
+                </div>
+              </div>
+
+              <!-- The course promo, in the Bundle's look (replaces the wireframe's placeholder image) -->
+              <div class="subnav-promo">
+                <img class="subnav-promo__gift" src="assets/cards/hero_mac_03.webp" alt="" aria-hidden="true" />
+                <span class="subnav-promo__head">
+                  <strong class="subnav-promo__name">AI գրագետ</strong>
+                  <span class="subnav-promo__tagline">Մասնակցեք 3-ով՝ բացառիկ գնով</span>
+                </span>
+                <span class="subnav-promo__price">
+                  <span class="pkg__unit">1 անձը՝</span>
+                  <s class="pkg__old">֏ 45,700</s>
+                  <span class="pill pill--deal">−62%</span>
+                  <span class="subnav-promo__amount">֏ 17,366</span>
+                </span>
+                <button type="button" class="btn btn--primary btn--block btn--sm" data-open="friends-form">Գրանցվել ընկերներով</button>
+                <a href="aigraget.html" class="btn btn--outline btn--block btn--sm">Մանրամասն</a>
+              </div>
+            </div>
+          </div>
+        </div>
         <a href="index.html#webinar" class="nav__link">Վեբինար</a>
         <a href="index.html#mission" class="nav__link">Մեր առաքելությունը</a>
         <a href="index.html#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
+      <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
       <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
         <span></span><span></span>
       </button>
     </nav>
-    <div class="nav-cta-slot">
-      <a href="#price" class="btn btn--primary btn--md nav-cta" inert>Գնել AI գրագեր</a>
-    </div>
   </header>
   <div class="nav-scrim" aria-hidden="true"></div>
 
@@ -697,6 +747,74 @@
     <button type="button" class="fab fab--contact" aria-label="Կապ" aria-expanded="false" aria-controls="contact-actions"><i class="ic ic--phone fab__open-icon" aria-hidden="true"></i><i class="ic ic--x fab__close-icon" aria-hidden="true"></i></button>
     <button type="button" class="fab fab--top" aria-label="Վերև"><i class="ic ic--arrow-up" aria-hidden="true"></i></button>
   </div>
+
+  <dialog class="modal" id="friends-form" aria-labelledby="friends-form-title">
+      <form class="modal__panel" novalidate>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-form-title">Գրանցվել ընկերներով</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Ընկեր 1</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name1" autocomplete="name" required autofocus />   <!-- autofocus: showModal() starts here, not on the ✕ -->
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email1" autocomplete="email" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Հեռախոս</span>
+            <span class="field__group">
+              <span class="field__prefix">+374</span>
+              <input class="field__input field__input--grouped" type="tel" name="phone1" autocomplete="tel-national" inputmode="tel" required />
+            </span>
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Ընկեր 2</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name2" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email2" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <fieldset class="modal__group">
+          <legend class="modal__legend">Ընկեր 3</legend>
+          <label class="field">
+            <span class="field__label">Անուն, ազգանուն</span>
+            <input class="field__input" type="text" name="name3" autocomplete="off" required />
+          </label>
+          <label class="field">
+            <span class="field__label">Էլ. փոստ</span>
+            <input class="field__input" type="email" name="email3" autocomplete="off" required />
+          </label>
+        </fieldset>
+
+        <footer class="modal__foot">
+          <!-- what the three pay together: 3 × ֏ 17,366 (the Bundle card's price per person) -->
+          <p class="modal__total"><span class="modal__total-label">Ընդհանուր<span class="modal__total-meta">3 մասնակից</span></span><span class="modal__total-sum">֏ 52,098</span></p>
+          <p class="modal__note">Բոլոր դաշտերը պարտադիր են գրանցվելու համար։</p>
+          <button type="submit" class="btn btn--primary btn--block btn--md" disabled>Գրանցվել ընկերներով</button>   <!-- enabled once every field is filled in -->
+        </footer>
+      </form>
+      <!-- After «Գրանցվել ընկերներով»: the form steps aside for this (script.js → friendsForm); closing brings the empty form back -->
+      <div class="modal__panel" data-done hidden>
+        <header class="modal__head">
+          <h2 class="modal__title" id="friends-done-title">Դուք գրանցված եք</h2>
+          <button type="button" class="dismiss" data-close aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
+        </header>
+        <p class="modal__text">Երեքիդ էլ փոստին նամակ ենք ուղարկել՝ հաջորդ քայլերով։</p>
+        <button type="button" class="btn btn--primary btn--block btn--md" data-close>Փակել</button>
+      </div>
+    </dialog>
 
   <script src="script.js?v=levelup-9"></script>
 </body>
