@@ -9207,10 +9207,6 @@
     position: fixed;
   }
 
-  .block {
-    display: block;
-  }
-
   .grid {
     display: grid;
   }
