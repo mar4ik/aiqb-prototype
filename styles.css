@@ -1495,7 +1495,7 @@
     display: flex;
   }
 
-  .story-hero__actions .btn--primary {
+  .story-hero__actions .btn--primary, .story-hero__actions .btn--white {
     min-width: calc(var(--spacing) * 50);
   }
 
@@ -1671,6 +1671,15 @@
     .story-hero__stage.is-dropping .story-hero__bubble {
       animation: none;
     }
+  }
+
+  .story-hero--blue {
+    background: var(--color-primary);
+    box-shadow: 0 0 0 100vmax var(--color-primary);
+  }
+
+  .story-hero--blue .drop {
+    background: var(--color-primary);
   }
 
   .drop {

@@ -660,7 +660,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .story-hero:has(+ .facts) { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px, aigraget.html) shows on the first screen */
 }
 .story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
-.story-hero__actions .btn--primary { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
+.story-hero__actions .btn--primary, .story-hero__actions .btn--white { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
 /* Above the headline: the dates (.pill--date) and the ministry endorsement, side by side with air between them (no line
    since Oct 2026: the endorsement's left border is transparent, so the spacing stays as it was). The row starts --cut
    left of the column and is clipped there, so when the endorsement wraps under the dates its left air falls in the
@@ -723,6 +723,11 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   100% { translate: 0 0; }
 }
 @media (prefers-reduced-motion: reduce) { .story-hero__stage.is-dropping .story-hero__bubble { animation: none; } }
+
+/* Blue hero (aigraget.html, a trial): the hero's Black ground becomes Blue (--color-primary), copy and stage with it; White
+   text on Blue (BRAND.md → Text on colour). The balls keep their own colours. */
+.story-hero--blue { background: var(--color-primary); box-shadow: 0 0 0 100vmax var(--color-primary); }
+.story-hero--blue .drop { background: var(--color-primary); }
 
 /* The stage: columns 7–12 and on to the screen's right edge, top to bottom, on Black like the copy, so the hero is one
    dark field. Each ball is a tool's logo on a White disc (like .tool-stack__logo, which is this ball in the cards); the

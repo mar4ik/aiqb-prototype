@@ -100,7 +100,7 @@
        ========================================================= -->
   <aside class="raffle-bar" aria-label="Խաղարկություն" inert>   <!-- comes in on scroll (script.js · 04 makes it inert until then) -->
     <img class="raffle-bar__img" src="assets/cards/macbooks-bow.webp" width="800" height="410" alt="" />
-    <p class="raffle-bar__text">Գրանցվի՛ր Հոկտեմբեր, Նոյեմբեր, Դեկտեմբեր<br /> ամիսներին, մասնակցիր խաղարկությանը</p>
+    <p class="raffle-bar__text">Գրանցվի՛ր հոկտեմբեր, նոյեմբեր, դեկտեմբեր<br /> ամիսներին, մասնակցիր խաղարկությանը</p>
     <a href="#packages" class="btn btn--primary btn--sm raffle-bar__btn">Թողնել հայտ</a>
   </aside>
 
@@ -226,23 +226,23 @@
          and one Ink ball with the brand's eyes, which watch the pointer. The balls are a toy: one hops when the pointer
          comes over it (the hint), picks up and throws, and kicks when clicked (script.js · 03 B, Matter.js).
          (.story-hero keeps the name of the first version, the storyboard.) -->
-    <section class="story-hero">
+    <section class="story-hero story-hero--blue">
       <div class="story-hero__copy">
         <div class="story-hero__meta">   <!-- the dates, the ministry endorsement beside them -->
-          <p class="pill pill--date"><i class="ic ic--calendar" aria-hidden="true"></i>Նոյեմբերի 8 – Դեկտեմբերի 31</p>
+          <p class="pill pill--date"><i class="ic ic--calendar" aria-hidden="true"></i>նոյեմբերի 8 – դեկտեմբերի 31</p>
           <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
         </div>
         <h1 class="story-hero__title">8 պարտադիր <span class="story-hero__nobr">AI-հմտություն</span> <span class="story-hero__title-sub">բոլորի համար՝ անկախ մասնագիտությունից</span></h1>
         <div class="story-hero__actions">
-          <a href="#packages" class="btn btn--primary btn--base">Ավելին</a>
+          <a href="#packages" class="btn btn--white btn--base">Ավելին</a>
           <a href="https://form.typeform.com/to/lfiFv4dt" class="btn btn--line btn--base" target="_blank" rel="noopener">Ստուգի՛ր AI գրագիտությունդ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
         </div>
       </div>
 
-      <!-- The stage: the falling tools, the gifts, the eyes, and the course's name in two words that drop in with them
-           (.drop__ball--word: plain White text, no disc). The floor is the stage's bottom edge (script.js · 03). -->
+      <!-- The stage, with the draw in an Orange chat bubble along its bottom: a shelf the balls land on (script.js · 03 B
+           adds it to the physics; it falls in first). Outside .drop, whose role="img" would hide it from screen readers -->
       <div class="story-hero__stage">
-      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo, AI գրագետ">
+      <div class="drop" role="img" aria-label="AI գործիքներ՝ ChatGPT, Gemini, Claude, Grok, NotebookLM, Nano Banana, Veo, Google Flow, Higgsfield, Lovable, Gamma, Make.com, Suno, Arena, Oboe, Wispr Flow, և 3 MacBook Neo">
         <!-- One ball a tool (its name in data-name); script.js sizes them for the stage and drops them in this order:
            the tools, then the three gifts (huge bubbles, data-size times a tool's size, each with one of the MacBook Neos
            the AI գրագետ cards give, in a feed colour), the eyes last (bigger too), on top of the pile -->
@@ -262,9 +262,9 @@
         <span class="drop__ball" data-name="Arena"><img src="assets/logos/arena.svg" alt="" /></span>
         <span class="drop__ball" data-name="Oboe"><img src="assets/logos/oboe.svg" alt="" /></span>
         <span class="drop__ball" data-name="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="" /></span>
-        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="2.4" data-bg="sky"><img src="assets/cards/hero_mac_01.webp" alt="" /></span>
-        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="2.4" data-bg="pink"><img src="assets/cards/hero_mac_02.webp" alt="" /></span>
-        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="2.4" data-bg="yellow"><img src="assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="sky"><img src="assets/cards/hero_mac_01.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift" data-name="MacBook Neo" data-size="3.2" data-bg="pink"><img src="assets/cards/hero_mac_02.webp" alt="" /></span>
+        <span class="drop__ball drop__ball--gift drop__ball--turned" data-name="MacBook Neo" data-size="3.2" data-bg="yellow"><img src="assets/cards/hero_mac_03.webp" alt="" /></span>   <!-- turned: it leans like the second; mirrored, the three sit three ways -->
         <!-- The brand's eyes (.eyes, 96 × 50, no outline) on an Ink ball: they stay upright as it rolls -->
         <span class="drop__ball drop__ball--eyes" data-size="1.8">   <!-- data-size: bigger than a tool (script.js) -->
           <svg class="eyes" viewBox="0 0 96 50" data-look="you">
@@ -276,9 +276,13 @@
             <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
           </svg>
         </span>
-        <span class="drop__ball drop__ball--word" data-name="AI" data-size="2.2"><span>AI</span></span>
-        <span class="drop__ball drop__ball--word" data-name="Գրագետ" data-size="4"><span>Գրագետ</span></span>
       </div>
+        <div class="story-hero__bubble">
+          <p class="story-hero__bubble-kicker">Խաղարկություն</p>
+          <p class="story-hero__bubble-title">3 MacBook Neo</p>
+          <p class="story-hero__bubble-detail">Յուրաքանչյուր ամսվա խմբում</p>
+          <p class="story-hero__bubble-text">հոկտեմբերին, նոյեմբերին և դեկտեմբերին գրանցվածների միջև՝ ամեն ամիս <strong>3 MacBook Neo-ի խաղարկություն</strong></p>
+        </div>
       </div>
     </section>
 
