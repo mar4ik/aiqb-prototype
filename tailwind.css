@@ -651,6 +651,11 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 /* The one message, the biggest thing on the page. «գլխացավանքի» is a long word: Headline H1, and Headline H2 where the
    6-column panel is narrowest (lg to xl) and on phones, so it always fits */
 .story-hero__title { @apply text-aqb-headline-h1 italic; }
+/* The breadcrumb over the hero copy: Label (nav text), each step a link with an icon; the links change colour only on hover */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(2); @apply text-aqb-label; }
+.crumbs__link { display: inline-flex; align-items: center; gap: --spacing(2); transition: color .2s; }
+.crumbs__link:hover { color: var(--color-feed-yellow); }
+.crumbs__current { font-weight: var(--font-weight-detail); }   /* the page you are on: SemiBold */
 /* Its second line, smaller: who it is for (Body L SemiBold, upright; Body M on phones), still part of the one headline */
 .story-hero__title-sub { display: block; margin-top: --spacing(3); @apply text-aqb-body-l; font-style: normal; font-weight: var(--font-weight-detail); text-wrap: balance; }
 @media (width >= theme(--breakpoint-lg)) and (width < theme(--breakpoint-xl)) {
@@ -2181,6 +2186,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--arrow-right { --i: url("assets/icons/arrow-right.svg"); }   /* a secondary action that leads on (Hero B's «Ստուգի՛ր AI գրագիտությունդ») */
 .ic--zap        { --i: url("assets/icons/zap.svg"); }       /* electricity (the about timeline, aigraget.html) */
 .ic--monitor    { --i: url("assets/icons/monitor.svg"); }   /* the computer (same) */
+.ic--home       { --i: url("assets/icons/house.svg"); }     /* the home page (the breadcrumb's first step, aigraget.html) */
 .ic--globe      { --i: url("assets/icons/globe.svg"); }     /* the internet (same) */
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
 .ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */

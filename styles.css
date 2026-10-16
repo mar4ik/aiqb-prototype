@@ -1460,6 +1460,32 @@
     font-style: italic;
   }
 
+  .crumbs {
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    font-size: var(--text-aqb-label);
+    line-height: var(--tw-leading, var(--text-aqb-label--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-label--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-label--font-weight));
+    flex-wrap: wrap;
+    display: flex;
+  }
+
+  .crumbs__link {
+    align-items: center;
+    gap: calc(var(--spacing) * 2);
+    transition: color .2s;
+    display: inline-flex;
+  }
+
+  .crumbs__link:hover {
+    color: var(--color-feed-yellow);
+  }
+
+  .crumbs__current {
+    font-weight: var(--font-weight-detail);
+  }
+
   .story-hero__title-sub {
     margin-top: calc(var(--spacing) * 3);
     font-size: var(--text-aqb-body-l);
@@ -5420,6 +5446,10 @@
 
   .ic--monitor {
     --i: url("assets/icons/monitor.svg");
+  }
+
+  .ic--home {
+    --i: url("assets/icons/house.svg");
   }
 
   .ic--globe {
