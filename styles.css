@@ -2177,8 +2177,7 @@
     line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
-    font-style: italic;
-    font-weight: var(--font-weight-headline);
+    font-weight: var(--font-weight-text);
   }
 
   .why__answer {
@@ -3300,8 +3299,6 @@
     line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
-    font-style: italic;
-    font-weight: var(--font-weight-headline);
     text-wrap: balance;
   }
 
