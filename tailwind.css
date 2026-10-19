@@ -936,7 +936,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .why__bubble[data-bg="pink"]   { --why-bg: var(--color-feed-pink); }
 .why__bubble[data-bg="yellow"] { --why-bg: var(--color-feed-yellow); }
 .why__title { @apply text-aqb-subhead; text-wrap: balance; overflow-wrap: anywhere; }   /* long words break at their &shy; (aigraget.html) */
-.why__text { @apply text-aqb-body-s; font-weight: var(--font-weight-text); }   /* the bubbles' text: body size, upright Regular (the brand's reading cut; italic is for headlines only, and Regular italic isn't loaded, so it fell back to ExtraBold Italic) */
+.why__text { @apply text-aqb-body-s italic; font-weight: var(--font-weight-headline); }   /* the bubbles' text: body size in the headline cut, ExtraBold Italic (chosen over the brand's Regular for body text, which BRAND.md doesn't allow in italic; same as .section-sub) */
 /* The answer: centred under the two, its words left-aligned; the eyes under its tail (bottom right), outside the bubble
    (BRAND.md → Bubble construction: Peek), so they say it; script.js (05 · peekEyes) blinks them and turns them to the
    pointer. (.why__bubble--tail-left, the second block, is mirrored by script.js · 03b: no CSS of its own) */
@@ -1258,7 +1258,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   .skill::details-content, .skill__toggle { transition: none; }
 }
 .skill__body {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: --spacing(6) --spacing(8);
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: --spacing(6) --spacing(8);   /* one full-width column: the lessons' texts (the outcome column went) */
   margin: 0 --spacing(6); padding: --spacing(5) 0 --spacing(6);
   border-top: 1px solid color-mix(in oklab, var(--color-black) 20%, transparent);   /* as the course page's result line */
 }
@@ -1317,7 +1317,7 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 .audience__bubble[data-bg="teal"]   { --audience-bg: var(--color-feed-teal); }
 .audience__bubble[data-bg="pink"]   { --audience-bg: var(--color-feed-pink); }
 .audience__bubble[data-bg="sky"]    { --audience-bg: var(--color-feed-sky); }
-.audience__who { @apply text-aqb-subhead; text-wrap: balance; }   /* a card title: Subhead */
+.audience__who { @apply text-aqb-subhead italic; font-weight: var(--font-weight-headline); text-wrap: balance; }   /* a card title: Subhead in the headline cut, ExtraBold Italic (a trial, as .why__text; BRAND.md italic is for headlines) */
 .audience__gain { @apply text-aqb-body-s; }
 .audience__bubble--last .audience__gain { font-weight: var(--font-weight-detail); }   /* the closing one, in the detail cut (as the reference) */
 /* The last bubble closes it: centred under both columns at one column's width (as the why answer) */

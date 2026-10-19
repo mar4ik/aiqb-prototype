@@ -2177,7 +2177,8 @@
     line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
-    font-weight: var(--font-weight-text);
+    font-style: italic;
+    font-weight: var(--font-weight-headline);
   }
 
   .why__answer {
@@ -3116,7 +3117,7 @@
     margin: 0 calc(var(--spacing) * 6);
     padding: calc(var(--spacing) * 5) 0 calc(var(--spacing) * 6);
     border-top: 1px solid #0003;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 1fr);
     display: grid;
   }
 
@@ -3299,6 +3300,8 @@
     line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
     letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
     font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
+    font-style: italic;
+    font-weight: var(--font-weight-headline);
     text-wrap: balance;
   }
 
