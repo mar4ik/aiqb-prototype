@@ -5545,7 +5545,7 @@
   }
 
   .teacher__photo {
-    height: calc(var(--spacing) * 95);
+    aspect-ratio: 4 / 5;
     border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
     position: relative;
     overflow: hidden;
@@ -8379,10 +8379,6 @@
 
     .teacher {
       width: 78vw;
-    }
-
-    .teacher__photo {
-      height: calc(var(--spacing) * 64);
     }
 
     .teacher__body {

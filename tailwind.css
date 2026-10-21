@@ -2245,7 +2245,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 .teacher__photo {
   position: relative;
-  height: --spacing(95);
+  aspect-ratio: 4 / 5;   /* the portraits are 900 × 1125: the box keeps their ratio at every width, so the whole picture shows (decided Oct 2026; it was a fixed height, almost square on wide screens) */
   overflow: hidden;
   border-radius: var(--radius-3xl) var(--radius-3xl) 0 0;
 }
@@ -3274,7 +3274,6 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .teachers__top, .quotes__top { padding-right: --spacing(4); }
   .quote { width: 82vw; }
   .teacher { width: 78vw; }
-  .teacher__photo { height: --spacing(64); }
   .teacher__body { padding: --spacing(5) --spacing(6) --spacing(6); gap: --spacing(4.5); }
   .stats__row { grid-template-columns: minmax(0, 1fr); gap: --spacing(8); }
   .stat__num { @apply text-aqb-headline-h1; }
