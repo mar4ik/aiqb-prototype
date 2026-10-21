@@ -1721,8 +1721,8 @@ revealOnce(document.querySelector('.kept'), null, 0.3);
 })();
 
 /* 05g · COURSE VIDEOS — a lesson picked in the list moves into the player (its poster, number, name and teacher, a
-   quick fade between them) and is marked aria-current; play swaps the poster for the lesson's video when it has one
-   (data-video: a YouTube id; none yet, aigraget.html) */
+   quick fade between them) and is marked aria-current; play swaps the poster for the lesson's video: a file on the
+   site (data-video: assets/videos/lessons/*.mp4, the browser's player) or a YouTube id (an embed) */
 (function courseVideos() {
   const reel = document.querySelector('.reel');
   if (!reel) return;
@@ -1751,13 +1751,23 @@ revealOnce(document.querySelector('.kept'), null, 0.3);
   }));
 
   player.querySelector('.reel__play').addEventListener('click', () => {
-    const id = current?.dataset.video;
-    if (!id) return;   // TODO: no videos yet
-    const frame = document.createElement('iframe');
+    const src = current?.dataset.video;
+    if (!src) return;
+    stop();
+    let frame;
+    if (src.includes('/')) {   // a file on the site (assets/videos/lessons/*.mp4): the browser's own player, with its controls
+      frame = document.createElement('video');
+      frame.src = src;
+      frame.poster = poster.src;
+      frame.controls = true; frame.autoplay = true; frame.playsInline = true; frame.preload = 'metadata';
+      frame.setAttribute('aria-label', now.name.textContent);
+    } else {   // a YouTube id
+      frame = document.createElement('iframe');
+      frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(src)}?autoplay=1&rel=0`;
+      frame.title = now.name.textContent;
+      frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    }
     frame.className = 'reel__frame';
-    frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0`;
-    frame.title = now.name.textContent;
-    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
     player.append(frame);
   });
 })();
