@@ -4781,9 +4781,38 @@
     margin-left: auto;
   }
 
-  .pill--black {
+  .pill--black, .pill--hot {
     background: var(--color-black);
     color: var(--color-white);
+  }
+
+  .pill--hot .ic--flame {
+    color: var(--color-accent);
+    transform-origin: 50% 90%;
+    animation: 1.6s ease-in-out infinite flame-flicker;
+  }
+
+  @keyframes flame-flicker {
+    0%, 100% {
+      rotate: 0deg;
+      scale: 1;
+    }
+
+    30% {
+      rotate: -4deg;
+      scale: .92 1.08;
+    }
+
+    60% {
+      rotate: 3deg;
+      scale: 1.06 .95;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pill--hot .ic--flame {
+      animation: none;
+    }
   }
 
   .pill--lg {
@@ -5466,6 +5495,10 @@
 
   .ic--plus {
     --i: url("assets/icons/plus.svg");
+  }
+
+  .ic--flame {
+    --i: url("assets/icons/flame.svg");
   }
 
   .teachers, .quotes {
@@ -7676,7 +7709,7 @@
     padding: calc(var(--spacing) * 8) calc(var(--spacing) * 12);
   }
 
-  .join-role--filled .pill {
+  .join-role--filled .pill, .join-role .pill--hot {
     margin-bottom: calc(var(--spacing) * 2);
   }
 
@@ -7920,6 +7953,100 @@
     border-top: 1px solid var(--join-line);
   }
 
+  .post {
+    --post-bg: var(--color-ink-900);
+    --post-fg: var(--color-white);
+    --post-accent: var(--post-bg);
+  }
+
+  .post[data-bg="blue"] {
+    --post-bg: var(--color-primary);
+  }
+
+  .post[data-bg="orange"] {
+    --post-bg: var(--color-accent);
+  }
+
+  .post[data-bg="teal"] {
+    --post-bg: var(--color-feed-teal);
+  }
+
+  .post[data-bg="yellow"] {
+    --post-bg: var(--color-feed-yellow);
+  }
+
+  .post[data-bg="pink"] {
+    --post-bg: var(--color-feed-pink);
+  }
+
+  .post:is([data-bg="teal"], [data-bg="yellow"], [data-bg="pink"]) {
+    --post-fg: var(--color-black);
+    --post-accent: var(--post-bg);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .post:is([data-bg="teal"], [data-bg="yellow"], [data-bg="pink"]) {
+      --post-accent: color-mix(in oklab, var(--post-bg) 45%, var(--color-black));
+    }
+  }
+
+  .post[data-bg] {
+    margin-top: 0;
+  }
+
+  .post[data-bg] > .post__head {
+    --join-muted: var(--post-fg);
+    padding-block: calc(var(--spacing) * 12) calc(var(--spacing) * 16);
+    color: var(--post-fg);
+    background: var(--post-bg);
+    box-shadow: 0 0 0 100vmax var(--post-bg);
+    clip-path: inset(-100vmax -100vmax 0);
+  }
+
+  .post[data-bg] > .post__head .post__back:hover {
+    color: var(--post-fg);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .post[data-bg] > .post__head .post__back:hover {
+      color: color-mix(in oklab, var(--post-fg) 70%, var(--post-bg));
+    }
+  }
+
+  .post[data-bg] .post__body blockquote {
+    padding: calc(var(--spacing) * 8);
+    border-radius: var(--radius-3xl);
+    background: var(--post-bg);
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .post[data-bg] .post__body blockquote {
+      background: color-mix(in oklab, var(--post-bg) 16%, var(--color-white));
+    }
+  }
+
+  .post[data-bg] .post__body li:before {
+    background: var(--post-accent);
+  }
+
+  .post[data-bg] .post__end {
+    padding: calc(var(--spacing) * 12);
+    border-radius: var(--radius-3xl);
+    color: var(--post-fg);
+    background: var(--post-bg);
+    border: 0;
+  }
+
+  .post__end-title {
+    font-size: var(--text-aqb-subhead);
+    line-height: var(--tw-leading, var(--text-aqb-subhead--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-subhead--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-subhead--font-weight));
+    font-weight: var(--font-weight-headline);
+    flex-basis: 100%;
+    font-style: italic;
+  }
+
   @media not all and (min-width: 48rem) {
     .join-hero {
       padding-block: calc(var(--spacing) * 6) var(--section-y);
@@ -7976,6 +8103,18 @@
 
     .post__body h2 {
       margin-top: calc(var(--spacing) * 12);
+    }
+
+    .post[data-bg] > .post__head {
+      padding-block: calc(var(--spacing) * 6) calc(var(--spacing) * 10);
+    }
+
+    .post[data-bg] .post__end {
+      padding: calc(var(--spacing) * 8) calc(var(--spacing) * 5);
+    }
+
+    .post[data-bg] .post__body blockquote {
+      padding: calc(var(--spacing) * 6) calc(var(--spacing) * 5);
     }
   }
 

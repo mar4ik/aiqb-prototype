@@ -1942,6 +1942,16 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pill--date { background: var(--color-campaign-green); color: var(--color-white); }   /* a date range, with .ic--calendar (Hero B's «Նոյեմբերի 8 – Դեկտեմբերի 31»): the campaign green, white text */
 .pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
 .pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (the home page's «Խաղարկություն» on Hero B's Orange bubble) */
+/* Hot: the «Burning» tag on a role we need first (join.html) — the tag on a colour (.pill--black), its flame in Orange,
+   flickering now and then (still with reduced motion) */
+.pill--hot { background: var(--color-black); color: var(--color-white); }
+.pill--hot .ic--flame { color: var(--color-accent); transform-origin: 50% 90%; animation: flame-flicker 1.6s ease-in-out infinite; }
+@keyframes flame-flicker {
+  0%, 100% { scale: 1 1; rotate: 0deg; }
+  30% { scale: .92 1.08; rotate: -4deg; }
+  60% { scale: 1.06 .95; rotate: 3deg; }
+}
+@media (prefers-reduced-motion: reduce) { .pill--hot .ic--flame { animation: none; } }
 .pill--lg { height: --spacing(10); padding: 0 --spacing(4.5); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* size step: 40px, Body S SemiBold (a tag that leads a block) */
 
 /* Row 2 · schedule */
@@ -2191,6 +2201,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
 .ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */
 .ic--plus       { --i: url("assets/icons/plus.svg"); }      /* opens a card; turned 45° it closes it (the lessons, aigraget.html) */
+.ic--flame      { --i: url("assets/icons/flame.svg"); }     /* burning: a role we need first (.pill--hot, join.html) — solid, as the brandbook asks of new icons */
 
 /* ============================================================
    06 · TEACHERS
@@ -3052,7 +3063,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 
 /* Filled («Already with us»): an Ink card, slim and quiet — not a link, no cut, no eyes; an «Already with us» tag over the name */
 .join-role--filled { padding: --spacing(8) --spacing(12); }
-.join-role--filled .pill { margin-bottom: --spacing(2); }
+.join-role--filled .pill, .join-role .pill--hot { margin-bottom: --spacing(2); }
 
 /* Every role's «Դիմել»: right under its copy, the details beside it — the same place on every card */
 .join-apply { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(6); margin-top: --spacing(4); }
@@ -3125,6 +3136,46 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
 }
 .post__end { padding-top: --spacing(10); border-top: 1px solid var(--join-line); }
 
+/* Each role page wears its card's colour from join.html (data-bg on .post: blue · orange · teal · yellow · pink; a filled
+   role stays Ink). The role's head is a full-bleed band in that colour, up to the top of the page behind the floating
+   header (as the join hero's Sky); the lead quote sits on a light tint of it, the list checks take it, and the closing
+   «Դիմել» is a bubble of it. Text on the colour follows BRAND.md → Text on colour: white on Blue, Orange and Ink, black
+   on the feed colours; «Դիմել» is .btn--white on the first, .btn--dark on the others */
+.post { --post-bg: var(--color-ink-900); --post-fg: var(--color-white); --post-accent: var(--post-bg); }
+.post[data-bg="blue"]   { --post-bg: var(--color-primary); }
+.post[data-bg="orange"] { --post-bg: var(--color-accent); }
+.post[data-bg="teal"]   { --post-bg: var(--color-feed-teal); }
+.post[data-bg="yellow"] { --post-bg: var(--color-feed-yellow); }
+.post[data-bg="pink"]   { --post-bg: var(--color-feed-pink); }
+.post:is([data-bg="teal"], [data-bg="yellow"], [data-bg="pink"]) {
+  --post-fg: var(--color-black);
+  --post-accent: color-mix(in oklab, var(--post-bg) 45%, var(--color-black));   /* the checks on white: the feed colour a few steps darker, so they still show (3:1) */
+}
+.post[data-bg] { margin-top: 0; }   /* the band starts at the top of the page */
+.post[data-bg] > .post__head {
+  --join-muted: var(--post-fg);
+  padding-block: --spacing(12) --spacing(16);
+  color: var(--post-fg);
+  background: var(--post-bg);
+  box-shadow: 0 0 0 100vmax var(--post-bg);
+  clip-path: inset(-100vmax -100vmax 0);   /* sideways and up to the top of the page, not down */
+}
+.post[data-bg] > .post__head .post__back:hover { color: color-mix(in oklab, var(--post-fg) 70%, var(--post-bg)); }   /* a text link: colour only */
+.post[data-bg] .post__body blockquote {
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);
+  background: color-mix(in oklab, var(--post-bg) 16%, var(--color-white));
+}
+.post[data-bg] .post__body li::before { background: var(--post-accent); }
+.post[data-bg] .post__end {
+  padding: --spacing(12);
+  border: 0; border-radius: var(--radius-3xl);
+  color: var(--post-fg);
+  background: var(--post-bg);
+}
+.post__end-title { flex-basis: 100%; @apply text-aqb-subhead; font-weight: var(--font-weight-headline); font-style: italic; }   /* «Պատրա՞ստ ես» over the closing «Դիմել»: a card title, in the headline cut */
+
+
 @media (width < theme(--breakpoint-md)) {
   .join-hero { padding-block: --spacing(6) var(--section-y); }
   .join-roles { padding-block: --spacing(8) var(--section-y); }
@@ -3138,6 +3189,9 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .post__title { @apply text-aqb-headline-h2 italic; }
   .post .join-apply > .btn { flex: 1 1 100%; }   /* «Դիմել» and Copy link: the same size, stacked full width (they don't fit side by side) */
   .post__body h2 { margin-top: --spacing(12); }
+  .post[data-bg] > .post__head { padding-block: --spacing(6) --spacing(10); }
+  .post[data-bg] .post__end { padding: --spacing(8) --spacing(5); }
+  .post[data-bg] .post__body blockquote { padding: --spacing(6) --spacing(5); }
 }
 
 /* ============================================================
