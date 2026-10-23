@@ -51,6 +51,7 @@ A campaign can bring its own colours. They live in code as `--color-campaign-*` 
 
 - **Green** — Tailwind's green-600, `oklch(62.7% 0.194 149.214)`, token `--color-campaign-green`: the webinar bar and the floating buttons.
 - **Bundle** — the Bundle card keeps its original colours (`--color-campaign-bundle-*`): a light-blue wash fading to white, the animated ribbon border (Blue, light blue, Orange, violet), the white-on-Orange «−20%» pill, the pale green «Խնայիր» pill and the violet «Նվեր» pill. A deliberate exception to the rules above: the gradients. (Its white «−20%» on Orange is now the rule for all Orange.)
+- **Legal pages** — the raffle terms page (`raffle-terms.html`) is a copy of aiqezban.ai/terms, with that page's own typeface, sizes, weights and colours (navy `#1A1A6E` headings, a `#FF4B00` orange phone button, Tailwind greys). Decided Oct 2026 as a flagged exception, kept apart from the brand: its styles sit in a `lint-brand: off` block that the brand check skips, and nothing else may use them.
 
 ## Typography
 

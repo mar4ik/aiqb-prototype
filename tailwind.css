@@ -3478,6 +3478,59 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .course-price__starter { max-width: none; }
 }
 
+/* lint-brand: off ============================================================
+   16 · LEGAL PAGE (raffle-terms.html) — a copy of aiqezban.ai/terms (the course terms page), its styles read from the
+   page itself (saved in the repo in archive/aiqezban-terms/): Noto Sans Armenian, Tailwind v4's sizes, weights,
+   greys and shadow, its navy headings and orange phone button, its spacing. Off the brand scale on purpose (decided
+   Oct 2026): the brand check skips everything between the lint-brand: off / on marks. Nothing here is for other pages.
+   The one addition: the line under the title (the document's subtitle) is 18px italic, grey-600.
+   ============================================================ */
+body.legal-page {   /* the page's html / body: Noto, 16px, line-height 1.5, antialiased, near-black on white */
+  font-family: "Noto Sans Armenian", sans-serif; font-weight: 400; line-height: 1.5; letter-spacing: 0;
+  color: #171717; background: #fff;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+/* header.fixed.top-0.inset-x-0.z-[52].bg-white > .container.mx-auto.flex.items-center.justify-between.py-[24px].max-w-[1024px].px-4 */
+.legal-bar { position: fixed; top: 0; inset-inline: 0; z-index: 52; background: #fff; }
+.legal-bar__in { width: 100%; max-width: 1024px; margin-inline: auto; padding: 24px 16px; display: flex; align-items: center; justify-content: space-between; }
+/* a.flex.items-end > .w-10.h-10.shrink-0.overflow-hidden.rounded-full > img.object-cover */
+.legal-bar__logo { display: flex; align-items: flex-end; width: 40px; height: 40px; flex-shrink: 0; overflow: hidden; border-radius: calc(infinity * 1px); }
+.legal-bar__logo img { width: 100%; height: 100%; object-fit: cover; }
+/* md and up: a.bg-[#ff4b00].flex.items-center.justify-center.px-[16px].py-[10px].shrink-0.transition-opacity.hover:opacity-90 > p.text-[14px].text-white.text-nowrap.font-medium.leading-[normal] */
+.legal-bar__phone {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  padding: 10px 16px; background: #ff4b00; color: #fff;
+  font-size: 14px; line-height: normal; font-weight: 500; text-wrap: nowrap;
+  transition: opacity .15s;
+}
+.legal-bar__phone:hover { opacity: .9; }
+.legal-bar__phone .ic { display: none; }
+@media (width < 48rem) {   /* below md: a.flex.items-center.gap-[6px].bg-white.border.border-gray-200.shadow-sm.rounded-full.px-[14px].py-[7px].text-[13px].font-medium.text-black (the page's 📞 is the phone icon here) */
+  .legal-bar__phone {
+    gap: 6px; padding: 7px 14px; background: #fff; color: #000;
+    border: 1px solid #e5e7eb; border-radius: calc(infinity * 1px);
+    box-shadow: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
+    font-size: 13px; line-height: 1.5;
+  }
+  .legal-bar__phone .ic { display: block; width: 14px; height: 14px; }
+}
+/* .pt-28.pb-16.px-4.sm:px-6.lg:px-8.max-w-4xl.mx-auto */
+.legal { max-width: 56rem; margin-inline: auto; padding: 112px 16px 64px; }
+@media (width >= 40rem) { .legal { padding-inline: 24px; } }
+@media (width >= 64rem) { .legal { padding-inline: 32px; } }
+.legal__title { font-size: 1.875rem; line-height: calc(2.25 / 1.875); font-weight: 700; color: #1a1a6e; margin-bottom: 32px; }   /* h1.text-3xl.font-bold.mb-8, color #1A1A6E */
+.legal__meta { font-size: 1.125rem; line-height: calc(1.75 / 1.125); font-style: italic; color: #4a5565; margin-bottom: 32px; }   /* text-lg italic text-gray-600 mb-8 */
+.legal__body > * + * { margin-top: 32px; }   /* .space-y-8 */
+.legal__heading { font-size: 1.25rem; line-height: calc(1.75 / 1.25); font-weight: 700; color: #1a1a6e; margin-bottom: 16px; }   /* h2.text-xl.font-bold.mb-4, color #1A1A6E */
+.legal__section > * + * { margin-top: 8px; }   /* .space-y-2 for the clauses */
+.legal__section > .legal__heading + * { margin-top: 0; }
+.legal__section p, .legal__list { color: #364153; }   /* .text-gray-700 */
+.legal__list { list-style-type: disc; padding-left: 20px; }   /* .list-disc.pl-5.space-y-2 */
+.legal__list > * + * { margin-top: 8px; }
+.legal__section a { text-decoration: underline; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.legal__section a .ic--external { width: 14px; height: 14px; margin-left: 2px; vertical-align: -1px; }
+/* lint-brand: on */
+
 } /* end @layer components */
 
 /* ============================================================

@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs';
 const only = process.argv[2];
 const BRAND = 'BRAND.md';
 const CSS = 'tailwind.css';
-const PAGES = ['index.html', 'aigraget.html', 'doctor-register.html', 'join.html', 'join/community-owner.html', 'join/learning-experience-coordinator.html'];
+const PAGES = ['index.html', 'aigraget.html', 'doctor-register.html', 'join.html', 'raffle-terms.html', 'join/community-owner.html', 'join/learning-experience-coordinator.html'];
 const REFS = [CSS, ...PAGES, 'script.js', 'join.js'];
 
 const problems = [];
@@ -30,7 +30,10 @@ const blank = (t) => t.replace(/[^\n]/g, ' ');   // keeps line breaks, so line n
 const stripComments = (text) => text.replace(/\/\*[\s\S]*?\*\//g, blank);
 
 const brand = readFileSync(BRAND, 'utf8');
-const css = stripComments(readFileSync(CSS, 'utf8'));
+// A block between `/* lint-brand: off` and `/* lint-brand: on */` is skipped whole: raffle-terms.html copies another site's
+// page (aiqezban.ai/terms) with that page's own typeface, sizes and colours (decided Oct 2026). Nothing else may use it.
+const skipExceptions = (text) => text.replace(/\/\* lint-brand: off[\s\S]*?\/\* lint-brand: on \*\//g, blank);
+const css = stripComments(skipExceptions(readFileSync(CSS, 'utf8')));
 const themeStart = css.indexOf('@theme {');
 const themeEnd = css.indexOf('\n}', themeStart);
 if (themeStart < 0) report(CSS, 1, 'no @theme block');
@@ -116,6 +119,7 @@ if (only !== 'colors') {
     }
   }
   for (const file of PAGES) {
+    if (file === 'raffle-terms.html') continue;   // loads Noto Sans Armenian: the copied page's typeface (see skipExceptions)
     const html = readFileSync(file, 'utf8');
     for (const m of html.matchAll(/fonts\.googleapis|fonts\.gstatic|use\.typekit|fonts\.bunny/gi)) report(file, lineOf(html, m.index), `loads another typeface (${m[0]}) — Adelle Sans ARM is the only one`);
   }
