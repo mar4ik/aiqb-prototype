@@ -688,8 +688,9 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
 
 /* The right side: the stage (.drop), and along its bottom the draw in the brand's chat bubble (BRAND.md → Chat bubble;
    script.js cuts it, as the reviews' bubbles), Orange as the refund band: the prize White in the headline cut (Headline
-   H2, one step under the hero title), led by its kicker «Խաղարկություն» (plain words), the rest
-   White too (BRAND.md → Text on colour: white on Orange at every size): the detail (SemiBold), the terms. It is a shelf: script.js adds its body to the physics, so the balls land on
+   H2, one step under the hero title), led by its kicker «Գրանցվիր … և ստացիր» (plain words), the rest
+   White too (BRAND.md → Text on colour: white on Orange at every size): the detail (SemiBold: «1-ը շահելու հնարավորություն»),
+   the months. It is a shelf: script.js adds its body to the physics, so the balls land on
    it. The bottom padding is the tail's room (script.js: padding-bottom − padding-top). */
 .story-hero__stage {
   grid-column: 7 / -1;
@@ -709,9 +710,9 @@ html[data-hone-wait] :is(.hero, .story-hero) { visibility: hidden; }
   pointer-events: none;   /* the balls on it stay playable */
 }
 .story-hero__bubble .pill { align-self: flex-start; margin-bottom: --spacing(2); }   /* the home page's tag (.pill--black) leads, a little apart */
-.story-hero__bubble-kicker { margin-bottom: --spacing(3); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* «Խաղարկություն» over the prize: plain words (so it never reads as a button) in the detail cut, a little apart */
+.story-hero__bubble-kicker { margin-bottom: --spacing(3); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* «Գրանցվիր … և ստացիր» over the prize: plain words (so it never reads as a button) in the detail cut, a little apart */
 .story-hero__bubble-title { @apply text-aqb-headline-h2 italic; color: var(--color-white); }
-.story-hero__bubble-detail { margin-top: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }
+.story-hero__bubble-detail { margin-top: --spacing(1); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* «1-ը շահելու հնարավորություն» under the prize, the months (regular) under it */
 .story-hero__bubble-text { @apply text-aqb-body-s; text-wrap: pretty; }
 .story-hero__bubble-text strong { font-weight: var(--font-weight-detail); }   /* the prize in the terms, in the detail cut */
 .story-hero__bubble-btn { align-self: flex-start; margin-top: --spacing(3); pointer-events: auto; }   /* «Թողնել հայտ» under the terms; clickable, though the bubble lets clicks through to the balls */
