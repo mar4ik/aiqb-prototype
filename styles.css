@@ -4291,18 +4291,6 @@
     transform: scale(1.05);
   }
 
-  .pro-card > img.pro-card__blob {
-    object-fit: contain;
-    padding: calc(var(--spacing) * 8) calc(var(--spacing) * 8) calc(var(--spacing) * 24);
-    animation: 6s ease-in-out infinite blob-float;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .pro-card > img.pro-card__blob {
-      animation: none;
-    }
-  }
-
   .pro-card:after {
     content: "";
     z-index: 1;
@@ -9529,24 +9517,6 @@
 
   75% {
     rotate: 3deg;
-  }
-}
-
-@keyframes blob-float {
-  0%, 100% {
-    transform: translateY(0) rotate(0) scale(1);
-  }
-
-  25% {
-    transform: translateY(-14px) rotate(8deg) scale(1.03);
-  }
-
-  50% {
-    transform: translateY(-4px) rotate(14deg) scale(1);
-  }
-
-  75% {
-    transform: translateY(-16px) rotate(6deg) scale(1.04);
   }
 }
 

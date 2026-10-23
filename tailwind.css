@@ -1711,13 +1711,6 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
   transition: transform .6s var(--ease-smooth);
 }
 .pro-card:hover > img:first-child, .pro-card:hover .pro-card__media { transform: scale(1.05); }
-/* transparent 3D blob: keep it whole, clear of the title; float + slow turn so it feels alive */
-.pro-card > img.pro-card__blob {
-  object-fit: contain;
-  padding: --spacing(8) --spacing(8) --spacing(24);
-  animation: blob-float 6s ease-in-out infinite;
-}
-@media (prefers-reduced-motion: reduce) { .pro-card > img.pro-card__blob { animation: none; } }
 /* dark scrim so the title is always readable */
 .pro-card::after {
   content: "";
@@ -3542,9 +3535,3 @@ body.legal-page {   /* the page's html / body: Noto, 16px, line-height 1.5, anti
 @keyframes ribbon-spin { to { --ribbon-angle: 360deg; } }
 @keyframes ribbon-weight { 0%, 100% { padding: 2px; } 50% { padding: 4px; } }
 @keyframes gift-wiggle { 25% { rotate: 6deg; } 50% { rotate: -6deg; } 75% { rotate: 3deg; } }   /* from / to: the picture upright */
-@keyframes blob-float {
-  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
-  25%      { transform: translateY(-14px) rotate(8deg) scale(1.03); }
-  50%      { transform: translateY(-4px) rotate(14deg) scale(1); }
-  75%      { transform: translateY(-16px) rotate(6deg) scale(1.04); }
-}
