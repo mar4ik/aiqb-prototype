@@ -7,78 +7,18 @@
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
   <link rel="stylesheet" href="styles.css?v=pages-62" />
-  <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
+  <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor, locally too. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
-       Hone (the A/B tool, exp_aiqb_ab_1) runs on localhost only, for local tests; it never runs on the live site (proxy.js
-       does not ask it either). Locally, first match wins:
-         1. localStorage aiqb_hero: the hero Hone gave this browser last time.
-         2. nothing yet: Hero B, with both heroes hidden (html[data-hone-wait]) until Hone's answer arrives, 2 s at most.
-       Hone's answer when it arrives (agent.js, event hone:answer) is final: it sets the hero and is kept for next time.
-       The hero on show goes to window.dataLayer. -->
+       The Hone A/B test (exp_aiqb_ab_1) is switched off (Oct 2026): it used to pick the hero on localhost; a hero it saved in
+       this browser (localStorage aiqb_hero) is cleared. The hero on show goes to window.dataLayer. -->
   <script>
     (function () {
       var html = document.documentElement;
       var preview = new URLSearchParams(location.search).get('hero') === 'a';
-      var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-      var optedOut = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' || window.doNotTrack === '1';
-
-      // Hone's changes → the hero they give: Hero A when they set html[data-hero="a"], Hero B (the page as it is) otherwise
-      function heroOf(changes) {
-        var hero = 'b';
-        (changes || []).forEach(function (c) {
-          if (c && c.selector === 'html' && c.kind === 'attr' && c.attr === 'data-hero' && (c.value === 'a' || c.value === 'b')) hero = c.value;
-        });
-        return hero;
-      }
-
-      var told = null;
-      function tell(hero) {
-        if (hero === told) return;
-        told = hero;
-        (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
-      }
-
-      // The live site, the preview, and visitors who asked not to be tracked: no Hone, nothing to wait for or keep
-      if (!local || preview || optedOut) {
-        html.dataset.hero = preview ? 'a' : 'b';
-        tell(html.dataset.hero);
-        return;
-      }
-
-      var hero = null;
-      try { var saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
-      if (saved === 'a' || saved === 'b') hero = saved;
-
-      html.dataset.hero = hero || 'b';
-      var waiting = !hero;
-      function release() {
-        if (!waiting) return;
-        waiting = false;
-        html.removeAttribute('data-hone-wait');
-      }
-      if (waiting) {
-        html.setAttribute('data-hone-wait', '');
-        setTimeout(function () { release(); tell(html.dataset.hero); }, 2000);
-      } else {
-        tell(hero);
-      }
-
-      document.addEventListener('hone:answer', function (e) {
-        var chosen = heroOf(e.detail && e.detail.changes);
-        if (html.dataset.hero !== chosen) html.dataset.hero = chosen;
-        try { localStorage.setItem('aiqb_hero', chosen); } catch (err) {}
-        release();
-        tell(chosen);
-      });
-
-      // Hone's agent: async, so the page never waits for it; it confirms the hero with Hone and reports the view and the
-      // click on the hero button
-      var agent = document.createElement('script');
-      agent.src = 'https://hone-bandit.vercel.app/agent.js';
-      agent.async = true;
-      agent.dataset.experiment = 'exp_aiqb_ab_1';
-      document.head.appendChild(agent);
+      html.dataset.hero = preview ? 'a' : 'b';
+      try { localStorage.removeItem('aiqb_hero'); } catch (e) {}
+      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: html.dataset.hero, hero_preview: preview });
     })();
   </script>
 </head>
@@ -810,7 +750,7 @@
 
     <!-- =========================================================
          05m · PACKAGES — «Ընտրիր մասնակցության՝ քեզ ամենահարմար տարբերակը»: the grey full-bleed band with the three cards
-         (no tabs, no PRO courses, no endorsement strip on this page: index.html keeps them). #packages: every «Ընտրել
+         (no PRO courses, no endorsement strip on this page: index.html keeps them). #packages: every «Ընտրել
          դասընթաց» / «Թողնել հայտ» lands here
          ========================================================= -->
     <section class="pricing" id="packages" aria-labelledby="packages-title">
@@ -949,7 +889,7 @@
         </article>
 
         <!-- ───── AI գրագետ with 3 friends: the whole course, one price a person (−62% off AI գրագետ) ───── -->
-        <article class="pkg pkg--bundle pkg--friends">
+        <article class="pkg pkg--bundle pkg--friends pkg--ribbon">
           <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
           <header class="pkg__head">
             <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>

@@ -7,78 +7,18 @@
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
   <link rel="stylesheet" href="styles.css?v=pages-9" />
-  <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor on the live site. Hero A (the eyes'
+  <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor, locally too. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
-       Hone (the A/B tool, exp_aiqb_ab_1) runs on localhost only, for local tests; it never runs on the live site (proxy.js
-       does not ask it either). Locally, first match wins:
-         1. localStorage aiqb_hero: the hero Hone gave this browser last time.
-         2. nothing yet: Hero B, with both heroes hidden (html[data-hone-wait]) until Hone's answer arrives, 2 s at most.
-       Hone's answer when it arrives (agent.js, event hone:answer) is final: it sets the hero and is kept for next time.
-       The hero on show goes to window.dataLayer. -->
+       The Hone A/B test (exp_aiqb_ab_1) is switched off (Oct 2026): it used to pick the hero on localhost; a hero it saved in
+       this browser (localStorage aiqb_hero) is cleared. The hero on show goes to window.dataLayer. -->
   <script>
     (function () {
       var html = document.documentElement;
       var preview = new URLSearchParams(location.search).get('hero') === 'a';
-      var local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
-      var optedOut = navigator.globalPrivacyControl === true || navigator.doNotTrack === '1' || window.doNotTrack === '1';
-
-      // Hone's changes → the hero they give: Hero A when they set html[data-hero="a"], Hero B (the page as it is) otherwise
-      function heroOf(changes) {
-        var hero = 'b';
-        (changes || []).forEach(function (c) {
-          if (c && c.selector === 'html' && c.kind === 'attr' && c.attr === 'data-hero' && (c.value === 'a' || c.value === 'b')) hero = c.value;
-        });
-        return hero;
-      }
-
-      var told = null;
-      function tell(hero) {
-        if (hero === told) return;
-        told = hero;
-        (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: hero, hero_preview: preview });
-      }
-
-      // The live site, the preview, and visitors who asked not to be tracked: no Hone, nothing to wait for or keep
-      if (!local || preview || optedOut) {
-        html.dataset.hero = preview ? 'a' : 'b';
-        tell(html.dataset.hero);
-        return;
-      }
-
-      var hero = null;
-      try { var saved = localStorage.getItem('aiqb_hero'); } catch (e) {}
-      if (saved === 'a' || saved === 'b') hero = saved;
-
-      html.dataset.hero = hero || 'b';
-      var waiting = !hero;
-      function release() {
-        if (!waiting) return;
-        waiting = false;
-        html.removeAttribute('data-hone-wait');
-      }
-      if (waiting) {
-        html.setAttribute('data-hone-wait', '');
-        setTimeout(function () { release(); tell(html.dataset.hero); }, 2000);
-      } else {
-        tell(hero);
-      }
-
-      document.addEventListener('hone:answer', function (e) {
-        var chosen = heroOf(e.detail && e.detail.changes);
-        if (html.dataset.hero !== chosen) html.dataset.hero = chosen;
-        try { localStorage.setItem('aiqb_hero', chosen); } catch (err) {}
-        release();
-        tell(chosen);
-      });
-
-      // Hone's agent: async, so the page never waits for it; it confirms the hero with Hone and reports the view and the
-      // click on the hero button
-      var agent = document.createElement('script');
-      agent.src = 'https://hone-bandit.vercel.app/agent.js';
-      agent.async = true;
-      agent.dataset.experiment = 'exp_aiqb_ab_1';
-      document.head.appendChild(agent);
+      html.dataset.hero = preview ? 'a' : 'b';
+      try { localStorage.removeItem('aiqb_hero'); } catch (e) {}
+      (window.dataLayer = window.dataLayer || []).push({ event: 'hero_variant', hero_variant: html.dataset.hero, hero_preview: preview });
     })();
   </script>
 </head>
@@ -231,7 +171,8 @@
         <h1 class="story-hero__title">Սովորի՛ր աշխատել<br />AI-ի հետ այսօր</h1>
         <p class="story-hero__lead">Գրանցվիր հիմա, ստացիր այս ամսվա 3 MacBook-ներից մեկը</p>   <!-- the offer under the headline: the draw (its terms in the Orange bubble under the pile) -->
         <div class="story-hero__actions">
-          <a href="#packages" class="btn btn--primary btn--lg">Ընտրել դասընթաց</a>
+          <!-- The call to action leads to the course page (the arrow says it leaves the page): decided Oct 2026 -->
+          <a href="aigraget.html" class="btn btn--primary btn--lg">Դարձիր AI գրագետ<i class="ic ic--arrow-right" aria-hidden="true"></i></a>
           <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" />100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</p>
         </div>
       </div>
@@ -362,45 +303,46 @@
     </section>
 
     <!-- =========================================================
-         05b · PACKAGES — grey full-bleed band with the tabs + cards
+         05b · PACKAGES — grey full-bleed band: the AI գրագիտություն cards, then the PRO courses (one section, no tabs: decided Oct 2026)
          ========================================================= -->
-    <section class="pricing">
-      <!-- Package tabs: «AI գրագիտություն» (default) and «PRO դասընթացներ» -->
-      <div class="pkg-switch" id="packages">
-        <div class="pill-tabs" role="tablist" aria-label="Դասընթացներ">
-          <button type="button" class="pill-tabs__tab" role="tab" id="tab-basic" aria-controls="panel-basic" aria-selected="true">AI գրագիտություն</button>
-          <button type="button" class="pill-tabs__tab" role="tab" id="tab-pro" aria-controls="panel-pro" aria-selected="false" tabindex="-1">PRO դասընթացներ</button>
+    <section class="pricing" id="packages" aria-labelledby="packages-title">
+      <!-- The title, with the slider's arrows (the teachers') beside it under xl -->
+      <div class="pricing__top">
+        <h2 class="section-title" id="packages-title">Դասընթացներ</h2>
+        <div class="teachers__nav packages__nav">
+          <button type="button" class="teachers__arrow" data-dir="-1" aria-label="Նախորդը"><i class="ic ic--chev-left"></i></button>
+          <button type="button" class="teachers__arrow" data-dir="1" aria-label="Հաջորդը"><i class="ic ic--chev-right"></i></button>
         </div>
       </div>
 
-      <!-- Ministry endorsement (coat of arms) + tax refund — above the cards, shown for both tabs -->
-      <p class="endorse endorse--strip"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br />Պաշտոնապես երաշխավորված է<br />ԿԳՄՍ նախարարության կողմից։</span></p>
+      <!-- One row of four, the same width and height (decided Oct 2026): the one course (9 lessons, 4 weeks) as one card,
+           AI գրագետ, the whole course, in the Bundle's campaign look (.pkg--bundle: the gift; BRAND.md → Campaign colours),
+           then the three PRO courses, the doctor last; Start first (Oct 2026). The 3-friends offer lives on aigraget.html. The row
+           is a slider: the arrows in .pricing__top step it (script.js → cardSliders). -->
+      <div class="packages packages--row">
 
-      <div class="pkg-panel" role="tabpanel" id="panel-basic" aria-labelledby="tab-basic">
-      <!-- Three ways into the one course (9 lessons, 4 weeks): its first 3 lessons (Start), the whole course (AI գրագետ),
-           and the whole course for 3 friends together (one price a person). The two AI գրագետ cards wear the Bundle's
-           campaign look (.pkg--bundle: the wash, the ribbon border, the gift; BRAND.md → Campaign colours).
-           Stacked below lg, the two AI գրագետ cards come first. -->
-      <div class="packages">
-
-        <!-- ───── Start ───── -->
-        <article class="pkg pkg--start">
+        <!-- ───── AI գրագետ: the whole course ───── -->
+        <!-- ───── Start: the first 3 lessons, laid out as the AI գրագետ card. Hidden for now (Oct 2026): remove `hidden` to show it first ───── -->
+        <article class="pkg pkg--start" hidden>
           <header class="pkg__head">
-            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">Start</h3>
-            <p class="pkg__desc">AI-ի հետ առաջին ծանոթության համար</p>
-            <div class="pkg__schedule">
-              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>Առաջին 3 դասը՝ 9-ից</p>   <!-- the lessons it covers, first: the brand eyes (static, at you) in place of an icon -->
-              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the start, then the days (as the AI-Master cards) -->
-                <ul class="pkg__days">
-                  <li>Սկիզբը՝ նոյեմբերի 3</li>
-                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
-                </ul>
-              </div>
-              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>
-            </div>
+            <p class="pkg__desc">«AI գրագետ» դասընթացի առաջին 3 դասը</p>   <!-- what Start is: the course's first 3 lessons -->
           </header>
+
+          <ul class="tool-stack tool-stack--wrap">   <!-- its 10 tools, all shown -->
+            <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
+            <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+            <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
+            <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+            <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
+            <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+            <li class="tool-stack__logo" title="Grok"><img src="assets/logos/grok.svg" alt="Grok" /></li>
+            <li class="tool-stack__logo" title="Suno"><img src="assets/logos/suno.svg" alt="Suno" /></li>
+            <li class="tool-stack__logo" title="Oboe"><img src="assets/logos/oboe.svg" alt="Oboe" /></li>
+            <li class="tool-stack__logo" title="Gamma"><img src="assets/logos/gamma.svg" alt="Gamma" /></li>
+          </ul>
+
+          <hr class="pkg__rule" />
 
           <div class="pkg__price">
             <p class="pkg__amount">֏ 19,500</p>
@@ -412,162 +354,99 @@
             <a href="aigraget.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
           </div>
 
-        
+          <hr class="pkg__rule" />
 
-          <div class="pkg__tools">
-            <p class="pkg__label">10 AI գործիք</p>
-            <ul class="tool-stack">
-              <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
-              <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
-              <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
-              <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
-              <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
-              <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
-              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma">+4<span class="sr-only">: Grok, Suno, Oboe, Gamma</span></li>
-            </ul>
-          </div>
-        
-
+          <p class="endorse"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։ Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>
         </article>
 
-        <!-- ───── AI գրագետ: the whole course ───── -->
-        <article class="pkg pkg--bundle pkg--master">
+        <article class="pkg pkg--bundle pkg--master pkg--ribbon">
+          <!-- The card as the Figma design (AIQB · Product Designs, node 514:849, Oct 2026): the name and the line under it (SemiBold),
+               the 16 tool logos, the raffle (the bar's picture and words), a rule, the 3-friends offer (the line, a person's old
+               price, the price), one button «Մանրամասն», a rule, the endorsement. No tag or schedule: aigraget.html has them.
+               The ribbon border stays (asked for the same week). -->
           <header class="pkg__head">
-            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
             <h3 class="pkg__name">AI&nbsp;գրագետ</h3>
-            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
-                 way; the card crops what runs past its right edge) -->
-            <span class="pkg__gift pkg__gift--mac02"><img src="assets/cards/hero_mac_02.webp" width="720" height="671" alt="MacBook Neo" /></span>
             <!-- Shown after a «Ի՞նչ սովորել» tile is clicked (script.js): names the topic; ✕ hides it and ends the spotlight -->
             <div class="pkg-spot" hidden>
               <p>Սովորիր <strong class="pkg-spot__topic"></strong> <strong>AI գրագետ</strong> դասընթացի ընթացքում</p>
               <button type="button" class="dismiss" aria-label="Փակել"><i class="ic ic--x" aria-hidden="true"></i></button>
             </div>
-            <p class="pkg__desc">Ամբողջական AI<br />կրթություն մեկ ծրագրում</p>
-            <div class="pkg__schedule">
-              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
-              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-              <div class="pkg__date"><i class="ic ic--calendar"></i>   <!-- the dates by the calendar: the start, then the days week by week -->
-                <ul class="pkg__days">
-                  <li>Սկիզբը՝ նոյեմբերի 3</li>
-                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
-                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
-                </ul>
-              </div>
-              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>   <!-- the time by the clock, dark as the start date -->
-            </div>
+            <p class="pkg__desc"><strong>Ամբողջական AI կրթություն մեկ ծրագրում</strong></p>   <!-- in the detail cut, as the design; wraps on its own (critic, Oct 2026) -->
           </header>
 
-          <div class="pkg__price">
-            <s class="pkg__old">֏ 57,000</s>
-            <span class="pill pill--deal">−20%</span>
-            <span class="pill pill--save">Խնայիր ֏ 11,300</span>
-            <p class="pkg__amount">֏ 45,700</p>
+          <ul class="tool-stack tool-stack--wrap">   <!-- all 16 logos, wrapping (no «+10»: decided Oct 2026) -->
+            <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
+            <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
+            <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
+            <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
+            <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
+            <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
+            <li class="tool-stack__logo" title="Grok"><img src="assets/logos/grok.svg" alt="Grok" /></li>
+            <li class="tool-stack__logo" title="Suno"><img src="assets/logos/suno.svg" alt="Suno" /></li>
+            <li class="tool-stack__logo" title="Oboe"><img src="assets/logos/oboe.svg" alt="Oboe" /></li>
+            <li class="tool-stack__logo" title="Gamma"><img src="assets/logos/gamma.svg" alt="Gamma" /></li>
+            <li class="tool-stack__logo" title="NotebookLM"><img src="assets/logos/notebooklm.svg" alt="NotebookLM" /></li>
+            <li class="tool-stack__logo" title="Veo"><img src="assets/logos/veo.svg" alt="Veo" /></li>
+            <li class="tool-stack__logo" title="Lovable"><img src="assets/logos/lovable.svg" alt="Lovable" /></li>
+            <li class="tool-stack__logo" title="Make.com"><img src="assets/logos/make.svg" alt="Make.com" /></li>
+            <li class="tool-stack__logo" title="Higgsfield"><img src="assets/logos/higgsfield.svg" alt="Higgsfield" /></li>
+            <li class="tool-stack__logo" title="Google Flow"><img src="assets/logos/google-flow.svg" alt="Google Flow" /></li>
+          </ul>
+
+          <!-- The raffle: the bar's picture (the three MacBooks with the bow) and its words, centred -->
+          <div class="pkg__raffle">
+            <img src="assets/cards/macbooks-bow.webp" width="800" height="410" alt="" />
+            <p>Գրանցվի՛ր հոկտեմբեր, նոյեմբեր, դեկտեմբեր ամիսներին, մասնակցիր խաղարկությանը</p>
           </div>
 
-          <div class="pkg__cta">
-            <!-- TODO: the checkout link for AI գրագետ -->
-            <a href="#" class="btn btn--primary btn--block btn--md">Գնել AI գրագետ</a>
-            <a href="aigraget.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
-          </div>
+          <hr class="pkg__rule" />
 
-        
-
-          <div class="pkg__tools">
-            <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
-            <ul class="tool-stack">
-              <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
-              <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
-              <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
-              <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
-              <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
-              <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
-              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
-            </ul>
-          </div>
-        
-
-        </article>
-
-        <!-- ───── AI գրագետ with 3 friends: the whole course, one price a person (−62% off AI գրագետ) ───── -->
-        <article class="pkg pkg--bundle pkg--friends">
-          <span class="pkg__corner pkg__corner--sash">Ամենաշահավետ</span>
-          <header class="pkg__head">
-            <span class="pill pill--zoom">Օնլայն <img src="assets/logos/zoom.svg" alt="Zoom" /></span>
-            <h3 class="pkg__name">AI&nbsp;գրագետ</h3>
-            <!-- The gift, big, right under the name: one of the MacBook Neos (each card its own picture, both leaning the same
-                 way; the card crops what runs past its right edge) -->
-            <span class="pkg__gift pkg__gift--mac03"><img src="assets/cards/hero_mac_03.webp" width="720" height="668" alt="MacBook Neo" /></span>   <!-- &#8288; (word joiner): never breaks at the hyphen -->
-            <p class="pkg__tagline">3 ընկերներով</p>
-            <p class="pkg__desc"><strong>Մասնակցեք 3-ով՝<br />բացառիկ գնով,</strong> սովորեք<br />կիրառել AI-ը և փոխանակեք Ձեր նոր հմտությունները միասին։</p>
-            <div class="pkg__schedule">
-              <p class="pkg__format pkg__lessons"><span class="pkg__eyes" aria-hidden="true"><svg class="eyes" viewBox="0 0 96 50" data-look="you"><ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" /><ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" /><circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" /><circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" /></svg></span>9 դաս</p>
-              <p class="pkg__format"><i class="ic ic--video"></i>Live ձևաչափ</p>
-              <div class="pkg__date"><i class="ic ic--calendar"></i>
-                <ul class="pkg__days">
-                  <li>Սկիզբը՝ նոյեմբերի 3</li>
-                  <li>Շաբաթ 1՝ երք, հնգ, շբթ</li>
-                  <li>Շաբաթ 2–4՝ երք, հնգ</li>
-                </ul>
-              </div>
-              <p class="pkg__date"><i class="ic ic--clock"></i>Ժամերը՝ 19:00–21:00</p>
-            </div>
-          </header>
-
+          <!-- The 3-friends offer (Oct 2026): a person's price (the course's price struck, the deal pill beside it, the price),
+               then the condition under it -->
           <div class="pkg__price">
             <span class="pkg__unit">1 անձը՝</span>   <!-- the price is a person's: three pay ֏ 52,098 together -->
             <s class="pkg__old">֏ 45,700</s>
             <span class="pill pill--deal">−62%</span>
             <p class="pkg__amount">֏ 17,366</p>
+            <p class="pkg__desc">3 և ավելի ընկերներով մասնակցելու դեպքում</p>   <!-- the condition, right under the price (part of the price block) -->
           </div>
 
           <div class="pkg__cta">
-            <!-- opens the three-person form (#friends-form, script.js → friendsForm) -->
-            <button type="button" class="btn btn--primary btn--block btn--md" data-open="friends-form">Գրանցվել ընկերներով</button>
-            <a href="aigraget.html" class="btn btn--outline btn--block btn--md">Մանրամասն</a>
+            <a href="aigraget.html" class="btn btn--primary btn--block btn--md">Մանրամասն</a>   <!-- the one button leads to the course page -->
           </div>
 
-        
+          <hr class="pkg__rule" />
 
-          <div class="pkg__tools">
-            <p class="pkg__label">16 AI գործիք՝ բոլորը մեկ տեղում</p>
-            <ul class="tool-stack">
-              <li class="tool-stack__logo" title="Gemini"><img src="assets/logos/gemini.svg" alt="Gemini" /></li>
-              <li class="tool-stack__logo" title="ChatGPT"><img src="assets/logos/chatgpt.svg" alt="ChatGPT" /></li>
-              <li class="tool-stack__logo" title="Claude"><img src="assets/logos/claude.svg" alt="Claude" /></li>
-              <li class="tool-stack__logo" title="Nano Banana"><img src="assets/logos/nano-banana.svg" alt="Nano Banana" /></li>
-              <li class="tool-stack__logo" title="Arena"><img src="assets/logos/arena.svg" alt="Arena" /></li>
-              <li class="tool-stack__logo" title="Wispr Flow"><img src="assets/logos/wispr-flow.svg" alt="Wispr Flow" /></li>
-              <li class="tool-stack__more" title="Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow">+10<span class="sr-only">: Grok, Suno, Oboe, Gamma, NotebookLM, Veo, Lovable, Make.com, Higgsfield, Google Flow</span></li>
-            </ul>
-          </div>
-        
-
+          <!-- The tax refund + ministry endorsement, last -->
+          <p class="endorse"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։ Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>   <!-- no forced breaks: the card is narrow, the words wrap -->
         </article>
-      </div>
-      </div>
 
-      <div class="pkg-panel" role="tabpanel" id="panel-pro" aria-labelledby="tab-pro" hidden>
-        <div class="pro-grid">
-          <a class="pro-card" href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">
-            <video class="pro-card__media" src="assets/videos/teacher-level-1-hero.mp4" poster="assets/videos/teacher-level-1-hero.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
-            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+        <!-- The PRO courses: image / video cards that link out to their own pages, each tagged «PRO» -->
+        <a class="pro-card" href="https://aiqezban.mam-edu.com/" target="_blank" rel="noopener">
+          <video class="pro-card__media" src="assets/videos/teacher-level-1-hero.mp4" poster="assets/videos/teacher-level-1-hero.webp" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <span class="pill pill--black pro-card__tag">PRO</span>
+          <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+          <!-- The title with the tax refund + ministry endorsement under it (.pro-card__foot: the bottom block) -->
+          <div class="pro-card__foot">
             <h3 class="pro-card__title">AI քեզ ուսուցիչ</h3>
-          </a>
-          <!-- TODO: real external link for «AI քեզ project manager» -->
-          <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
-            <video class="pro-card__media" src="assets/videos/project-manager-hero.mp4" poster="assets/videos/project-manager-hero.jpg" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
-            <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
-            <h3 class="pro-card__title">AI քեզ project manager</h3>
-          </a>
-          <!-- Coming soon: links to the pre-registration page -->
-          <a class="pro-card is-soon" href="doctor-register.html" target="_blank" rel="noopener">
-            <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
-            <span class="pro-card__soon">Շուտով</span>
-            <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
-            <span class="btn btn--white btn--sm pro-card__cta">Գրանցվել</span>
-          </a>
-        </div>
+            <p class="endorse endorse--light"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։ Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</span></p>
+          </div>
+        </a>
+        <!-- TODO: real external link for «AI քեզ project manager» -->
+        <a class="pro-card" href="https://example.com/ai-qez-product-manager" target="_blank" rel="noopener">
+          <video class="pro-card__media" src="assets/videos/project-manager-hero.mp4" poster="assets/videos/project-manager-hero.jpg" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+          <span class="pill pill--black pro-card__tag">PRO</span>
+          <span class="pro-card__arrow" aria-hidden="true"><img src="assets/lucide-arrow-up-right.svg" width="24" height="24" alt="" /></span>
+          <h3 class="pro-card__title">AI քեզ project manager</h3>
+        </a>
+        <!-- Coming soon: links to the pre-registration page -->
+        <a class="pro-card is-soon" href="doctor-register.html" target="_blank" rel="noopener">
+          <img src="assets/learn/research-astronaut.webp" alt="" loading="lazy" />
+          <span class="pill pill--black pro-card__tag">PRO</span>
+          <span class="pro-card__soon">Շուտով</span>
+          <h3 class="pro-card__title">AI քեզ բժիշկ</h3>
+          <span class="btn btn--white btn--sm pro-card__cta">Գրանցվել</span>
+        </a>
       </div>
 
     </section>

@@ -1033,7 +1033,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     watch.observe(heroCta);
   };
   setup();
-  new MutationObserver(setup).observe(html, { attributes: true, attributeFilter: ['data-hero'] });   // the A/B tool may switch the hero after load
+  new MutationObserver(setup).observe(html, { attributes: true, attributeFilter: ['data-hero'] });   // kept from the A/B test (off since Oct 2026): a hero switched after load still sets up
 })();
 
 /* ============================================================
@@ -1114,6 +1114,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   const sliders = [
     { row: '.teachers__row', arrows: '.teachers .teachers__arrow', item: '.teacher' },
     { row: '.quotes__row', arrows: '.quotes .teachers__arrow', item: '.quote' },   // the reviews (05f), same arrows
+    { row: '.packages--row', arrows: '.pricing .teachers__arrow', item: '.pkg:not([hidden])' },   // the home page's courses (05b)
   ];
 
   sliders.forEach(({ row: rowSelector, arrows: arrowSelector, item }) => {
@@ -1359,34 +1360,6 @@ function armPhoneDigits(value) {
 })();
 
 /* ============================================================
-   05 · PACKAGES — «AI գրագիտություն / PRO դասընթացներ» pill tabs
-   ============================================================ */
-(function packageTabs() {
-  const tabs = Array.from(document.querySelectorAll('.pill-tabs [role="tab"]'));
-  if (!tabs.length) return;
-
-  function select(tab, focus) {
-    tabs.forEach((t) => {
-      const on = t === tab;
-      t.setAttribute('aria-selected', String(on));
-      t.tabIndex = on ? 0 : -1;
-      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
-    });
-    if (focus) tab.focus();
-  }
-
-  tabs.forEach((tab, i) => {
-    tab.addEventListener('click', () => select(tab));
-    tab.addEventListener('keydown', (e) => {
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      e.preventDefault();
-      const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
-      select(next, true);
-    });
-  });
-})();
-
-/* ============================================================
    05 · «Ի՞նչ սովորել» tiles → the course card
    Each tile names the card that teaches it (data-pkg="master": the AI գրագետ
    card, the whole course). Wide screens: scroll to the card, name the topic
@@ -1426,7 +1399,6 @@ function armPhoneDigits(value) {
     const card = packages.querySelector(`.pkg--${pkg}`);
     if (!card) return;   // unknown package: let the link jump to #packages
     e.preventDefault();
-    document.getElementById('tab-basic')?.click();   // the cards live on the «AI գրագիտություն» tab
     const heading = card.querySelector('.pkg__name');
     heading.tabIndex = -1;   // keyboard focus follows the scroll, so Tab continues at that card's «Գնել»
     heading.focus({ preventScroll: true });
