@@ -637,8 +637,8 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       const r = word ? Math.max(text.offsetWidth, text.offsetHeight) / 2 : unit * sizeOf(el);
       const body = Bodies.circle(x, y, Math.min(r, word ? W / 2 : W * 0.21), BALL);   // no ball wider than 42% of the stage (the gifts on a phone); a word's ball is its text
       const eyes = el.classList.contains('drop__ball--eyes');
-      // the eyes and the gifts never turn (the eyes stay level, the laptops stand)
-      const ball = { el, body, r: body.circleRadius, eyes, upright: eyes || el.classList.contains('drop__ball--gift') || el.classList.contains('drop__ball--word'), hopAt: 0, last: null };
+      // the eyes, the gifts and the avatars never turn (the eyes stay level, the laptops and the faces stand)
+      const ball = { el, body, r: body.circleRadius, eyes, upright: eyes || el.matches('.drop__ball--gift, .drop__ball--word, .drop__ball--avatar'), hopAt: 0, last: null };
       el.style.setProperty('--ball', `${2 * ball.r}px`);
       Composite.add(engine.world, body);
       balls.push(ball);
@@ -1276,6 +1276,20 @@ function armPhoneDigits(value) {
 }
 
 /* ============================================================
+   Modals · the pinned foot's edge — while more of the form is below (the dialog scrolls), the foot shows a soft
+   shadow on its top edge (.modal__foot.is-more, tailwind.css), so it's clear the fields go on under it
+   ============================================================ */
+(function modalEdge() {
+  document.querySelectorAll('dialog.modal').forEach((dialog) => {
+    const check = () => dialog.querySelectorAll('.modal__foot').forEach((foot) => {
+      foot.classList.toggle('is-more', dialog.scrollTop + dialog.clientHeight < dialog.scrollHeight - 1);
+    });
+    dialog.addEventListener('scroll', check, { passive: true });
+    new ResizeObserver(check).observe(dialog);   // opened (0 → its size), the screen turned, a field grew
+  });
+})();
+
+/* ============================================================
    05d · 3-FRIENDS FORM — «Գրանցվել ընկերներով» opens the popup
    (.modal, a native <dialog>: Escape closes it, focus stays inside).
    «Գրանցվել ընկերներով» stays disabled until every field is filled in:
@@ -1355,6 +1369,81 @@ function armPhoneDigits(value) {
     done.hidden = false;
     done.focus();
     if (eyes) eyes.dataset.look = 'you';
+  });
+  update();
+})();
+
+/* ============================================================
+   12b · OFFER CALCULATOR (aigraget/team/) — how many people: the number, the slider (1–500) and the offer form's
+   stepper (− number +) follow each other (a number over 500 keeps the slider at its end, «500+»); every [data-calc] shows the count and the estimate (count ×
+   data-price, ֏). «Ստանալ կորպորատիվ առաջարկ» opens the offer form (#offer-form, a native <dialog>) with the estimate
+   in its foot and hidden fields; its button stays disabled until every field is filled in (8 digits after +374, a
+   valid email). Sent, the confirmation takes its place; closed, the empty form comes back. Front end only (TODO,
+   developer: send new FormData(form) — name, position, phone, email, program, people — and show the confirmation once
+   that worked; until then it shows straight away and nothing is sent)
+   ============================================================ */
+(function offerCalc() {
+  const calc = document.querySelector('.calc');
+  const dialog = document.getElementById('offer-form');
+  if (!calc || !dialog) return;
+  const number = calc.querySelector('.calc__number');
+  const range = calc.querySelector('.calc__range');
+  const price = Number(calc.dataset.price);
+  const form = dialog.querySelector('form');
+  const done = dialog.querySelector('[data-done]');
+  const submit = form.querySelector('button[type="submit"]');
+  const { name, position, phone, email, people } = form.elements;
+  const money = (n) => `֏ ${n.toLocaleString('en-US')}`;
+  const MAX = Number(number.max);
+
+  // One count for the whole page: the calculator's box and slider, the offer form's stepper (− box +); each control sets
+  // it, every [data-count] box, the slider, the − / + and every [data-calc] follow (the box being typed in is left alone)
+  const counts = [...document.querySelectorAll('[data-count]')];
+  const steps = [...document.querySelectorAll('[data-step]')];
+  let count = 1;
+  const clean = (v) => Math.min(MAX, Math.max(1, Math.round(Number(v)) || 1));
+  function set(n, from = null) {
+    count = n;
+    counts.forEach((box) => { if (box !== from) box.value = n; });
+    if (range !== from) range.value = Math.min(n, Number(range.max));   // over 500: the slider at its end, «500+»
+    steps.forEach((btn) => { btn.disabled = Number(btn.dataset.step) < 0 ? n <= 1 : n >= MAX; });
+    document.querySelectorAll('[data-calc="people"]').forEach((el) => { el.textContent = n; });
+    document.querySelectorAll('[data-calc="total"]').forEach((el) => { el.textContent = money(n * price); });
+    people.value = n;
+  }
+
+  range.addEventListener('input', () => set(Number(range.value), range));
+  counts.forEach((box) => {
+    box.addEventListener('input', () => { if (box.value !== '') set(clean(box.value), box); });   // mid-typing an empty box: wait for a number
+    box.addEventListener('change', () => set(clean(box.value)));   // left empty or out of range: back to a real count
+  });
+  steps.forEach((btn) => btn.addEventListener('click', () => set(clean(count + Number(btn.dataset.step)))));
+  set(clean(number.value));
+
+  function update() {
+    submit.disabled = !(name.value.trim() !== '' && position.value.trim() !== '' && armPhoneDigits(phone.value).length === 8 && email.value.trim() !== '' && email.checkValidity());
+  }
+  function showDone(on) {
+    form.hidden = on;
+    done.hidden = !on;
+    dialog.setAttribute('aria-labelledby', on ? 'offer-done-title' : 'offer-form-title');
+    if (on) done.querySelector('.btn').focus();
+  }
+  dialog.addEventListener('close', () => {
+    if (done.hidden) return;
+    form.reset();
+    set(count);   // reset() put the stepper and the hidden count back to 1: the calculator's again
+    showDone(false);
+    update();
+  });
+  document.querySelectorAll('[data-open="offer-form"]').forEach((btn) => btn.addEventListener('click', () => dialog.showModal()));
+  dialog.querySelectorAll('[data-close]').forEach((btn) => btn.addEventListener('click', () => dialog.close()));
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });   // a click on the dimmed page around it
+  form.addEventListener('input', update);
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();               // no backend yet
+    if (submit.disabled) return;
+    showDone(true);
   });
   update();
 })();
@@ -1539,8 +1628,8 @@ function makeEyes({ tm = false } = {}) {
    proportions are the brand bubble's (240 × 302 drawing), measured in T so the tail keeps its shape at any width.
    ============================================================ */
 (function heroBubble() {
-  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B), the why blocks (05 · .why__bubble), the about lead (05b · .about__lead) and the audience boxes (05i · .audience__bubble) and the mission's words (08 · .mission__body--bubble): those two the shape without its tail; whose corners scale up 1.5× for their size
-  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble')];
+  // also the reviews' bubbles (05f · .quote__bubble), Hero B's draw bubble (03 B) and its lead in a bubble (aigraget/team/ · .story-hero__lead--bubble), the why blocks (05 · .why__bubble), the about lead (05b · .about__lead) and the audience boxes (05i · .audience__bubble) and the mission's words (08 · .mission__body--bubble): those two the shape without its tail; whose corners scale up 1.5× for their size
+  const buttons = [...document.querySelectorAll('.btn--inline, .quote__bubble, .story-hero__bubble, .story-hero__lead--bubble, .rivals__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble')];
   if (!buttons.length || !canClip) return;
   function shape(el) {
     const W = el.offsetWidth, H = el.offsetHeight;
@@ -1548,11 +1637,11 @@ function makeEyes({ tm = false } = {}) {
     const T = parseFloat(cs.paddingBottom) - parseFloat(cs.paddingTop);   // the tail's room at the bottom
     if (!W || !H || T <= 0) return;
     const Hb = H - T, e = 0.17 * T;
-    const r = el.matches('.quote__bubble, .story-hero__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble') ? 1.5 : 1;   // corner scale
+    const r = el.matches('.quote__bubble, .story-hero__bubble, .story-hero__lead--bubble, .rivals__bubble, .why__bubble, .about__lead, .audience__bubble, .mission__body--bubble') ? 1.5 : 1;   // corner scale
     // The tip: the brand's, a little in from the right side; when the bubble speaks for the eyes on a circle under
-    // it (05b · .about__eyes), right over their middle, so it points at them (layout offsets, not the on-screen box,
+    // it (05b · .about__eyes, 05a · .rivals__eyes), right over their middle, so it points at them (layout offsets, not the on-screen box,
     // which an entrance may still be scaling)
-    const who = el.nextElementSibling?.matches('.about__eyes') ? el.nextElementSibling : null;
+    const who = el.nextElementSibling?.matches('.about__eyes, .rivals__eyes') ? el.nextElementSibling : null;
     const tip = who ? Math.min(W - e, who.offsetLeft + who.offsetWidth / 2 - el.offsetLeft) : W - e;
     // 05i · .audience__bubble and 08 · .mission__body--bubble: the bubble without its tail, only the bottom edge falling
     // away from the side to the other corner (so no two sit level)
@@ -1586,7 +1675,7 @@ function makeEyes({ tm = false } = {}) {
    .flight) only blinks: it keeps looking ahead, where it flies
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .callback__eyes > .eyes, .flight__ship .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .rivals__eyes > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .callback__eyes > .eyes, .flight__ship .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you
@@ -1755,10 +1844,11 @@ revealOnce(document.querySelector('.kept'), null, 0.3);
 bubbleCards('.format__card', '.format__title', document.querySelector('.format__eyes'));
 bubbleCards('.needs__card', '.needs__title');
 bubbleCards('.kept__card', '.kept__title', document.querySelector('.kept__eyes'), { bigEyes: true });
-function bubbleCards(cardSel, titleSel, eyes = null, { bigEyes = false } = {}) {
+bubbleCards('.loss', '.loss__title', null, { shapes: ['tail-right', 'step-right', 'step-right', 'tail-right'] });   // aigraget/team/ · 05 losses: the format cards' look; two by two, so the cuts go crosswise (no neighbours alike)
+function bubbleCards(cardSel, titleSel, eyes = null, { bigEyes = false, shapes = ['tail-right', 'step-right', 'tail-right', 'step-right'] } = {}) {
   const cards = [...document.querySelectorAll(cardSel)];
   if (!cards.length || !canClip) return;
-  const SHAPES = ['tail-right', 'step-right', 'tail-right', 'step-right'];
+  const SHAPES = shapes;   // the cut of each card in turn (a row: tail, step, tail, step)
   const GAP = 4;                // air between the eyes and the shape
   const progress = new Map();   // card → its cut: 0 a plain rectangle · 1 the bubble
   const animating = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window;

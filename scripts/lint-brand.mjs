@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs';
 const only = process.argv[2];
 const BRAND = 'BRAND.md';
 const CSS = 'tailwind.css';
-const PAGES = ['index.html', 'aigraget.html', 'doctor-register.html', 'join.html', 'raffle-terms.html', 'join/community-owner.html', 'join/learning-experience-coordinator.html'];
+const PAGES = ['index.html', 'aigraget.html', 'aigraget/team/index.html', 'doctor-register.html', 'join.html', 'raffle-terms.html', 'join/community-owner.html', 'join/learning-experience-coordinator.html'];
 const REFS = [CSS, ...PAGES, 'script.js', 'join.js'];
 
 const problems = [];

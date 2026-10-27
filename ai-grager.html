@@ -6,7 +6,7 @@
   <title>AI գրագեր դասընթաց · AI քեզ բան</title>
   <meta name="description" content="AI գրագեր՝ AI դասընթաց զրոյից. 4 շաբաթ, 9 դաս, 18 ժամ, օնլայն՝ Zoom-ով։ AI-ի հիմունքներից մինչև նկարներ, վիդեոներ, քո կայքէջը, ավտոմատացումներ և AI ագենտներ։ Առաջին 3 դասը կարելի է գնել առանձին։" />
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css?v=grager-5" />
+  <link rel="stylesheet" href="styles.css?v=grager-9" />
 </head>
 <body>
 
@@ -34,11 +34,9 @@
         <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
       </a>
       <div class="nav__links" id="nav-menu">
-        <a href="index.html#courses" class="nav__link">Ի՞նչ սովորել</a>
-        <a href="index.html#packages" class="nav__link">Դասընթացներ</a>
-        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
-        <div class="nav__item" hidden>
+        <a href="index.html#packages" class="nav__link">Ի՞նչ սովորել</a>   <!-- the home page's «Դասընթացներ»: its «Ի՞նչ սովորել» section is hidden for now -->
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js), as on the home page -->
+        <div class="nav__item">
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
           </button>
@@ -47,6 +45,7 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="/aigraget/team" class="subnav__link">AI գրագետ թիմ</a>
                   <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
                   <a href="index.html#packages" class="subnav__link">Start</a>
                 </div>
@@ -79,8 +78,7 @@
             </div>
           </div>
         </div>
-        <a href="index.html#webinar" class="nav__link">Վեբինար</a>
-        <a href="index.html#mission" class="nav__link">Մեր առաքելությունը</a>
+        <span class="nav__link nav__link--soon">Վեբինար</span>   <!-- the webinar gets a page of its own: no link until it exists -->
         <a href="index.html#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
       <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
@@ -823,6 +821,6 @@
       </div>
     </dialog>
 
-  <script src="script.js?v=levelup-9"></script>
+  <script src="script.js?v=levelup-10"></script>
 </body>
 </html>

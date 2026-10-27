@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-9" />
+  <link rel="stylesheet" href="styles.css?v=pages-17" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor, locally too. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -53,11 +53,9 @@
         <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
       </a>
       <div class="nav__links" id="nav-menu">
-        <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
-        <a href="#packages" class="nav__link">Դասընթացներ</a>
-        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
-        <div class="nav__item" hidden>
+        <a href="#packages" class="nav__link">Ի՞նչ սովորել</a>   <!-- «Դասընթացներ»: the «Ի՞նչ սովորել» section is hidden for now -->
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js) -->
+        <div class="nav__item">
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
           </button>
@@ -66,6 +64,7 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="/aigraget/team" class="subnav__link">AI գրագետ թիմ</a>
                   <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
                   <a href="#packages" class="subnav__link">Start</a>
                 </div>
@@ -98,8 +97,7 @@
             </div>
           </div>
         </div>
-        <a href="#webinar" class="nav__link">Վեբինար</a>
-        <a href="#mission" class="nav__link">Մեր առաքելությունը</a>
+        <span class="nav__link nav__link--soon">Վեբինար</span>   <!-- the webinar gets a page of its own: no link until it exists -->
         <a href="#teachers" class="nav__link" hidden>Մեր ուսուցիչները</a>
       </div>
       <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
@@ -228,8 +226,9 @@
     <!-- =========================================================
          05 · COURSES / PACKAGES — «Ի՞նչ սովորել»
          Rows inside the 3 cards line up via CSS subgrid.
+         Hidden for now (Oct 2026), kept: remove `hidden` to bring it back (and the nav's «Ի՞նչ սովորել» to #courses)
          ========================================================= -->
-    <section class="courses" id="courses">
+    <section class="courses" id="courses" hidden>
       <div class="courses__top">
         <h2 class="section-title">Ի՞նչ սովորել</h2>
         <div class="courses__nav">
@@ -789,7 +788,7 @@
       <h2 class="refund__title" id="refund-title">100% գումարի վերադարձ՝ առանց որևէ հարցի</h2>
       <!-- the promise, its one condition (a detail line), then the same ask as the hero's -->
       <div class="refund__body">
-        <p>Մենք չենք ուզում, որ որոշում կայացնելիս անհանգստանաս։ Եթե վերջում սպասելիքներդ չարդարանան, կվերադարձնենք քո վճարած ողջ գումարը։</p>
+        <p>Եթե վերջում սպասելիքներդ չարդարանան, կվերադարձնենք քո վճարած ողջ գումարը։</p>
         <p class="refund__condition">Միակ պայմանը՝ մասնակցություն բոլոր դասերին</p>
         <a href="#packages" class="btn btn--dark btn--md">Ընտրել դասընթաց</a>
       </div>
@@ -926,16 +925,17 @@
          08 · MISSION — «Մեր առաքելությունը · 1,000,000 AI գրագետ հայ», a Teal band
          ========================================================= -->
     <section class="mission" id="mission">
-      <div class="mission__row">
+      <div class="mission__row mission__row--split">
         <div class="mission__head">
-          <p class="mission__kicker">Մեր առաքելությունը</p>
+          <p class="mission__kicker">Մեր նպատակն է</p>
           <h2 class="mission__title">1,000,000<br />AI գրագետ հայ</h2>   <!-- a statement, not a section label: Display L (BRAND.md → Hierarchy) -->
+          <p class="mission__when">առաջիկա հինգ&nbsp;տարում</p>   <!-- when: a detail under the headline, not part of it -->
           <!-- The million: a crowd of the brand's eyes drifting under the headline, each pair someone who learned;
                script.js (08 · missionCrowd) fills the row, and the eyes blink and look around -->
           <div class="crowd" aria-hidden="true"><div class="crowd__track"></div></div>
         </div>
         <div class="mission__body">
-          <p class="mission__text">Մեր նպատակը հստակ է՝ առաջիկա 5 տարում օգնել առնվազն 1,000,000 մարդու ձեռք բերել կիրառական AI գրագիտություն։ Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
+          <p class="mission__text">Դու ոչ միայն սովորում ես, այլև միանում ես ավելի մեծ շարժման։</p>
           <a href="#packages" class="btn btn--primary btn--md">Ընտրել դասընթաց</a>   <!-- the same words as the hero's ask: a second wording would read as a second offer -->
         </div>
       </div>
@@ -1202,6 +1202,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-1"></script>
+  <script src="script.js?v=pages-2"></script>
 </body>
 </html>

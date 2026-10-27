@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-62" />
+  <link rel="stylesheet" href="styles.css?v=pages-66" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor, locally too. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -54,10 +54,8 @@
       </a>
       <div class="nav__links" id="nav-menu">
         <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
-        <a href="#packages" class="nav__link">Դասընթացներ</a>
-        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js).
-             Hidden for now — to bring it back, remove `hidden` here and delete the plain link above. -->
-        <div class="nav__item" hidden>
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js), as on the home page -->
+        <div class="nav__item">
           <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
             Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
           </button>
@@ -66,6 +64,7 @@
               <div class="subnav__cols">
                 <div class="subnav__group">
                   <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="/aigraget/team" class="subnav__link">AI գրագետ թիմ</a>
                   <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
                   <a href="index.html#packages" class="subnav__link">Start</a>
                 </div>
@@ -98,8 +97,7 @@
             </div>
           </div>
         </div>
-        <a href="index.html#webinar" class="nav__link">Վեբինար</a>
-        <a href="index.html#mission" class="nav__link">Մեր առաքելությունը</a>
+        <span class="nav__link nav__link--soon">Վեբինար</span>   <!-- the webinar gets a page of its own: no link until it exists -->
         <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
       </div>
       <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
@@ -1831,6 +1829,6 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>   <!-- the hero's eyes walk (03) -->
-  <script src="script.js?v=pages-21"></script>
+  <script src="script.js?v=pages-22"></script>
 </body>
 </html>

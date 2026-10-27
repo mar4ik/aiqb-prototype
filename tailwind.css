@@ -175,7 +175,7 @@
 .section-sub { @apply text-aqb-body-m italic; font-weight: var(--font-weight-headline); color: var(--color-ink-700); text-wrap: pretty; }   /* the audience__sum cut: ExtraBold Italic, as the audience's summary line (aigraget.html only) */
 
 /* One section box for every content section: same side margins, same vertical rhythm */
-.courses, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .refund, .mission, .referral, .faq, .contact {
+.courses, .rivals, .losses, .partners, .why, .about, .reel, .skills, .audience, .format, .callback, .pricing, .needs, .certificate, .kept, .stats, .refund, .mission, .referral, .faq, .contact {
   max-width: var(--container-page);
   margin: 0 auto;
   padding: var(--section-y) var(--page-x);
@@ -371,6 +371,9 @@
   transition: color var(--default-transition-duration);
 }
 .nav__link:hover { color: var(--color-primary); }   /* text link: colour only, no background */
+/* a nav item with no page yet («Վեբինար», Oct 2026): a <span>, the link's look, but no hover colour and no pointer */
+.nav__link--soon { cursor: default; }
+.nav__link--soon:hover { color: var(--color-ink-900); }
 
 /* «Դասընթացներ» sub nav: a white panel under the pill with course links + the Bundle promo.
    Opens on hover / keyboard focus (CSS) and on click (script.js toggles .is-open). */
@@ -385,14 +388,14 @@
 }
 
 .subnav {
-  position: absolute; left: 0; right: 0; top: 100%;
-  padding-top: --spacing(1);          /* invisible bridge so hover survives the gap */
+  position: absolute; left: 0; right: 0; top: calc(100% - --spacing(3));
+  padding-top: --spacing(4);          /* invisible bridge from the trigger's bottom (the pill's 12px padding up) to the panel, 4px under the pill: the pointer never leaves the item on its way down, so it doesn't close and jump */
   opacity: 0; visibility: hidden; translate: 0 calc(--spacing(2) * -1);
   transition: opacity .2s, translate .25s var(--ease-smooth), visibility 0s .25s;
 }
 @media (width >= theme(--breakpoint-lg)) {
   .nav__item:is(:hover, :focus-within, .is-open):not(.is-closed) .subnav {
-    opacity: 1; visibility: visible; translate: 0 0;
+    opacity: 1; visibility: visible; translate: -50% 0;   /* centred under the pill (left: 50%, below), settled */
     transition: opacity .2s, translate .25s var(--ease-smooth), visibility 0s;
   }
 }
@@ -459,6 +462,8 @@
 
 /* Desktop: keep the dropdown short — tighter promo (mobile keeps the big version) */
 @media (width >= theme(--breakpoint-lg)) {
+  .subnav { left: 50%; right: auto; width: max-content; min-width: 100%; translate: -50% calc(--spacing(2) * -1); }   /* at least the nav's width, wider when the links need it (the promo never covers a column), centred under the pill: its middle on the pill's (left 50%, back by half its width), sliding down into place as it opens */
+  .subnav__cols { grid-template-columns: repeat(2, minmax(max-content, 1fr)); }   /* each column as wide as its longest link */
   .subnav__cols { padding-top: --spacing(5); padding-bottom: --spacing(3); }
   .subnav__link { min-height: --spacing(9); padding-block: --spacing(1); }
 }
@@ -660,6 +665,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 }
 @media (width >= theme(--breakpoint-lg)) {
   .story-hero:has(+ .facts) { min-height: calc(100svh - --spacing(18)); }   /* the facts strip under it (03c, 72px, aigraget.html) shows on the first screen */
+  .story-hero.story-hero--full { min-height: 100svh; }   /* aigraget/team/: the hero fills the first screen, the facts strip under the fold */
 }
 .story-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: --spacing(4) --spacing(8); margin-top: --spacing(8); }   /* «Ավելին» and the outline button; air above them: the words, then the ask */
 .story-hero__actions .btn--primary, .story-hero__actions .btn--white { min-width: --spacing(50); }   /* «Ավելին» is a short word: 200px at least, so it holds its own beside the longer outline button */
@@ -731,6 +737,26 @@ html:not([data-hero="b"]) .story-hero { display: none; }
    text on Blue (BRAND.md → Text on colour). The balls keep their own colours. */
 .story-hero--blue { background: var(--color-primary); box-shadow: 0 0 0 100vmax var(--color-primary); }
 .story-hero--blue .drop { background: var(--color-primary); }
+/* Green hero (aigraget/team/): the same, on the campaign Green (BRAND.md → Campaign colours), White text as on the webinar bar */
+.story-hero--green { background: var(--color-campaign-green); box-shadow: 0 0 0 100vmax var(--color-campaign-green); }
+.story-hero--green .drop { background: var(--color-campaign-green); }
+/* Long lead (aigraget/team/): the line under the headline is long, so Body S (still SemiBold) across the copy's whole
+   half: 4 lines from 1440 up, 5 at 1280 (Oct 2026: the copy and the stage stay 50 / 50) */
+.story-hero--long-lead .story-hero__lead { max-width: none; @apply text-aqb-body-s; }
+/* …in the brand's chat bubble (BRAND.md → Chat bubble; script.js · 03b cuts it, its tail at the bottom-right): Black
+   with White text (BRAND.md → Text on colour), the words at Body S in the reading cut */
+.story-hero__lead--bubble {
+  padding: --spacing(5) --spacing(6) --spacing(11);   /* 44 − 20: a 24px tail (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--color-black); color: var(--color-white);
+}
+.story-hero--long-lead .story-hero__lead--bubble { display: flex; flex-direction: column; gap: --spacing(4); font-weight: var(--font-weight-text); }
+/* …and under the line, after a White hairline, the ministry endorsement (aigraget/team/: the coat of arms, small print) */
+.story-hero__lead--bubble .story-hero__endorse { padding-top: --spacing(4); border-top: 1px solid color-mix(in oklab, var(--color-white) 24%, transparent); }
+@media (width < theme(--breakpoint-md)) {
+  .story-hero__lead--bubble .story-hero__endorse { text-wrap: balance; }
+  .story-hero__lead--bubble .story-hero__endorse br { display: none; }   /* phones: the line wraps evenly, no word left alone */
+}   /* Body S (the long lead's size), Regular */
 
 /* The stage: columns 7–12 and on to the screen's right edge, top to bottom, on Black like the copy, so the hero is one
    dark field. Each ball is a tool's logo on a White disc (like .tool-stack__logo, which is this ball in the cards); the
@@ -773,6 +799,11 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 .drop__ball--gift[data-bg="yellow"] { background: var(--color-feed-yellow); }
 .drop__ball--gift img { width: 100%; height: auto; border-radius: 0; }
 .drop__ball--turned img { scale: -1 1; }   /* faces the other way (two of the pictures lean alike) */
+/* The team (aigraget/team/): an avatar (DiceBear «Gaze», assets/avatars/) cut round like the other balls, on its own
+   dark ground, edge to edge, as big as a tool ball; it stays upright as it rolls (script.js). Its colours are the
+   avatar's own, not the brand's: a decision (Oct 2026), as the picture is used unchanged */
+.drop__ball--avatar { overflow: hidden; background: none; }
+.drop__ball--avatar img { width: 100%; height: 100%; border-radius: 0; }
 .drop.is-live .drop__ball { position: absolute; top: 0; left: 0; will-change: transform; }
 .drop.is-holding, .drop.is-holding .drop__ball { cursor: grabbing; }   /* while a ball is held (script.js), wherever the pointer is */
 .drop.is-still .drop__ball { cursor: default; }
@@ -876,6 +907,10 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 @media (width < theme(--breakpoint-md)) {
   .facts__row { grid-template-columns: minmax(0, 1fr); }
 }
+/* aigraget/team/ (three facts): on desktop together in the middle of the strip, 48px apart, not spread to its edges */
+@media (width >= theme(--breakpoint-lg)) {
+  .facts--center .facts__row { justify-content: center; align-items: center; column-gap: --spacing(12); }
+}
 
 /* ============================================================
    05 · COURSES («Ի՞նչ սովորել») + PACKAGES
@@ -944,7 +979,67 @@ html:not([data-hero="b"]) .story-hero { display: none; }
   display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3);
 }
 .why__answer .why__bubble { align-self: stretch; }
-.why__answer .eyes { width: --spacing(19); }   /* 112.6 wide with the ™: the eyes themselves stay 64px, as the drawing's 96 of 112.6 */
+.why__answer .eyes { width: --spacing(19); }
+/* 05a · RIVALS (aigraget/team/): one statement on the Black band, before the why bubbles (it runs straight into them:
+   no bottom padding of its own). The brand's chat bubble (BRAND.md → Chat bubble; script.js · 03b cuts it), Teal with
+   black text, the words at Subhead; its tail points down at the eye logo with the ™ under its bottom-right corner, so
+   the eyes say it (as the about lead's, 05b), blinking and following the pointer (script.js · 05 peekEyes). Two thirds
+   of the page wide, centred; stacked layouts the full column */
+.rivals {
+  padding-bottom: 0;
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+}
+.rivals__say {
+  width: min(100%, calc((100% - var(--card-gap)) * 2 / 3));
+  margin: 0 auto;
+  display: flex; flex-direction: column; align-items: flex-end; gap: --spacing(3);
+}
+.rivals__bubble {
+  align-self: stretch;
+  padding: --spacing(8) --spacing(8) --spacing(16);   /* the extra bottom padding is the tail's room (script.js reads it) */
+  border-radius: var(--radius-lg);   /* until script.js shapes it */
+  background: var(--color-feed-teal);
+  color: var(--color-black);
+}
+.rivals__text { @apply text-aqb-subhead; text-wrap: pretty; }
+.rivals__eyes { display: block; width: --spacing(19); }   /* 112.6 wide with the ™, as the why answer's; the tail's tip over its middle */
+.rivals__eyes .eyes { width: 100%; }
+/* 05 · LOSSES (aigraget/team/, in the why bubbles' place, keeping id="courses"): on the same Black band, the section title
+   (White on Black) left-aligned, then four cards two by two in the format cards' look (05k): a feed colour each (Sky,
+   Pink, Yellow, Teal) with black text (BRAND.md → Text on colour), the icon on a Black disc (.loss__icon shares
+   .format__icon), the card title (Subhead), the reading text; script.js (05k · bubbleCards) cuts each top-right corner
+   into the brand bubble as the row scrolls in */
+.losses {
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(0 -100vmax);
+}
+.losses .section-title { color: var(--color-white); text-wrap: balance; }
+.losses__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); margin-top: var(--title-gap); }
+.loss {
+  display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3);
+  padding: --spacing(8);
+  border-radius: var(--radius-3xl);   /* until script.js cuts it (its corners: the same 24) */
+  background: var(--loss-bg, var(--color-feed-sky));
+  color: var(--color-black);
+}
+.loss[data-bg="sky"]    { --loss-bg: var(--color-feed-sky); }
+.loss[data-bg="pink"]   { --loss-bg: var(--color-feed-pink); }
+.loss[data-bg="yellow"] { --loss-bg: var(--color-feed-yellow); }
+.loss[data-bg="teal"]   { --loss-bg: var(--color-feed-teal); }
+.loss__title { @apply text-aqb-subhead; }
+.loss__text { @apply text-aqb-body-s; text-wrap: pretty; }
+@media (width < theme(--breakpoint-md)) {
+  .losses__grid { grid-template-columns: minmax(0, 1fr); }
+  .loss { padding: --spacing(6); }
+}
+@media (width < theme(--breakpoint-lg)) { .rivals__say { width: 100%; } }   /* stacked layouts: the full column */
+@media (width < theme(--breakpoint-md)) {
+  .rivals__bubble { padding: --spacing(6) --spacing(6) --spacing(12); }
+  .rivals__text { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); }   /* phones: Body M, still SemiBold (the long words fit) */
+}   /* 112.6 wide with the ™: the eyes themselves stay 64px, as the drawing's 96 of 112.6 */
 /* The entrance (script.js · revealOnce; without script, or for reduced motion, all of it simply shows): the bubbles pop
    in one after another like messages, each growing out of its tail (--d: when), then the eyes under the answer come up */
 .why__bubble { transform-origin: 100% 100%; }   /* the tail's corner */
@@ -1406,7 +1501,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 .format__icons { display: flex; align-items: center; gap: --spacing(3); margin-bottom: --spacing(3); }
 .format__icons .format__icon { margin-bottom: 0; }
 .format__logo { width: auto; height: --spacing(4); }   /* the Zoom wordmark, small enough to stay clear of the cut corner */
-.format__icon {
+.format__icon, .loss__icon {
   display: grid; place-items: center;
   width: --spacing(14); height: --spacing(14); margin-bottom: --spacing(3);
   border-radius: var(--radius-full);
@@ -1657,6 +1752,36 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 .contact__done-text { @apply text-aqb-subhead; text-wrap: balance; }
 @media (width < theme(--breakpoint-md)) {
   .contact__card { padding: --spacing(6); }
+}
+/* 12b · The calculator (aigraget/team/), in a wider card: how many people (Label, the number in a .field__input box
+   beside it) over a slider 1–500 (the browser's own control in the campaign Green, as the webinar bar; its ticks
+   at their places on the scale, small print), then what it comes to: a list split by hairlines (Label, the values
+   right-aligned), the estimate last in the headline cut (as the cards' prices), then the ask */
+.contact__card--calc { width: min(100%, --spacing(180)); }
+.calc { display: flex; flex-direction: column; gap: --spacing(6); }
+.calc__count { display: flex; align-items: center; justify-content: space-between; gap: --spacing(4); }
+.calc__label { @apply text-aqb-label; color: var(--color-ink-900); }
+.calc .calc__number { flex: none; width: --spacing(30); text-align: center; font-variant-numeric: tabular-nums; }   /* .calc: over .field__input's full width, which comes later */
+.calc__slider { display: flex; flex-direction: column; gap: --spacing(2); }
+.calc__range { width: 100%; height: --spacing(6); margin: 0; accent-color: var(--color-campaign-green); cursor: pointer; }   /* a layout box: the thumb's room */
+.calc__range:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 4px; border-radius: var(--radius-full); }
+.calc__ticks { position: relative; height: --spacing(5); @apply text-aqb-caption; color: var(--color-ink-600); }   /* a layout box for the ticks' line */
+.calc__tick { position: absolute; top: 0; translate: -50% 0; font-variant-numeric: tabular-nums; }
+.calc__tick--1   { left: 0; translate: none; }
+.calc__tick--100 { left: 19.84%; }   /* (100 − 1) / 499 of the way */
+.calc__tick--250 { left: 49.9%; }    /* (250 − 1) / 499 */
+.calc__tick--500 { left: auto; right: 0; translate: none; }
+.calc__sum { display: flex; flex-direction: column; margin: 0; }
+.calc__row { display: flex; align-items: baseline; justify-content: space-between; gap: --spacing(4); padding: --spacing(3) 0; border-bottom: 1px solid var(--line); @apply text-aqb-label; }
+.calc__row dt { font-weight: var(--font-weight-text); color: var(--color-ink-600); }
+.calc__row dd { margin: 0; color: var(--color-ink-900); text-align: right; font-variant-numeric: tabular-nums; }
+.calc__row--total { align-items: center; padding: --spacing(4) 0; border-bottom: 0; }
+.calc__row--total dt { font-weight: var(--font-weight-detail); color: var(--color-ink-900); }
+.calc__row--total dd { @apply text-aqb-subhead; font-weight: var(--font-weight-headline); font-style: italic; white-space: nowrap; }
+@media (width < theme(--breakpoint-md)) {
+  .calc .calc__number { width: --spacing(24); }   /* phones: room for «Մասնակիցների» beside it */
+  .calc__row--total { flex-direction: column; align-items: flex-start; gap: --spacing(1); }   /* the estimate under its label: a big sum needs the whole width */
+  .calc__row--total dd { text-align: left; }
 }
 
 /* Packages band: grey, full-bleed (box-shadow paints the grey past the 1440 column) */
@@ -2215,6 +2340,10 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
 .ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */
 .ic--plus       { --i: url("assets/icons/plus.svg"); }      /* opens a card; turned 45° it closes it (the lessons, aigraget.html) */
+.ic--chart      { --i: url("assets/icons/chart-no-axes-combined.svg"); }   /* productivity (the losses grid, aigraget/team/) */
+.ic--wallet     { --i: url("assets/icons/wallet.svg"); }    /* money (same) */
+.ic--target     { --i: url("assets/icons/target.svg"); }    /* competitive edge (same) */
+.ic--minus      { --i: url("assets/icons/minus.svg"); }     /* one less (the stepper, with --plus) */
 
 /* ============================================================
    06 · TEACHERS
@@ -2470,7 +2599,11 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .mission__kicker { @apply text-aqb-body-m; }
 .mission__kicker--lg { margin-bottom: --spacing(5); @apply text-aqb-body-l; }   /* aigraget.html: one step up, still Regular (BRAND.md → Hierarchy), 32px over the headline with the head's gap */
 .mission__title { @apply text-aqb-display-l italic; }
+.mission__when { @apply text-aqb-subhead; }   /* «առաջիկա հինգ տարում» under the headline: Subhead (32, SemiBold), a third of the Display L over it */
 .mission__body { display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(6); max-width: --spacing(120); }
+/* index.html: the refund band's columns (7 : 5, the same gap), so the paragraph starts on the same line as the refund's words over it */
+.mission__row--split { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.mission__row--split .mission__body { max-width: none; }
 .mission__text { display: flex; flex-direction: column; gap: --spacing(3); @apply text-aqb-body-s; }   /* its paragraphs, a line's air apart */
 /* aigraget.html: the paragraph and the button in the brand's chat bubble without its tail, as the audience boxes
    (BRAND.md → Chat bubble): Yellow with black text, so the words read on the Teal; script.js (03b) cuts it */
@@ -2499,6 +2632,48 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 .crowd:hover .crowd__track { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) { .crowd__track { animation: none; } }
+/* 05g · PARTNERS (aigraget/team/, after «Դասընթացի կառուցվածքը»): a row of client logos drifting by on the Black band,
+   as the crowd does (the same marquee, fade and pause on hover; still for reduced motion). For now placeholders drawn in
+   CSS: a faint White tile with a mark (a dot or a square) and a bar, varied tile to tile, until the real logos come.
+   It follows the Black video section straight on (no top padding: that one's bottom is the air above), then the
+   section rhythm under it before the (White) FAQ */
+.partners {
+  padding-block: 0 var(--section-y);
+  background: var(--color-black);
+  box-shadow: 0 0 0 100vmax var(--color-black);
+  clip-path: inset(-1px -100vmax 0);   /* 1px over the Black band above: no hairline where they meet on a fractional pixel */
+}
+.partners__strip {
+  contain: inline-size;
+  overflow: hidden;
+  mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(16), var(--color-black) calc(100% - --spacing(16)), transparent 100%);
+}
+.partners__track {
+  display: flex; align-items: center; gap: --spacing(6);
+  width: max-content;
+  padding-right: --spacing(6);   /* = the gap, so -50% lands exactly on the copy */
+  animation: marquee 40s linear infinite;
+}
+.partners:hover .partners__track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) { .partners__track { animation: none; } }
+.partners__logo {
+  --mark: color-mix(in oklab, var(--color-white) 40%, transparent);
+  flex: none;
+  display: flex; align-items: center; justify-content: center; gap: --spacing(3);
+  width: --spacing(48); height: --spacing(20);
+  border-radius: var(--radius-2xl);
+  background: color-mix(in oklab, var(--color-white) 8%, transparent);
+}
+.partners__logo::before { content: ""; width: --spacing(7); height: --spacing(7); border-radius: var(--radius-full); background: var(--mark); }   /* the mark */
+.partners__logo::after { content: ""; width: --spacing(18); height: --spacing(3); border-radius: var(--radius-full); background: var(--mark); }   /* the name */
+.partners__logo:nth-child(3n+2)::before { border-radius: var(--radius-md); }   /* a square mark */
+.partners__logo:nth-child(3n)::before { width: --spacing(5); height: --spacing(9); border-radius: var(--radius-md); }   /* a tall mark */
+.partners__logo:nth-child(2n)::after { width: --spacing(24); }
+.partners__logo:nth-child(4n+3)::after { width: --spacing(14); height: --spacing(4); }
+@media (width < theme(--breakpoint-md)) {
+  .partners__logo { width: --spacing(36); height: --spacing(16); }
+  .partners__strip { mask: linear-gradient(90deg, transparent 0, var(--color-black) --spacing(8), var(--color-black) calc(100% - --spacing(8)), transparent 100%); }
+}
 .crowd .eyes { flex: none; width: --spacing(14); }
 .crowd .eyes:nth-child(3n+2) { width: --spacing(11); }
 .crowd .eyes:nth-child(5n+3) { width: --spacing(17); }
@@ -2681,7 +2856,8 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 @media (prefers-reduced-motion: reduce) { .modal { transition: none; translate: none; } }
 html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it */
 .modal__panel { --modal-pad: --spacing(10); display: flex; flex-direction: column; gap: --spacing(8); padding: var(--modal-pad); }   /* = .promo-form */
-.modal__head { display: flex; align-items: center; justify-content: space-between; gap: --spacing(4); }   /* the title, the ✕ beside it */
+.modal__head { display: flex; align-items: center; justify-content: space-between; gap: --spacing(4); }   /* the title; the ✕ in the corner */
+.modal__head .dismiss { position: absolute; top: --spacing(4); right: --spacing(4); }   /* the ✕ in the popup's top-right corner, 16px in (the head spans the popup and is sticky, so it stays there) */
 /* The title (and ✕) and the button (in __foot) stay in view while the fields scroll between them: sticky to the
    dialog's own scroll, each a White bar with the panel's padding inside it, so at the end of the scroll the last
    field sits clear above the button */
@@ -2699,6 +2875,44 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
 }
 .modal__title { @apply text-aqb-subhead; color: var(--color-ink-900); text-wrap: balance; }   /* a form title: Subhead */
 /* The total, first in the pinned foot: what everyone in the form pays together, set off by a hairline */
+/* What the form comes to (aigraget/team/ · the offer): a grey box with the calculator's rows (.calc__row, less air in
+   the box), the estimate under its label on phones, over the note and the button */
+.modal__summary { padding: --spacing(1) --spacing(5); border-radius: var(--radius-2xl); background: var(--surface); }
+.modal__summary .calc__row { padding: --spacing(3) 0; }
+.modal__summary .calc__row--total { flex-direction: column; align-items: flex-start; gap: --spacing(1); padding: --spacing(3) 0 --spacing(4); }
+.modal__summary .calc__row--total dd { text-align: left; }
+/* Split (aigraget/team/ · the offer): nothing pinned, one flow: the fields, then under them the sum, the note and the
+   button across the popup. From md the fields two to a row (the legend across) in a wider popup, and the estimate
+   beside its label again (the box is wide), so it all shows at once; on phones one column */
+/* Stepper: a number with − and + beside it (the offer form's count, aigraget/team/): round White buttons with a hairline,
+   the box a narrow .field__input; − / + turn off at the ends (script.js · 12b) */
+.stepper { display: inline-flex; align-items: center; gap: --spacing(2); }
+.stepper__btn {
+  display: grid; place-items: center; flex: none;
+  width: --spacing(10); height: --spacing(10);
+  border: 1px solid var(--line); border-radius: var(--radius-full);
+  background: var(--color-white); color: var(--color-ink-900);
+  cursor: pointer;
+  transition: border-color var(--default-transition-duration), color var(--default-transition-duration);
+}
+.stepper__btn:hover:not(:disabled) { border-color: var(--color-primary); color: var(--color-primary); }
+.stepper__btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.stepper__btn:disabled { opacity: .4; cursor: default; }
+.stepper .stepper__input { width: --spacing(20); padding: --spacing(2); text-align: center; background: var(--color-white); font-variant-numeric: tabular-nums; }   /* .stepper: over .field__input's full width, which comes later; White on the grey box */
+@media (width < theme(--breakpoint-md)) {
+  .calc__row--count { flex-direction: column; align-items: flex-start; gap: --spacing(2); }   /* phones: the label over the stepper, so − box + fit the box */
+}
+.modal--split { width: min(--spacing(220), 100% - --spacing(8)); }
+.modal--split .modal__head, .modal--split .modal__foot { position: static; }
+.modal--split .modal__foot { margin: 0; padding: 0; box-shadow: none; }
+@media (width >= theme(--breakpoint-md)) {
+  .modal--split .modal__group { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: --spacing(6); }
+  .modal--split .modal__summary .calc__row--total { flex-direction: row; align-items: center; justify-content: space-between; gap: --spacing(4); padding: --spacing(3) 0; }
+  .modal--split .modal__summary .calc__row--total dd { text-align: right; }
+}
+/* The pinned foot shows a soft edge while more of the form scrolls under it (script.js → modalEdge sets .is-more) */
+.modal__foot { transition: box-shadow .2s; }
+.modal__foot.is-more { box-shadow: 0 -12px 16px -12px color-mix(in oklab, var(--color-ink-900) 18%, transparent); }
 .modal__total { display: flex; align-items: center; justify-content: space-between; gap: --spacing(4); padding: --spacing(4) 0; border-bottom: 1px solid var(--line); }   /* a hairline under it, between the total and the note */
 .modal__total-label { display: flex; flex-direction: column; gap: --spacing(1); @apply text-aqb-label; color: var(--color-ink-900); }   /* «Ընդհանուր»: a detail */
 .modal__total-meta { @apply text-aqb-caption; font-weight: var(--font-weight-text); color: var(--color-ink-600); }   /* how many people it covers */
@@ -3235,6 +3449,8 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .learn-grid { --learn-col-w: calc((100% - var(--card-gap)) / 2.25); --learn-h: --spacing(75); }   /* two tiles in view, the third peeking: three were too narrow for the titles at 768 (words broke mid-word) */
   .refund { grid-template-columns: minmax(0, 1fr); align-items: start; }
   .mission__row { flex-direction: column; align-items: flex-start; gap: --spacing(6); }
+  .mission__row--split { grid-template-columns: minmax(0, 1fr); }   /* stacked, as the refund */
+  .mission__row--split .mission__body { max-width: --spacing(120); }   /* …and the paragraph keeps its stacked measure */
   .faq { grid-template-columns: minmax(0, 1fr); }
   .promo-form { width: 100%; }
 }
