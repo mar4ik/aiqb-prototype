@@ -247,6 +247,17 @@
 .dismiss:hover { background: color-mix(in oklab, currentColor 12%, transparent); color: var(--color-ink-900); }
 .dismiss:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
+/* Text link: a link inside a line of copy (the ministry's name → its certificate, a PDF in a new tab). It keeps the
+   text's colour and underlines it in that colour, so it reads on white, the feed colours and Black; hover only darkens
+   the underline (colour only, as every text link) */
+.text-link {
+  color: inherit;
+  text-decoration: underline; text-decoration-color: color-mix(in oklab, currentColor 40%, transparent); text-underline-offset: 3px;
+  transition: text-decoration-color var(--default-transition-duration);
+}
+.text-link:hover { text-decoration-color: currentColor; }
+.text-link:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
 /* ============================================================
    01 · ANNOUNCEMENT BAR (orange, floating at the bottom until the page is scrolled)
    ============================================================ */

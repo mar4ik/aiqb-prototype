@@ -32,6 +32,7 @@ There's no component folder: the **atomic components are the shared classes in `
 | Chip | `.chip` (in `.chips`) | filter / topic chips |
 | Tool logo | `.tool-pill` (`--lg`), `.tool-stack` | AI-tool logos |
 | Form field | `.field`, `.field__label`, `.field__input` (`--grouped`), `.field__prefix` | every input |
+| Text link | `.text-link` (keeps the text's colour, underlined in it; hover darkens the underline) | a link inside a line of copy: the whole sentence «Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։» (on `aigraget.html`'s about list «Դասընթացը երաշխավորված է ՀՀ ԿԳՄՍՆ կողմից») opens the certificate PDF (`assets/certificate/aiqezban_certificate.pdf`) in a new tab; not inside the PRO card, which is a link itself |
 | Nav link | `.nav__link` (`--soon`: a `<span>` for an item with no page yet, no hover colour, e.g. «Վեբինար»), `.subnav__link` (`--soon`) | navigation text links |
 | Legal page | `.legal-bar` (`__logo`, `__phone`), `.legal` (`__title`, `__meta`, `__body`, `__section`, `__heading`, `__list`) | `raffle-terms.html` only: a copy of aiqezban.ai/terms with that page's own typeface (Noto Sans Armenian), sizes, weights, greys, navy and orange, read from the saved page (`archive/aiqezban-terms/`). Decided Oct 2026: the block sits between `lint-brand: off / on` marks in `tailwind.css`, which the brand check skips. Never reuse it |
 | Section title | `.section-title`; with a subtitle: both in `.section-head`, the subtitle `.section-sub` (Body M, Ink 700) | every section heading |

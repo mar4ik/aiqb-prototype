@@ -676,6 +676,33 @@
     outline-offset: 2px;
   }
 
+  .text-link {
+    color: inherit;
+    text-decoration: underline;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .text-link {
+      -webkit-text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+      -webkit-text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+      text-decoration-color: color-mix(in oklab, currentColor 40%, transparent);
+    }
+  }
+
+  .text-link {
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--default-transition-duration);
+  }
+
+  .text-link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .text-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
   .topbar {
     left: 50%;
     bottom: calc(var(--spacing) * 6);
