@@ -2786,6 +2786,24 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ladder__step:nth-child(9)  .avatar { --av: var(--color-feed-teal);      --av-fg: var(--color-black); }
 .ladder__step:nth-child(10) .avatar { --av: var(--color-primary);        --av-fg: var(--color-white); }
 
+/* The home page's ladder (index.html): the count of friends in a white circle, the discount it adds up to under it;
+   #1 Orange and #10 Blue, as their reward cards. aigraget.html keeps the avatar ladder above */
+.ladder__dot {
+  position: relative;
+  width: --spacing(13); height: --spacing(13);
+  display: grid; place-items: center;
+  padding-top: .2em;   /* as .avatar: Adelle Sans ARM sets its figures .1em above the line's middle */
+  border-radius: var(--radius-full);
+  background: var(--color-white);
+  color: var(--color-ink-900);
+  @apply text-aqb-label; font-weight: var(--font-weight-detail);
+}
+.ladder__step--first .ladder__dot { background: var(--color-accent);  color: var(--color-white); }
+.ladder__step--last  .ladder__dot { background: var(--color-primary); color: var(--color-white); }
+.ladder__pct { @apply text-aqb-label; font-weight: var(--font-weight-detail); color: var(--color-ink-600); white-space: nowrap; }
+.ladder__step--first .ladder__pct { color: var(--color-accent); }
+.ladder__step--last  .ladder__pct { color: var(--color-primary); }
+
 /* Reward cards: the prize is the headline */
 .rewards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--card-gap); }   /* minmax: «Անվճար» never widens its card past the other */
 .reward {
@@ -2801,6 +2819,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 }
 .reward--first .reward__prize { color: var(--color-accent); }
 .reward--last  .reward__prize { color: var(--color-primary); }
+.reward__who--strong { @apply text-aqb-body-m; font-weight: var(--font-weight-detail); color: var(--color-ink-900); }   /* home: who earns it, as loud as what they earn */
 .reward__desc { @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
 
 /* Form card — the promo-code form and the doctor pre-registration form */
@@ -3533,6 +3552,18 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .courses__nav, .teachers__nav { display: none; }   /* phones swipe; the titles keep the whole width */
   .ladder .avatar { width: --spacing(7); height: --spacing(7); border-width: 2px; }
   .ladder .avatar--letter { @apply text-aqb-caption; }
+  /* Phones: ten percentages don't fit one row (they ran together at 320px), so the home ladder is two rows of five,
+     each step joined to the next by its own dashed line (none after 5 and 10) */
+  .ladder--pct { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); row-gap: --spacing(5); }
+  .ladder--pct::before { display: none; }
+  .ladder--pct .ladder__step::before { display: none; }
+  .ladder--pct .ladder__step::after {
+    content: "";
+    position: absolute; top: --spacing(5); left: calc(50% + --spacing(5)); width: calc(100% - --spacing(10));
+    border-top: 2px dashed var(--color-grey-300);
+  }
+  .ladder--pct .ladder__step:nth-child(5n)::after { display: none; }
+  .ladder--pct .ladder__dot { width: --spacing(10); height: --spacing(10); }
   .ladder__step::before { width: --spacing(7); height: --spacing(7); margin-left: calc(--spacing(3.5) * -1); }
   .ladder::before { left: --spacing(3.5); right: --spacing(3.5); top: --spacing(3.5); }
   .rewards { grid-template-columns: 1fr; }

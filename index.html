@@ -6,7 +6,7 @@
   <title>AI քեզ բան</title>
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
   <!-- Display fonts for the wordmark shuffle (09b) — each has Armenian + Latin -->
-  <link rel="stylesheet" href="styles.css?v=pages-18" />
+  <link rel="stylesheet" href="styles.css?v=pages-20" />
   <!-- The hero: Hero B (the falling AI tools, with the sales words), always, for every visitor, locally too. Hero A (the eyes'
        walk writing «AI քեզ բան», with the original words) is kept: ?hero=a shows it for the team, this visit only, marked
        hero_preview. Set before the page paints, so the other hero never flashes (tailwind.css: html[data-hero]).
@@ -1057,33 +1057,32 @@
         <div class="referral__left">
           <div class="referral__head">
             <h2 class="section-title referral__title">Հրավիրիր ընկերոջդ</h2>
-            <p class="referral__sub">Երկուսդ էլ կստանաք բոնուս AI կուրսի համար</p>
           </div>
 
-          <!-- Friends ladder: 10 friends; #1 unlocks −10%, #10 makes it free -->
-          <ol class="ladder" aria-label="1 ընկեր՝ −10%, 10 ընկեր՝ անվճար">
-              <li class="ladder__step ladder__step--first"><span class="avatar avatar--letter">Օ</span><span class="ladder__num">1</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Գ</span><span class="ladder__num">2</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Լ</span><span class="ladder__num">3</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Ս</span><span class="ladder__num">4</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Ն</span><span class="ladder__num">5</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Կ</span><span class="ladder__num">6</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Վ</span><span class="ladder__num">7</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Բ</span><span class="ladder__num">8</span></li>
-              <li class="ladder__step"><span class="avatar avatar--letter">Մ</span><span class="ladder__num">9</span></li>
-              <li class="ladder__step ladder__step--last"><span class="avatar avatar--letter">Տ</span><span class="ladder__num">10</span></li>
+          <!-- Friends ladder: the count of friends in the circle, the discount it adds up to under it (every friend −10%, 10 = free) -->
+          <ol class="ladder ladder--pct" aria-label="Ամեն ընկեր՝ 10%, 10 ընկեր՝ 100%">
+              <li class="ladder__step ladder__step--first"><span class="ladder__dot">1</span><span class="ladder__pct">10%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">2</span><span class="ladder__pct">20%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">3</span><span class="ladder__pct">30%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">4</span><span class="ladder__pct">40%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">5</span><span class="ladder__pct">50%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">6</span><span class="ladder__pct">60%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">7</span><span class="ladder__pct">70%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">8</span><span class="ladder__pct">80%</span></li>
+              <li class="ladder__step"><span class="ladder__dot">9</span><span class="ladder__pct">90%</span></li>
+              <li class="ladder__step ladder__step--last"><span class="ladder__dot">10</span><span class="ladder__pct">100%</span></li>
           </ol>
 
           <div class="rewards">
             <div class="reward reward--first">
-              <p class="reward__who">1 ընկեր</p>
+              <p class="reward__who reward__who--strong">1 ընկեր</p>
               <p class="reward__prize">−10%</p>
-              <p class="reward__desc">Երկուսդ էլ կստանաք զեղչ</p>
+              <p class="reward__desc">Զեղչ երկուսիդ համար</p>
             </div>
             <div class="reward reward--last">
-              <p class="reward__who">10 ընկեր</p>
+              <p class="reward__who reward__who--strong">10 ընկեր</p>
               <p class="reward__prize">Անվճար</p>
-              <p class="reward__desc">Դու մասնակցում ես անվճար</p>
+              <p class="reward__desc">Մասնակցելու հնարավորություն քեզ համար</p>
             </div>
           </div>
         </div>
