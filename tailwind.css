@@ -3182,6 +3182,10 @@ html:has(.modal[open]) { overflow: hidden; }   /* the page stays put behind it *
   opacity: 1; visibility: visible; translate: none;
   transition: transform var(--default-transition-duration), opacity .3s ease, translate .3s ease;
 }
+/* help / chat: the support person's face fills the 48px circle (the size of ↑ and the contact button);
+   first in the row, so the contact group opens between it and the ✕ */
+.fab--avatar { overflow: hidden; background: var(--surface); }
+.fab--avatar img { width: 100%; height: 100%; object-fit: cover; }
 
 /* ============================================================
    13 · PRE-REGISTRATION PAGE (doctor-register.html)
@@ -3417,6 +3421,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
      48px circle, white icon on the bar's green. Closing the group brings the full bar back. */
   .fab-group .fab--label { width: --spacing(10); padding-inline: 0; }   /* phone: icon only, so the open row has a fixed width */
   .fab__label { display: none; }
+  .is-contact-open .fab--avatar { display: none; }   /* the open row has no room for it here: the group takes its place */
   .promo { transition: transform .4s var(--ease-smooth), opacity .3s ease, left .35s var(--ease-smooth), width .35s var(--ease-smooth), padding .35s var(--ease-smooth); }
   .is-contact-open .promo {
     left: calc(100% - --spacing(14) - --spacing(60) - --spacing(2) - --spacing(12));   /* gutter + the open row (group 32 + ✕ 12 + ↑ 12 + 2 gaps) + a gap + its own 48px */
@@ -3501,7 +3506,7 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
      (not centred) and leaves room for the closed row, so it can fold into the open one (see xl above) */
   .promo {
     left: --spacing(4); bottom: --spacing(4);
-    width: calc(100% - --spacing(36)); max-width: none;   /* both gutters (4 + 4) + the closed row (contact 12 + ↑ 12 + gap 2) + a gap (2) */
+    width: calc(100% - --spacing(50)); max-width: none;   /* both gutters (4 + 4) + the closed row (avatar 12 + contact 12 + ↑ 12 + 2 gaps) + a gap (2) */
     gap: --spacing(3); padding: --spacing(1) --spacing(1) --spacing(1) --spacing(4);   /* the 40px button with the 4px inset of .fab-group */
     overflow: hidden;
     transform: translateY(calc(100% + --spacing(15)));
@@ -3520,6 +3525,13 @@ html[lang="en"] [data-lang="hy"] { display: none; }   /* each piece of copy is w
   .promo__btn { margin-left: auto; }
   .fabs { right: --spacing(4); bottom: --spacing(4); }
   .is-contact-open .promo { left: calc(100% - --spacing(4) - --spacing(60) - --spacing(2) - --spacing(12)); }   /* same fold, phone gutter */
+  @media (width < 22.5rem) {   /* 320px phones: beside the avatar there's no room for the bar's words, so it stays folded into its 48px circle, as while the contact group is open */
+    .promo { width: --spacing(12); gap: 0; padding: 0; }
+    .promo__text,
+    .promo__btn-label { display: none; }
+    .promo__btn { width: --spacing(12); height: --spacing(12); padding: 0; background: none; color: var(--color-white); }   /* no white fill: the whole circle is the button */
+    .promo__btn .ic { display: block; }
+  }
   .pkg { --pkg-pad: --spacing(6); }
   .pkg__name { @apply text-aqb-headline-h2; }   /* phones step down the scale */
   .pkg__gift { width: --spacing(55); right: calc(--spacing(17.5) * -1); bottom: 0; }   /* phones: 220px, right −70px, so most of the laptop shows (checked 320–414, clear of the words) */

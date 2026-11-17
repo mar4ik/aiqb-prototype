@@ -8190,6 +8190,17 @@
     translate: none;
   }
 
+  .fab--avatar {
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .fab--avatar img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
   .signup {
     justify-content: center;
     align-items: center;
@@ -8809,7 +8820,7 @@
       padding-inline: 0;
     }
 
-    .fab__label {
+    .fab__label, .is-contact-open .fab--avatar {
       display: none;
     }
 
@@ -9058,7 +9069,7 @@
     .promo {
       left: calc(var(--spacing) * 4);
       bottom: calc(var(--spacing) * 4);
-      width: calc(100% - calc(var(--spacing) * 36));
+      width: calc(100% - calc(var(--spacing) * 50));
       gap: calc(var(--spacing) * 3);
       max-width: none;
       padding: var(--spacing) var(--spacing) var(--spacing) calc(var(--spacing) * 4);
@@ -9107,6 +9118,30 @@
 
     .is-contact-open .promo {
       left: calc(100% - calc(var(--spacing) * 4) - calc(var(--spacing) * 60) - calc(var(--spacing) * 2) - calc(var(--spacing) * 12));
+    }
+
+    @media not all and (min-width: 22.5rem) {
+      .promo {
+        width: calc(var(--spacing) * 12);
+        gap: 0;
+        padding: 0;
+      }
+
+      .promo__text, .promo__btn-label {
+        display: none;
+      }
+
+      .promo__btn {
+        width: calc(var(--spacing) * 12);
+        height: calc(var(--spacing) * 12);
+        color: var(--color-white);
+        background: none;
+        padding: 0;
+      }
+
+      .promo__btn .ic {
+        display: block;
+      }
     }
 
     .pkg {
