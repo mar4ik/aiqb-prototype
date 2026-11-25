@@ -82,6 +82,7 @@
 
   /* Campaign colours — a campaign can bring its own scheme (BRAND.md) */
   --color-campaign-green: oklch(62.7% 0.194 149.214);   /* Tailwind's green-600: webinar bar, floating buttons */
+  --color-campaign-yellow: #fcf051;   /* the 28-day ad's lemon yellow, sampled from its slide art: the marker on 28-day.html (black text) */
   /* Bundle: the card keeps its original colours (owner's call) — a blue wash, the travelling ribbon border, its pills */
   --color-campaign-bundle-wash: oklch(97% 0.014 254.604);          /* Tailwind's blue-50: card + sub nav promo background */
   --color-campaign-bundle-blue: oklch(70.7% 0.165 254.624);        /* blue-400: the ribbon's light band */
@@ -861,29 +862,40 @@ html:not([data-hero="b"]) .story-hero { display: none; }
    sized from the height that's left so everything fits under the nav; from lg: the carousel and the copy as one centred
    group, carousel left, copy right (no empty middle) */
 .promo-hero {
-  --header-h: --spacing(20);
-  --copy-h: --spacing(79);   /* under the carousel on phones: the gap, headline + fact pill + button + endorsement with their gaps, and the bottom padding */
+  --header-h: --spacing(4);   /* the main nav is off on this page for now (28-day.html): just air over the carousel; --spacing(20) with the nav */
+  --copy-h: --spacing(74);   /* under the carousel on phones: the gap, headline + promise + button with their gaps, and the bottom padding */
   min-height: 100svh;
   padding: calc(var(--header-h) + --spacing(2)) var(--page-x) --spacing(6);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: --spacing(3);
-  text-align: center;
+  text-align: left;   /* phones too: the copy reads from the left edge, under the centred carousel */
   background: var(--color-black); color: var(--color-white);
 }
 .promo-hero .carousel { --carousel-h: clamp(--spacing(50), calc(100svh - var(--header-h) - var(--copy-h)), --spacing(160)); }   /* 200px at least: only a 320 × 568 phone scrolls a little */
-.promo-hero__copy { display: flex; flex-direction: column; align-items: center; gap: --spacing(3); }
+.promo-hero__copy { align-self: center; max-width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: --spacing(3); }
 .promo-hero__title { @apply text-aqb-headline-h2 italic; }
-.promo-hero__actions { display: flex; flex-direction: column; align-items: stretch; gap: --spacing(3); }   /* phones: the button across the column (the reference) */
-/* Phones: the crest sits in the first line of the endorsement, so crest and words are one centred block */
-.promo-hero__actions .story-hero__endorse { display: block; }
-.promo-hero__actions .story-hero__endorse img { display: inline-block; width: --spacing(5); margin-right: --spacing(1.5); vertical-align: middle; }
+.promo-hero__actions { align-self: stretch; display: flex; flex-direction: column; align-items: stretch; gap: --spacing(3); }   /* phones: the button across the column (the reference) */
+.promo-hero__eyes { position: absolute; z-index: 0; right: 0; bottom: calc(100% - --spacing(1)); }   /* phones: the eye logo peeking over the yellow band's right (tall) end from behind it, its lower edge hidden: no row of its own */
+.promo-hero__eyes .eyes { width: auto; height: --spacing(8); }   /* its eyes only, white on the Black ground */
+.promo-hero__sub { position: relative; @apply text-aqb-body-s; text-wrap: balance; }   /* the promise under the headline */
+.promo-hero__sub mark {   /* a marker band in the ad's own yellow (campaign colour): tilted and tapered, plain corners (black text, BRAND.md → Text on colour) */
+  position: relative; z-index: 1;   /* over the eyes peeking from behind it */
+  display: inline-block; padding: --spacing(3) --spacing(5);
+  background: var(--color-campaign-yellow); color: var(--color-black);
+  font-weight: var(--font-weight-headline); font-style: italic;   /* the headline's cut (Adelle Sans ARM ExtraBold Italic), as the ad's banner text */
+  rotate: -2deg;
+  clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%);   /* tapered: narrower at the left end, wider at the right, like the ad's banner */
+}
 @media (width >= theme(--breakpoint-lg)) {
   .promo-hero { flex-direction: row; gap: --spacing(18); padding-top: calc(var(--header-h) + --spacing(4)); text-align: left; }
   .promo-hero .carousel { --carousel-h: min(calc(100svh - var(--header-h) - --spacing(16)), --spacing(240)); }   /* as tall as the screen allows: no small island on wide screens */
-  .promo-hero__copy { width: --spacing(130); align-items: flex-start; gap: --spacing(6); }
+  .promo-hero__copy { align-self: auto; width: --spacing(130); align-items: flex-start; gap: --spacing(6); }
   .promo-hero__title { @apply text-aqb-headline-h1 italic; }
-  .promo-hero__actions { align-items: flex-start; gap: --spacing(4); }
-  .promo-hero__actions .story-hero__endorse { display: flex; }
-  .promo-hero__actions .story-hero__endorse img { width: --spacing(9); margin-right: 0; }
+  .promo-hero__actions { align-self: flex-start; align-items: flex-start; gap: --spacing(4); }
+  .promo-hero__copy { position: relative; padding-top: --spacing(18); }   /* room for the eyes: 48px and a 24px gap */
+  .promo-hero__sub { position: static; }
+  .promo-hero__eyes { top: 0; left: 0; right: auto; bottom: auto; }   /* from lg: over the headline, at its left edge */
+  .promo-hero__eyes .eyes { height: --spacing(12); }
+  .promo-hero__sub { @apply text-aqb-body-m; }
 }
 @media (width >= theme(--breakpoint-2xl)) {
   .promo-hero { gap: --spacing(24); }
@@ -2148,7 +2160,6 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .pill--save { background: var(--color-campaign-bundle-save); color: var(--color-campaign-bundle-save-text); }
 .pill--date { background: var(--color-campaign-green); color: var(--color-white); }   /* a date range, with .ic--calendar (Hero B's «Նոյեմբերի 8 – Դեկտեմբերի 31»): the campaign green, white text */
 .pill--gift { background: var(--color-campaign-bundle-violet); color: var(--color-white); height: --spacing(5.5); padding: 0 --spacing(2.5); margin-left: auto; }
-.pill--feed { background: var(--color-feed-yellow); color: var(--color-black); }   /* Feed Yellow, black text: a fact line that echoes the ad's yellow frame (28-day.html) */
 .pill--black { background: var(--color-black); color: var(--color-white); }   /* a tag on a colour (the home page's «Խաղարկություն» on Hero B's Orange bubble) */
 .pill--lg { height: --spacing(10); padding: 0 --spacing(4.5); @apply text-aqb-body-s; font-weight: var(--font-weight-detail); }   /* size step: 40px, Body S SemiBold (a tag that leads a block) */
 

@@ -1722,7 +1722,7 @@ function makeEyes({ tm = false } = {}) {
    .flight) only blinks: it keeps looking ahead, where it flies
    ============================================================ */
 (function peekEyes() {
-  const all = [...document.querySelectorAll('.why__answer > .eyes, .rivals__eyes > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .callback__eyes > .eyes, .flight__ship .eyes')];
+  const all = [...document.querySelectorAll('.why__answer > .eyes, .rivals__eyes > .eyes, .about__eyes > .eyes, .audience__eyes > .eyes, .format__eyes > .eyes, .needs__eyes > .eyes, .certificate__eyes > .eyes, .kept__eyes > .eyes, .contact__eyes > .eyes, .callback__eyes > .eyes, .promo-hero__eyes > .eyes, .flight__ship .eyes')];
   if (!all.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const PUPIL_TRAVEL = { x: 9, y: 10.54 };   // the brand's pupil oval, in the eyes' 96 × 50 units (BRAND.md → Eyes)
   const LOOKS = ['left', 'right', 'up-left', 'up-right', 'you', 'you'];   // mostly at you

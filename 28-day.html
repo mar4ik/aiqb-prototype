@@ -9,11 +9,14 @@
   <meta property="og:description" content="28 օր անց՝ ավելի շատ հնարավորություններ, ավելի շատ ժամանակ։" />
   <meta property="og:image" content="assets/campaign-28/today.webp" />
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css?v=pages-71" />
+  <link rel="stylesheet" href="styles.css?v=pages-91" />
   <link rel="preload" as="image" href="assets/campaign-28/today.webp" />
 </head>
 <body>
 
+  <!-- The main nav and its «Ընտրել դասընթաց» are off on this page for now (Nov 2026): the <template> keeps them out of the
+       page; delete its two tags to bring them back -->
+  <template data-nav-off>
   <!-- =========================================================
        02 · MAIN NAV — the same as aigraget.html (a fixed pill that hugs its links)
        ========================================================= -->
@@ -81,6 +84,7 @@
     </div>
   </header>
   <div class="nav-scrim" aria-hidden="true"></div>
+  </template>
 
   <main>
 
@@ -104,17 +108,26 @@
         </div>
       </div>
       <div class="promo-hero__copy">
-        <h1 class="promo-hero__title">Սովորի՛ր AI<br />28 օրում</h1>
-        <p class="pill pill--feed">Օնլայն՝&nbsp;Zoom-ով · 4&nbsp;շաբաթ · ֏&nbsp;19,500-ից</p>
+        <h1 class="promo-hero__title">Սովորի՛ր AI<br />28 օրում,</h1>
+        <p class="promo-hero__sub"><mark>ունեցիր ավելի շատ գումար,<br />ավելի շատ ժամանակ</mark>
+        <span class="promo-hero__eyes" aria-hidden="true">   <!-- the eye logo without its ground: the brand's eyes with the ™ (blink, glance, follow the pointer: script.js · peekEyes); phones: peeking over the yellow band's right end, outside it (BRAND.md → Bubble construction: Peek); from lg: over the headline -->
+            <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you" aria-hidden="true">
+              <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+              <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+              <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+              <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+              <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+            </svg>
+          </span>
+        </p>
         <div class="promo-hero__actions">
           <a href="/aigraget#packages" class="btn btn--primary btn--base">Ընտրել դասընթաց</a>
-          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br /><a class="text-link" href="assets/certificate/aiqezban_certificate.pdf" target="_blank" rel="noopener">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</a></span></p>
         </div>
       </div>
     </section>
 
   </main>
 
-  <script src="script.js?v=pages-24"></script>
+  <script src="script.js?v=pages-25"></script>
 </body>
 </html>
