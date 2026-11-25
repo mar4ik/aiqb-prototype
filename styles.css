@@ -1231,7 +1231,7 @@
   }
 
   .is-past-hero-cta .nav-cta-slot {
-    max-width: calc(var(--spacing) * 60);
+    max-width: calc(var(--spacing) * 80);
     visibility: visible;
     transition: max-width .35s var(--ease-smooth), visibility 0s;
   }
@@ -2029,6 +2029,209 @@
     .drop__ball--eyes {
       --ball: calc(var(--spacing) * 25);
     }
+  }
+
+  .promo-hero {
+    --header-h: calc(var(--spacing) * 20);
+    --copy-h: calc(var(--spacing) * 79);
+    min-height: 100svh;
+    padding: calc(var(--header-h) + calc(var(--spacing) * 2)) var(--page-x) calc(var(--spacing) * 6);
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    text-align: center;
+    background: var(--color-black);
+    color: var(--color-white);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .promo-hero .carousel {
+    --carousel-h: clamp(calc(var(--spacing) * 50), calc(100svh - var(--header-h) - var(--copy-h)), calc(var(--spacing) * 160));
+  }
+
+  .promo-hero__copy {
+    align-items: center;
+    gap: calc(var(--spacing) * 3);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .promo-hero__title {
+    font-size: var(--text-aqb-headline-h2);
+    line-height: var(--tw-leading, var(--text-aqb-headline-h2--line-height));
+    letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h2--letter-spacing));
+    font-weight: var(--tw-font-weight, var(--text-aqb-headline-h2--font-weight));
+    font-style: italic;
+  }
+
+  .promo-hero__actions {
+    align-items: stretch;
+    gap: calc(var(--spacing) * 3);
+    flex-direction: column;
+    display: flex;
+  }
+
+  .promo-hero__actions .story-hero__endorse {
+    display: block;
+  }
+
+  .promo-hero__actions .story-hero__endorse img {
+    width: calc(var(--spacing) * 5);
+    margin-right: calc(var(--spacing) * 1.5);
+    vertical-align: middle;
+    display: inline-block;
+  }
+
+  @media (min-width: 68.75rem) {
+    .promo-hero {
+      gap: calc(var(--spacing) * 18);
+      padding-top: calc(var(--header-h) + calc(var(--spacing) * 4));
+      text-align: left;
+      flex-direction: row;
+    }
+
+    .promo-hero .carousel {
+      --carousel-h: min(calc(100svh - var(--header-h) - calc(var(--spacing) * 16)), calc(var(--spacing) * 240));
+    }
+
+    .promo-hero__copy {
+      width: calc(var(--spacing) * 130);
+      align-items: flex-start;
+      gap: calc(var(--spacing) * 6);
+    }
+
+    .promo-hero__title {
+      font-size: var(--text-aqb-headline-h1);
+      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
+      font-style: italic;
+    }
+
+    .promo-hero__actions {
+      align-items: flex-start;
+      gap: calc(var(--spacing) * 4);
+    }
+
+    .promo-hero__actions .story-hero__endorse {
+      display: flex;
+    }
+
+    .promo-hero__actions .story-hero__endorse img {
+      width: calc(var(--spacing) * 9);
+      margin-right: 0;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    .promo-hero {
+      gap: calc(var(--spacing) * 24);
+    }
+
+    .promo-hero__copy {
+      width: calc(var(--spacing) * 160);
+    }
+
+    .promo-hero__title {
+      font-size: var(--text-aqb-display-l);
+      line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
+      letter-spacing: var(--tw-tracking, var(--text-aqb-display-l--letter-spacing));
+      font-weight: var(--tw-font-weight, var(--text-aqb-display-l--font-weight));
+      font-style: italic;
+    }
+  }
+
+  body:has(.promo-hero) {
+    background: var(--color-black);
+  }
+
+  .carousel {
+    height: var(--carousel-h, calc(var(--spacing) * 120));
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius-3xl);
+    touch-action: pan-y;
+    flex: none;
+    max-width: 100%;
+    position: relative;
+  }
+
+  .carousel:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: var(--spacing);
+  }
+
+  .carousel__slide {
+    object-fit: cover;
+    box-sizing: border-box;
+    border: calc(var(--spacing) * 2) solid var(--color-feed-yellow);
+    border-radius: var(--radius-3xl);
+    background: var(--color-feed-yellow);
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .carousel__slide[hidden] {
+    display: none;
+  }
+
+  .carousel__nav {
+    left: 50%;
+    bottom: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 8);
+    padding: 0 var(--spacing);
+    background: var(--color-black);
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    align-items: center;
+    display: flex;
+    position: absolute;
+    translate: -50%;
+  }
+
+  .carousel__arrow, .carousel__dot {
+    height: calc(var(--spacing) * 8);
+    color: inherit;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    display: flex;
+  }
+
+  .carousel__arrow {
+    width: calc(var(--spacing) * 8);
+  }
+
+  @media not all and (min-width: 40rem) {
+    .carousel__arrow {
+      display: none;
+    }
+  }
+
+  .carousel__dot {
+    width: calc(var(--spacing) * 5);
+  }
+
+  .carousel__dot:before {
+    content: "";
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+    border-radius: var(--radius-full);
+    background: #fff6;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .carousel__dot:before {
+      background: color-mix(in oklab, var(--color-white) 40%, transparent);
+    }
+  }
+
+  .carousel__dot[aria-current="true"]:before {
+    background: var(--color-white);
   }
 
   .promo {
@@ -5271,6 +5474,11 @@
     margin-left: auto;
   }
 
+  .pill--feed {
+    background: var(--color-feed-yellow);
+    color: var(--color-black);
+  }
+
   .pill--black {
     background: var(--color-black);
     color: var(--color-white);
@@ -5869,6 +6077,11 @@
   .ic--lg {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
+  }
+
+  .ic--sm {
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
   }
 
   .ic--calendar {

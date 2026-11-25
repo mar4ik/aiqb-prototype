@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Սովորի՛ր AI 28 օրում — AI քեզ բան</title>
+  <meta name="description" content="28 օր անց՝ ավելի շատ հնարավորություններ, ավելի շատ ժամանակ։" />
+  <meta property="og:title" content="Սովորի՛ր AI 28 օրում — AI քեզ բան" />
+  <meta property="og:description" content="28 օր անց՝ ավելի շատ հնարավորություններ, ավելի շատ ժամանակ։" />
+  <meta property="og:image" content="assets/campaign-28/today.webp" />
+  <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=pages-71" />
+  <link rel="preload" as="image" href="assets/campaign-28/today.webp" />
+</head>
+<body>
+
+  <!-- =========================================================
+       02 · MAIN NAV — the same as aigraget.html (a fixed pill that hugs its links)
+       ========================================================= -->
+  <header class="nav-wrap">
+    <nav class="nav">
+      <a href="index.html" class="nav__logo">
+        <img src="assets/logos/trademark.svg" alt="AI քեզ բան" />
+      </a>
+      <div class="nav__links" id="nav-menu">
+        <a href="#courses" class="nav__link">Ի՞նչ սովորել</a>
+        <!-- «Դասընթացներ» sub nav: the course and the AI tools (opens on hover / click, script.js), as on the home page -->
+        <div class="nav__item">
+          <button type="button" class="nav__link nav__trigger" aria-expanded="false" aria-controls="subnav-courses">
+            Դասընթացներ<i class="ic ic--chev-down" aria-hidden="true"></i>
+          </button>
+          <div class="subnav" id="subnav-courses">
+            <div class="subnav__panel">
+              <div class="subnav__cols">
+                <div class="subnav__group">
+                  <p class="subnav__label">AI գրագիտություն</p>
+                  <a href="/aigraget/team" class="subnav__link">AI գրագետ թիմ</a>
+                  <a href="aigraget.html" class="subnav__link subnav__link--stack">AI գրագետ<span class="subnav__sub">Start + Level-&#8288;Up</span></a>
+                  <a href="index.html#packages" class="subnav__link">Start</a>
+                </div>
+                <div class="subnav__group">
+                  <p class="subnav__label">PRO դասընթացներ</p>
+                  <a href="https://aiqezban.mam-edu.com/" class="subnav__link" target="_blank" rel="noopener">AI քեզ ուսուցիչ<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- TODO: real external link for «AI քեզ project manager» (same as the PRO card) -->
+                  <a href="https://example.com/ai-qez-product-manager" class="subnav__link" target="_blank" rel="noopener">AI քեզ project manager<i class="ic ic--external" aria-hidden="true"></i></a>
+                  <!-- no link yet: the name and the «Շուտով» label, in a neutral grey -->
+                  <span class="subnav__link subnav__link--soon" aria-disabled="true">AI քեզ բժիշկ<span class="pill subnav__soon">Շուտով</span></span>
+                </div>
+              </div>
+
+              <!-- The course promo, in the Bundle's look (replaces the wireframe's placeholder image) -->
+              <div class="subnav-promo">
+                <img class="subnav-promo__gift" src="assets/cards/hero_mac_03.webp" alt="" aria-hidden="true" />
+                <span class="subnav-promo__head">
+                  <strong class="subnav-promo__name">AI գրագետ</strong>
+                  <span class="subnav-promo__tagline">Մասնակցեք 3-ով՝ բացառիկ գնով</span>
+                </span>
+                <span class="subnav-promo__price">
+                  <span class="pkg__unit">1 անձը՝</span>
+                  <s class="pkg__old">֏ 45,700</s>
+                  <span class="pill pill--deal">−62%</span>
+                  <span class="subnav-promo__amount">֏ 17,366</span>
+                </span>
+                <button type="button" class="btn btn--primary btn--block btn--sm" data-open="friends-form">Գրանցվել ընկերներով</button>
+                <a href="aigraget.html" class="btn btn--outline btn--block btn--sm">Մանրամասն</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="nav__link nav__link--soon">Վեբինար</span>   <!-- the webinar gets a page of its own: no link until it exists -->
+        <a href="#teachers" class="nav__link">Մեր ուսուցիչները</a>
+      </div>
+      <!-- Mobile / tablet only: opens .nav__links as a dropdown panel (script.js) -->
+      <button type="button" class="nav__burger" aria-expanded="false" aria-controls="nav-menu" aria-label="Մենյու">
+        <span></span><span></span>
+      </button>
+    </nav>
+    <!-- «Ընտրել դասընթաց» beside the pill (script.js · 02 navCta: only once the page's own button is scrolled past, so the two never show together) -->
+    <div class="nav-cta-slot">
+      <a href="/aigraget#packages" class="btn btn--primary btn--base nav-cta">Ընտրել դասընթաց</a>
+    </div>
+  </header>
+  <div class="nav-scrim" aria-hidden="true"></div>
+
+  <main>
+
+    <!-- =========================================================
+         28-DAY · the landing of the «Սովորի՛ր AI 28 օրում» ad: the ad's four slides in the carousel (script.js · 03d),
+         then the promise and the one action. One screen on Black (tailwind.css · .promo-hero)
+         ========================================================= -->
+    <section class="promo-hero" aria-label="Սովորի՛ր AI 28 օրում">
+      <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="28 օր անց" tabindex="0">
+        <img class="carousel__slide" src="assets/campaign-28/today.webp" width="720" height="1280" alt="Այսօր սովորիր AI, որ կարողանաս անել այն, ինչ ուզում ես, ոչ թե այն, ինչ կարող ես" />
+        <img class="carousel__slide" src="assets/campaign-28/girl.webp" width="540" height="960" alt="Վիդեո՝ 28 օր անց" hidden />
+        <img class="carousel__slide" src="assets/campaign-28/after.webp" width="720" height="1280" alt="28 օր անց՝ ավելի շատ հնարավորություններ, ավելի շատ ժամանակ" hidden />
+        <img class="carousel__slide" src="assets/campaign-28/man.webp" width="540" height="960" alt="Վիդեո՝ 28 օր անց" hidden />
+        <div class="carousel__nav">
+          <button type="button" class="carousel__arrow" data-prev aria-label="Նախորդը"><i class="ic ic--sm ic--chev-left" aria-hidden="true"></i></button>
+          <button type="button" class="carousel__dot" aria-label="Սլայդ 1" aria-current="true"></button>
+          <button type="button" class="carousel__dot" aria-label="Սլայդ 2" aria-current="false"></button>
+          <button type="button" class="carousel__dot" aria-label="Սլայդ 3" aria-current="false"></button>
+          <button type="button" class="carousel__dot" aria-label="Սլայդ 4" aria-current="false"></button>
+          <button type="button" class="carousel__arrow" data-next aria-label="Հաջորդը"><i class="ic ic--sm ic--chev-right" aria-hidden="true"></i></button>
+        </div>
+      </div>
+      <div class="promo-hero__copy">
+        <h1 class="promo-hero__title">Սովորի՛ր AI<br />28 օրում</h1>
+        <p class="pill pill--feed">Օնլայն՝&nbsp;Zoom-ով · 4&nbsp;շաբաթ · ֏&nbsp;19,500-ից</p>
+        <div class="promo-hero__actions">
+          <a href="/aigraget#packages" class="btn btn--primary btn--base">Ընտրել դասընթաց</a>
+          <p class="story-hero__endorse"><img src="assets/logos/armgerb.svg" alt="" /><span>100% վերադարձ եկամտահարկից։<br /><a class="text-link" href="assets/certificate/aiqezban_certificate.pdf" target="_blank" rel="noopener">Պաշտոնապես երաշխավորված է ԿԳՄՍ նախարարության կողմից։</a></span></p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js?v=pages-24"></script>
+</body>
+</html>

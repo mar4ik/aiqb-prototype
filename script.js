@@ -1026,7 +1026,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
   let watch = null;
   const setup = () => {
     watch?.disconnect();
-    const heroCta = document.querySelector(html.dataset.hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn, .course-hero__actions .btn');   // the hero on show (A/B test; a course page's own hero)
+    const heroCta = document.querySelector(html.dataset.hero === 'b' ? '.story-hero__actions .btn' : '.hero__actions .btn, .course-hero__actions .btn, .promo-hero__actions .btn');   // the hero on show (A/B test; a course page's own hero; the 28-day page's)
     if (!heroCta || !('IntersectionObserver' in window)) { past(true); return; }
     // Past = above the screen; below it (a short screen at load) still counts as not reached
     watch = new IntersectionObserver(([entry]) => past(!entry.isIntersecting && entry.boundingClientRect.top < 0));
@@ -1049,6 +1049,53 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       (window.dataLayer = window.dataLayer || []).push({ event: 'hero_cta_click', hero_variant: variant, hero_preview: preview });
     });
   });
+})();
+
+/* ============================================================
+   03d · CAROUSEL (.carousel, 28-day.html) — one slide at a time, manual only (never moves by itself), ‹ › and the dots,
+   a swipe on touch, the arrow keys when it has focus; it loops round both ways
+   ============================================================ */
+(function carousels() {
+  document.querySelectorAll('[data-carousel]').forEach((root) => {
+    const slides = [...root.querySelectorAll('.carousel__slide')];
+    const dots = [...root.querySelectorAll('.carousel__dot')];
+    if (slides.length < 2) return;
+    let index = 0;
+    const go = (n) => {
+      index = (n + slides.length) % slides.length;
+      slides.forEach((slide, k) => { slide.hidden = k !== index; });
+      dots.forEach((dot, k) => dot.setAttribute('aria-current', k === index ? 'true' : 'false'));
+    };
+    root.querySelector('[data-prev]')?.addEventListener('click', () => go(index - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => go(index + 1));
+    dots.forEach((dot, k) => dot.addEventListener('click', () => go(k)));
+    let startX = null;
+    root.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      if (startX === null) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+    });
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(index - 1);
+      else if (e.key === 'ArrowRight') go(index + 1);
+    });
+  });
+})();
+
+/* 28-day page: the call to action keeps the ad's utm_* params on its way to the course page, and its click goes to
+   window.dataLayer (promo28_cta_click), as the heroes' do */
+(function promo28Cta() {
+  const cta = document.querySelector('.promo-hero__actions .btn');
+  if (!cta) return;
+  const utm = [...new URLSearchParams(location.search)].filter(([key]) => key.startsWith('utm_'));
+  if (utm.length) {
+    const url = new URL(cta.getAttribute('href'), location.href);
+    utm.forEach(([key, value]) => url.searchParams.set(key, value));
+    cta.href = url.pathname + url.search + url.hash;
+  }
+  cta.addEventListener('click', () => { (window.dataLayer = window.dataLayer || []).push({ event: 'promo28_cta_click' }); });
 })();
 
 /* ============================================================

@@ -36,6 +36,10 @@
     {
       "source": "/aigraget",
       "destination": "/aigraget.html"
+    },
+    {
+      "source": "/28-day",
+      "destination": "/28-day.html"
     }
   ]
 }
