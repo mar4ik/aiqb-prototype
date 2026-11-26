@@ -2057,6 +2057,14 @@
       column-gap: calc(var(--spacing) * 2);
       --peek-out: calc(calc(var(--spacing) * 2) + calc(var(--spacing) * 5));
     }
+
+    .promo-hero .carousel__slide {
+      transition: opacity .2s;
+    }
+
+    .promo-hero .carousel__slide.is-peer {
+      opacity: .35;
+    }
   }
 
   .promo-hero__copy {
@@ -2240,7 +2248,7 @@
   }
 
   .carousel.is-sliding .carousel__slide {
-    transition: translate .3s cubic-bezier(.2, .7, .2, 1);
+    transition: translate .3s cubic-bezier(.2, .7, .2, 1), opacity .3s cubic-bezier(.2, .7, .2, 1);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -1080,7 +1080,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
         const x = d * w + dx;
         const sliding = root.classList.contains('is-sliding');
         slide.hidden = Math.abs(x) >= 2 * w && !(sliding && !slide.hidden);   // the current one, its neighbours, the next-but-one during a move; one sliding out stays till the end
-        slide.classList.toggle('is-peer', d !== 0);
+        slide.classList.toggle('is-peer', Math.abs(x) > w / 2);   // the one nearest the centre is on show (full strength), the rest peek
         slide.toggleAttribute('inert', d !== 0);   // the peeking ones are a hint, not content
         slide.style.setProperty('--slide-x', `${x}px`);
       });

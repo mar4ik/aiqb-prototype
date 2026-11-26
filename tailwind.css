@@ -872,6 +872,8 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 .promo-hero { --carousel-h: clamp(--spacing(50), min(calc(100svh - var(--header-h) - var(--copy-h)), calc((100vw - 2 * (--spacing(2) + --spacing(5))) * 16 / 9)), --spacing(160)); }   /* on the section, so the carousel and the button under it share it: the height that's left, and narrow enough for the side cards to peek 20px in at each screen edge; 200px at least: only a 320 × 568 phone scrolls a little */
 @media (width < theme(--breakpoint-lg)) {
   .promo-hero .carousel { column-gap: --spacing(2); --peek-out: calc(--spacing(2) + --spacing(5)); }   /* touch screens: the cards either side, 8px off, show 20px past the frame: a hint to swipe (script.js · 03d) */
+  .promo-hero .carousel__slide { transition: opacity 200ms ease; }
+  .promo-hero .carousel__slide.is-peer { opacity: .35; }   /* the peeking cards dimmed: a hint that doesn't compete with the one on show */
 }
 .promo-hero__copy { width: calc(var(--carousel-h) * 9 / 16); max-width: 100%; }   /* as wide as the 9:16 carousel */
 .promo-hero__actions { position: relative; display: flex; flex-direction: column; align-items: stretch; }
@@ -927,7 +929,7 @@ body:has(.promo-hero) { background: var(--color-black); }   /* no white edge whe
 }
 .carousel .carousel__slide { position: absolute; inset: 0; }   /* every slide stacked in the frame, moved only by --slide-x: none changes its box when it becomes the one on show (a clip starting on a phone would flicker) */
 .carousel video.carousel__slide { background: var(--poster) center / cover no-repeat padding-box, var(--color-feed-yellow); }   /* a clip's first frame under it (script.js sets --poster from its poster), so the hand-over from the poster to the playing video shows no empty frame on iOS */
-.carousel.is-sliding .carousel__slide { transition: translate 300ms cubic-bezier(.2, .7, .2, 1); }
+.carousel.is-sliding .carousel__slide { transition: translate 300ms cubic-bezier(.2, .7, .2, 1), opacity 300ms cubic-bezier(.2, .7, .2, 1); }
 @media (prefers-reduced-motion: reduce) { .carousel.is-sliding .carousel__slide { transition: none; } }
 .carousel__nav { position: absolute; left: 50%; bottom: --spacing(6); translate: -50% 0; display: flex; align-items: center; height: --spacing(8); padding: 0 --spacing(1); background: var(--color-black); color: var(--color-white); border-radius: var(--radius-full); }   /* 24px up: 16px clear of the 8px frame */
 .carousel__arrow, .carousel__dot { display: flex; align-items: center; justify-content: center; height: --spacing(8); padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
