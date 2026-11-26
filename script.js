@@ -1181,10 +1181,19 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     // swipe the screen, not just the picture); an up / down move stays the page's scroll (touch-action: pan-y)
     const area = root.closest('.promo-hero') || root;
     let start = null;   // { x, y, axis: null | 'x' | 'y', dx, t }
+    const EDGE = 24;   // px at each screen edge where iOS Safari starts its own back / forward swipe
+    let dragEnded = 0;   // when the last sideways drag ended: the click that follows it is not a tap
     area.addEventListener('touchstart', (e) => {
       if (busy || e.touches.length > 1) { start = null; return; }
-      start = { x: e.touches[0].clientX, y: e.touches[0].clientY, axis: null, dx: 0, t: performance.now() };
-    }, { passive: true });
+      const x = e.touches[0].clientX;
+      // A swipe from the very edge would page the browser back or forward (to /aigraget, say) instead of the slides
+      if ((x < EDGE || x > window.innerWidth - EDGE) && !e.target.closest('a, button') && e.cancelable) e.preventDefault();
+      start = { x, y: e.touches[0].clientY, axis: null, dx: 0, t: performance.now() };
+    }, { passive: false });
+    // A swipe that starts or ends on «Ուզում եմ» (or any link) never opens it
+    area.addEventListener('click', (e) => {
+      if (performance.now() - dragEnded < 400) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
     area.addEventListener('touchmove', (e) => {
       if (!start) return;
       const dx = e.touches[0].clientX - start.x;
@@ -1205,6 +1214,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       start = null;
       dragging = false;
       if (axis !== 'x' || !dx) return;
+      dragEnded = performance.now();
       const fast = Math.abs(dx) / (performance.now() - t) > 0.4;   // a flick counts however short
       settle(dx < 0 ? 1 : -1, Math.abs(dx) > root.clientWidth / 4 || (fast && Math.abs(dx) > 20));
     };

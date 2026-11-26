@@ -887,6 +887,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 }
 .promo-hero { touch-action: pan-y; }   /* the whole first screen takes a sideways swipe for the carousel (script.js · 03d); up / down stays the page scroll */
 body:has(.promo-hero) { background: var(--color-black); }   /* no white edge when the page overscrolls */
+html:has(.promo-hero), body:has(.promo-hero) { overscroll-behavior-x: none; }   /* a sideways swipe moves the slides, never the browser's back / forward (Chrome on Android) */
 
 /* lint-brand: off — the posters below are drawn on the ad's 1080 × 1920 grid and scale with the slide, so their sizes
    are calc(… × --u), not the fixed type tokens (a poster's type fills its frame: BRAND.md → Play with type). Colours,

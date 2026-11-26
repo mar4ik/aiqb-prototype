@@ -2118,6 +2118,10 @@
     background: var(--color-black);
   }
 
+  html:has(.promo-hero), body:has(.promo-hero) {
+    overscroll-behavior-x: none;
+  }
+
   .carousel__slide.poster28 {
     background: var(--color-black);
     --u: calc(100cqw / 1080);
