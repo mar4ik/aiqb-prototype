@@ -869,7 +869,10 @@ html:not([data-hero="b"]) .story-hero { display: none; }
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: --spacing(10);
   background: var(--color-black); color: var(--color-white);
 }
-.promo-hero { --carousel-h: clamp(--spacing(50), calc(100svh - var(--header-h) - var(--copy-h)), --spacing(160)); }   /* on the section, so the carousel and the button under it share it; 200px at least: only a 320 × 568 phone scrolls a little */
+.promo-hero { --carousel-h: clamp(--spacing(50), min(calc(100svh - var(--header-h) - var(--copy-h)), calc((100vw - 2 * (--spacing(2) + --spacing(5))) * 16 / 9)), --spacing(160)); }   /* on the section, so the carousel and the button under it share it: the height that's left, and narrow enough for the side cards to peek 20px in at each screen edge; 200px at least: only a 320 × 568 phone scrolls a little */
+@media (width < theme(--breakpoint-lg)) {
+  .promo-hero .carousel { column-gap: --spacing(2); --peek-out: calc(--spacing(2) + --spacing(5)); }   /* touch screens: the cards either side, 8px off, show 20px past the frame: a hint to swipe (script.js · 03d) */
+}
 .promo-hero__copy { width: calc(var(--carousel-h) * 9 / 16); max-width: 100%; }   /* as wide as the 9:16 carousel */
 .promo-hero__actions { position: relative; display: flex; flex-direction: column; align-items: stretch; }
 .promo-hero__actions .btn { position: relative; z-index: 1; }   /* over the eyes peeking from behind it */
@@ -914,15 +917,16 @@ body:has(.promo-hero) { background: var(--color-black); }   /* no white edge whe
 
 /* Carousel (atom) — 9:16 slides in an 8px Feed Yellow frame, one at a time, never cropped; ‹ dots › in one Black pill
    inside the slide's bottom (script.js · carousel: manual only, loops, swipe, arrow keys). Height from --carousel-h */
-.carousel { position: relative; flex: none; height: var(--carousel-h, --spacing(120)); max-width: 100%; aspect-ratio: 9 / 16; border-radius: var(--radius-3xl); touch-action: pan-y; column-gap: --spacing(4); }   /* the slides move as a track inside it, column-gap apart (read by script.js), each clipped at its edge (.carousel__slide clip-path), so the side arrows can sit outside it */
+.carousel { position: relative; flex: none; height: var(--carousel-h, --spacing(120)); max-width: 100%; --peek-out: 0px; aspect-ratio: 9 / 16; border-radius: var(--radius-3xl); touch-action: pan-y; column-gap: --spacing(4); }   /* the slides move as a track inside it, column-gap apart (read by script.js), each clipped at its edge (.carousel__slide clip-path), so the side arrows can sit outside it */
 .carousel:focus-visible { outline: 2px solid var(--color-white); outline-offset: --spacing(1); }
 .carousel__slide { display: block; width: 100%; height: 100%; object-fit: cover; box-sizing: border-box; border: --spacing(2) solid var(--color-feed-yellow); border-radius: var(--radius-3xl); background: var(--color-feed-yellow); }
 .carousel__slide[hidden] { display: none; }
 .carousel__slide {   /* script.js sets --slide-x while a swipe or ‹ › moves the slides; the clip keeps each one inside the frame */
-  translate: var(--slide-x, 0) 0;
-  clip-path: inset(0 max(0px, var(--slide-x, 0px)) 0 max(0px, calc(-1 * var(--slide-x, 0px))) round var(--radius-3xl));
+  translate: var(--slide-x, 0px) 0;
+  clip-path: inset(0 max(0px, calc(var(--slide-x, 0px) - var(--peek-out, 0px))) 0 max(0px, calc(-1 * var(--slide-x, 0px) - var(--peek-out, 0px))) round var(--radius-3xl));   /* the frame, widened by --peek-out each side */
 }
-.carousel__slide.is-peer { position: absolute; inset: 0; }   /* the slide coming in, beside the current one */
+.carousel .carousel__slide { position: absolute; inset: 0; }   /* every slide stacked in the frame, moved only by --slide-x: none changes its box when it becomes the one on show (a clip starting on a phone would flicker) */
+.carousel video.carousel__slide { background: var(--poster) center / cover no-repeat padding-box, var(--color-feed-yellow); }   /* a clip's first frame under it (script.js sets --poster from its poster), so the hand-over from the poster to the playing video shows no empty frame on iOS */
 .carousel.is-sliding .carousel__slide { transition: translate 300ms cubic-bezier(.2, .7, .2, 1); }
 @media (prefers-reduced-motion: reduce) { .carousel.is-sliding .carousel__slide { transition: none; } }
 .carousel__nav { position: absolute; left: 50%; bottom: --spacing(6); translate: -50% 0; display: flex; align-items: center; height: --spacing(8); padding: 0 --spacing(1); background: var(--color-black); color: var(--color-white); border-radius: var(--radius-full); }   /* 24px up: 16px clear of the 8px frame */

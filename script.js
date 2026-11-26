@@ -1052,57 +1052,61 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 })();
 
 /* ============================================================
-   03d · CAROUSEL (.carousel, 28-day.html) — one slide at a time, manual only (never moves by itself), ‹ › and the dots,
-   a swipe on touch (the slides follow the finger and snap; ‹ › and the dots slide too), the arrow keys when it
-   has focus; it loops round both ways
+   03d · CAROUSEL (.carousel, 28-day.html) — one slide at a time, ‹ › and the dots, a swipe on touch (the slides follow
+   the finger and snap; ‹ › and the dots slide too), the arrow keys when it has focus; it loops round both ways. The
+   slides sit side by side as a track (--slide-x on each); below lg the ones either side peek in past the frame's edge
+   (tailwind.css · --peek-out), a hint to swipe. A clip plays once while it's the slide on show, holds its last frame
+   and then moves on to the next slide; swiped away, it pauses, and picks up where it stopped when it comes back
    ============================================================ */
 (function carousels() {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const HOLD = 800;   // ms a finished clip holds its last frame before the next slide comes in
   document.querySelectorAll('[data-carousel]').forEach((root) => {
     const slides = [...root.querySelectorAll('.carousel__slide')];
     const dots = [...root.querySelectorAll('.carousel__dot')];
-    if (slides.length < 2) return;
+    const n = slides.length;
+    if (n < 2) return;
     let index = 0;
-    let busy = false;   // a slide is animating in: input waits for it
-    const wrap = (n) => (n + slides.length) % slides.length;
+    let busy = false;   // a move is animating: input waits for it
+    let dragging = false;
+    const wrap = (k) => (k + n) % n;
     const step = () => root.clientWidth + (parseFloat(getComputedStyle(root).columnGap) || 0);
-    const place = (slide, x) => slide.style.setProperty('--slide-x', `${x}px`);
-    const show = (n) => {
-      index = wrap(n);
+    // Lays the track out with the current slide `dx` px off centre; `dir` says which way the far slide sits (n even)
+    const layout = (dx = 0, dir = 1) => {
+      const w = step();
       slides.forEach((slide, k) => {
-        slide.hidden = k !== index;
-        slide.classList.remove('is-peer');
-        slide.style.removeProperty('--slide-x');
-        if (slide instanceof HTMLVideoElement) {   // a clip plays only while it's the slide on show, and picks up where it stopped
-          if (k === index) slide.play().catch(() => {});
-          else slide.pause();
-        }
+        let d = wrap(k - index);
+        if (d > n / 2 || (d === n / 2 && dir < 0)) d -= n;
+        const x = d * w + dx;
+        const sliding = root.classList.contains('is-sliding');
+        slide.hidden = Math.abs(x) >= 2 * w && !(sliding && !slide.hidden);   // the current one, its neighbours, the next-but-one during a move; one sliding out stays till the end
+        slide.classList.toggle('is-peer', d !== 0);
+        slide.toggleAttribute('inert', d !== 0);   // the peeking ones are a hint, not content
+        slide.style.setProperty('--slide-x', `${x}px`);
       });
-      dots.forEach((dot, k) => dot.setAttribute('aria-current', k === index ? 'true' : 'false'));
     };
-    // The slide `dir` away (1 next, −1 previous) comes in beside the current one, `dx` px into the move
-    const peerOf = (dir) => {
-      const peer = slides[wrap(index + dir)];
-      if (peer instanceof HTMLVideoElement) peer.pause();   // comes in still, on the frame it stopped at
-      peer.hidden = false;
-      peer.classList.add('is-peer');
-      return peer;
+    const playCurrent = () => {
+      slides.forEach((slide, k) => {
+        if (!(slide instanceof HTMLVideoElement)) return;
+        if (k === index) slide.play().catch(() => {});   // a finished clip starts over; a paused one carries on
+        else slide.pause();
+      });
     };
-    const drag = (dir, dx) => {
-      place(slides[index], dx);
-      place(peerOf(dir), dx + dir * step());
+    let holdTimer = null;
+    const show = (k) => {
+      clearTimeout(holdTimer);
+      index = wrap(k);
+      layout();
+      dots.forEach((dot, j) => dot.setAttribute('aria-current', j === index ? 'true' : 'false'));
+      playCurrent();
     };
-    // Ends a move: the peer slides in (commit) or the current one slides back
+    // Ends a move: `dir` 1 = to the next slide, −1 = to the previous; commit false = back to where it was
     const settle = (dir, commit) => {
-      const current = slides[index];
-      const peer = slides[wrap(index + dir)];
       if (reduceMotion.matches) { show(commit ? index + dir : index); return; }
       busy = true;
       root.classList.add('is-sliding');
-      requestAnimationFrame(() => {
-        place(current, commit ? -dir * step() : 0);
-        place(peer, commit ? 0 : dir * step());
-      });
+      requestAnimationFrame(() => layout(commit ? -dir * step() : 0, dir));
+      const current = slides[index];
       const done = () => {
         clearTimeout(timer);
         current.removeEventListener('transitionend', done);
@@ -1113,26 +1117,34 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       const timer = setTimeout(done, 500);
       current.addEventListener('transitionend', done);
     };
-    const go = (n) => {
+    const go = (k) => {
       if (busy) return;
-      const target = wrap(n);
+      const target = wrap(k);
       if (target === index) return;
-      const dir = n > index ? 1 : -1;   // ‹ and the left swipe come in from the left, the rest from the right
-      if (reduceMotion.matches) { show(target); return; }
-      if (target !== wrap(index + dir)) { show(target); return; }   // a dot further away: no slide past the ones between
-      drag(dir, 0);
+      const dir = k > index ? 1 : -1;   // ‹ and a left swipe come in from the left, the rest from the right
+      if (reduceMotion.matches || target !== wrap(index + dir)) { show(target); return; }   // a dot further away: straight there
       settle(dir, true);
     };
-    show(0);   // the first slide may be a clip: start it
     root.querySelectorAll('[data-prev]').forEach((btn) => btn.addEventListener('click', () => go(index - 1)));   // in the pill, and beside the frame on desktop
     root.querySelectorAll('[data-next]').forEach((btn) => btn.addEventListener('click', () => go(index + 1)));
     dots.forEach((dot, k) => dot.addEventListener('click', () => {
       if (busy || k === index) return;
       const fwd = wrap(k - index);
       if (fwd === 1) go(index + 1);
-      else if (fwd === slides.length - 1) go(index - 1);
+      else if (fwd === n - 1) go(index - 1);
       else show(k);
     }));
+    // A clip that ends holds its last frame, then the next slide comes in (not while a finger is on the screen)
+    slides.forEach((slide, k) => {
+      if (!(slide instanceof HTMLVideoElement)) return;
+      slide.loop = false;
+      if (slide.poster) slide.style.setProperty('--poster', `url("${slide.poster}")`);
+      slide.addEventListener('ended', () => {
+        if (k !== index) return;
+        clearTimeout(holdTimer);
+        holdTimer = setTimeout(() => { if (k === index && !dragging) go(index + 1); }, HOLD);
+      });
+    });
     // Touch: the slides follow the finger and snap. On the 28-day page the whole first screen takes the swipe (people
     // swipe the screen, not just the picture); an up / down move stays the page's scroll (touch-action: pan-y)
     const area = root.closest('.promo-hero') || root;
@@ -1148,21 +1160,18 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       if (!start.axis) {
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
         start.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (start.axis === 'x') { dragging = true; clearTimeout(holdTimer); }
       }
       if (start.axis !== 'x') return;
       if (e.cancelable) e.preventDefault();
-      const dir = dx < 0 ? 1 : -1;
-      if (start.dx && Math.sign(start.dx) !== Math.sign(dx)) {   // turned back past the start: the other neighbour comes in
-        const old = slides[wrap(index - dir)];
-        old.hidden = true; old.classList.remove('is-peer'); old.style.removeProperty('--slide-x');
-      }
       start.dx = dx;
-      drag(dir, dx);
+      layout(dx, dx < 0 ? 1 : -1);
     }, { passive: false });
     const end = () => {
       if (!start) return;
       const { axis, dx, t } = start;
       start = null;
+      dragging = false;
       if (axis !== 'x' || !dx) return;
       const fast = Math.abs(dx) / (performance.now() - t) > 0.4;   // a flick counts however short
       settle(dx < 0 ? 1 : -1, Math.abs(dx) > root.clientWidth / 4 || (fast && Math.abs(dx) > 20));
@@ -1173,6 +1182,8 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       if (e.key === 'ArrowLeft') go(index - 1);
       else if (e.key === 'ArrowRight') go(index + 1);
     });
+    window.addEventListener('resize', () => { if (!busy && !dragging) layout(); });
+    show(0);
   });
 })();
 

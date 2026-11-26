@@ -2047,9 +2047,16 @@
     gap: calc(var(--spacing) * 10);
     background: var(--color-black);
     color: var(--color-white);
-    --carousel-h: clamp(calc(var(--spacing) * 50), calc(100svh - var(--header-h) - var(--copy-h)), calc(var(--spacing) * 160));
+    --carousel-h: clamp(calc(var(--spacing) * 50), min(calc(100svh - var(--header-h) - var(--copy-h)), calc((100vw - 2 * (calc(var(--spacing) * 2) + calc(var(--spacing) * 5))) * 16 / 9)), calc(var(--spacing) * 160));
     flex-direction: column;
     display: flex;
+  }
+
+  @media not all and (min-width: 68.75rem) {
+    .promo-hero .carousel {
+      column-gap: calc(var(--spacing) * 2);
+      --peek-out: calc(calc(var(--spacing) * 2) + calc(var(--spacing) * 5));
+    }
   }
 
   .promo-hero__copy {
@@ -2188,6 +2195,7 @@
 
   .carousel {
     height: var(--carousel-h, calc(var(--spacing) * 120));
+    --peek-out: 0px;
     aspect-ratio: 9 / 16;
     border-radius: var(--radius-3xl);
     touch-action: pan-y;
@@ -2218,13 +2226,17 @@
   }
 
   .carousel__slide {
-    translate: var(--slide-x, 0) 0;
-    clip-path: inset(0 max(0px, var(--slide-x, 0px)) 0 max(0px, calc(-1 * var(--slide-x, 0px))) round var(--radius-3xl));
+    translate: var(--slide-x, 0px) 0;
+    clip-path: inset(0 max(0px, calc(var(--slide-x, 0px) - var(--peek-out, 0px))) 0 max(0px, calc(-1 * var(--slide-x, 0px) - var(--peek-out, 0px))) round var(--radius-3xl));
   }
 
-  .carousel__slide.is-peer {
+  .carousel .carousel__slide {
     position: absolute;
     inset: 0;
+  }
+
+  .carousel video.carousel__slide {
+    background: var(--poster) center / cover no-repeat padding-box, var(--color-feed-yellow);
   }
 
   .carousel.is-sliding .carousel__slide {
