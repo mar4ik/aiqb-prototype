@@ -943,6 +943,17 @@ body:has(.promo-hero) { background: var(--color-black); }   /* no white edge whe
   .carousel__side--next { left: calc(100% + --spacing(4)); }
 }
 .carousel__dot { width: --spacing(5); }
+.carousel__play {   /* play, as in Instagram / Facebook clips: a big see-through circle in the middle of a paused clip; hidden (and click-through, so a tap on the clip pauses it) while it plays (script.js · 03d) */
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 1;
+  display: grid; place-items: center; width: --spacing(18); height: --spacing(18); padding: 0; border: 0;
+  border-radius: var(--radius-full); background: color-mix(in oklab, var(--color-black) 45%, transparent); color: var(--color-white); cursor: pointer;
+  opacity: 0; pointer-events: none; scale: .9;
+  transition: opacity 200ms ease, scale 200ms ease;
+}
+.carousel__play.is-shown, .carousel__play:focus-visible { opacity: 1; pointer-events: auto; scale: 1; }
+.carousel__play[hidden] { display: none; }
+.carousel__play .ic { width: --spacing(8); height: --spacing(8); translate: 2px 0; }   /* the triangle's weight sits left: nudged to look centred */
+.carousel__play:focus-visible { outline: 2px solid var(--color-white); outline-offset: 2px; }
 .carousel__dot::before { content: ""; width: --spacing(2); height: --spacing(2); border-radius: var(--radius-full); background: color-mix(in oklab, var(--color-white) 40%, transparent); }
 .carousel__dot[aria-current="true"]::before { background: var(--color-white); }
 
@@ -2442,7 +2453,7 @@ html[lang="en"] .pill-tabs__tab[data-lang-tab="en"] { background: var(--color-pr
 .ic--home       { --i: url("assets/icons/house.svg"); }     /* the home page (the breadcrumb's first step, aigraget.html) */
 .ic--globe      { --i: url("assets/icons/globe.svg"); }     /* the internet (same) */
 .ic--sparkles   { --i: url("assets/icons/sparkles.svg"); }  /* AI (same) */
-.ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html) */
+.ic--play       { --i: url("assets/icons/play.svg"); }      /* play a video (the course videos, aigraget.html; a paused clip on 28-day.html) */
 .ic--plus       { --i: url("assets/icons/plus.svg"); }      /* opens a card; turned 45° it closes it (the lessons, aigraget.html) */
 .ic--chart      { --i: url("assets/icons/chart-no-axes-combined.svg"); }   /* productivity (the losses grid, aigraget/team/) */
 .ic--wallet     { --i: url("assets/icons/wallet.svg"); }    /* money (same) */

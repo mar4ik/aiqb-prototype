@@ -1085,11 +1085,39 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
         slide.style.setProperty('--slide-x', `${x}px`);
       });
     };
+    // Play / pause, as in Instagram / Facebook clips: a clip plays by itself; a tap on it pauses it, and a big see-through
+    // play button shows in its middle (.carousel__play.is-shown) until a tap plays it again. A paused clip doesn't move on.
+    // The button stays in the tab order on a clip's slide (keyboard: it shows when focused)
+    const playBtn = root.querySelector('[data-play]');
+    let pending = false;   // a play() on its way: no play button flashing up meanwhile
+    const seen = new Set();   // clips that have been on show once
+    const syncPlay = () => {
+      if (!playBtn) return;
+      const clip = slides[index];
+      playBtn.hidden = !(clip instanceof HTMLVideoElement);
+      if (playBtn.hidden) return;
+      const paused = (clip.paused || clip.ended) && !pending;
+      playBtn.classList.toggle('is-shown', paused);
+      playBtn.setAttribute('aria-label', paused ? 'Միացնել' : 'Դադարեցնել');
+    };
+    const play = (clip) => {
+      pending = true;
+      clip.play().catch(() => {}).finally(() => { pending = false; syncPlay(); });
+    };
+    const toggleClip = () => {
+      const clip = slides[index];
+      if (!(clip instanceof HTMLVideoElement)) return;
+      clearTimeout(holdTimer);
+      if (clip.paused || clip.ended) play(clip);
+      else clip.pause();
+    };
+    playBtn?.addEventListener('click', toggleClip);
     const playCurrent = () => {
       slides.forEach((slide, k) => {
         if (!(slide instanceof HTMLVideoElement)) return;
-        if (k === index) slide.play().catch(() => {});   // a finished clip starts over; a paused one carries on
-        else slide.pause();
+        if (k !== index) { slide.pause(); return; }
+        if (!seen.has(slide)) { seen.add(slide); play(slide); }   // the first time on show it plays by itself;
+        // back again after a swipe it waits, paused where it stopped, with the play button up: a tap plays it
       });
     };
     let holdTimer = null;
@@ -1099,6 +1127,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       layout();
       dots.forEach((dot, j) => dot.setAttribute('aria-current', j === index ? 'true' : 'false'));
       playCurrent();
+      syncPlay();
     };
     // Ends a move: `dir` 1 = to the next slide, −1 = to the previous; commit false = back to where it was
     const settle = (dir, commit) => {
@@ -1139,6 +1168,8 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       if (!(slide instanceof HTMLVideoElement)) return;
       slide.loop = false;
       if (slide.poster) slide.style.setProperty('--poster', `url("${slide.poster}")`);
+      ['play', 'pause', 'ended'].forEach((type) => slide.addEventListener(type, () => { if (k === index) syncPlay(); }));
+      slide.addEventListener('click', () => { if (k === index) toggleClip(); });   // a tap on the clip (a swipe fires no click)
       slide.addEventListener('ended', () => {
         if (k !== index) return;
         clearTimeout(holdTimer);
