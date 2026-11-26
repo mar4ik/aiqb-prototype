@@ -147,7 +147,6 @@
   :root, :host {
     --color-accent: var(--color-brand-orange);
     --color-campaign-green: oklch(62.7% .194 149.214);
-    --color-campaign-yellow: #fcf051;
     --color-campaign-bundle-wash: oklch(97% .014 254.604);
     --color-campaign-bundle-blue: oklch(70.7% .165 254.624);
     --color-campaign-bundle-violet: oklch(54.1% .281 293.009);
@@ -644,6 +643,12 @@
     padding: calc(calc(var(--spacing) * 5) - 1px + .5px) calc(calc(var(--spacing) * 9) - 1px) calc(calc(var(--spacing) * 5) - 1px - .5px);
     font-size: var(--text-aqb-label);
     letter-spacing: var(--text-aqb-label--letter-spacing);
+  }
+
+  .btn--xl {
+    padding: calc(calc(var(--spacing) * 4) - 1px + .5px) calc(calc(var(--spacing) * 7) - 1px) calc(calc(var(--spacing) * 4) - 1px - .5px);
+    font-size: var(--text-aqb-body-m);
+    letter-spacing: var(--text-aqb-body-m--letter-spacing);
   }
 
   .dismiss {
@@ -2034,7 +2039,7 @@
 
   .promo-hero {
     --header-h: calc(var(--spacing) * 4);
-    --copy-h: calc(var(--spacing) * 74);
+    --copy-h: calc(var(--spacing) * 76);
     min-height: 100svh;
     padding: calc(var(--header-h) + calc(var(--spacing) * 2)) var(--page-x) calc(var(--spacing) * 6);
     justify-content: center;
@@ -2100,7 +2105,7 @@
   .promo-hero__sub mark {
     z-index: 1;
     padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5);
-    background: var(--color-campaign-yellow);
+    background: var(--color-feed-yellow);
     color: var(--color-black);
     font-weight: var(--font-weight-headline);
     clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%);
@@ -2123,7 +2128,8 @@
     }
 
     .promo-hero__copy {
-      width: calc(var(--spacing) * 130);
+      width: fit-content;
+      max-width: calc(var(--spacing) * 160);
       align-self: auto;
       align-items: flex-start;
       gap: calc(var(--spacing) * 6);
@@ -2138,8 +2144,7 @@
     }
 
     .promo-hero__actions {
-      align-self: flex-start;
-      align-items: flex-start;
+      align-self: stretch;
       gap: calc(var(--spacing) * 4);
     }
 
@@ -2173,10 +2178,6 @@
       gap: calc(var(--spacing) * 24);
     }
 
-    .promo-hero__copy {
-      width: calc(var(--spacing) * 160);
-    }
-
     .promo-hero__title {
       font-size: var(--text-aqb-display-l);
       line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
@@ -2188,6 +2189,86 @@
 
   body:has(.promo-hero) {
     background: var(--color-black);
+  }
+
+  .carousel__slide.poster28 {
+    background: var(--color-black);
+    --u: calc(100cqw / 1080);
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+  }
+
+  .poster28 .poster28__logo {
+    left: calc(72 * var(--u));
+    top: calc(120 * var(--u));
+    width: calc(400 * var(--u));
+    height: auto;
+    position: absolute;
+  }
+
+  .poster28 .poster28__bubble {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    inset: 0 auto auto 0;
+  }
+
+  .poster28 .poster28__bubble--blue {
+    fill: var(--color-brand-blue);
+  }
+
+  .poster28 .poster28__bubble--orange {
+    fill: var(--color-brand-orange);
+  }
+
+  .poster28 .poster28__text {
+    margin: 0;
+  }
+
+  .poster28 .poster28__text > span {
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    white-space: nowrap;
+    font-size: calc(var(--s) * var(--u));
+    letter-spacing: var(--tracking-aqb);
+    line-height: var(--leading-aqb-headline);
+    color: var(--color-white);
+    position: absolute;
+  }
+
+  .poster28 .poster28__h {
+    font-weight: var(--font-weight-headline);
+    font-style: italic;
+  }
+
+  .poster28 .poster28__k {
+    font-weight: 400;
+  }
+
+  .poster28 .poster28__b {
+    font-weight: 400;
+    line-height: var(--leading-aqb-body);
+  }
+
+  .poster28 .poster28__m {
+    transform-origin: 0 calc(var(--s) * .86 * var(--u));
+    rotate: -3deg;
+  }
+
+  .poster28 .poster28__m > span {
+    font-weight: var(--font-weight-headline);
+    font-style: italic;
+    line-height: var(--leading-aqb-text);
+    background: var(--color-feed-yellow);
+    color: var(--color-black);
+    clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
+    padding: .3em .45em .34em;
+    display: block;
+  }
+
+  .poster28--after > * {
+    translate: calc(-20 * var(--u)) 0;
   }
 
   .carousel {

@@ -82,7 +82,6 @@
 
   /* Campaign colours — a campaign can bring its own scheme (BRAND.md) */
   --color-campaign-green: oklch(62.7% 0.194 149.214);   /* Tailwind's green-600: webinar bar, floating buttons */
-  --color-campaign-yellow: #fcf051;   /* the 28-day ad's lemon yellow, sampled from its slide art: the marker on 28-day.html (black text) */
   /* Bundle: the card keeps its original colours (owner's call) — a blue wash, the travelling ribbon border, its pills */
   --color-campaign-bundle-wash: oklch(97% 0.014 254.604);          /* Tailwind's blue-50: card + sub nav promo background */
   --color-campaign-bundle-blue: oklch(70.7% 0.165 254.624);        /* blue-400: the ribbon's light band */
@@ -235,6 +234,7 @@
 .btn--base { padding: calc(--spacing(3) - 1px + .5px) calc(--spacing(6) - 1px) calc(--spacing(3) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
 .btn--md { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
 .btn--lg { padding: calc(--spacing(5) - 1px + .5px) calc(--spacing(9) - 1px) calc(--spacing(5) - 1px - .5px); font-size: var(--text-aqb-label); letter-spacing: var(--text-aqb-label--letter-spacing); }
+.btn--xl { padding: calc(--spacing(4) - 1px + .5px) calc(--spacing(7) - 1px) calc(--spacing(4) - 1px - .5px); font-size: var(--text-aqb-body-m); letter-spacing: var(--text-aqb-body-m--letter-spacing); }   /* md's 56px with Body M text (24, SemiBold): a lone call to action that leads the screen (the 28-day page's «Ուզում եմ», with --block) */
 
 /* Dismiss: small round icon-only ✕ (holds .ic--x) that hides a banner. The hover tint is mixed from
    the text colour, so it reads on any background (e.g. the grey .pkg-spot). */
@@ -863,7 +863,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
    group, carousel left, copy right (no empty middle) */
 .promo-hero {
   --header-h: --spacing(4);   /* the main nav is off on this page for now (28-day.html): just air over the carousel; --spacing(20) with the nav */
-  --copy-h: --spacing(74);   /* under the carousel on phones: the gap, headline + promise + button with their gaps, and the bottom padding */
+  --copy-h: --spacing(76);   /* under the carousel on phones: the gap, headline + promise + button with their gaps, and the bottom padding */
   min-height: 100svh;
   padding: calc(var(--header-h) + --spacing(2)) var(--page-x) --spacing(6);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: --spacing(3);
@@ -877,10 +877,10 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 .promo-hero__eyes { position: absolute; z-index: 0; right: 0; bottom: calc(100% - --spacing(1)); }   /* phones: the eye logo peeking over the yellow band's right (tall) end from behind it, its lower edge hidden: no row of its own */
 .promo-hero__eyes .eyes { width: auto; height: --spacing(8); }   /* its eyes only, white on the Black ground */
 .promo-hero__sub { position: relative; @apply text-aqb-body-s; text-wrap: balance; }   /* the promise under the headline */
-.promo-hero__sub mark {   /* a marker band in the ad's own yellow (campaign colour): tilted and tapered, plain corners (black text, BRAND.md → Text on colour) */
+.promo-hero__sub mark {   /* a marker band in Feed Yellow, the brand yellow: tilted and tapered, plain corners (black text, BRAND.md → Text on colour) */
   position: relative; z-index: 1;   /* over the eyes peeking from behind it */
   display: inline-block; padding: --spacing(3) --spacing(5);
-  background: var(--color-campaign-yellow); color: var(--color-black);
+  background: var(--color-feed-yellow); color: var(--color-black);
   font-weight: var(--font-weight-headline); font-style: italic;   /* the headline's cut (Adelle Sans ARM ExtraBold Italic), as the ad's banner text */
   rotate: -2deg;
   clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%);   /* tapered: narrower at the left end, wider at the right, like the ad's banner */
@@ -888,9 +888,9 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 @media (width >= theme(--breakpoint-lg)) {
   .promo-hero { flex-direction: row; gap: --spacing(18); padding-top: calc(var(--header-h) + --spacing(4)); text-align: left; }
   .promo-hero .carousel { --carousel-h: min(calc(100svh - var(--header-h) - --spacing(16)), --spacing(240)); }   /* as tall as the screen allows: no small island on wide screens */
-  .promo-hero__copy { align-self: auto; width: --spacing(130); align-items: flex-start; gap: --spacing(6); }
+  .promo-hero__copy { align-self: auto; width: fit-content; max-width: --spacing(160); align-items: flex-start; gap: --spacing(6); }   /* as wide as its widest line, so the button spans the text block */
   .promo-hero__title { @apply text-aqb-headline-h1 italic; }
-  .promo-hero__actions { align-self: flex-start; align-items: flex-start; gap: --spacing(4); }
+  .promo-hero__actions { align-self: stretch; gap: --spacing(4); }
   .promo-hero__copy { position: relative; padding-top: --spacing(18); }   /* room for the eyes: 48px and a 24px gap */
   .promo-hero__sub { position: static; }
   .promo-hero__eyes { top: 0; left: 0; right: auto; bottom: auto; }   /* from lg: over the headline, at its left edge */
@@ -899,10 +899,38 @@ html:not([data-hero="b"]) .story-hero { display: none; }
 }
 @media (width >= theme(--breakpoint-2xl)) {
   .promo-hero { gap: --spacing(24); }
-  .promo-hero__copy { width: --spacing(160); }
   .promo-hero__title { @apply text-aqb-display-l italic; }
 }
 body:has(.promo-hero) { background: var(--color-black); }   /* no white edge when the page overscrolls */
+
+/* lint-brand: off — the posters below are drawn on the ad's 1080 × 1920 grid and scale with the slide, so their sizes
+   are calc(… × --u), not the fixed type tokens (a poster's type fills its frame: BRAND.md → Play with type). Colours,
+   tracking and leading are the tokens */
+/* 28-day posters (28-day.html, carousel slides 1 and 3) — the ad's two posters on the brand in HTML/CSS: Black, a Blue
+   or Orange bubble (BRAND.md → Bubble construction: merged blocks, 20/10 corners, one angled tail) with the headline in
+   ExtraBold Italic, the kicker and body in Regular, the last lines on one tilted Feed Yellow band (black text), the static
+   white wordmark (logo_bright) on top. --u is one unit of the 1080 grid (container query units), so the whole poster
+   scales with the slide; each line's --x / --y (top-left) and --s (size), in units, sit inline in 28-day.html.
+   Everything ends above the carousel's dots */
+.carousel__slide.poster28 { position: relative; overflow: hidden; container-type: size; background: var(--color-black); --u: calc(100cqw / 1080); }
+.poster28 .poster28__logo { position: absolute; left: calc(72 * var(--u)); top: calc(120 * var(--u)); width: calc(400 * var(--u)); height: auto; }
+.poster28 .poster28__bubble { position: absolute; inset: 0 auto auto 0; width: 100%; height: auto; }
+.poster28 .poster28__bubble--blue { fill: var(--color-brand-blue); }
+.poster28 .poster28__bubble--orange { fill: var(--color-brand-orange); }
+.poster28 .poster28__text { margin: 0; }
+.poster28 .poster28__text > span { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); white-space: nowrap; font-size: calc(var(--s) * var(--u)); letter-spacing: var(--tracking-aqb); line-height: var(--leading-aqb-headline); color: var(--color-white); }
+.poster28 .poster28__h { font-weight: var(--font-weight-headline); font-style: italic; }   /* white on Blue / Orange */
+.poster28 .poster28__k { font-weight: 400; }   /* the kicker, Regular */
+.poster28 .poster28__b { font-weight: 400; line-height: var(--leading-aqb-body); }
+.poster28 .poster28__m { rotate: -3deg; transform-origin: 0 calc(var(--s) * .86 * var(--u)); }
+.poster28 .poster28__m > span {   /* one solid band for all its lines, tapered like the page's marker (.promo-hero__sub mark) */
+  display: block; padding: .3em .45em .34em;
+  font-weight: var(--font-weight-headline); font-style: italic; line-height: var(--leading-aqb-text);
+  background: var(--color-feed-yellow); color: var(--color-black);   /* the brand's Feed Yellow, black text (BRAND.md → Text on colour) */
+  clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
+}
+.poster28--after > * { translate: calc(-20 * var(--u)) 0; }   /* «28 օր անց»: its bubble and band reach further right (to 1049) than they start (72), so the whole layout moves 20 units left to sit in the horizontal middle; the text stays left-aligned */
+/* lint-brand: on */
 
 /* Carousel (atom) — 9:16 slides in an 8px Feed Yellow frame, one at a time, never cropped; ‹ dots › in one Black pill
    inside the slide's bottom (script.js · carousel: manual only, loops, swipe, arrow keys). Height from --carousel-h */
