@@ -1073,12 +1073,17 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
         slide.hidden = k !== index;
         slide.classList.remove('is-peer');
         slide.style.removeProperty('--slide-x');
+        if (slide instanceof HTMLVideoElement) {   // a clip plays only while it's the slide on show, and picks up where it stopped
+          if (k === index) slide.play().catch(() => {});
+          else slide.pause();
+        }
       });
       dots.forEach((dot, k) => dot.setAttribute('aria-current', k === index ? 'true' : 'false'));
     };
     // The slide `dir` away (1 next, −1 previous) comes in beside the current one, `dx` px into the move
     const peerOf = (dir) => {
       const peer = slides[wrap(index + dir)];
+      if (peer instanceof HTMLVideoElement) peer.pause();   // comes in still, on the frame it stopped at
       peer.hidden = false;
       peer.classList.add('is-peer');
       return peer;
@@ -1118,8 +1123,9 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       drag(dir, 0);
       settle(dir, true);
     };
-    root.querySelector('[data-prev]')?.addEventListener('click', () => go(index - 1));
-    root.querySelector('[data-next]')?.addEventListener('click', () => go(index + 1));
+    show(0);   // the first slide may be a clip: start it
+    root.querySelectorAll('[data-prev]').forEach((btn) => btn.addEventListener('click', () => go(index - 1)));   // in the pill, and beside the frame on desktop
+    root.querySelectorAll('[data-next]').forEach((btn) => btn.addEventListener('click', () => go(index + 1)));
     dots.forEach((dot, k) => dot.addEventListener('click', () => {
       if (busy || k === index) return;
       const fwd = wrap(k - index);

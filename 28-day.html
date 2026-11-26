@@ -16,7 +16,7 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://aiqb-prototype.vercel.app/assets/og/28-day.png" />
   <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css?v=pages-99" />
+  <link rel="stylesheet" href="styles.css?v=pages-101" />
 </head>
 <body>
 
@@ -96,7 +96,7 @@
 
     <!-- =========================================================
          28-DAY · the landing of the «Սովորի՛ր AI 28 օրում» ad: the ad's four slides in the carousel (script.js · 03d),
-         then the promise and the one action. One screen on Black (tailwind.css · .promo-hero)
+         then the one action, the brand's eyes peeking from behind it. One screen on Black (tailwind.css · .promo-hero)
          ========================================================= -->
     <section class="promo-hero" aria-label="Սովորի՛ր AI 28 օրում">
       <div class="carousel" data-carousel aria-roledescription="carousel" aria-label="28 օր անց" tabindex="0">
@@ -139,7 +139,7 @@
             <span class="poster28__m" style="--x:80; --y:1174.8; --s:89"><span>որ կարողանաս անել<br>այն, ինչ ուզում ես,</span></span>
           </p>
         </div>
-        <img class="carousel__slide" src="assets/campaign-28/girl.webp?v=2" width="540" height="960" alt="Վիդեո՝ 28 օր անց" hidden />
+        <video class="carousel__slide" src="assets/campaign-28/girl.mp4" poster="assets/campaign-28/girl-poster.webp" width="540" height="960" muted loop playsinline preload="auto" aria-label="Վիդեո՝ 28 օր անց" hidden></video>
         <div class="carousel__slide poster28 poster28--after" role="group" aria-roledescription="slide" aria-label="28 օր անց ունեցիր ավելի շատ գումար, ավելի շատ ժամանակ" hidden>
           <svg class="poster28__logo" viewBox="0 0 1100 201" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AI Քեզ Բան">
 <g clip-path="url(#poster28-logo-clip-3)">
@@ -175,7 +175,7 @@
             <span class="poster28__m" style="--x:80; --y:1274.8; --s:88"><span>ունեցիր<br>ավելի շատ գումար,<br>ավելի շատ ժամանակ</span></span>
           </p>
         </div>
-        <img class="carousel__slide" src="assets/campaign-28/man.webp?v=2" width="540" height="960" alt="Վիդեո՝ 28 օր անց" hidden />
+        <video class="carousel__slide" src="assets/campaign-28/man.mp4" poster="assets/campaign-28/man-poster.webp" width="540" height="960" muted loop playsinline preload="auto" aria-label="Վիդեո՝ 28 օր անց" hidden></video>
         <div class="carousel__nav">
           <button type="button" class="carousel__arrow" data-prev aria-label="Նախորդը"><i class="ic ic--sm ic--chev-left" aria-hidden="true"></i></button>
           <button type="button" class="carousel__dot" aria-label="Սլայդ 1" aria-current="true"></button>
@@ -184,28 +184,27 @@
           <button type="button" class="carousel__dot" aria-label="Սլայդ 4" aria-current="false"></button>
           <button type="button" class="carousel__arrow" data-next aria-label="Հաջորդը"><i class="ic ic--sm ic--chev-right" aria-hidden="true"></i></button>
         </div>
+        <button type="button" class="courses__arrow carousel__side carousel__side--prev" data-prev aria-label="Նախորդը"><i class="ic ic--chev-left" aria-hidden="true"></i></button>
+        <button type="button" class="courses__arrow carousel__side carousel__side--next" data-next aria-label="Հաջորդը"><i class="ic ic--chev-right" aria-hidden="true"></i></button>
       </div>
       <div class="promo-hero__copy">
-        <h1 class="promo-hero__title">Սովորի՛ր AI<br />28 օրում,</h1>
-        <p class="promo-hero__sub"><mark>ունեցիր ավելի շատ գումար,<br />ավելի շատ ժամանակ</mark>
-        <span class="promo-hero__eyes" aria-hidden="true">   <!-- the eye logo without its ground: the brand's eyes with the ™ (blink, glance, follow the pointer: script.js · peekEyes); phones: peeking over the yellow band's right end, outside it (BRAND.md → Bubble construction: Peek); from lg: over the headline -->
-            <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you" aria-hidden="true">
-              <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
-              <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
-              <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
-              <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
-              <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
-            </svg>
-          </span>
-        </p>
         <div class="promo-hero__actions">
           <a href="/aigraget" class="btn btn--primary btn--xl btn--block">Ուզում եմ</a>
+          <span class="promo-hero__eyes" aria-hidden="true">   <!-- the eye logo without its ground: the brand's eyes with the ™ (blink, glance, follow the pointer: script.js · peekEyes); peeking over the button's right end from behind it (BRAND.md → Bubble construction: Peek) -->
+              <svg class="eyes eyes--tm" viewBox="0 0 112.6 50" data-look="you" aria-hidden="true">
+                <ellipse class="eyes__white" cx="23.05" cy="24.98" rx="23.05" ry="24.98" />
+                <ellipse class="eyes__white" cx="72.94" cy="24.98" rx="23.05" ry="24.98" />
+                <circle class="eyes__pupil" cx="23.05" cy="24.98" r="10.93" />
+                <circle class="eyes__pupil" cx="72.94" cy="24.98" r="10.93" />
+                <path class="eyes__tm" transform="matrix(0.81531 0 0 0.81531 -49.837 -52.879)" d="M186.51 65.7559V68.0741H183.971V75.072H181.4V68.0741H178.873V65.7559H186.51Z M199.153 75.072H196.57L195.839 69.7098L193.379 75.0843H192.623L190.145 69.7098L189.425 75.072H186.83L188.238 65.7559H190.796L192.992 70.8228L195.199 65.7559H197.77L199.153 75.072Z" />
+              </svg>
+            </span>
         </div>
       </div>
     </section>
 
   </main>
 
-  <script src="script.js?v=pages-26"></script>
+  <script src="script.js?v=pages-30"></script>
 </body>
 </html>

@@ -2039,52 +2039,41 @@
 
   .promo-hero {
     --header-h: calc(var(--spacing) * 4);
-    --copy-h: calc(var(--spacing) * 76);
+    --copy-h: calc(var(--spacing) * 32);
     min-height: 100svh;
     padding: calc(var(--header-h) + calc(var(--spacing) * 2)) var(--page-x) calc(var(--spacing) * 6);
     justify-content: center;
     align-items: center;
-    gap: calc(var(--spacing) * 3);
-    text-align: left;
+    gap: calc(var(--spacing) * 10);
     background: var(--color-black);
     color: var(--color-white);
+    --carousel-h: clamp(calc(var(--spacing) * 50), calc(100svh - var(--header-h) - var(--copy-h)), calc(var(--spacing) * 160));
     flex-direction: column;
     display: flex;
-  }
-
-  .promo-hero .carousel {
-    --carousel-h: clamp(calc(var(--spacing) * 50), calc(100svh - var(--header-h) - var(--copy-h)), calc(var(--spacing) * 160));
   }
 
   .promo-hero__copy {
-    align-self: center;
-    align-items: flex-start;
-    gap: calc(var(--spacing) * 3);
-    flex-direction: column;
+    width: calc(var(--carousel-h) * 9 / 16);
     max-width: 100%;
-    display: flex;
-  }
-
-  .promo-hero__title {
-    font-size: var(--text-aqb-headline-h2);
-    line-height: var(--tw-leading, var(--text-aqb-headline-h2--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h2--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-headline-h2--font-weight));
-    font-style: italic;
   }
 
   .promo-hero__actions {
-    align-self: stretch;
-    align-items: stretch;
-    gap: calc(var(--spacing) * 3);
     flex-direction: column;
+    align-items: stretch;
     display: flex;
+    position: relative;
+  }
+
+  .promo-hero__actions .btn {
+    z-index: 1;
+    position: relative;
   }
 
   .promo-hero__eyes {
     z-index: 0;
-    right: 0;
-    bottom: calc(100% - var(--spacing));
+    right: calc(var(--spacing) * 5);
+    bottom: calc(100% - calc(var(--spacing) * 2));
+    line-height: 0;
     position: absolute;
   }
 
@@ -2093,97 +2082,16 @@
     height: calc(var(--spacing) * 8);
   }
 
-  .promo-hero__sub {
-    font-size: var(--text-aqb-body-s);
-    line-height: var(--tw-leading, var(--text-aqb-body-s--line-height));
-    letter-spacing: var(--tw-tracking, var(--text-aqb-body-s--letter-spacing));
-    font-weight: var(--tw-font-weight, var(--text-aqb-body-s--font-weight));
-    text-wrap: balance;
-    position: relative;
-  }
-
-  .promo-hero__sub mark {
-    z-index: 1;
-    padding: calc(var(--spacing) * 3) calc(var(--spacing) * 5);
-    background: var(--color-feed-yellow);
-    color: var(--color-black);
-    font-weight: var(--font-weight-headline);
-    clip-path: polygon(0 20%, 100% 0, 100% 100%, 0 80%);
-    font-style: italic;
-    display: inline-block;
-    position: relative;
-    rotate: -2deg;
-  }
-
   @media (min-width: 68.75rem) {
     .promo-hero {
-      gap: calc(var(--spacing) * 18);
+      --copy-h: calc(var(--spacing) * 38);
+      gap: calc(var(--spacing) * 14);
       padding-top: calc(var(--header-h) + calc(var(--spacing) * 4));
-      text-align: left;
-      flex-direction: row;
-    }
-
-    .promo-hero .carousel {
-      --carousel-h: min(calc(100svh - var(--header-h) - calc(var(--spacing) * 16)), calc(var(--spacing) * 240));
-    }
-
-    .promo-hero__copy {
-      width: fit-content;
-      max-width: calc(var(--spacing) * 160);
-      align-self: auto;
-      align-items: flex-start;
-      gap: calc(var(--spacing) * 6);
-    }
-
-    .promo-hero__title {
-      font-size: var(--text-aqb-headline-h1);
-      line-height: var(--tw-leading, var(--text-aqb-headline-h1--line-height));
-      letter-spacing: var(--tw-tracking, var(--text-aqb-headline-h1--letter-spacing));
-      font-weight: var(--tw-font-weight, var(--text-aqb-headline-h1--font-weight));
-      font-style: italic;
-    }
-
-    .promo-hero__actions {
-      align-self: stretch;
-      gap: calc(var(--spacing) * 4);
-    }
-
-    .promo-hero__copy {
-      padding-top: calc(var(--spacing) * 18);
-      position: relative;
-    }
-
-    .promo-hero__sub {
-      position: static;
-    }
-
-    .promo-hero__eyes {
-      inset: 0 auto auto 0;
+      --carousel-h: min(calc(100svh - var(--header-h) - var(--copy-h)), calc(var(--spacing) * 240));
     }
 
     .promo-hero__eyes .eyes {
       height: calc(var(--spacing) * 12);
-    }
-
-    .promo-hero__sub {
-      font-size: var(--text-aqb-body-m);
-      line-height: var(--tw-leading, var(--text-aqb-body-m--line-height));
-      letter-spacing: var(--tw-tracking, var(--text-aqb-body-m--letter-spacing));
-      font-weight: var(--tw-font-weight, var(--text-aqb-body-m--font-weight));
-    }
-  }
-
-  @media (min-width: 96rem) {
-    .promo-hero {
-      gap: calc(var(--spacing) * 24);
-    }
-
-    .promo-hero__title {
-      font-size: var(--text-aqb-display-l);
-      line-height: var(--tw-leading, var(--text-aqb-display-l--line-height));
-      letter-spacing: var(--tw-tracking, var(--text-aqb-display-l--letter-spacing));
-      font-weight: var(--tw-font-weight, var(--text-aqb-display-l--font-weight));
-      font-style: italic;
     }
   }
 
@@ -2284,7 +2192,6 @@
     flex: none;
     max-width: 100%;
     position: relative;
-    overflow: hidden;
   }
 
   .carousel:focus-visible {
@@ -2309,6 +2216,7 @@
 
   .carousel__slide {
     translate: var(--slide-x, 0) 0;
+    clip-path: inset(0 max(0px, var(--slide-x, 0px)) 0 max(0px, calc(-1 * var(--slide-x, 0px))) round var(--radius-3xl));
   }
 
   .carousel__slide.is-peer {
@@ -2359,6 +2267,31 @@
   @media not all and (min-width: 40rem) {
     .carousel__arrow {
       display: none;
+    }
+  }
+
+  .carousel .carousel__side {
+    display: none;
+  }
+
+  @media (min-width: 68.75rem) {
+    .carousel__arrow {
+      display: none;
+    }
+
+    .carousel .carousel__side {
+      display: grid;
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+    }
+
+    .carousel__side--prev {
+      right: calc(100% + calc(var(--spacing) * 4));
+    }
+
+    .carousel__side--next {
+      left: calc(100% + calc(var(--spacing) * 4));
     }
   }
 
@@ -8562,7 +8495,7 @@
   .signup {
     justify-content: center;
     align-items: center;
-    gap: calc(var(--spacing) * 8);
+    gap: calc(var(--spacing) * 10);
     min-height: 100vh;
     padding: calc(var(--spacing) * 12) calc(var(--spacing) * 4);
     background: var(--surface);
