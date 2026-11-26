@@ -3928,6 +3928,96 @@ body.legal-page {   /* the page's html / body: Noto, 16px, line-height 1.5, anti
 .legal__section a .ic--external { width: 14px; height: 14px; margin-left: 2px; vertical-align: -1px; }
 /* lint-brand: on */
 
+/* ============================================================
+   17 · SURVEY PAGE (survey.html at /survey; script: survey.js) — «AI-ն ինչի՞դ ա պետք»: a needs survey filled on
+   a phone. White, one column, one question a screen: the question in ExtraBold Italic is the one loud thing, the
+   answers are plain rows split by hairlines (.choice), no cards, no backgrounds. Phones and tablets keep the action in
+   a bar fixed to the bottom (thumb reach); from lg it sits under the content
+   ============================================================ */
+.survey { max-width: --spacing(150); margin: 0 auto; padding: 0 var(--page-x) --spacing(36); }   /* 600px column; the bottom room clears the fixed bar */
+.survey__screen[hidden] { display: none; }
+.survey__logo { display: block; width: --spacing(11); height: auto; margin-top: --spacing(5); }
+.survey__nav { display: flex; align-items: center; justify-content: space-between; padding-top: --spacing(2); @apply text-aqb-label; color: var(--color-ink-600); }
+.survey__back { display: inline-flex; align-items: center; gap: --spacing(1); min-width: --spacing(11); min-height: --spacing(11); margin-left: calc(--spacing(2) * -1); padding: 0 --spacing(2); @apply text-aqb-label; color: var(--color-ink-900); }   /* a 44px target */
+.survey__back[hidden] { visibility: hidden; display: inline-flex; }   /* keeps the count on the right */
+.survey__back:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: var(--radius-md); }
+.survey__progress { height: --spacing(1.25); margin-top: --spacing(1); border-radius: var(--radius-full); background: var(--line); overflow: hidden; }
+.survey__progress-fill { display: block; height: 100%; width: var(--fill, 0%); border-radius: inherit; background: var(--color-primary); transition: width 300ms var(--ease-smooth); }
+.survey__kicker { margin-top: --spacing(7); @apply text-aqb-label; color: var(--color-accent); }   /* the intro only (Orange stays for the intro kicker and the result's blanks) */
+/* The question: Headline H2 from md. On phones the questions and the result's headline are written by survey.js, so
+   no hand-placed &shy; can save a long word («հաճախորդներին») at 48px: they step to the Subhead size in the headline's
+   ExtraBold Italic, as .section-sub sets Body M in it. Decided Nov 2026: a deliberate exception to H2 being the smallest
+   headline (CLAUDE.md → Typography), for the survey only */
+.survey__title { margin-top: --spacing(6); @apply text-aqb-subhead italic; font-weight: var(--font-weight-headline); color: var(--color-ink-900); text-wrap: pretty; }
+@media (width >= theme(--breakpoint-md)) { .survey__title { @apply text-aqb-headline-h2; } }
+.survey__kicker + .survey__title { margin-top: --spacing(2); }
+.survey__hint { margin-top: --spacing(3); @apply text-aqb-label; color: var(--color-ink-600); }
+.survey__lead { margin-top: --spacing(4); @apply text-aqb-body-s; color: var(--color-ink-700); }
+.survey__small { margin-top: --spacing(5); @apply text-aqb-caption; font-weight: var(--font-weight-text); color: var(--color-ink-600); }
+.survey__facts { margin-top: --spacing(6); border-top: 1px solid var(--line); }
+.survey__fact { display: flex; justify-content: space-between; gap: --spacing(4); padding: --spacing(3) 0; border-bottom: 1px solid var(--line); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-700); }
+.survey__fact b { color: var(--color-ink-900); text-align: right; }
+.survey__or { padding: --spacing(5) 0 --spacing(1.5); @apply text-aqb-caption; color: var(--color-ink-600); }
+.survey__group { margin-top: --spacing(7); }   /* a second field on the same screen (6a's exact number, 9's tools…) */
+.survey__group > .field__label { display: block; margin-bottom: --spacing(2.5); }
+.survey__extra { margin-top: --spacing(2.5); }   /* the «Այլ» / «Դեռ չեմ անում» text box under its row */
+.survey__time { display: grid; grid-template-columns: 1fr 1fr; gap: --spacing(3); }
+.survey__time .field__group { align-items: stretch; }
+.survey__time .field__prefix { border-right: 0; border-left: 1px solid var(--line); }   /* the unit after the number */
+.survey__error { margin-top: --spacing(3); @apply text-aqb-label; color: var(--color-ink-900); }
+
+/* The action bar: fixed on phones and tablets, a fade over the list's end so a row slides under it rather than being cut
+   by a line; from lg the button simply follows the content */
+.survey__dock { position: fixed; z-index: 10; left: 0; right: 0; bottom: 0; padding: --spacing(2) var(--page-x) calc(--spacing(4) + env(safe-area-inset-bottom)); background: var(--color-white); }
+.survey__dock::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: --spacing(7); background: linear-gradient(to bottom, transparent, var(--color-white)); pointer-events: none; }   /* white to see-through: a scroll fade, not a brand-colour gradient */
+.survey__dock-in { max-width: calc(--spacing(150) - 2 * var(--page-x)); margin: 0 auto; }
+.survey__note { margin-bottom: --spacing(2); @apply text-aqb-label; color: var(--color-ink-900); }
+.survey__note[hidden] { display: none; }
+.survey__count { font-weight: var(--font-weight-text); opacity: .8; }   /* «· 2/3» after «Շարունակել» */
+@media (width >= theme(--breakpoint-lg)) {
+  .survey { padding-top: 10vh; padding-bottom: --spacing(20); }
+  .survey__logo { margin-top: 0; }
+  .survey__dock { position: static; padding: 0; margin-top: --spacing(8); background: none; }
+  .survey__dock::before { display: none; }
+  .survey__dock-in { max-width: none; }
+}
+
+/* Choice: one answer as a whole-row control (a native checkbox or radio inside, visually hidden). Phones put the box on
+   the right, under the thumb; from md it sits right before the words. A chosen row turns SemiBold Blue with a Blue rule
+   on its left; once the limit is reached (.choices.is-full) the other rows fade */
+.choices { margin-top: --spacing(5); border-top: 1px solid var(--line); }
+.choice { position: relative; display: flex; align-items: center; gap: --spacing(3.5); min-height: --spacing(14); padding: --spacing(3) 0; border-bottom: 1px solid var(--line); @apply text-aqb-label; font-weight: var(--font-weight-text); color: var(--color-ink-900); cursor: pointer; transition: padding 150ms ease, opacity 150ms ease; }
+.choice input { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.choice__text { flex: 1; }
+.choice__box { display: grid; place-items: center; flex: none; width: --spacing(6); height: --spacing(6); border: 1.5px solid var(--color-ink-400); border-radius: var(--radius-md); color: var(--color-white); }
+.choice__box .ic { width: --spacing(4); height: --spacing(4); opacity: 0; }
+.choice--radio .choice__box { border-radius: var(--radius-full); }
+.choice:has(input:checked) { padding-left: --spacing(3.5); box-shadow: inset 3px 0 0 var(--color-primary); color: var(--color-primary); font-weight: var(--font-weight-detail); }
+.choice:has(input:checked) .choice__box { background: var(--color-primary); border-color: var(--color-primary); }
+.choice:has(input:checked) .choice__box .ic { opacity: 1; }
+.choice:has(input:focus-visible) .choice__box { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+.choices.is-full .choice:not(:has(input:checked)) { opacity: .4; }
+@media (width >= theme(--breakpoint-md)) { .choice__box { order: -1; } }
+
+/* Result: the recommendation, read top to bottom; section heads are details, the ready prompt sits in an Ink box with
+   its blanks in Orange, and the copy button under it */
+.result__sec { margin-top: --spacing(7); }
+.result__head { @apply text-aqb-label; color: var(--color-ink-900); }
+.result__text { margin-top: --spacing(1.5); @apply text-aqb-body-s; color: var(--color-ink-700); }
+.result__list { margin-top: --spacing(1.5); padding-left: --spacing(6); list-style: decimal; @apply text-aqb-body-s; color: var(--color-ink-700); }
+.result__list li + li { margin-top: --spacing(1.5); }
+.result__prompt { margin-top: --spacing(2.5); padding: --spacing(4); border-radius: var(--radius-2xl); background: var(--color-ink-900); color: var(--color-white); @apply text-aqb-label; font-weight: var(--font-weight-text); white-space: pre-line; }
+.result__prompt mark { background: none; color: var(--color-accent); font-weight: var(--font-weight-detail); }
+.result__copy { margin-top: --spacing(2.5); }
+.result__idea { padding: --spacing(4) 0; border-bottom: 1px solid var(--line); }
+.result__idea:first-of-type { border-top: 1px solid var(--line); }
+.result__idea .result__text { margin-top: --spacing(1); }
+.result__more { margin-top: --spacing(2); @apply text-aqb-label; color: var(--color-primary); }
+.result__more:hover { color: var(--color-primary-hover); }
+.result__rule { margin-top: --spacing(10); border-top: 1px solid var(--line); }
+.result__done { margin-top: --spacing(4); @apply text-aqb-body-s; color: var(--color-ink-700); }
+.result__send { margin-top: --spacing(8); }   /* the result's own button stays in the flow: nothing floats over the recommendation */
+
 } /* end @layer components */
 
 /* ============================================================

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="hy">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AI-ն ինչի՞դ ա պետք — AI քեզ բան</title>
+  <meta name="description" content="Պատասխանեք մի քանի կարճ հարցի և ստացեք գործնական առաջարկ՝ ինչպես AI-ը կարող է օգնել հենց ձեզ։" />
+  <meta property="og:title" content="AI-ն ինչի՞դ ա պետք — AI քեզ բան" />
+  <meta property="og:description" content="Պատասխանեք մի քանի կարճ հարցի և ստացեք գործնական առաջարկ՝ ինչպես AI-ը կարող է օգնել հենց ձեզ։" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aiqb-prototype.vercel.app/survey" />
+  <link rel="icon" href="assets/logos/trademark.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css?v=survey-1" />
+</head>
+<body>
+
+  <!-- =========================================================
+       17 · SURVEY — «AI-ն ինչի՞դ ա պետք» (the needs survey, v. 24 Nov 2026). No main nav: a survey, nothing to
+       leave it for. The intro is here in the markup; survey.js draws the questions one a screen and the result
+       ========================================================= -->
+  <main class="survey" id="survey">
+
+    <section class="survey__screen" data-screen="intro">
+      <img class="survey__logo" src="assets/logos/trademark.svg" alt="AI քեզ բան" />
+      <p class="survey__kicker">AI-ն ինչի՞դ ա պետք</p>
+      <h1 class="survey__title">Ո՞ր գործերն եք ուզում անել ավելի հեշտ ու արագ</h1>
+      <p class="survey__lead">Պատասխանեք մի քանի կարճ հարցի՝ հասկանալու համար, թե արհեստական բանականությունը՝ AI-ը, ինչպես կարող է օգնել հենց ձեզ։ Նախնական գիտելիքներ պետք չեն։ Վերջում կտեսնեք ձեր պատասխաններին համապատասխան գործնական առաջարկներ։</p>
+      <div class="survey__facts">
+        <div class="survey__fact"><span>Հարցեր</span><b>12</b></div>
+        <div class="survey__fact"><span>Էլ. հասցե կամ հեռախոս</span><b>Պետք չէ</b></div>
+        <div class="survey__fact"><span>Վերջում</span><b>Անհատական առաջարկ</b></div>
+      </div>
+      <!-- TODO before publishing: point the link at the organisation's privacy notice (use, retention, contact) -->
+      <p class="survey__small">Հարցումն իրականացնում է Lumiverse-ի «AI Քեզ Բան» թիմը։ Ձեր պատասխաններն օգտագործվելու են անհատական առաջարկներ կազմելու և մասնակիցների կարիքներն ամփոփ ուսումնասիրելու համար։ Խնդրում ենք չգրել գաղտնի տեղեկություններ կամ այլ մարդկանց անձնական տվյալներ։ Կապի տվյալներ թողնելը և դասընթացների մասին տեղեկություններ ստանալը կամավոր են։ <a class="text-link" href="#privacy">Գաղտնիության ծանուցում</a></p>
+      <div class="survey__dock"><div class="survey__dock-in">
+        <button type="button" class="btn btn--primary btn--md btn--block" data-start>Սկսել</button>
+      </div></div>
+    </section>
+
+    <!-- one question at a time (survey.js) -->
+    <section class="survey__screen" data-screen="question" hidden></section>
+
+    <!-- the recommendation and the optional questions after it (survey.js) -->
+    <section class="survey__screen" data-screen="result" hidden></section>
+
+  </main>
+
+  <script src="survey.js?v=survey-1"></script>
+</body>
+</html>
