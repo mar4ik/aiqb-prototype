@@ -1134,7 +1134,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       else if (fwd === n - 1) go(index - 1);
       else show(k);
     }));
-    // A clip that ends holds its last frame, then the next slide comes in (not while a finger is on the screen)
+    // A clip that ends holds its last frame, then the next slide comes in (not while a finger is on the screen; not after the last slide)
     slides.forEach((slide, k) => {
       if (!(slide instanceof HTMLVideoElement)) return;
       slide.loop = false;
@@ -1142,7 +1142,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       slide.addEventListener('ended', () => {
         if (k !== index) return;
         clearTimeout(holdTimer);
-        holdTimer = setTimeout(() => { if (k === index && !dragging) go(index + 1); }, HOLD);
+        holdTimer = setTimeout(() => { if (k === index && !dragging && index < n - 1) go(index + 1); }, HOLD);   // the last slide's clip stays on its last frame: no jump back to the start
       });
     });
     // Touch: the slides follow the finger and snap. On the 28-day page the whole first screen takes the swipe (people
