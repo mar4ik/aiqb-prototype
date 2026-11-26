@@ -2187,6 +2187,10 @@
     }
   }
 
+  .promo-hero {
+    touch-action: pan-y;
+  }
+
   body:has(.promo-hero) {
     background: var(--color-black);
   }
@@ -2276,9 +2280,11 @@
     aspect-ratio: 9 / 16;
     border-radius: var(--radius-3xl);
     touch-action: pan-y;
+    column-gap: calc(var(--spacing) * 4);
     flex: none;
     max-width: 100%;
     position: relative;
+    overflow: hidden;
   }
 
   .carousel:focus-visible {
@@ -2299,6 +2305,25 @@
 
   .carousel__slide[hidden] {
     display: none;
+  }
+
+  .carousel__slide {
+    translate: var(--slide-x, 0) 0;
+  }
+
+  .carousel__slide.is-peer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .carousel.is-sliding .carousel__slide {
+    transition: translate .3s cubic-bezier(.2, .7, .2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel.is-sliding .carousel__slide {
+      transition: none;
+    }
   }
 
   .carousel__nav {

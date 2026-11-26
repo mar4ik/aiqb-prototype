@@ -1053,30 +1053,116 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
 
 /* ============================================================
    03d · CAROUSEL (.carousel, 28-day.html) — one slide at a time, manual only (never moves by itself), ‹ › and the dots,
-   a swipe on touch, the arrow keys when it has focus; it loops round both ways
+   a swipe on touch (the slides follow the finger and snap; ‹ › and the dots slide too), the arrow keys when it
+   has focus; it loops round both ways
    ============================================================ */
 (function carousels() {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('[data-carousel]').forEach((root) => {
     const slides = [...root.querySelectorAll('.carousel__slide')];
     const dots = [...root.querySelectorAll('.carousel__dot')];
     if (slides.length < 2) return;
     let index = 0;
-    const go = (n) => {
-      index = (n + slides.length) % slides.length;
-      slides.forEach((slide, k) => { slide.hidden = k !== index; });
+    let busy = false;   // a slide is animating in: input waits for it
+    const wrap = (n) => (n + slides.length) % slides.length;
+    const step = () => root.clientWidth + (parseFloat(getComputedStyle(root).columnGap) || 0);
+    const place = (slide, x) => slide.style.setProperty('--slide-x', `${x}px`);
+    const show = (n) => {
+      index = wrap(n);
+      slides.forEach((slide, k) => {
+        slide.hidden = k !== index;
+        slide.classList.remove('is-peer');
+        slide.style.removeProperty('--slide-x');
+      });
       dots.forEach((dot, k) => dot.setAttribute('aria-current', k === index ? 'true' : 'false'));
+    };
+    // The slide `dir` away (1 next, −1 previous) comes in beside the current one, `dx` px into the move
+    const peerOf = (dir) => {
+      const peer = slides[wrap(index + dir)];
+      peer.hidden = false;
+      peer.classList.add('is-peer');
+      return peer;
+    };
+    const drag = (dir, dx) => {
+      place(slides[index], dx);
+      place(peerOf(dir), dx + dir * step());
+    };
+    // Ends a move: the peer slides in (commit) or the current one slides back
+    const settle = (dir, commit) => {
+      const current = slides[index];
+      const peer = slides[wrap(index + dir)];
+      if (reduceMotion.matches) { show(commit ? index + dir : index); return; }
+      busy = true;
+      root.classList.add('is-sliding');
+      requestAnimationFrame(() => {
+        place(current, commit ? -dir * step() : 0);
+        place(peer, commit ? 0 : dir * step());
+      });
+      const done = () => {
+        clearTimeout(timer);
+        current.removeEventListener('transitionend', done);
+        root.classList.remove('is-sliding');
+        busy = false;
+        show(commit ? index + dir : index);
+      };
+      const timer = setTimeout(done, 500);
+      current.addEventListener('transitionend', done);
+    };
+    const go = (n) => {
+      if (busy) return;
+      const target = wrap(n);
+      if (target === index) return;
+      const dir = n > index ? 1 : -1;   // ‹ and the left swipe come in from the left, the rest from the right
+      if (reduceMotion.matches) { show(target); return; }
+      if (target !== wrap(index + dir)) { show(target); return; }   // a dot further away: no slide past the ones between
+      drag(dir, 0);
+      settle(dir, true);
     };
     root.querySelector('[data-prev]')?.addEventListener('click', () => go(index - 1));
     root.querySelector('[data-next]')?.addEventListener('click', () => go(index + 1));
-    dots.forEach((dot, k) => dot.addEventListener('click', () => go(k)));
-    let startX = null;
-    root.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
-    root.addEventListener('touchend', (e) => {
-      if (startX === null) return;
-      const dx = e.changedTouches[0].clientX - startX;
-      startX = null;
-      if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
-    });
+    dots.forEach((dot, k) => dot.addEventListener('click', () => {
+      if (busy || k === index) return;
+      const fwd = wrap(k - index);
+      if (fwd === 1) go(index + 1);
+      else if (fwd === slides.length - 1) go(index - 1);
+      else show(k);
+    }));
+    // Touch: the slides follow the finger and snap. On the 28-day page the whole first screen takes the swipe (people
+    // swipe the screen, not just the picture); an up / down move stays the page's scroll (touch-action: pan-y)
+    const area = root.closest('.promo-hero') || root;
+    let start = null;   // { x, y, axis: null | 'x' | 'y', dx, t }
+    area.addEventListener('touchstart', (e) => {
+      if (busy || e.touches.length > 1) { start = null; return; }
+      start = { x: e.touches[0].clientX, y: e.touches[0].clientY, axis: null, dx: 0, t: performance.now() };
+    }, { passive: true });
+    area.addEventListener('touchmove', (e) => {
+      if (!start) return;
+      const dx = e.touches[0].clientX - start.x;
+      const dy = e.touches[0].clientY - start.y;
+      if (!start.axis) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        start.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+      if (start.axis !== 'x') return;
+      if (e.cancelable) e.preventDefault();
+      const dir = dx < 0 ? 1 : -1;
+      if (start.dx && Math.sign(start.dx) !== Math.sign(dx)) {   // turned back past the start: the other neighbour comes in
+        const old = slides[wrap(index - dir)];
+        old.hidden = true; old.classList.remove('is-peer'); old.style.removeProperty('--slide-x');
+      }
+      start.dx = dx;
+      drag(dir, dx);
+    }, { passive: false });
+    const end = () => {
+      if (!start) return;
+      const { axis, dx, t } = start;
+      start = null;
+      if (axis !== 'x' || !dx) return;
+      const fast = Math.abs(dx) / (performance.now() - t) > 0.4;   // a flick counts however short
+      settle(dx < 0 ? 1 : -1, Math.abs(dx) > root.clientWidth / 4 || (fast && Math.abs(dx) > 20));
+    };
+    area.addEventListener('touchend', end);
+    area.addEventListener('touchcancel', end);
     root.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') go(index - 1);
       else if (e.key === 'ArrowRight') go(index + 1);

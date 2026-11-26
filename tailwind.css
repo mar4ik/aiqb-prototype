@@ -901,6 +901,7 @@ html:not([data-hero="b"]) .story-hero { display: none; }
   .promo-hero { gap: --spacing(24); }
   .promo-hero__title { @apply text-aqb-display-l italic; }
 }
+.promo-hero { touch-action: pan-y; }   /* the whole first screen takes a sideways swipe for the carousel (script.js · 03d); up / down stays the page scroll */
 body:has(.promo-hero) { background: var(--color-black); }   /* no white edge when the page overscrolls */
 
 /* lint-brand: off — the posters below are drawn on the ad's 1080 × 1920 grid and scale with the slide, so their sizes
@@ -934,10 +935,14 @@ body:has(.promo-hero) { background: var(--color-black); }   /* no white edge whe
 
 /* Carousel (atom) — 9:16 slides in an 8px Feed Yellow frame, one at a time, never cropped; ‹ dots › in one Black pill
    inside the slide's bottom (script.js · carousel: manual only, loops, swipe, arrow keys). Height from --carousel-h */
-.carousel { position: relative; flex: none; height: var(--carousel-h, --spacing(120)); max-width: 100%; aspect-ratio: 9 / 16; border-radius: var(--radius-3xl); touch-action: pan-y; }
+.carousel { position: relative; flex: none; height: var(--carousel-h, --spacing(120)); max-width: 100%; aspect-ratio: 9 / 16; border-radius: var(--radius-3xl); touch-action: pan-y; overflow: hidden; column-gap: --spacing(4); }   /* the slides move as a track inside it, column-gap apart (read by script.js), clipped at its edge */
 .carousel:focus-visible { outline: 2px solid var(--color-white); outline-offset: --spacing(1); }
 .carousel__slide { display: block; width: 100%; height: 100%; object-fit: cover; box-sizing: border-box; border: --spacing(2) solid var(--color-feed-yellow); border-radius: var(--radius-3xl); background: var(--color-feed-yellow); }
 .carousel__slide[hidden] { display: none; }
+.carousel__slide { translate: var(--slide-x, 0) 0; }   /* script.js sets --slide-x while a swipe or ‹ › moves the slides */
+.carousel__slide.is-peer { position: absolute; inset: 0; }   /* the slide coming in, beside the current one */
+.carousel.is-sliding .carousel__slide { transition: translate 300ms cubic-bezier(.2, .7, .2, 1); }
+@media (prefers-reduced-motion: reduce) { .carousel.is-sliding .carousel__slide { transition: none; } }
 .carousel__nav { position: absolute; left: 50%; bottom: --spacing(6); translate: -50% 0; display: flex; align-items: center; height: --spacing(8); padding: 0 --spacing(1); background: var(--color-black); color: var(--color-white); border-radius: var(--radius-full); }   /* 24px up: 16px clear of the 8px frame */
 .carousel__arrow, .carousel__dot { display: flex; align-items: center; justify-content: center; height: --spacing(8); padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
 .carousel__arrow { width: --spacing(8); }
