@@ -1132,6 +1132,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
     // Ends a move: `dir` 1 = to the next slide, −1 = to the previous; commit false = back to where it was
     const settle = (dir, commit) => {
       if (reduceMotion.matches) { show(commit ? index + dir : index); return; }
+      if (playBtn) playBtn.hidden = true;   // the play button belongs to the clip on show: gone the moment a move starts
       busy = true;
       root.classList.add('is-sliding');
       requestAnimationFrame(() => layout(commit ? -dir * step() : 0, dir));
@@ -1191,7 +1192,7 @@ function shuffleIn(letters, { also = [], styles = true, timing = {}, almost = 0,
       if (!start.axis) {
         if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
         start.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-        if (start.axis === 'x') { dragging = true; clearTimeout(holdTimer); }
+        if (start.axis === 'x') { dragging = true; clearTimeout(holdTimer); if (playBtn) playBtn.hidden = true; }
       }
       if (start.axis !== 'x') return;
       if (e.cancelable) e.preventDefault();
