@@ -909,7 +909,7 @@ body:has(.promo-hero) { background: var(--color-black); }   /* no white edge whe
   background: var(--color-feed-yellow); color: var(--color-black);   /* the brand's Feed Yellow, black text (BRAND.md → Text on colour) */
   clip-path: polygon(0 5%, 100% 0, 100% 100%, 0 95%);
 }
-.poster28--after > * { translate: calc(-20 * var(--u)) 0; }   /* «28 օր անց»: its bubble and band reach further right (to 1049) than they start (72), so the whole layout moves 20 units left to sit in the horizontal middle; the text stays left-aligned */
+.carousel__slide.poster28 > .eyes.poster28__eyes { position: absolute; left: calc(var(--x) * var(--u)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--u)); }   /* slide 3 «Այ քեզ բան»: the eye logo with its ™ under the bubble's tail tip, just outside it (BRAND.md → Eyes); it blinks and glances (script.js · peekEyes) */
 /* lint-brand: on */
 
 /* Carousel (atom) — 9:16 slides in an 8px Feed Yellow frame, one at a time, never cropped; ‹ dots › in one Black pill

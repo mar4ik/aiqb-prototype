@@ -2179,8 +2179,11 @@
     display: block;
   }
 
-  .poster28--after > * {
-    translate: calc(-20 * var(--u)) 0;
+  .carousel__slide.poster28 > .eyes.poster28__eyes {
+    left: calc(var(--x) * var(--u));
+    top: calc(var(--y) * var(--u));
+    width: calc(var(--w) * var(--u));
+    position: absolute;
   }
 
   .carousel {
