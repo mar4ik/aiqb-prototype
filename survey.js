@@ -257,8 +257,9 @@
   const Q = {
     q1: { block: 1, kind: 'multi', key: 'role', max: 2, title: 'Այս պահին ինչո՞վ եք հիմնականում զբաղվում։', hint: 'Ընտրեք մինչև 2 տարբերակ',
       options: [['work', 'Աշխատում եմ կազմակերպությունում'], ['biz', 'Ունեմ բիզնես կամ աշխատում եմ ինքնուրույն'], ['study', 'Սովորում եմ'], ['job', 'Աշխատանք եմ փնտրում'],
-        ['home', 'Հիմնականում զբաղվում եմ տան և ընտանիքի գործերով'], ['retired', 'Թոշակառու եմ'], ['other', 'Այլ', { field: 'roleOther', placeholder: 'Գրեք ձեր տարբերակը' }]],
-      fields: [{ key: 'occupation', label: 'Եթե ցանկանում եք, նշեք ձեր զբաղմունքը կամ ոլորտը', placeholder: 'Օրինակ՝ ուսուցիչ, վարորդ, վաճառող, հաշվապահ', max: 80 }] },
+        ['home', 'Հիմնականում զբաղվում եմ տան և ընտանիքի գործերով'], ['retired', 'Թոշակառու եմ'], ['other', 'Այլ', { field: 'roleOther', placeholder: 'Օրինակ՝ ուսուցիչ, վարորդ, վաճառող, հաշվապահ' }]] },
+      // (the separate «զբաղմունքը կամ ոլորտը» box was dropped, Nov 2026: the occupation is asked only through «Այլ», so
+      // the occupation column stays "unknown" and role_other holds it)
     q2: { block: 2, kind: 'multi', key: 'tasks', max: 3, title: 'Վերջին 30 օրում ո՞ր գործերն են ձեզնից շատ ժամանակ կամ ջանք պահանջել։', hint: 'Ընտրեք մինչև 3 տարբերակ',
       options: null /* built from TASKS in the respondent's order (07) */ },
     q2u: { block: 3, kind: 'text', key: 'unsureText', optional: true, title: 'Վերջին օրերին ո՞ր գործի վրա կուզենայիք ավելի քիչ ժամանակ կամ ջանք ծախսել։',
@@ -574,7 +575,10 @@
   });
   screens.question.addEventListener('submit', (e) => { e.preventDefault(); next(); });
   // a tap on a faded row once the limit is reached still explains why
+  // (only the tap on the row: the click the label then forwards to its input arrives with the box already toggled, so a
+  // chosen row being unchosen would read as a faded one and be blocked; onChoice handles the limit for the input itself)
   screens.question.addEventListener('click', (e) => {
+    if (e.target.matches('.choice input')) return;
     const row = e.target.closest('.choices.is-full .choice');
     if (row && !row.querySelector('input').checked && Q[current]?.max) { e.preventDefault(); note(`Արդեն ընտրել եք ${Q[current].max}-ը։ Հանեք մեկը՝ ուրիշն ընտրելու համար։`); }
   });
