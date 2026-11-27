@@ -40,6 +40,10 @@
     {
       "source": "/28-day",
       "destination": "/28-day.html"
+    },
+    {
+      "source": "/survey",
+      "destination": "/survey.html"
     }
   ]
 }
